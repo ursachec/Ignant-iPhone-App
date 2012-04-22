@@ -40,6 +40,7 @@
 		FE33F6AD14B87B2E00A44ABA /* backButtonBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = FE33F6AC14B87B2E00A44ABA /* backButtonBlack.png */; };
 		FE33F6B014B898ED00A44ABA /* IgnantLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE33F6AF14B898ED00A44ABA /* IgnantLoadingView.xib */; };
 		FE33F6B314B89B0700A44ABA /* IgnantLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE33F6B214B89B0700A44ABA /* IgnantLoadingView.m */; };
+		FE342EFD15448CC400F0D456 /* dump_images_big_jpg.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE342EFC15448CC400F0D456 /* dump_images_big_jpg.txt */; };
 		FE37487414C1E2F600CF6374 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FE37487314C1E2F600CF6374 /* FBConnect.bundle */; };
 		FE37488114C1E31200CF6374 /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = FE37487814C1E31200CF6374 /* Facebook.m */; };
 		FE37488214C1E31200CF6374 /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FE37487A14C1E31200CF6374 /* FBDialog.bundle */; };
@@ -224,6 +225,7 @@
 		FE33F6AF14B898ED00A44ABA /* IgnantLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IgnantLoadingView.xib; sourceTree = "<group>"; };
 		FE33F6B114B89B0700A44ABA /* IgnantLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IgnantLoadingView.h; sourceTree = "<group>"; };
 		FE33F6B214B89B0700A44ABA /* IgnantLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IgnantLoadingView.m; sourceTree = "<group>"; };
+		FE342EFC15448CC400F0D456 /* dump_images_big_jpg.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dump_images_big_jpg.txt; path = IgnantApp/dump_images_big_jpg.txt; sourceTree = "<group>"; };
 		FE37487314C1E2F600CF6374 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
 		FE37487714C1E31200CF6374 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		FE37487814C1E31200CF6374 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
@@ -577,6 +579,7 @@
 		FE0DDD1014AE350F003B8778 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FE342EFC15448CC400F0D456 /* dump_images_big_jpg.txt */,
 				FEBA71D7150D053B0016AD6E /* Constants */,
 				FEBA71D6150D05300016AD6E /* UIImages */,
 			);
@@ -1092,6 +1095,7 @@
 				FE6205A415386C2200339F12 /* blueArrow@2x.png in Resources */,
 				FE6205A515386C2200339F12 /* whiteArrow.png in Resources */,
 				FE6205A615386C2200339F12 /* whiteArrow@2x.png in Resources */,
+				FE342EFD15448CC400F0D456 /* dump_images_big_jpg.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
