@@ -22,10 +22,10 @@
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
 
-
-
 #define kForceReloadCoreData NO
 
+
+#warning TODO: before loading content from ignant, check if the internet connection is available!!!
 
 @interface IGNAppDelegate()
 {
