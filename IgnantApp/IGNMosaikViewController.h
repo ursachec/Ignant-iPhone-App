@@ -19,6 +19,7 @@ extern NSString * const kImageFilename;
 @interface IGNMosaikViewController : UIViewController
 
 -(IBAction)handleBack:(id)sender;
+- (IBAction)triggerRandomAction:(id)sender;
 
 @property (retain, nonatomic) IBOutlet UIView *bigMosaikView;
 @property (retain, nonatomic) IBOutlet UIScrollView *mosaikScrollView;

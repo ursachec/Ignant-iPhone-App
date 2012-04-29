@@ -27,22 +27,19 @@
 #import "HJMOFileCache.h"
 #import "HJObjManager.h"
 
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
 
 #import "IgnantLoadingView.h"
-
-#import <QuartzCore/QuartzCore.h>
-
-#import "Constants.h"
 
 #import "IGNAppDelegate.h"
 
 
 #import "IgnantImporter.h"
 
+//imports for ASIHTTPRequest
+#import "ASIHTTPRequest.h"
+#import "NSURL+stringforurl.h"
+
+#import "Constants.h"
 
 
 @interface IGNMasterViewController ()
@@ -124,10 +121,7 @@
         _importer = [[IgnantImporter alloc] init];
         _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;
-        
-        
-        
-        
+    
         
     }
     
@@ -441,27 +435,21 @@
 {    
     if ([self isIndexPathLastRow:indexPath]) 
     {
-        
         if (!_loadingMorePosts) 
         {
-            
-            [self startGettingMorePosts];
-            
+            [self startGettingMorePosts];       
             _loadingMorePosts = YES;
             
 #warning TODO: check performance, maybe us something better to let the tableview know that the cell has changed
             [_blogEntriesTableView reloadData];
-            
         }
         else
         {
             NSLog(@"trying to load more posts, will not trigger again");
         }
-         
     }
     else
     {
-        
         if (!self.detailViewController) {
             self.detailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
         }
@@ -522,15 +510,11 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    
     //set the appropriate category if NOT home category
-    
     if (!self.isHomeCategory)
     {
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"categoryId == %@", [self.currentCategory categoryId]]];
     }
-    
-    
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".

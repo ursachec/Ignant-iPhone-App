@@ -26,6 +26,7 @@
 
 
 #warning TODO: before loading content from ignant, check if the internet connection is available!!!
+#warning TODO: ??? implement OpenUDID to know what mosaic images have already been loaded, or are there enough so that they won't be repeated ?
 
 @interface IGNAppDelegate()
 {

@@ -7,6 +7,10 @@
 //
 
 
+//some preprocessor commans
+#define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
+
+
 
 //other constants
 
@@ -31,6 +35,7 @@ extern NSString * const kAPICommandGetDataForFirstRun;
 extern NSString * const kAPICommandGetMorePosts;
 extern NSString * const kAPICommandGetArticlesForCategory;
 extern NSString * const kAPICommandGetSingleArticle;
+extern NSString * const kAPICommandGetSetOfMosaicImages;
 
 
 //getting content
@@ -51,6 +56,8 @@ extern NSString * const kTLErrorMessage;
 extern NSString * const kTLMetaInformation;
 extern NSString * const kTLResponseStatus;
 extern NSString * const kTLCategoriesList;
+extern NSString * const kTLMosaicImages;
+
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
 
