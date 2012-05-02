@@ -102,3 +102,8 @@ extern NSString * const kFKImageId;
 extern NSString * const kFKImageDescription;
 extern NSString * const kFKImageBase64Representation;
 extern NSString * const kFKImageURL;
+
+extern NSString * const kFKImageWidth;
+extern NSString * const kFKImageHeight;
+extern NSString * const kFKImageReferenceArticleId;
+

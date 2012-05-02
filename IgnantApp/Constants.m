@@ -8,7 +8,8 @@
 
 #import "Constants.h"
 
-int const kInvalidBlogEntryIndex = -100;
+//WARNING! (because of slappy programming) don't change the index to be other than -1, app crashes when navigating in the detailviewcontroller to the last index
+int const kInvalidBlogEntryIndex = -1;
 
 int const kFirstRelatedArticleTag = 501;
 int const kSecondRelatedArticleTag = 502;
@@ -17,8 +18,8 @@ int const kThirdRelatedArticleTag = 503;
 //################################################################################
 
 //server stuff
-#define SHOULD_USE_REMOTE_SERVER NO
-BOOL const shouldUseRemoteServer = false;
+#define shouldUseRemoteServer TRUE
+
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
 NSString * const kAdressForContentServer = @"http://localhost/ignant/ignant.php";
@@ -118,3 +119,8 @@ NSString * const kFKImageId = @"id";
 NSString * const kFKImageDescription = @"description";
 NSString * const kFKImageBase64Representation = @"base64Representation";
 NSString * const kFKImageURL = @"url";
+
+NSString * const kFKImageWidth = @"width";
+NSString * const kFKImageHeight = @"height";
+NSString * const kFKImageReferenceArticleId = @"refArticleId";
+
