@@ -196,6 +196,8 @@
 		FEC36AE21528F974004F19C8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC36AE11528F973004F19C8 /* Security.framework */; };
 		FEC36AE41528F9F0004F19C8 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC36AE31528F9F0004F19C8 /* libxml2.dylib */; };
 		FED8536315472FB200D10FCE /* mosaic_images.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED8536215472FB200D10FCE /* mosaic_images.plist */; };
+		FEDC80D0154D9D8E00007342 /* mosaicCloseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = FEDC80CE154D9D8E00007342 /* mosaicCloseButton.png */; };
+		FEDC80D3154D9FE500007342 /* mosaicLoadMore.png in Resources */ = {isa = PBXBuildFile; fileRef = FEDC80D2154D9FE500007342 /* mosaicLoadMore.png */; };
 		FEE61BB014DD7B5D00A169BF /* navigationButtonNextArticle.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BAE14DD7B5D00A169BF /* navigationButtonNextArticle.png */; };
 		FEE61BB114DD7B5D00A169BF /* navigationButtonPreviousArticle.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BAF14DD7B5D00A169BF /* navigationButtonPreviousArticle.png */; };
 		FEE61BB414DD7C0E00A169BF /* navigationButtonStart.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BB314DD7C0E00A169BF /* navigationButtonStart.png */; };
@@ -214,6 +216,7 @@
 		FEE61BDE14DD964300A169BF /* navigationButtonBack.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BDD14DD964300A169BF /* navigationButtonBack.png */; };
 		FEE61BE114DD974A00A169BF /* IGNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BE014DD974A00A169BF /* IGNViewController.m */; };
 		FEF0EB5D15042E9600571E99 /* IgnantLoadingMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF0EB5C15042E9500571E99 /* IgnantLoadingMoreCell.m */; };
+		FEF41A391551DCCE00A73688 /* dummy20x30.png in Resources */ = {isa = PBXBuildFile; fileRef = FEF41A381551DCCE00A73688 /* dummy20x30.png */; };
 		FEF8A1C7151A86BD0070EF7A /* ignantCellArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = FEF8A1C6151A86BD0070EF7A /* ignantCellArrow.png */; };
 /* End PBXBuildFile section */
 
@@ -502,6 +505,8 @@
 		FEC36AE11528F973004F19C8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FEC36AE31528F9F0004F19C8 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		FED8536215472FB200D10FCE /* mosaic_images.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mosaic_images.plist; sourceTree = "<group>"; };
+		FEDC80CE154D9D8E00007342 /* mosaicCloseButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mosaicCloseButton.png; sourceTree = "<group>"; };
+		FEDC80D2154D9FE500007342 /* mosaicLoadMore.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mosaicLoadMore.png; sourceTree = "<group>"; };
 		FEE61BAE14DD7B5D00A169BF /* navigationButtonNextArticle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigationButtonNextArticle.png; sourceTree = "<group>"; };
 		FEE61BAF14DD7B5D00A169BF /* navigationButtonPreviousArticle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigationButtonPreviousArticle.png; sourceTree = "<group>"; };
 		FEE61BB314DD7C0E00A169BF /* navigationButtonStart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigationButtonStart.png; sourceTree = "<group>"; };
@@ -527,6 +532,7 @@
 		FEE61BE014DD974A00A169BF /* IGNViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGNViewController.m; sourceTree = "<group>"; };
 		FEF0EB5B15042E9500571E99 /* IgnantLoadingMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IgnantLoadingMoreCell.h; sourceTree = "<group>"; };
 		FEF0EB5C15042E9500571E99 /* IgnantLoadingMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IgnantLoadingMoreCell.m; sourceTree = "<group>"; };
+		FEF41A381551DCCE00A73688 /* dummy20x30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dummy20x30.png; sourceTree = "<group>"; };
 		FEF8A1C6151A86BD0070EF7A /* ignantCellArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ignantCellArrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -748,6 +754,7 @@
 		FE3B99961546FA750027FEC2 /* test images */ = {
 			isa = PBXGroup;
 			children = (
+				FEF41A381551DCCE00A73688 /* dummy20x30.png */,
 				FE6F9CE9154D8160005E12C3 /* images_small_200 */,
 			);
 			name = "test images";
@@ -855,6 +862,7 @@
 		FEA811BD14B254A700E6C3CA /* Mosaik */ = {
 			isa = PBXGroup;
 			children = (
+				FEDC80CC154D9D3600007342 /* ui images */,
 				FE3B99961546FA750027FEC2 /* test images */,
 				FEC82EDF154B2E87004F4E95 /* test resources */,
 				FEC82EDE154B2E7A004F4E95 /* Custom views */,
@@ -1143,6 +1151,15 @@
 			name = "Data importers";
 			sourceTree = "<group>";
 		};
+		FEDC80CC154D9D3600007342 /* ui images */ = {
+			isa = PBXGroup;
+			children = (
+				FEDC80CE154D9D8E00007342 /* mosaicCloseButton.png */,
+				FEDC80D2154D9FE500007342 /* mosaicLoadMore.png */,
+			);
+			name = "ui images";
+			sourceTree = "<group>";
+		};
 		FEE61BD414DD8A5000A169BF /* More */ = {
 			isa = PBXGroup;
 			children = (
@@ -1330,6 +1347,9 @@
 				FE6F9D35154D8160005E12C3 /* we-05_200x_160.jpg in Resources */,
 				FE6F9D36154D8160005E12C3 /* wei_03_200x_150.jpg in Resources */,
 				FE6F9D37154D8160005E12C3 /* zirwes04_200x_93.jpg in Resources */,
+				FEDC80D0154D9D8E00007342 /* mosaicCloseButton.png in Resources */,
+				FEDC80D3154D9FE500007342 /* mosaicLoadMore.png in Resources */,
+				FEF41A391551DCCE00A73688 /* dummy20x30.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
