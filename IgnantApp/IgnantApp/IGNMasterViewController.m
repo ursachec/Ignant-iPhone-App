@@ -110,10 +110,8 @@
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
-        
 #warning just temp, delete afterwards
         _tempNumberOfTimesLoadedMorePosts = 0;
-        
         
         //use the importer from the appDelegate
         
@@ -122,11 +120,9 @@
         _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;
     
-        
     }
     
     return self;
-    
 }
 							
 - (void)dealloc
@@ -145,16 +141,19 @@
 }
 
 #pragma mark - show mosaik / more
-- (IBAction)showMosaik:(id)sender {
+- (IBAction)showMosaik:(id)sender 
+{
     
     IGNMosaikViewController *mosaikVC = [[IGNMosaikViewController alloc] initWithNibName:@"IGNMosaikViewController" bundle:nil];
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    mosaikVC.parentNavigationController = self.navigationController;
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
     [mosaikVC release];
 
 }
 
-- (IBAction)showMore:(id)sender {
+- (IBAction)showMore:(id)sender 
+{
         
     IGNMoreOptionsViewController *moreOptionsVC = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil];
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
@@ -291,7 +290,7 @@
     }
     else
     {
-        return 107.0f;
+        return 109.0f;
     }
 }
 
@@ -369,68 +368,6 @@
     return nil;
 }
 
-
-
-
-////////////////////////////////////////////////////////////
-//managing cells with asynchronous images
-
-//
-//// Customize the appearance of table view cells.
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    static NSString *CellIdentifier = @"Cell";
-//    
-//    HJManagedImageV* mi;
-//    IgnantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    if (cell == nil) {
-//        cell = [[[IgnantCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-//        
-//        //Create a managed image view and add it to the cell (layout is very naieve)
-//        
-//
-//        CGFloat ratio = 375.0f/245.0f;
-//        CGFloat width = 147.0f;
-//        
-//		mi = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5.0f,0.0f,width,width/ratio)] autorelease];
-//        mi.tag = 999;
-//		[cell addSubview:mi];
-//        
-//        cell.managedImage = mi;
-//        
-//    } else {
-//		//Get a reference to the managed image view that was already in the recycled cell, and clear it
-//		mi = (HJManagedImageV*)[cell viewWithTag:999];
-//		[mi clear];
-//	}
-//    
-//    
-//    BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-//    
-//    
-//    //set the URL that we want the managed image view to load
-////	mi.url = [NSURL URLWithString:[FlickrSearchRes image75pxUrl:searchRes]];
-//
-//#ifdef DEBUG
-//#warning REMOVE THIS BEFORE RELEASE
-//    NSArray *tempImageArray = [[NSArray alloc] initWithObjects:@"http://www.ignant.de/wp-content/uploads/2012/01/Of-Ar_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Agnespre2.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/toledano_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/sang-pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/more-light_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/allandale_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/nova_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Guy_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/hake_hol_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Julien-Legrand_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/temp_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/gravinese_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/haus_w_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/jooney_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/timmelsjoch_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/prepre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/soustitre_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/major_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/lis_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/landscape_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/03/dmig.jpg",@"http://www.ignant.de/wp-content/uploads/2011/03/arcedemi.jpg",@"http://www.ignant.de/wp-content/uploads/2011/08/SHOP-klein.jpg", nil];
-//
-//    mi.url = [NSURL URLWithString:[tempImageArray objectAtIndex:indexPath.row]];
-//#else
-//    mi.url = [NSURL URLWithString:blogEntry.thumbImageFilename];
-//#endif
-//    
-//    
-//    
-//	//tell the object manager to manage the managed image view, 
-//	//this causes the cached image to display, or the image to be loaded, cached, and displayed
-//	[_hjObjectManager manage:mi];
-//    
-//
-//    [self configureCell:cell atIndexPath:indexPath];
-//    return cell;
-//}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
     if ([self isIndexPathLastRow:indexPath]) 
@@ -468,7 +405,7 @@
             self.detailViewController.previousBlogEntryIndex = indexPath.row-1;
         } 
         else{
-            self.detailViewController.previousBlogEntryIndex = -1;
+            self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         if(indexPath.row+1<fetchedResultsArray.count)
@@ -476,11 +413,12 @@
             self.detailViewController.nextBlogEntryIndex = indexPath.row+1;
         }
         else{
-            self.detailViewController.nextBlogEntryIndex = -1;
+            self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         //set the managedObjectContext and push the view controller
         self.detailViewController.managedObjectContext = self.managedObjectContext;
+        self.detailViewController.isNavigationBarAndToolbarHidden = NO;
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     }
 }
