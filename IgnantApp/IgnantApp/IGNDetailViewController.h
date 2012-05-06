@@ -14,13 +14,14 @@
 
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate>
+@interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 
 
 @property (strong, nonatomic) NSString *currentArticleId;
 
 @property(nonatomic) BOOL didLoadContentForRemoteArticle;
 @property(nonatomic) BOOL isShowingArticleFromLocalDatabase; 
+@property(nonatomic, assign) BOOL isNavigationBarAndToolbarHidden;
 
 @property(retain, nonatomic) NSArray* fetchedResults;
 
@@ -38,7 +39,11 @@
 @property (retain, nonatomic) IBOutlet UILabel *firstRelatedArticleCategoryLabel;
 @property (retain, nonatomic) IBOutlet UILabel *secondRelatedArticleCategoryLabel;
 
+@property (retain, nonatomic) IBOutlet UIButton *firstRelatedArticleShowDetailsButton;
+@property (retain, nonatomic) IBOutlet UIButton *secondRelatedArticleShowDetailsButton;
+@property (retain, nonatomic) IBOutlet UIButton *thirdRelatedArticleShowDetailsButton;
 @property (strong, nonatomic) BlogEntry* blogEntry;
+- (IBAction)handleRightSwipe:(id)sender;
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (retain, nonatomic) IBOutlet UIScrollView *contentScrollView;
@@ -55,4 +60,8 @@
 @property (retain, nonatomic) IBOutlet UIWebView *descriptionWebView;
 
 -(IBAction)showRelatedArticle:(id)sender;
+
+- (IBAction)handleLeftSwipe:(id)sender;
+
+
 @end
