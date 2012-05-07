@@ -11,6 +11,7 @@
 
 @protocol IgnantImporterDelegate <NSObject>
 
+@optional
 -(void)didStartImportingRSSData;
 -(void)didFinishImportingRSSData;
 
@@ -18,11 +19,9 @@
 -(void)didFinishParsingRSSData;
 
 
-
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer;
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary;
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary;
-
 
 
 @end

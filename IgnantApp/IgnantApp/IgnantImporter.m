@@ -430,6 +430,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle
 {
+    LOG_CURRENT_FUNCTION()
     
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
@@ -441,9 +442,26 @@ static const NSUInteger kImportBatchSize = 5;
 
     id unconvertedBlogEntryCategoryId = [oneArticle objectForKey:kFKArticleCategoryId];
     id unconvertedBlogEntryArticleId = [oneArticle objectForKey:kFKArticleId]; 
+    id unconvertedBlogEntryNumberOfViews = [oneArticle objectForKey:kFKArticleNumberOfViews]; 
     
     NSString *blogEntryCategoryId = [unconvertedBlogEntryCategoryId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryCategoryId stringValue] : unconvertedBlogEntryCategoryId;
     NSString *blogEntryArticleId = [unconvertedBlogEntryArticleId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryArticleId stringValue] : unconvertedBlogEntryArticleId;
+    
+    NSNumber * blogEntryNumberOfViews = nil;
+    
+    if ([unconvertedBlogEntryNumberOfViews isKindOfClass:[NSString class]]) 
+    {
+        NSNumberFormatter * numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+        blogEntryNumberOfViews = [numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
+        [numberFormatter release];
+    }
+    else
+    {
+        blogEntryNumberOfViews = unconvertedBlogEntryNumberOfViews;
+    }
+    
+    
     
 #warning fix date to take GMT into consideration
     //2012-03-02T00:00:00+00:00
@@ -461,6 +479,7 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.categoryName = blogEntryCategoryName;
     self.currentBlogEntry.categoryId = blogEntryCategoryId;
     self.currentBlogEntry.relatedArticles = blogEntryRelatedArticles;
+    self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
         
     
     //add the article to the specific category
