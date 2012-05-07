@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IGNViewController.h"
+#import "IGNMasterViewController.h"
 
-@interface MostViewedViewController : IGNViewController
+@interface MostViewedViewController : IGNMasterViewController
 
 @end

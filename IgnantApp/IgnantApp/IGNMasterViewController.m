@@ -45,30 +45,17 @@
 @interface IGNMasterViewController ()
 {
     
-    EGORefreshTableHeaderView *_refreshHeaderView;
-	BOOL _reloading;
-    
-    
-    CGFloat _rotatingAngle;
-    BOOL _animate;
-    
-    BOOL _showLoadMorePosts;
-    
-    BOOL _loadingMorePosts;
-    
-    
-    BOOL _tempNumberOfTimesLoadedMorePosts;
-    
 }
+
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 -(void)startGettingMorePosts;
 
-@property (nonatomic, strong) HJObjManager *hjObjectManager;
+@property (nonatomic, retain) HJObjManager *hjObjectManager;
 @property (nonatomic, retain) UIView *spinningLoadingView;
 @property (nonatomic, retain) UIImageView *spinningImageView;
 
-@property (nonatomic, retain) IgnantImporter *importer;
+@property (nonatomic, retain, readwrite) IgnantImporter *importer;
 
 @property (assign, readwrite) BOOL isHomeCategory;
 
@@ -81,18 +68,19 @@
 
 @implementation IGNMasterViewController
 
-@synthesize blogEntriesTableView = _blogEntriesTableView;
-@synthesize detailViewController = _detailViewController;
+@synthesize isHomeCategory = _isHomeCategory;
+
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize hjObjectManager = _hjObjectManager;
+
+@synthesize blogEntriesTableView = _blogEntriesTableView;
+@synthesize detailViewController = _detailViewController;
 
 @synthesize spinningLoadingView = _spinningLoadingView;
 @synthesize spinningImageView = _spinningImageView;
 
 @synthesize importer = _importer;
-
-@synthesize isHomeCategory = _isHomeCategory;
 
 @synthesize currentCategory = _currentCategory;
 
@@ -104,22 +92,16 @@
     if (self) {
         
         _showLoadMorePosts = YES;
-        _loadingMorePosts = NO;
-        
+        _isLoadingMorePosts = NO;
         
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
-#warning just temp, delete afterwards
-        _tempNumberOfTimesLoadedMorePosts = 0;
         
-        //use the importer from the appDelegate
+        //create the importer - done in a separate method in case the subclasses have to use it - 
+        //!!! there have to be different persistentStoreCoordinators
+        [self createImporter];
         
-        IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
-        _importer = [[IgnantImporter alloc] init];
-        _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
-        _importer.delegate = self;
-    
     }
     
     return self;
@@ -132,6 +114,15 @@
     [__managedObjectContext release];
     [_blogEntriesTableView release];
     [super dealloc];
+}
+
+-(void)createImporter
+{
+    //use the importer from the appDelegate
+    IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
+    _importer = [[IgnantImporter alloc] init];
+    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
+    _importer.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -210,7 +201,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
 		
@@ -317,7 +308,7 @@
     static NSString *CellIdentifierLoading = @"LoadingCell";
     
     
-    if ( [self isIndexPathLastRow:indexPath] && !_loadingMorePosts  ) 
+    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMorePosts  ) 
     {
         
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
@@ -330,7 +321,7 @@
         return cell;
         
     }
-    else if([self isIndexPathLastRow:indexPath] && _loadingMorePosts)
+    else if([self isIndexPathLastRow:indexPath] && _isLoadingMorePosts)
     {
     
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
@@ -372,10 +363,9 @@
 {    
     if ([self isIndexPathLastRow:indexPath]) 
     {
-        if (!_loadingMorePosts) 
+        if (!_isLoadingMorePosts) 
         {
             [self startGettingMorePosts];       
-            _loadingMorePosts = YES;
             
 #warning TODO: check performance, maybe us something better to let the tableview know that the cell has changed
             [_blogEntriesTableView reloadData];
@@ -475,8 +465,6 @@
     return __fetchedResultsController;
 }    
 
-
-
 - (void)fetch 
 {
     NSError *error = nil;
@@ -553,6 +541,8 @@
     
     
     cell.categoryName = blogEntry.categoryName;
+    
+    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
         
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
@@ -591,26 +581,27 @@
 #pragma mark - getting content from the server
 -(void)startGettingMorePosts
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _isLoadingMorePosts = YES;
+        [self.blogEntriesTableView reloadData];
+        
+    });
+        
     NSDate* lastImportDateForMainPageArticle = (NSDate*) [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultsLastImportDateForMainPageArticle];
     
     NSLog(@"lastImportDateForMainPageArticle: %@", lastImportDateForMainPageArticle);
-    
     NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[lastImportDateForMainPageArticle timeIntervalSince1970]];
-    
-    // Test default delegate methods
     
     //set the relevant categoryId
     NSString *categoryId = @"";
-    
     if (self.isHomeCategory) 
     {
-        categoryId = @"-1";
+        categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
     }
     else 
     {
         categoryId = [self.currentCategory categoryId];
     }
-    
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMorePosts,kParameterAction,categoryId,kCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
@@ -618,10 +609,9 @@
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+    [request setDelegate:self];
+    [request startAsynchronous];
 }
 
 - (void)requestStarted:(ASIHTTPRequest *)request
@@ -634,18 +624,27 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    
+    LOG_CURRENT_FUNCTION()
+    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     _showLoadMorePosts = YES;
-    _loadingMorePosts = NO;
+    _isLoadingMorePosts = NO;
     
-    [self.importer importJSONStringWithMorePosts:[request responseString]];
+    dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+    dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONStringWithMorePosts:[request responseString]];
+    });
+
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     NSLog(@"requestFailed");
+    
+#warning TODO: do something if the request has failed
 }
 
 
@@ -664,10 +663,10 @@
 
 -(void)didFinishImportingRSSData
 {
-//    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self fetch];
         [self.blogEntriesTableView reloadData];
-//    });
+    });
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {
@@ -691,7 +690,6 @@
 	//  model should call this when its done loading
 	_reloading = NO;
 	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
-	
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -721,13 +719,27 @@
 	
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     
+    //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance) 
+    {
+        if (!_isLoadingMorePosts) 
+        {
+            [self startGettingMorePosts];
+        }
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-	
 }
-
 
 @end
