@@ -350,10 +350,12 @@ static const NSUInteger kImportBatchSize = 5;
     
     SBJSON *parser = [[SBJSON alloc] init];
     
-    NSString *filePath = TEST_JSON_DUMP;
-    NSData *response = [NSData dataWithContentsOfFile:filePath];
+#warning TODO: add this code to some unit testing or remove it from the class
+//    NSString *filePath = TEST_JSON_DUMP;
+//    NSData *response = [NSData dataWithContentsOfFile:filePath];
     
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    
+    NSString *json_string = [jsonString copy];
     NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
 
     NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];
