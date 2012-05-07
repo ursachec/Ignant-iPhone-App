@@ -414,7 +414,11 @@
     self.navigationDetailViewController.blogEntry = self.previousBlogEntry;
     self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
     
-    [self.navigationController pushViewController:_navigationDetailViewController animated:YES];
+    //push the view controller from left to right
+    NSMutableArray *vcs =  [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [vcs insertObject:_navigationDetailViewController atIndex:[vcs count]-1];
+    [self.navigationController setViewControllers:vcs animated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)setupNavigationEntries
