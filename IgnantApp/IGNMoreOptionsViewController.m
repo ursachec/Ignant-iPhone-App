@@ -15,6 +15,8 @@
 #import "MostViewedViewController.h"
 #import "SearchViewController.h"
 #import "ContactViewController.h"
+#import "IGNMasterViewController.h"
+
 
 #import "IGNAppDelegate.h"
 
@@ -199,7 +201,8 @@ typedef enum _moreOptionsIndeces  {
             
             NSLog(@"something");
             
-            MostViewedViewController *mostViewedVC = [[MostViewedViewController alloc] initWithNibName:@"MostViewedViewController" bundle:nil];
+            MostViewedViewController *mostViewedVC = [[MostViewedViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil];
+            mostViewedVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:mostViewedVC animated:YES];
             [mostViewedVC release];
             
