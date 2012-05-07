@@ -8,24 +8,75 @@
 
 #import "MosaicView.h"
 
+@interface MosaicView ()
+{
+    BOOL _shouldTriggerFinalizingAnimation;
+}
+@end
+
 @implementation MosaicView
+@synthesize delegate = _delegate;
+@synthesize articleId;
+@synthesize articleTitle;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
+    if (self) 
+    {
         // Initialization code
+        
+        UITapGestureRecognizer *longPressGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        [self addGestureRecognizer:longPressGestureRecognizer];
+        [longPressGestureRecognizer release];
+        
+        
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+#pragma mark -
+
+-(void)handleTap:(UITapGestureRecognizer*)recognizer
 {
-    // Drawing code
+
+    if(self.delegate!=nil)
+    {
+        [_delegate triggerActionForTapInView:self];
+    }
 }
-*/
+
+-(void)handleLongPress:(UITapGestureRecognizer*)recognizer
+{
+    UIView *view = recognizer.view;
+    CGPoint currentLocation = [recognizer locationInView:view.superview];
+    
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            if (self.delegate != nil) 
+            {
+                [_delegate triggerActionForGestureStateBeganInView:self];
+            }
+            break;
+        case UIGestureRecognizerStateChanged:
+            NSLog(@"UIGestureRecognizerStateChanged");            
+            break;
+        case UIGestureRecognizerStateEnded:
+            if (self.delegate != nil) 
+            {
+                [_delegate triggerActionForGestureStateEndedInView:self];
+            }
+            
+            break;
+        case UIGestureRecognizerStateCancelled:
+            if (self.delegate != nil) 
+            {
+                [_delegate triggerActionForGestureStateCanceledInView:self];
+            }
+            break;
+        default:
+            break;
+    }
+}
 
 @end
