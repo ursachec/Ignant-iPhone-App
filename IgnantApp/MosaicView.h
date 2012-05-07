@@ -14,10 +14,6 @@
 
 -(void)triggerActionForTapInView:(MosaicView*)view;
 
--(void)triggerActionForGestureStateBeganInView:(MosaicView*)view;
--(void)triggerActionForGestureStateEndedInView:(MosaicView*)view;
--(void)triggerActionForGestureStateCanceledInView:(MosaicView*)view;
-
 @end
 
 @interface MosaicView : UIView

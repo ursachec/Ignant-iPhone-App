@@ -46,37 +46,5 @@
     }
 }
 
--(void)handleLongPress:(UITapGestureRecognizer*)recognizer
-{
-    UIView *view = recognizer.view;
-    CGPoint currentLocation = [recognizer locationInView:view.superview];
-    
-    switch (recognizer.state) {
-        case UIGestureRecognizerStateBegan:
-            if (self.delegate != nil) 
-            {
-                [_delegate triggerActionForGestureStateBeganInView:self];
-            }
-            break;
-        case UIGestureRecognizerStateChanged:
-            NSLog(@"UIGestureRecognizerStateChanged");            
-            break;
-        case UIGestureRecognizerStateEnded:
-            if (self.delegate != nil) 
-            {
-                [_delegate triggerActionForGestureStateEndedInView:self];
-            }
-            
-            break;
-        case UIGestureRecognizerStateCancelled:
-            if (self.delegate != nil) 
-            {
-                [_delegate triggerActionForGestureStateCanceledInView:self];
-            }
-            break;
-        default:
-            break;
-    }
-}
 
 @end
