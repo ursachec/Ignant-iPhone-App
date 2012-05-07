@@ -18,6 +18,9 @@
 
 #import "IGNAppDelegate.h"
 
+//temp icon for categories tempMoreCategoryIcon.png (in mainBundle)
+
+
 typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,
     indexForTumblrFeed = 1,
@@ -36,6 +39,9 @@ typedef enum _moreOptionsIndeces  {
 }
 -(void)setUpMoreOptions;
 -(void)handleBack:(id)sender;
+
+-(UIImage*)iconImageForRow:(int)row;
+
 @end
 
 #pragma mark - 
@@ -120,6 +126,12 @@ typedef enum _moreOptionsIndeces  {
 
 #pragma mark - UITableView delegate & datasource
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self configureCell:cell atIndexPath:indexPath];
+
+}
+
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -141,27 +153,18 @@ typedef enum _moreOptionsIndeces  {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     } 
     
-    
     UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
     customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     cell.selectedBackgroundView = customBackgroundView;
-//    [customBackgroundView release];
+    [customBackgroundView release];
     
-    
-    
-    
-    [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath");
 
-    
-    
-    
     switch (indexPath.row) {
         case indexForAboutIgnant:
             
@@ -185,8 +188,6 @@ typedef enum _moreOptionsIndeces  {
             
             NSLog(@"something");
             
-            
-//            managedObjectContext
             CategoriesViewController *categoriesVC = [[CategoriesViewController alloc] initWithNibName:@"CategoriesViewController" bundle:nil];
             
             categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
@@ -203,15 +204,7 @@ typedef enum _moreOptionsIndeces  {
             [mostViewedVC release];
             
             break;
-//        case indexForSearch:
-//            
-//            NSLog(@"something");
-//            
-//            SearchViewController *searchVC = [[SearchViewController alloc] initWithNibName:@"SearchViewController" bundle:nil];
-//            [self.navigationController pushViewController:searchVC animated:YES];
-//            [searchVC release];
-//            
-//            break;
+            
         case indexForContact:
             
             NSLog(@"something");
@@ -233,8 +226,68 @@ typedef enum _moreOptionsIndeces  {
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [_listOfOptions objectAtIndex:indexPath.row];
-    cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:15];
+#define DEBUG_SHOW_HELP_COLORS FALSE
+    
+    CGSize imageSize = CGSizeMake(22.0f, 25.0f);
+    CGFloat verticalMiddle = (cell.contentView.frame.size.height-imageSize.height)/2;
+    CGFloat paddingLeft = 10.0f;
+    
+    //add the image icon to the category cell
+    CGRect imageFrame = CGRectMake(paddingLeft, verticalMiddle, imageSize.width, imageSize.height);
+    UIImageView* imageView = [[UIImageView alloc] initWithFrame:imageFrame];
+    imageView.image = [self iconImageForRow:indexPath.row];
+    
+#if DEBUG_SHOW_HELP_COLORS
+    imageView.backgroundColor = [UIColor redColor];
+#endif    
+    
+    [cell.contentView addSubview:imageView];
+    [imageView release];
+    
+    
+    //add the title label to the category cell
+    CGFloat paddingLeftFromImageIcon = 10.0f;
+    CGSize labelSize = CGSizeMake(cell.contentView.frame.size.width-imageFrame.origin.x-imageFrame.size.width-paddingLeftFromImageIcon, cell.contentView.frame.size.height);
+    CGRect labelFrame = CGRectMake(imageFrame.origin.x+imageFrame.size.width+paddingLeftFromImageIcon, 0.0f , labelSize.width, labelSize.height);
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:labelFrame];
+    titleLabel.font = [UIFont fontWithName:@"Georgia" size:15.0f];
+    
+#if DEBUG_SHOW_HELP_COLORS
+    titleLabel.backgroundColor = [UIColor greenColor];
+#endif
+    
+    titleLabel.text = [_listOfOptions objectAtIndex:indexPath.row];
+    [cell.contentView addSubview:titleLabel];
+    [titleLabel release];
+    
+}
+
+-(UIImage*)iconImageForRow:(int)row
+{
+    UIImage* returnImage = nil;
+
+    switch (row) {
+        case indexForAboutIgnant:
+            returnImage = [UIImage imageNamed:@"1"];
+            break;
+        case indexForTumblrFeed:
+            returnImage = [UIImage imageNamed:@"2"];
+            break;
+        case indexForCategories:
+            returnImage = [UIImage imageNamed:@"3"];
+            break;
+        case indexForContact:
+            returnImage = [UIImage imageNamed:@"4"];
+            break;
+        case indexForMostRed:
+            returnImage = [UIImage imageNamed:@"5"];
+            break;    
+            
+        default:
+            break;
+    }
+    
+    return returnImage;
 }
 
 
