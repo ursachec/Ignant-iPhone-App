@@ -16,9 +16,16 @@ int const kSecondRelatedArticleTag = 502;
 int const kThirdRelatedArticleTag = 503;
 
 //################################################################################
+//categories
+int const kCategoryIndexForHome = -1;
+int const kCategoryIndexForMostRed = -500;
+
+
+
+//################################################################################
 
 //server stuff
-#define shouldUseRemoteServer TRUE
+#define shouldUseRemoteServer FALSE
 
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
@@ -26,7 +33,7 @@ NSString * const kAdressForContentServer = @"http://localhost/ignant/ignant.php"
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.2.108/ignant/ignant.php";
+NSString * const kAdressForContentServer = @"http://192.168.44.217/ignant/ignant.php";
 #endif
 
 

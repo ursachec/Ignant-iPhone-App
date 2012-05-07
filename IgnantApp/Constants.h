@@ -11,7 +11,12 @@
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
 
 
+//################################################################################
+//categories
+extern int const kCategoryIndexForHome;
+extern int const kCategoryIndexForMostRed;
 
+//################################################################################
 //other constants
 
 extern int const kInvalidBlogEntryIndex;
@@ -21,6 +26,8 @@ extern int const kFirstRelatedArticleTag;
 extern int const kSecondRelatedArticleTag;
 extern int const kThirdRelatedArticleTag;
 
+
+//################################################################################
 
 
 //server adresses
