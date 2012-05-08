@@ -89,7 +89,7 @@ typedef enum _moreOptionsIndeces  {
 
 -(void)handleBack:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - View lifecycle
@@ -102,15 +102,15 @@ typedef enum _moreOptionsIndeces  {
     [self setUpMoreOptions];
     
     //add the back-to-start button
-    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat ratio = .5;
-    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
-    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
-    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
-    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = backBarButtonItem;
+//    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
+//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    CGFloat ratio = .5;
+//    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
+//    [backButton setImage:backButtonImage forState:UIControlStateNormal];
+//    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
+//    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
+//    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+//    self.navigationItem.leftBarButtonItem = backBarButtonItem;
     
 }
 
@@ -182,20 +182,17 @@ typedef enum _moreOptionsIndeces  {
             
             NSLog(@"something");
             
-            IgnantTumblrFeedViewController *tumblrVC = [[IgnantTumblrFeedViewController alloc] initWithNibName:@"IgnantTumblrFeedViewController" bundle:nil];
+            IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
             [self.navigationController pushViewController:tumblrVC animated:YES];
-            [tumblrVC release];
             
             break;
         case indexForCategories:
             
             NSLog(@"something");
             
-            CategoriesViewController *categoriesVC = [[CategoriesViewController alloc] initWithNibName:@"CategoriesViewController" bundle:nil];
-            
+            CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
             categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:categoriesVC animated:YES];
-            [categoriesVC release];
             
             break;
         case indexForMostRed:

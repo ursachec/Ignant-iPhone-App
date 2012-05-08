@@ -44,6 +44,8 @@
     NSString *_firstRelatedArticleId;
     NSString *_secondRelatedArticleId;
     NSString *_thirdRelatedArticleId;
+    
+    IGNAppDelegate *appDelegate;
 }
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary;
@@ -184,7 +186,7 @@
         
         _didLoadContentForRemoteArticle = NO;
         
-        IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
+        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
         _importer = [[IgnantImporter alloc] init];
         _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;
@@ -234,15 +236,15 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     //add the back-to-start button
-    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat ratio = .5;
-    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
-    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
-    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
-    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = backBarButtonItem;
+//    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
+//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    CGFloat ratio = .5;
+//    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
+//    [backButton setImage:backButtonImage forState:UIControlStateNormal];
+//    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
+//    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
+//    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+//    self.navigationItem.leftBarButtonItem = backBarButtonItem;
     
 }
 
@@ -341,7 +343,7 @@
 
 -(void)handleBack:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)navigateToNextArticle
@@ -1049,9 +1051,9 @@
 
 - (IBAction)showMore:(id)sender {
     
-    IGNMoreOptionsViewController *moreOptionsVC = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil];
+    IGNMoreOptionsViewController *moreOptionsVC = appDelegate.moreOptionsViewController;
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
-    [moreOptionsVC release];
+
 }
 
 

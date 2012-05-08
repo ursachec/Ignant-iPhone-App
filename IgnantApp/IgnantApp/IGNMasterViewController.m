@@ -44,7 +44,7 @@
 
 @interface IGNMasterViewController ()
 {
-    
+    IGNAppDelegate *appDelegate;
 }
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
@@ -98,6 +98,8 @@
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
         
+        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         //create the importer - done in a separate method in case the subclasses have to use it - 
         //!!! there have to be different persistentStoreCoordinators
         [self createImporter];
@@ -119,7 +121,7 @@
 -(void)createImporter
 {
     //use the importer from the appDelegate
-    IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
+            
     _importer = [[IgnantImporter alloc] init];
     _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
     _importer.delegate = self;
@@ -135,11 +137,11 @@
 - (IBAction)showMosaik:(id)sender 
 {
     
-    IGNMosaikViewController *mosaikVC = [[IGNMosaikViewController alloc] initWithNibName:@"IGNMosaikViewController" bundle:nil];
+    IGNMosaikViewController *mosaikVC = appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
-    [mosaikVC release];
+
 
 }
 
@@ -153,11 +155,8 @@
 
 - (IBAction)showTumblr:(id)sender {
     
-    IgnantTumblrFeedViewController *tumblrVC = [[IgnantTumblrFeedViewController alloc] initWithNibName:@"IgnantTumblrFeedViewController" bundle:nil];
+    IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
     [self.navigationController pushViewController:tumblrVC animated:YES];
-    [tumblrVC release];
-    
-
 }
 
 #pragma mark - spinning animation
@@ -192,8 +191,6 @@
         self.navigationItem.titleView = someLabel;
         [someLabel release];
     }
-    
-    
 }
 
 
@@ -669,8 +666,7 @@
     });
 }
 
-- (void)importerDidSave:(NSNotification *)saveNotification {
-    IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];  
+- (void)importerDidSave:(NSNotification *)saveNotification {  
     [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
 

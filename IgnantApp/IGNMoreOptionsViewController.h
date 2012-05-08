@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IGNViewController.h"
 
-@interface IGNMoreOptionsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface IGNMoreOptionsViewController : IGNViewController <UITableViewDelegate, UITableViewDataSource>
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 

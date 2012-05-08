@@ -12,12 +12,19 @@
 
 #import "FBConnect.h"
 
-@class IgnantImporter, IGNMasterViewController;
+@class IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
     NSString *persistentStorePath;
 }
+
+
+@property(nonatomic, readonly, strong) IGNMoreOptionsViewController *moreOptionsViewController;
+@property(nonatomic, readonly, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
+@property(nonatomic, readonly, strong) CategoriesViewController *categoriesViewController;
+@property(nonatomic, readonly, strong) IGNMosaikViewController *mosaikViewController;
+
 
 @property (strong, nonatomic) UIWindow *window;
 

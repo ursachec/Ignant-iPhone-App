@@ -99,14 +99,6 @@
 		FE4B50A8152B95890009406F /* IgnantTumblrFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE4B50A5152B94A20009406F /* IgnantTumblrFeedViewController.xib */; };
 		FE50DA64154B42AB00257B9E /* mosaic_images_more.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE50DA63154B42AB00257B9E /* mosaic_images_more.plist */; };
 		FE62059515386C1300339F12 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE62059415386A6D00339F12 /* EGORefreshTableHeaderView.m */; };
-		FE62059F15386C2200339F12 /* grayArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059715386C2200339F12 /* grayArrow.png */; };
-		FE6205A015386C2200339F12 /* grayArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059815386C2200339F12 /* grayArrow@2x.png */; };
-		FE6205A115386C2200339F12 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059915386C2200339F12 /* blackArrow.png */; };
-		FE6205A215386C2200339F12 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059A15386C2200339F12 /* blackArrow@2x.png */; };
-		FE6205A315386C2200339F12 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059B15386C2200339F12 /* blueArrow.png */; };
-		FE6205A415386C2200339F12 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059C15386C2200339F12 /* blueArrow@2x.png */; };
-		FE6205A515386C2200339F12 /* whiteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059D15386C2200339F12 /* whiteArrow.png */; };
-		FE6205A615386C2200339F12 /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE62059E15386C2200339F12 /* whiteArrow@2x.png */; };
 		FE6205A915386E9100339F12 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6205A815386E9100339F12 /* BlogEntry.m */; };
 		FE68746314EDB1FA00861188 /* MOSAIK.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE68746214EDB1FA00861188 /* MOSAIK.jpg */; };
 		FE6F9D11154D8160005E12C3 /* 3_200x_156.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6F9CEA154D8160005E12C3 /* 3_200x_156.jpg */; };
@@ -363,14 +355,6 @@
 		FE50DA63154B42AB00257B9E /* mosaic_images_more.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mosaic_images_more.plist; sourceTree = "<group>"; };
 		FE62059315386A6D00339F12 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		FE62059415386A6D00339F12 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
-		FE62059715386C2200339F12 /* grayArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayArrow.png; sourceTree = "<group>"; };
-		FE62059815386C2200339F12 /* grayArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grayArrow@2x.png"; sourceTree = "<group>"; };
-		FE62059915386C2200339F12 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
-		FE62059A15386C2200339F12 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
-		FE62059B15386C2200339F12 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrow.png; sourceTree = "<group>"; };
-		FE62059C15386C2200339F12 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueArrow@2x.png"; sourceTree = "<group>"; };
-		FE62059D15386C2200339F12 /* whiteArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteArrow.png; sourceTree = "<group>"; };
-		FE62059E15386C2200339F12 /* whiteArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "whiteArrow@2x.png"; sourceTree = "<group>"; };
 		FE6205A715386E9100339F12 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		FE6205A815386E9100339F12 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		FE68746214EDB1FA00861188 /* MOSAIK.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = MOSAIK.jpg; sourceTree = "<group>"; };
@@ -953,14 +937,6 @@
 		FE62059615386C1A00339F12 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FE62059715386C2200339F12 /* grayArrow.png */,
-				FE62059815386C2200339F12 /* grayArrow@2x.png */,
-				FE62059915386C2200339F12 /* blackArrow.png */,
-				FE62059A15386C2200339F12 /* blackArrow@2x.png */,
-				FE62059B15386C2200339F12 /* blueArrow.png */,
-				FE62059C15386C2200339F12 /* blueArrow@2x.png */,
-				FE62059D15386C2200339F12 /* whiteArrow.png */,
-				FE62059E15386C2200339F12 /* whiteArrow@2x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1382,14 +1358,6 @@
 				FEB3A74F150FBA5000AECCC4 /* RelatedArticleViewController.xib in Resources */,
 				FEC36ADD1528F735004F19C8 /* README.txt in Resources */,
 				FEC36ADE1528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist in Resources */,
-				FE62059F15386C2200339F12 /* grayArrow.png in Resources */,
-				FE6205A015386C2200339F12 /* grayArrow@2x.png in Resources */,
-				FE6205A115386C2200339F12 /* blackArrow.png in Resources */,
-				FE6205A215386C2200339F12 /* blackArrow@2x.png in Resources */,
-				FE6205A315386C2200339F12 /* blueArrow.png in Resources */,
-				FE6205A415386C2200339F12 /* blueArrow@2x.png in Resources */,
-				FE6205A515386C2200339F12 /* whiteArrow.png in Resources */,
-				FE6205A615386C2200339F12 /* whiteArrow@2x.png in Resources */,
 				FED8536315472FB200D10FCE /* mosaic_images.plist in Resources */,
 				FE50DA64154B42AB00257B9E /* mosaic_images_more.plist in Resources */,
 				FE6F9D11154D8160005E12C3 /* 3_200x_156.jpg in Resources */,

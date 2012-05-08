@@ -646,7 +646,7 @@ static const NSUInteger kImportBatchSize = 5;
     
     SBJSON *parser = [[SBJSON alloc] init];
     NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonStringWithSingleArticle error:nil];
-        
+    
     //check if an error has occured
     BOOL errorOccured = [[dictionaryFromJSON objectForKey:kTLError] boolValue];
     if (dictionaryFromJSON==nil || errorOccured) 

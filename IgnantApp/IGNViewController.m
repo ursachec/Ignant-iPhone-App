@@ -60,6 +60,7 @@
     [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
+    [backBarButtonItem release];
 }
 
 

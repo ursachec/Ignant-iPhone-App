@@ -8,19 +8,25 @@
 
 #import "IGNAppDelegate.h"
 
+
+//import relevant view controller
 #import "IGNMasterViewController.h"
-
 #import "IGNDetailViewController.h"
+#import "IGNMoreOptionsViewController.h"
+#import "IgnantTumblrFeedViewController.h"
+#import "CategoriesViewController.h"
+#import "IGNMosaikViewController.h"
 
+//import other needed classes
 #import "IgnantImporter.h"
-
 #import "IgnantLoadingView.h"
-
 #import "Constants.h"
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
+
+
 
 #define kForceReloadCoreData NO
 
@@ -32,6 +38,15 @@
 {
     Facebook *facebook;
 }
+
+
+@property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
+@property(nonatomic, readwrite, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
+@property(nonatomic, readwrite, strong) CategoriesViewController *categoriesViewController;
+@property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
+
+
+
 
 @property (readwrite, strong, nonatomic) IGNMasterViewController *masterViewController;
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
@@ -55,10 +70,16 @@
 @synthesize importer = _importer;
 
 @synthesize masterViewController = _masterViewController;
+@synthesize moreOptionsViewController = _moreOptionsViewController;
+@synthesize tumblrFeedViewController = _tumblrFeedViewController;
+@synthesize categoriesViewController = _categoriesViewController;
+@synthesize mosaikViewController = _mosaikViewController;
 
 @synthesize customLoadingView = _customLoadingView;
 
 @synthesize facebook = _facebook;
+
+
 
 // String used to identify the update object in the user defaults storage.
 static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
@@ -73,6 +94,14 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     [__persistentStoreCoordinator release];
     [_navigationController release];
     [_splitViewController release];
+    
+    
+    //release view controllers
+    [_tumblrFeedViewController release];
+    [_moreOptionsViewController release];
+    [_categoriesViewController release];
+    [_mosaikViewController release];
+    
     [super dealloc];
 }
 
@@ -243,6 +272,43 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
         } 
     }
 }
+
+#pragma mark - reusable view controllers
+
+-(IGNMoreOptionsViewController*)moreOptionsViewController
+{
+    if (_moreOptionsViewController==nil) {
+        _moreOptionsViewController = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil ];
+    }
+    
+    return _moreOptionsViewController;
+}
+
+-(IgnantTumblrFeedViewController*)tumblrFeedViewController
+{
+    if (_tumblrFeedViewController==nil) {
+        _tumblrFeedViewController = [[IgnantTumblrFeedViewController alloc] initWithNibName:@"IgnantTumblrFeedViewController" bundle:nil];
+    }
+    return _tumblrFeedViewController;
+}
+
+-(CategoriesViewController*)categoriesViewController
+{
+    if (_categoriesViewController==nil) {
+        _categoriesViewController = [[CategoriesViewController alloc] initWithNibName:@"CategoriesViewController" bundle:nil];
+    }
+    return _categoriesViewController;
+}
+
+-(IGNMosaikViewController*)mosaikViewController
+{
+    if (_mosaikViewController==nil) {
+        _mosaikViewController = [[IGNMosaikViewController alloc] initWithNibName:@"IGNMosaikViewController" bundle:nil];
+    }
+    return _mosaikViewController;
+}
+
+
 
 #pragma mark - facebook integration
 // Pre 4.2 support
