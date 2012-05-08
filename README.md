@@ -1,3 +1,4 @@
 Ignant-iPhone-App
 =================
-just a test for learning git
+
+iPhone app for the art blog www.ignant.de
