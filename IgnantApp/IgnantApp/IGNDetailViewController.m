@@ -234,11 +234,12 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     //add the back-to-start button
-    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart.png"];
+    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     CGFloat ratio = .5;
     backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
     [backButton setImage:backButtonImage forState:UIControlStateNormal];
+    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
     [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
