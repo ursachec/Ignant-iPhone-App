@@ -48,6 +48,8 @@
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary;
 
+-(void)setupNavigationEntries;
+
 @property (nonatomic, retain) NSString *firstRelatedArticleId;
 @property (nonatomic, retain) NSString *secondRelatedArticleId;
 @property (nonatomic, retain) NSString *thirdRelatedArticleId;
@@ -57,7 +59,6 @@
 
 //properties for navigating through remote articles
 @property (strong, nonatomic) NSArray *relatedArticlesIds;
-
 
 //article UI stugg
 @property (strong, nonatomic) IBOutlet UILabel *dateLabel;
@@ -81,19 +82,21 @@
 @property (retain, nonatomic) IBOutlet UIView *articleContentView;
 @property (retain, nonatomic) IBOutlet UIView *relatedArticlesView;
 
-
 //loading view
 @property (retain, nonatomic) IBOutlet UIView *loadingView;
 
 
+
 -(void)configureView;
 -(void)setupNavigationButtons;
+-(void)setupLoadingView;
 
 - (IBAction)showPictureSlideshow:(id)sender;
 
--(void)setupLoadingView;
-
 -(void)startLoadingSingleArticle;
+
+
+-(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
 
@@ -150,6 +153,9 @@
 @synthesize thirdRelatedArticleCategoryLabel = _thirdRelatedArticleCategoryLabel;
 @synthesize firstRelatedArticleCategoryLabel = _firstRelatedArticleCategoryLabel;
 @synthesize secondRelatedArticleCategoryLabel = _secondRelatedArticleCategoryLabel;
+@synthesize firstRelatedArticleShowDetailsButton = _firstRelatedArticleShowDetailsButton;
+@synthesize secondRelatedArticleShowDetailsButton = _secondRelatedArticleShowDetailsButton;
+@synthesize thirdRelatedArticleShowDetailsButton = _thirdRelatedArticleShowDetailsButton;
 
 @synthesize loadingView = _loadingView;
 
@@ -161,11 +167,14 @@
 @synthesize nextDetailViewController = _nextDetailViewController;
 
 
+@synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self) 
+    {
         
         
         self.firstRelatedArticleId = @"";
@@ -179,7 +188,6 @@
         _importer = [[IgnantImporter alloc] init];
         _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;
-        
         
     }
     return self;
@@ -206,6 +214,9 @@
     [_firstRelatedArticleCategoryLabel release];
     [_secondRelatedArticleCategoryLabel release];
     [_thirdRelatedArticleCategoryLabel release];
+    [_firstRelatedArticleShowDetailsButton release];
+    [_secondRelatedArticleShowDetailsButton release];
+    [_thirdRelatedArticleShowDetailsButton release];
     [super dealloc];
 }
 
@@ -221,9 +232,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
-    
-    CGSize sizeOfButtons = CGSizeMake(35.0f, 35.0f);
     
     //add the back-to-start button
     UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart.png"];
@@ -235,11 +243,16 @@
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
     
+}
+
+-(void)loadNavigationButtons
+{
+    CGSize sizeOfButtons = CGSizeMake(35.0f, 35.0f);
+    
+    
     //add the navigate back-forth buttons
     UIView *backAndForwardNavigationItemView = [[UIView alloc] initWithFrame:CGRectMake(320.0f-70.0f-10.0f-10.0f, 5.0f, 90.0f, 35.0f)];
     backAndForwardNavigationItemView.backgroundColor = [UIColor clearColor];
-    
-    
     
     //add navigate forward button
     self.nextArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -259,7 +272,6 @@
     
     UIBarButtonItem *backAndForwardNavigationItem = [[UIBarButtonItem alloc] initWithCustomView:backAndForwardNavigationItemView];
     self.navigationItem.rightBarButtonItem = backAndForwardNavigationItem;
-    
 }
 
 - (void)viewDidUnload
@@ -283,6 +295,9 @@
     [self setFirstRelatedArticleCategoryLabel:nil];
     [self setSecondRelatedArticleCategoryLabel:nil];
     [self setThirdRelatedArticleCategoryLabel:nil];
+    [self setFirstRelatedArticleShowDetailsButton:nil];
+    [self setSecondRelatedArticleShowDetailsButton:nil];
+    [self setThirdRelatedArticleShowDetailsButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -292,10 +307,17 @@
 {
     [super viewWillAppear:animated];
     
+#warning THIS IS PROBABLY A BAD IDEA, YOU SHOULD HIDE THE TOOLBAR EARLIER
+
+    [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
+
+    
+    //----------------------------------------------------------------------------
     
     if (_isShowingArticleFromLocalDatabase) 
     {
-            [self configureView];
+        [self setupNavigationEntries];
+        [self configureView];
     }
     else if(!_didLoadContentForRemoteArticle)
     {
@@ -323,6 +345,10 @@
 
 -(void)navigateToNextArticle
 {    
+    //if previous blog entry invalid, just return
+    if (_nextBlogEntryIndex==kInvalidBlogEntryIndex)
+        return;
+    
     if (_navigationDetailViewController==nil) {
         self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
     }
@@ -348,12 +374,18 @@
     
     _navigationDetailViewController.blogEntry = self.nextBlogEntry;
     
+    self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
+    
     [self.navigationController pushViewController:_navigationDetailViewController animated:YES];
 }
 
 -(void)navigateToPreviousArticle
 {
-
+    //if previous blog entry invalid, just return
+    if (_previousBlogEntryIndex==kInvalidBlogEntryIndex)
+        return;
+    
+    //navigate to previous article
     if (_navigationDetailViewController==nil) {
         self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
     }
@@ -366,7 +398,7 @@
         self.navigationDetailViewController.previousBlogEntryIndex = _previousBlogEntryIndex-1;
     } 
     else{
-        self.navigationDetailViewController.previousBlogEntryIndex = -1;
+        self.navigationDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
     }
     
     
@@ -375,23 +407,70 @@
         self.navigationDetailViewController.nextBlogEntryIndex = _currentBlogEntryIndex;
     }
     else{
-        self.navigationDetailViewController.nextBlogEntryIndex = -1;
+        self.navigationDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
     }
     
     
     self.navigationDetailViewController.blogEntry = self.previousBlogEntry;
+    self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
     
-    [self.navigationController pushViewController:_navigationDetailViewController animated:YES];
+    //push the view controller from left to right
+    NSMutableArray *vcs =  [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [vcs insertObject:_navigationDetailViewController atIndex:[vcs count]-1];
+    [self.navigationController setViewControllers:vcs animated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)setupNavigationEntries
+{
+
+    //set up view for when the article is not in the local database and has to be loaded
+    if (_isLoadingCurrentArticle) 
+    {
+        self.nextBlogEntry = nil;
+        self.previousBlogEntry = nil;
+        
+        _nextArticleButton.alpha = 0;
+        _previousArticleButton.alpha = 0;
+        
+        return;
+    }
+    
+    //set up view for when article is not saved in the local database
+    else if(!_isShowingArticleFromLocalDatabase)
+    {
+        
+        
+        
+    }
+    
+    //set up view for when article is stored in the local database
+    else 
+    {
+        
+        //set up previousObject
+        NSManagedObject *previousObject = nil;
+        if (_previousBlogEntryIndex!=kInvalidBlogEntryIndex) {
+            previousObject = [_fetchedResults objectAtIndex:_previousBlogEntryIndex];
+        }
+        self.previousBlogEntry = (BlogEntry*)previousObject;
+        
+        //set up nextObject
+        NSManagedObject *nextObject = nil;
+        if (_nextBlogEntryIndex!=kInvalidBlogEntryIndex) {
+            nextObject = [_fetchedResults objectAtIndex:_nextBlogEntryIndex];
+        }
+        self.nextBlogEntry = (BlogEntry*)nextObject;
+        
+    }
+
+}
 
 -(void)setupNavigationButtons
 {
-    
     //set up view for when the article is not in the local database and has to be loaded
-    if (_isLoadingCurrentArticle) {
-        
-        
+    if (_isLoadingCurrentArticle) 
+    {
         self.nextBlogEntry = nil;
         self.previousBlogEntry = nil;
         
@@ -415,14 +494,14 @@
         
         //set up previousObject
         NSManagedObject *previousObject = nil;
-        if (_previousBlogEntryIndex!=-1) {
+        if (_previousBlogEntryIndex!=kInvalidBlogEntryIndex) {
             previousObject = [_fetchedResults objectAtIndex:_previousBlogEntryIndex];
         }
         self.previousBlogEntry = (BlogEntry*)previousObject;
         
         //set up nextObject
         NSManagedObject *nextObject = nil;
-        if (_nextBlogEntryIndex!=-1) {
+        if (_nextBlogEntryIndex!=kInvalidBlogEntryIndex) {
             nextObject = [_fetchedResults objectAtIndex:_nextBlogEntryIndex];
         }
         self.nextBlogEntry = (BlogEntry*)nextObject;
@@ -454,14 +533,8 @@
             _nextArticleButton.userInteractionEnabled = YES;
             _nextArticleButton.alpha = alphaForActiveButtons;
         }
-        
     }
-
 }
-
-
-
-
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
@@ -523,11 +596,12 @@
     
     //add the imageViewSize to the finalSizeForArticleContentView
     finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
-    NSLog(@"(imageView) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));    
+//    NSLog(@"(imageView) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));    
     
     //set up the button for showing pictures
-    NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos",_remoteImagesArray.count];
+    NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos »",_remoteImagesArray.count];
     [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
+    
     
     //set up the title, date and category labels
     _titleLabel.text = [_blogEntry.title uppercaseString];
@@ -541,22 +615,17 @@
     
 #warning LOAD category by using live data!
     
-    
     NSString *category = _blogEntry.categoryName;
-    
     NSString *categoryName = @"∙ "; //special characters: ∙ , ●
-    
     categoryName = [categoryName stringByAppendingString:category];
     
     _categoryLabel.text = categoryName;
     _categoryLabel.frame = CGRectMake(tempRect.origin.x+tempRect.size.width, tempRect.origin.y, 100, tempRect.size.height);
     
-    
     //add the title, date and category labels size to the finalSizeForArticleContentView
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-    
+//    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     //set up the description textview
     //set up the user interface for the current objects    
@@ -571,8 +640,7 @@
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
     
-    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-    
+//    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     //set the frame of the article content view
     tempRect = _articleContentView.frame;
@@ -582,29 +650,16 @@
     [self.contentScrollView addSubview:self.articleContentView];
     
     
-    
-    
-    
-    
     //#############################################################################################
     //------------------------------------------------
     //---------------- RELATED ARTICLES --------------
     //------------------------------------------------
     
-    
     NSArray *remoteContentRelatedArticles = _blogEntry.relatedArticles;
-    
-
     
     if (remoteContentRelatedArticles == nil || [remoteContentRelatedArticles count]!=3) {
         return;
     }
-    
- 
-    
-   
-    
-    
     
     NSDictionary* firstRelatedArticle = [remoteContentRelatedArticles objectAtIndex:0];
     NSDictionary* secondRelatedArticle = [remoteContentRelatedArticles objectAtIndex:1];
@@ -619,9 +674,7 @@
         UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
         self.firstRelatedArticleImageView.image = someImage;   
         
-      
         self.firstRelatedArticleId = (NSString*)[firstRelatedArticle objectForKey:kFKArticleId];
-        
     }
     
     //set up second related article
@@ -633,9 +686,7 @@
         UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
         self.secondRelatedArticleImageView.image = someImage;
         
-        
-        self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];
-        
+        self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];   
     }
     
     //set up third related article
@@ -649,8 +700,6 @@
         
         self.thirdRelatedArticleId = (NSString*)[thirdRelatedArticle objectForKey:kFKArticleId];
     }
-    
-    
     
     
     //    //set up current frame for the article content view
@@ -682,13 +731,8 @@
 - (void)configureView
 {
     
-    
 #define PADDING_BOTTOM 20.0f
     [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
-    
-    
-    //set up the navigation buttons
-    [self setupNavigationButtons];
     
     
     //if article still needs to be loaded, show loading view
@@ -710,12 +754,9 @@
         //set up the remote pictures array
         self.remoteImagesArray = self.blogEntry.remoteImages;
         
-    
         //article already loaded,
         //set up the article content view
         [self setupArticleContentView];
-        
-        
     }
     
     //set up the related articles view and add it to the contentScrollView
@@ -727,40 +768,6 @@
     //set up the scrollView's final contentSize
     CGSize contentScrollViewFinalSize = CGSizeMake(320, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + PADDING_BOTTOM);
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-   
-    
-    
-    
-    
-    
-    
-    //---------------------------------------------------------------------
-    
-    //    //get the images for the blogEntry
-    //    NSManagedObjectContext *context = _managedObjectContext;
-    //    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    //    NSEntityDescription* imageEntity = [[NSEntityDescription entityForName:@"Image" inManagedObjectContext:_managedObjectContext] retain];
-    //    [request setEntity:imageEntity];
-    //    [request setIncludesSubentities:YES];
-    //    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-    //                              @"entry == %@", blogEntry];
-    //    [request setPredicate:predicate];
-    //    NSError *error;
-    //    NSArray *imagesToBeLoadedObjects = [context executeFetchRequest:request error:&error];
-    //    [request release];
-    //    
-    //    
-    //    //save the urls of the images in a mutableArray
-    //    NSMutableArray *urlsForImagesToBeLoaded = [[NSMutableArray alloc] initWithCapacity:imagesToBeLoadedObjects.count];
-    //    for (Image *i in imagesToBeLoadedObjects) {
-    //        [urlsForImagesToBeLoaded addObject:i.url];
-    //    }
-    
-    //    NSLog(@"imagesToBeLoadedObjects count: %d , blogEntryTitle: %@", [imagesToBeLoadedObjects count], blogEntry.title);
-    
-    //    [self setUpScrollViewWithImages:urlsForImagesToBeLoaded];
-        
     
 }
 
@@ -843,7 +850,7 @@
     //add the title, date and category labels size to the finalSizeForArticleContentView
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+//    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     
     //set up the description textview
@@ -859,7 +866,7 @@
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
     
-    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+//    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     
     //set the frame of the article content view
@@ -933,7 +940,8 @@
 
 #pragma mark - picture slideshow
 
-- (IBAction)showPictureSlideshow:(id)sender {
+- (IBAction)showPictureSlideshow:(id)sender 
+{
     
     ImageSlideshowViewController *slideshowVC = [[ImageSlideshowViewController alloc] initWithNibName:@"ImageSlideshowViewController" bundle:nil];
     
@@ -946,51 +954,79 @@
     [slideshowVC release];
 
 }
-- (IBAction)tapAction:(id)sender {
+- (IBAction)tapAction:(id)sender 
+{
+    if (self.navigationController.navigationBar.isHidden) 
+    {
+        [self setNavigationBarAndToolbarHidden:NO animated:YES];
+    }
+    else
+    {
+        [self setNavigationBarAndToolbarHidden:YES animated:YES];
+    }
+}
+
+-(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated
+{
     
 #define IGNANT_TOOLBAR_HEIGHT 50.0f
 #define ANIMATION_DURATION 0.2f
     
-    if (self.navigationController.navigationBar.isHidden) {
+    LOG_CURRENT_FUNCTION()
+    
+    
+#warning THIS DOES NOT SEEM TO WORK PROPERLY, REWRITE / FIX
+    //hide/show the navigation bar
+    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    
+//    //hide/show the toolbar
+    CGFloat totalHeight = (self.shareAndMoreToolbar.frame.origin.y+self.shareAndMoreToolbar.frame.size.height+20+44);
+    BOOL isCurrentlyHidden = !(totalHeight<=480.0f);
+    
+    NSLog(@"isCurrentlyHidden: %@    hidden: %@  totalHeight: %f _shareAndMoreToolbar.frame: %@", isCurrentlyHidden ? @"TRUE" : @"FALSE", hidden ? @"TRUE" : @"FALSE", totalHeight, NSStringFromCGRect(self.shareAndMoreToolbar.frame));
+    
+    //don't change anything if state hasn't change
+    if (hidden==isCurrentlyHidden)
+    return;
+    
+    
+    self.isNavigationBarAndToolbarHidden = hidden;
+    
+    
+    __block UIView* blockReadyShareAndMoreToolBar = _shareAndMoreToolbar;
+    __block UIScrollView* blockReadyContentScrollView = _contentScrollView;
+    
+    int hiddenMultiplicator = hidden ? 1 : -1;
+    void (^toolbarblock)(void);
+    toolbarblock = ^{
         
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        //move the toolbar out of the screen
+        CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
+        blockReadyShareAndMoreToolBar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y+IGNANT_TOOLBAR_HEIGHT*2*hiddenMultiplicator, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
         
-        [UIView animateWithDuration:ANIMATION_DURATION 
-                         animations:^{
-                             
-                             //move the toolbar out of the screen
-                             CGRect currentShareAndMoreToolbarFrame = _shareAndMoreToolbar.frame; 
-                             _shareAndMoreToolbar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y-IGNANT_TOOLBAR_HEIGHT*2, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
-                             
-                             //resize the scroll view
-                             CGRect currentScrollViewFrame = _contentScrollView.frame;
-                             _contentScrollView.frame = CGRectMake(0, 0, currentScrollViewFrame.size.width, currentScrollViewFrame.size.height-IGNANT_TOOLBAR_HEIGHT);
-                            } 
-                         completion:^(BOOL finished){
-                             NSLog(@"animation completed");
-                         }];
+        //resize the scroll view
+        CGRect currentScrollViewFrame = blockReadyContentScrollView.frame;
+        blockReadyContentScrollView.frame = CGRectMake(0, 0, currentScrollViewFrame.size.width, currentScrollViewFrame.size.height+IGNANT_TOOLBAR_HEIGHT*hiddenMultiplicator);
+    };
+    
+    
+    NSLog(@"blockReadyShareAndMoreToolBar.frame: %@   // self.shareAndMoreToolbar.frame: %@", NSStringFromCGRect(blockReadyShareAndMoreToolBar.frame), NSStringFromCGRect(_shareAndMoreToolbar.frame));
+    
+    //execute show/hide
+    if (!animated) 
+    {
+        toolbarblock();
     }
-    else{
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-        
-        
-        [UIView animateWithDuration:ANIMATION_DURATION
-                         animations:^{
-                             
-                             //move the toolbar out of the screen
-                             CGRect currentShareAndMoreToolbarFrame = _shareAndMoreToolbar.frame; 
-                             _shareAndMoreToolbar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y+2*IGNANT_TOOLBAR_HEIGHT, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
-                             
-                             //resize the scroll view
-                             CGRect currentScrollViewFrame = _contentScrollView.frame;
-                             _contentScrollView.frame = CGRectMake(0, 0, currentScrollViewFrame.size.width, currentScrollViewFrame.size.height+IGNANT_TOOLBAR_HEIGHT);
-                             
-                         } 
+    else 
+    {
+        [UIView animateWithDuration:ANIMATION_DURATION 
+                         animations:toolbarblock
                          completion:^(BOOL finished){
-                             NSLog(@"animation completed");
+                             
                          }];
     }
 }
+
 
 #pragma mark - UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -1074,6 +1110,7 @@
 //    
     //set the managedObjectContext and push the view controller
     self.nextDetailViewController.managedObjectContext = self.managedObjectContext;
+    self.nextDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
     [self.navigationController pushViewController:self.nextDetailViewController animated:YES];
 }
 
@@ -1158,16 +1195,11 @@
         self.thirdRelatedArticleId = (NSString*)[thirdRelatedArticle objectForKey:kFKArticleId];
     }
    
-    
-    
     [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
-    
     
     [self configureView];
     
-    
     [self.loadingView removeFromSuperview];
-    
 }
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
@@ -1179,8 +1211,52 @@
     
 }
 
+#pragma mark - UIGestureRecognizer delegate methods
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer 
+       shouldReceiveTouch:(UITouch *)touch
+{
+    
+    //check if touch on show fotos button
+    if (self.showPictureSlideshowButton.superview !=nil ) {
+        if ([touch.view isDescendantOfView:self.showPictureSlideshowButton]) {
+            return NO;
+        }
+    }
+    
+    //check if touch on show related articles button
+    if (self.firstRelatedArticleShowDetailsButton.superview !=nil
+        || self.secondRelatedArticleShowDetailsButton.superview !=nil
+        || self.thirdRelatedArticleShowDetailsButton.superview !=nil) {
+        
+        if ([touch.view isDescendantOfView:self.firstRelatedArticleShowDetailsButton]
+            || [touch.view isDescendantOfView:self.secondRelatedArticleShowDetailsButton]
+            || [touch.view isDescendantOfView:self.thirdRelatedArticleShowDetailsButton]) {
+            return NO;
+        }
+    }
+    
+    
+    return YES;
+}
+
+#pragma mark - swipe UIGestureRecognizer
 
 
 
+- (IBAction)handleRightSwipe:(id)sender 
+{
+    
+    LOG_CURRENT_FUNCTION()
+    
+    [self navigateToNextArticle];
+}
+
+
+- (IBAction)handleLeftSwipe:(id)sender 
+{
+    LOG_CURRENT_FUNCTION()
+    
+    [self navigateToPreviousArticle];
+}
 
 @end

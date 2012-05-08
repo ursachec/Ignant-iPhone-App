@@ -27,51 +27,35 @@
 #import "HJMOFileCache.h"
 #import "HJObjManager.h"
 
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
 
 #import "IgnantLoadingView.h"
-
-#import <QuartzCore/QuartzCore.h>
-
-#import "Constants.h"
 
 #import "IGNAppDelegate.h"
 
 
 #import "IgnantImporter.h"
 
+//imports for ASIHTTPRequest
+#import "ASIHTTPRequest.h"
+#import "NSURL+stringforurl.h"
+
+#import "Constants.h"
 
 
 @interface IGNMasterViewController ()
 {
     
-    EGORefreshTableHeaderView *_refreshHeaderView;
-	BOOL _reloading;
-    
-    
-    CGFloat _rotatingAngle;
-    BOOL _animate;
-    
-    BOOL _showLoadMorePosts;
-    
-    BOOL _loadingMorePosts;
-    
-    
-    BOOL _tempNumberOfTimesLoadedMorePosts;
-    
 }
+
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 -(void)startGettingMorePosts;
 
-@property (nonatomic, strong) HJObjManager *hjObjectManager;
+@property (nonatomic, retain) HJObjManager *hjObjectManager;
 @property (nonatomic, retain) UIView *spinningLoadingView;
 @property (nonatomic, retain) UIImageView *spinningImageView;
 
-@property (nonatomic, retain) IgnantImporter *importer;
+@property (nonatomic, retain, readwrite) IgnantImporter *importer;
 
 @property (assign, readwrite) BOOL isHomeCategory;
 
@@ -84,18 +68,19 @@
 
 @implementation IGNMasterViewController
 
-@synthesize blogEntriesTableView = _blogEntriesTableView;
-@synthesize detailViewController = _detailViewController;
+@synthesize isHomeCategory = _isHomeCategory;
+
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize hjObjectManager = _hjObjectManager;
+
+@synthesize blogEntriesTableView = _blogEntriesTableView;
+@synthesize detailViewController = _detailViewController;
 
 @synthesize spinningLoadingView = _spinningLoadingView;
 @synthesize spinningImageView = _spinningImageView;
 
 @synthesize importer = _importer;
-
-@synthesize isHomeCategory = _isHomeCategory;
 
 @synthesize currentCategory = _currentCategory;
 
@@ -107,32 +92,19 @@
     if (self) {
         
         _showLoadMorePosts = YES;
-        _loadingMorePosts = NO;
-        
+        _isLoadingMorePosts = NO;
         
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
         
-#warning just temp, delete afterwards
-        _tempNumberOfTimesLoadedMorePosts = 0;
-        
-        
-        //use the importer from the appDelegate
-        
-        IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
-        _importer = [[IgnantImporter alloc] init];
-        _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
-        _importer.delegate = self;
-        
-        
-        
-        
+        //create the importer - done in a separate method in case the subclasses have to use it - 
+        //!!! there have to be different persistentStoreCoordinators
+        [self createImporter];
         
     }
     
     return self;
-    
 }
 							
 - (void)dealloc
@@ -144,6 +116,15 @@
     [super dealloc];
 }
 
+-(void)createImporter
+{
+    //use the importer from the appDelegate
+    IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
+    _importer = [[IgnantImporter alloc] init];
+    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
+    _importer.delegate = self;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -151,16 +132,19 @@
 }
 
 #pragma mark - show mosaik / more
-- (IBAction)showMosaik:(id)sender {
+- (IBAction)showMosaik:(id)sender 
+{
     
     IGNMosaikViewController *mosaikVC = [[IGNMosaikViewController alloc] initWithNibName:@"IGNMosaikViewController" bundle:nil];
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    mosaikVC.parentNavigationController = self.navigationController;
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
     [mosaikVC release];
 
 }
 
-- (IBAction)showMore:(id)sender {
+- (IBAction)showMore:(id)sender 
+{
         
     IGNMoreOptionsViewController *moreOptionsVC = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil];
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
@@ -217,7 +201,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
 		
@@ -297,7 +281,7 @@
     }
     else
     {
-        return 107.0f;
+        return 109.0f;
     }
 }
 
@@ -324,7 +308,7 @@
     static NSString *CellIdentifierLoading = @"LoadingCell";
     
     
-    if ( [self isIndexPathLastRow:indexPath] && !_loadingMorePosts  ) 
+    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMorePosts  ) 
     {
         
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
@@ -337,7 +321,7 @@
         return cell;
         
     }
-    else if([self isIndexPathLastRow:indexPath] && _loadingMorePosts)
+    else if([self isIndexPathLastRow:indexPath] && _isLoadingMorePosts)
     {
     
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
@@ -375,93 +359,24 @@
     return nil;
 }
 
-
-
-
-////////////////////////////////////////////////////////////
-//managing cells with asynchronous images
-
-//
-//// Customize the appearance of table view cells.
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    static NSString *CellIdentifier = @"Cell";
-//    
-//    HJManagedImageV* mi;
-//    IgnantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    if (cell == nil) {
-//        cell = [[[IgnantCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-//        
-//        //Create a managed image view and add it to the cell (layout is very naieve)
-//        
-//
-//        CGFloat ratio = 375.0f/245.0f;
-//        CGFloat width = 147.0f;
-//        
-//		mi = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5.0f,0.0f,width,width/ratio)] autorelease];
-//        mi.tag = 999;
-//		[cell addSubview:mi];
-//        
-//        cell.managedImage = mi;
-//        
-//    } else {
-//		//Get a reference to the managed image view that was already in the recycled cell, and clear it
-//		mi = (HJManagedImageV*)[cell viewWithTag:999];
-//		[mi clear];
-//	}
-//    
-//    
-//    BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-//    
-//    
-//    //set the URL that we want the managed image view to load
-////	mi.url = [NSURL URLWithString:[FlickrSearchRes image75pxUrl:searchRes]];
-//
-//#ifdef DEBUG
-//#warning REMOVE THIS BEFORE RELEASE
-//    NSArray *tempImageArray = [[NSArray alloc] initWithObjects:@"http://www.ignant.de/wp-content/uploads/2012/01/Of-Ar_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Agnespre2.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/toledano_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/sang-pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/more-light_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/allandale_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/nova_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Guy_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/hake_hol_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/Julien-Legrand_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/temp_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/gravinese_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/haus_w_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/jooney_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2012/01/timmelsjoch_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/prepre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/soustitre_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/major_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/lis_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/12/landscape_pre.jpg",@"http://www.ignant.de/wp-content/uploads/2011/03/dmig.jpg",@"http://www.ignant.de/wp-content/uploads/2011/03/arcedemi.jpg",@"http://www.ignant.de/wp-content/uploads/2011/08/SHOP-klein.jpg", nil];
-//
-//    mi.url = [NSURL URLWithString:[tempImageArray objectAtIndex:indexPath.row]];
-//#else
-//    mi.url = [NSURL URLWithString:blogEntry.thumbImageFilename];
-//#endif
-//    
-//    
-//    
-//	//tell the object manager to manage the managed image view, 
-//	//this causes the cached image to display, or the image to be loaded, cached, and displayed
-//	[_hjObjectManager manage:mi];
-//    
-//
-//    [self configureCell:cell atIndexPath:indexPath];
-//    return cell;
-//}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
     if ([self isIndexPathLastRow:indexPath]) 
     {
-        
-        if (!_loadingMorePosts) 
+        if (!_isLoadingMorePosts) 
         {
-            
-            [self startGettingMorePosts];
-            
-            _loadingMorePosts = YES;
+            [self startGettingMorePosts];       
             
 #warning TODO: check performance, maybe us something better to let the tableview know that the cell has changed
             [_blogEntriesTableView reloadData];
-            
         }
         else
         {
             NSLog(@"trying to load more posts, will not trigger again");
         }
-         
     }
     else
     {
-        
         if (!self.detailViewController) {
             self.detailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
         }
@@ -480,7 +395,7 @@
             self.detailViewController.previousBlogEntryIndex = indexPath.row-1;
         } 
         else{
-            self.detailViewController.previousBlogEntryIndex = -1;
+            self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         if(indexPath.row+1<fetchedResultsArray.count)
@@ -488,11 +403,12 @@
             self.detailViewController.nextBlogEntryIndex = indexPath.row+1;
         }
         else{
-            self.detailViewController.nextBlogEntryIndex = -1;
+            self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         //set the managedObjectContext and push the view controller
         self.detailViewController.managedObjectContext = self.managedObjectContext;
+        self.detailViewController.isNavigationBarAndToolbarHidden = NO;
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     }
 }
@@ -522,15 +438,11 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    
     //set the appropriate category if NOT home category
-    
     if (!self.isHomeCategory)
     {
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"categoryId == %@", [self.currentCategory categoryId]]];
     }
-    
-    
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
@@ -552,8 +464,6 @@
     
     return __fetchedResultsController;
 }    
-
-
 
 - (void)fetch 
 {
@@ -631,6 +541,8 @@
     
     
     cell.categoryName = blogEntry.categoryName;
+    
+    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
         
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
@@ -669,26 +581,27 @@
 #pragma mark - getting content from the server
 -(void)startGettingMorePosts
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _isLoadingMorePosts = YES;
+        [self.blogEntriesTableView reloadData];
+        
+    });
+        
     NSDate* lastImportDateForMainPageArticle = (NSDate*) [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultsLastImportDateForMainPageArticle];
     
     NSLog(@"lastImportDateForMainPageArticle: %@", lastImportDateForMainPageArticle);
-    
     NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[lastImportDateForMainPageArticle timeIntervalSince1970]];
-    
-    // Test default delegate methods
     
     //set the relevant categoryId
     NSString *categoryId = @"";
-    
     if (self.isHomeCategory) 
     {
-        categoryId = @"-1";
+        categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
     }
     else 
     {
         categoryId = [self.currentCategory categoryId];
     }
-    
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMorePosts,kParameterAction,categoryId,kCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
@@ -696,10 +609,9 @@
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+    [request setDelegate:self];
+    [request startAsynchronous];
 }
 
 - (void)requestStarted:(ASIHTTPRequest *)request
@@ -712,18 +624,27 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    
+    LOG_CURRENT_FUNCTION()
+    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     _showLoadMorePosts = YES;
-    _loadingMorePosts = NO;
+    _isLoadingMorePosts = NO;
     
-    [self.importer importJSONStringWithMorePosts:[request responseString]];
+    dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+    dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONStringWithMorePosts:[request responseString]];
+    });
+
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     NSLog(@"requestFailed");
+    
+#warning TODO: do something if the request has failed
 }
 
 
@@ -742,10 +663,10 @@
 
 -(void)didFinishImportingRSSData
 {
-//    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self fetch];
         [self.blogEntriesTableView reloadData];
-//    });
+    });
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {
@@ -769,7 +690,6 @@
 	//  model should call this when its done loading
 	_reloading = NO;
 	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
-	
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -799,13 +719,27 @@
 	
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     
+    //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance) 
+    {
+        if (!_isLoadingMorePosts) 
+        {
+            [self startGettingMorePosts];
+        }
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-	
 }
-
 
 @end

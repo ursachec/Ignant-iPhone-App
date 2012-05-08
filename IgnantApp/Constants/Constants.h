@@ -7,7 +7,16 @@
 //
 
 
+//some preprocessor commans
+#define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
 
+
+//################################################################################
+//categories
+extern int const kCategoryIndexForHome;
+extern int const kCategoryIndexForMostRed;
+
+//################################################################################
 //other constants
 
 extern int const kInvalidBlogEntryIndex;
@@ -17,6 +26,8 @@ extern int const kFirstRelatedArticleTag;
 extern int const kSecondRelatedArticleTag;
 extern int const kThirdRelatedArticleTag;
 
+
+//################################################################################
 
 
 //server adresses
@@ -31,6 +42,7 @@ extern NSString * const kAPICommandGetDataForFirstRun;
 extern NSString * const kAPICommandGetMorePosts;
 extern NSString * const kAPICommandGetArticlesForCategory;
 extern NSString * const kAPICommandGetSingleArticle;
+extern NSString * const kAPICommandGetSetOfMosaicImages;
 
 
 //getting content
@@ -51,6 +63,8 @@ extern NSString * const kTLErrorMessage;
 extern NSString * const kTLMetaInformation;
 extern NSString * const kTLResponseStatus;
 extern NSString * const kTLCategoriesList;
+extern NSString * const kTLMosaicImages;
+
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
 
@@ -95,3 +109,8 @@ extern NSString * const kFKImageId;
 extern NSString * const kFKImageDescription;
 extern NSString * const kFKImageBase64Representation;
 extern NSString * const kFKImageURL;
+
+extern NSString * const kFKImageWidth;
+extern NSString * const kFKImageHeight;
+extern NSString * const kFKImageReferenceArticleId;
+

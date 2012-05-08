@@ -8,23 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class MosaicView;
+
+@protocol MosaicViewDelegate <NSObject>
+
+-(void)triggerActionForTapInView:(MosaicView*)view;
+
+@end
+
 @interface MosaicView : UIView
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//this is on the master branch
-
+@property(nonatomic, assign) id<MosaicViewDelegate> delegate;
+@property(nonatomic, copy) NSString* articleId;
+@property(nonatomic, copy) NSString* articleTitle;
 
 
 @end

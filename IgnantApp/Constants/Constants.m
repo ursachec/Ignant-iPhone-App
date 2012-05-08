@@ -8,21 +8,32 @@
 
 #import "Constants.h"
 
-int const kInvalidBlogEntryIndex = -100;
+//WARNING! (because of slappy programming) don't change the index to be other than -1, app crashes when navigating in the detailviewcontroller to the last index
+int const kInvalidBlogEntryIndex = -1;
 
 int const kFirstRelatedArticleTag = 501;
 int const kSecondRelatedArticleTag = 502;
 int const kThirdRelatedArticleTag = 503;
 
 //################################################################################
+//categories
+int const kCategoryIndexForHome = -1;
+int const kCategoryIndexForMostRed = -500;
+
+
+
+//################################################################################
 
 //server stuff
+#define shouldUseRemoteServer FALSE
+
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
 NSString * const kAdressForContentServer = @"http://localhost/ignant/ignant.php";
-#else
-//NSString * const kAdressForContentServer = @"http://localhost/ignant/ignant.php";
+#elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
+#else
+NSString * const kAdressForContentServer = @"http://192.168.44.217/ignant/ignant.php";
 #endif
 
 
@@ -35,6 +46,9 @@ NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";
 NSString * const kAPICommandGetMorePosts = @"getMorePosts";
 NSString * const kAPICommandGetArticlesForCategory = @"getArticlesForCategory";
 NSString * const kAPICommandGetSingleArticle = @"getSingleArticle";
+NSString * const kAPICommandGetSetOfMosaicImages = @"getSetOfMosaicImages";
+
+
 
 NSString * const kCategoryId = @"categoryId";
 NSString * const kNumberOfResultsToBeReturned = @"numberOfResultsToReturn";
@@ -56,6 +70,9 @@ NSString * const kTLErrorMessage = @"error_message";
 NSString * const kTLMetaInformation = @"meta_information";
 NSString * const kTLResponseStatus = @"response_status";
 NSString * const kTLCategoriesList = @"categories";
+NSString * const kTLMosaicImages = @"mosaicImages";
+
+
 
 //METAINFORMATION
 NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";
@@ -109,3 +126,8 @@ NSString * const kFKImageId = @"id";
 NSString * const kFKImageDescription = @"description";
 NSString * const kFKImageBase64Representation = @"base64Representation";
 NSString * const kFKImageURL = @"url";
+
+NSString * const kFKImageWidth = @"width";
+NSString * const kFKImageHeight = @"height";
+NSString * const kFKImageReferenceArticleId = @"refArticleId";
+

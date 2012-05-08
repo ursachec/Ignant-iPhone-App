@@ -10,6 +10,9 @@
 #import "HJObjManager.h"
 #import "HJManagedImageV.h"
 
+
+#warning TODO: implement real data from tumblr
+
 @interface IgnantTumblrFeedViewController ()
 {
 
@@ -70,19 +73,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    
-    
-//    HJManagedImageV *asyncImage = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5,5,300,300)] autorelease];
-//    asyncImage.url = [NSURL URLWithString:@"http://29.media.tumblr.com/tumblr_m1w8emWNTe1qztdbbo1_400.png"];
-//    [self.imageManager manage:asyncImage];
-//    
-//    
-//    [self.view addSubview:asyncImage];
-    
-    
-    
-    
 }
 
 - (void)viewDidUnload
@@ -134,8 +124,6 @@
         [currentImage setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.3]];
         currentImage.tag = 999;
         currentImage.url = urlAtCurrentIndex;
-        [currentImage.loadingWheel setColor:[UIColor whiteColor]];
-        [currentImage showLoadingWheel];
         [self.imageManager manage:currentImage];
         
         
@@ -149,7 +137,6 @@
     
     currentImage.url = urlAtCurrentIndex;
     [currentImage.loadingWheel setColor:[UIColor whiteColor]];
-    [currentImage showLoadingWheel];
     [self.imageManager manage:currentImage];
 
     return cell;

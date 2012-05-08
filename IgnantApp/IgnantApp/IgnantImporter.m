@@ -350,10 +350,12 @@ static const NSUInteger kImportBatchSize = 5;
     
     SBJSON *parser = [[SBJSON alloc] init];
     
-    NSString *filePath = TEST_JSON_DUMP;
-    NSData *response = [NSData dataWithContentsOfFile:filePath];
+#warning TODO: add this code to some unit testing or remove it from the class
+//    NSString *filePath = TEST_JSON_DUMP;
+//    NSData *response = [NSData dataWithContentsOfFile:filePath];
     
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    
+    NSString *json_string = [jsonString copy];
     NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
 
     NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];
@@ -428,6 +430,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle
 {
+    LOG_CURRENT_FUNCTION()
     
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
@@ -439,9 +442,26 @@ static const NSUInteger kImportBatchSize = 5;
 
     id unconvertedBlogEntryCategoryId = [oneArticle objectForKey:kFKArticleCategoryId];
     id unconvertedBlogEntryArticleId = [oneArticle objectForKey:kFKArticleId]; 
+    id unconvertedBlogEntryNumberOfViews = [oneArticle objectForKey:kFKArticleNumberOfViews]; 
     
     NSString *blogEntryCategoryId = [unconvertedBlogEntryCategoryId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryCategoryId stringValue] : unconvertedBlogEntryCategoryId;
     NSString *blogEntryArticleId = [unconvertedBlogEntryArticleId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryArticleId stringValue] : unconvertedBlogEntryArticleId;
+    
+    NSNumber * blogEntryNumberOfViews = nil;
+    
+    if ([unconvertedBlogEntryNumberOfViews isKindOfClass:[NSString class]]) 
+    {
+        NSNumberFormatter * numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+        blogEntryNumberOfViews = [numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
+        [numberFormatter release];
+    }
+    else
+    {
+        blogEntryNumberOfViews = unconvertedBlogEntryNumberOfViews;
+    }
+    
+    
     
 #warning fix date to take GMT into consideration
     //2012-03-02T00:00:00+00:00
@@ -459,6 +479,7 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.categoryName = blogEntryCategoryName;
     self.currentBlogEntry.categoryId = blogEntryCategoryId;
     self.currentBlogEntry.relatedArticles = blogEntryRelatedArticles;
+    self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
         
     
     //add the article to the specific category

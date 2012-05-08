@@ -8,10 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface IGNMosaikViewController : UIViewController
+extern NSString * const kImagesKey;
+
+extern NSString * const kImageWidth;
+extern NSString * const kImageHeight;
+extern NSString * const kImageUrl;
+extern NSString * const kImageArticleId;
+extern NSString * const kImageFilename;
+
+#import "MosaicView.h"
+
+@interface IGNMosaikViewController : UIViewController <MosaicViewDelegate>
 
 -(IBAction)handleBack:(id)sender;
 
+@property (retain, nonatomic) IBOutlet UIView *bigMosaikView;
+@property (retain, nonatomic) IBOutlet UIScrollView *mosaikScrollView;
+@property (retain, nonatomic) IBOutlet UIButton *closeMosaikButton;
+
+@property (nonatomic, assign) UINavigationController* parentNavigationController;
 
 @end
 

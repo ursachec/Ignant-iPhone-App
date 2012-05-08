@@ -109,13 +109,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     int numberOfObjects = [sectionInfo numberOfObjects];
-    
-    
-    NSLog(@"numberOfObjects: %d", numberOfObjects);
-    
     
     return numberOfObjects;
 }
@@ -130,15 +125,9 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     } 
     
-    
-    
-    UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    cell.selectedBackgroundView = customBackgroundView;
-    //    [customBackgroundView release];
-    
-    
+    //configure the cell
     [self configureCell:cell atIndexPath:indexPath];
+    
     return cell;
 }
 
@@ -156,6 +145,12 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+    //add a custom background view
+    UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+    customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+    cell.selectedBackgroundView = customBackgroundView;
+    [customBackgroundView release];
+    
     Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = category.name;
     cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:15];

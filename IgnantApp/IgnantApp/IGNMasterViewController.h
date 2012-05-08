@@ -18,24 +18,42 @@
 
 #import <CoreData/CoreData.h>
 
+
+
 @interface IGNMasterViewController : IGNViewController <NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, IgnantImporterDelegate, EGORefreshTableHeaderDelegate>
+{
+    
+    @protected
+    
+    EGORefreshTableHeaderView *_refreshHeaderView;
+	BOOL _reloading;
+    
+    BOOL _showLoadMorePosts;
+    BOOL _isLoadingMorePosts;
+
+}
+@property (nonatomic, retain, readonly) IgnantImporter *importer;
+
 @property (retain, nonatomic) IBOutlet UITableView *blogEntriesTableView;
 
-@property (strong, nonatomic) IGNDetailViewController *detailViewController;
+@property (retain, nonatomic) IGNDetailViewController *detailViewController;
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (retain, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (retain, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (assign, readonly) BOOL isHomeCategory;
+
 @property (retain, nonatomic, readonly) Category* currentCategory;
-
-
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category;
 
+
+
 - (IBAction)showTumblr:(id)sender;
 
 -(void)fetch;
+
+-(void)createImporter;
 
 @end
