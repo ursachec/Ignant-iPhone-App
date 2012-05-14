@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>ignant.php</string>
+	<string>feedKeys.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,21 +26,19 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-03-22T20:46:01Z</date>
+			<date>2012-05-14T20:58:15Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-03-22T20:46:01Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-05-14T20:58:56Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-03-22T20:45:26Z</date>
+			<date>2012-05-14T20:58:24Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -58,7 +56,9 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-03-22T20:45:46Z</date>
+			<date>2012-05-14T20:58:56Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -86,7 +86,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>21</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>239</integer>
@@ -227,48 +227,62 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>feedKeys.php</key>
+		<key>classes/Template.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>35</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>30</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>ignant.php</key>
+		<key>feedKeys.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>4</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>26</integer>
+		</dict>
+		<key>ignant.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>43</integer>
+				<key>line</key>
+				<integer>59</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>2</integer>
+			<integer>16</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>60</integer>
+				<integer>9</integer>
 				<key>line</key>
-				<integer>12</integer>
+				<integer>59</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>43</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>59</integer>
 			</dict>
 		</dict>
 		<key>index.php</key>
@@ -276,9 +290,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>21</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>65</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -294,60 +308,42 @@
 				<key>line</key>
 				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>99</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
 		</dict>
 		<key>unittests.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>486</integer>
+				<integer>147</integer>
 				<key>line</key>
 				<integer>449</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>477</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>index.php</string>
 		<string>unittests.php</string>
-		<string>script_to_get_images.sh</string>
 		<string>classes/RemoteImage.php</string>
 		<string>classes/LightArticle.php</string>
 		<string>classes/Category.php</string>
 		<string>classes/Base64Image.php</string>
 		<string>classes/RelatedArticle.php</string>
 		<string>ignant.php</string>
+		<string>classes/Template.php</string>
 		<string>JSONContentProxy.php</string>
 		<string>feedKeys.php</string>
-		<string>apiCommands.txt</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{243, 61}, {919, 717}}</string>
+	<string>{{302, 61}, {919, 717}}</string>
 </dict>
 </plist>

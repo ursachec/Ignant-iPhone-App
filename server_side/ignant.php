@@ -6,11 +6,14 @@ require_once('JSONContentProxy.php');
 //possible API commands
 define('API_COMMAND_ERROR','error');
 
-define('API_COMMAND_SEARCH','search');
+
 define('API_COMMAND_GET_DATA_FOR_FIRST_RUN','getDataForTheFirstRun');
+define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
 define('API_COMMAND_GET_MORE_POSTS','getMorePosts');
 define('API_COMMAND_GET_ARTICLES_FOR_CATEGORY','getArticlesForCategory');
-define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
+define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
+
+
 
 //-- general
 define('GET_ACTION','action');
@@ -52,6 +55,8 @@ $apiCommand = $_GET[GET_ACTION];
 	
 	/*
 	*/
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
+	
 	
 	printf('API_COMMAND_GET_DATA_FOR_FIRST_RUN');
 }
@@ -80,6 +85,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_POSTS)==0)
 	
 	//---------------------------------------------------------------------
 
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_MORE_POSTS';
+	
 	sleep(3);
 	
 	//get the array with articles
@@ -127,6 +134,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
 	
 	
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_SINGLE_ARTICLE';
 
 	if($oneArticle==null)
 	{
@@ -138,6 +146,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
 	}
 }
+
 
 else
 {

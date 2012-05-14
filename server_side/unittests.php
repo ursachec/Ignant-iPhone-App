@@ -290,9 +290,7 @@ class LightArticlesTest
 	public function getTestDescriptionTextForArticleId($articleID='')
 	{
 		
-		
-		
-		
+	
 		if( strcmp($articleID,'mark_powell')==0)
 		return 'Mark Powell zeichnet Menschen der älteren Generation auf gebrauchte Briefumschläge. Dabei benutzt er nichts außer Papier und Kugelschreiber. Powell bannt auf eine fast nostalgische Art und Weise die ausdrucksstarken Gesichter, Falten und Runzeln seiner Motive auf das Briefpapier. Dabei kommen die Gesichter auf den benutzen Umschlägen besonders gut zur Geltung und verbinden sich zu einer gutmütigen Dokumentation des kontinuierlichen Zerfalls.';
 		
@@ -376,63 +374,72 @@ class LightArticlesTest
 	
 	public function getJSONReadyArrayForArticleForId($articleId = '')
 	{
+		$articleArray =  null;
+		$oneArticle = null;
+		
+		$oneArticle = $this->getLightArticleForArticleId($articleId);
+		
+		$articleArray = ($oneArticle == null) ?  array() : $oneArticle->getArrayForJSONEncoding();
+		
+		return $articleArray;
+	}
+		
+	public function getLightArticlesArray(){
+		
+		$lightArticles = array();
+		
 		global $testImagesDirectory;
 		global $testImagesSuffix;
 		global $testImagesExtension;
-		
-		$oneArticle = null;
-		
 		$shouldIncludeImageBase64 = true;
-
-
-		if(strcmp($articleId,'hui_yi')==0)
-		{
-			
-			$oneArticle = new LightArticle($articleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('hui_yi', 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('hui_yi'), $this->getRemoteImagesForArticleId('hui_yi'), $this->getRelatedArticlesForArticleId('hui_yi') , $this->getCategoryWithId(1));
-			
-		}
-		else if(strcmp($articleId,'elodie_antoine')==0)
-		{
-			$oneArticle = new LightArticle($articleId, 'Elodie Antoine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('elodie_antoine', 'Some image description',$testImagesDirectory.'elodie_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('elodie_antoine'), $this->getRemoteImagesForArticleId('elodie_antoine'), $this->getRelatedArticlesForArticleId('elodie_antoine') , $this->getCategoryWithId(1));
-			
-		}
-		else if(strcmp($articleId,'imagine')==0)
-		{
-			
-			$oneArticle = new LightArticle($articleId, 'Imagine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('imagine', 'Some image description',$testImagesDirectory.'lego_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('imagine'), $this->getRemoteImagesForArticleId('imagine'), $this->getRelatedArticlesForArticleId('imagine') , $this->getCategoryWithId(1));
-			
-		}
-		else
-		{
-			$oneArticle = new LightArticle($articleId, 'CECILIA PAREDES', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('cecilia_paredes', 'Some image description',$testImagesDirectory.'cecilia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('cecilia_paredes'), $this->getRemoteImagesForArticleId('cecilia_paredes'), $this->getRelatedArticlesForArticleId('cecilia_paredes') , $this->getCategoryWithId(1));
-		}
 		
-		return $oneArticle->getArrayForJSONEncoding();
-	}
-		
-		
-	public function getLightArticleForArticleId($articleId = ''){
+		$tempArticleId = null;
 		
 		//set up articles
 		$lightArticles = array();
-		$lightArticles[] = new LightArticle(1, 'CECILIA PAREDES', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('cecilia_paredes', 'Some image description',$testImagesDirectory.'cecilia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('cecilia_paredes'), $this->getRemoteImagesForArticleId('cecilia_paredes'), $this->getRelatedArticlesForArticleId('cecilia_paredes'),  $this->getCategoryWithId(1));
+		$tempArticleId = 'cecilia_paredes';
+		$lightArticles[] = new LightArticle($tempArticleId, 'CECILIA PAREDES', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('cecilia_paredes', 'Some image description',$testImagesDirectory.'cecilia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId),  $this->getCategoryWithId(1));
 		
-		$lightArticles[] = new LightArticle(2, 'MARK POWELL', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('mark_powell', 'Some image description',$testImagesDirectory.'mark_powell_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('mark_powell'), $this->getRemoteImagesForArticleId('mark_powell'), $this->getRelatedArticlesForArticleId('mark_powell'), $this->getCategoryWithId(8));
+		$tempArticleId = 'mark_powell';
+		$lightArticles[] = new LightArticle($tempArticleId, 'MARK POWELL', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'mark_powell_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8));
 		
-		$lightArticles[] = new LightArticle(3, 'SWELLENDAMM HAUS', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('swellendamm_haus', 'Some image description',$testImagesDirectory.'swellendam_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('swellendamm_haus'), $this->getRemoteImagesForArticleId('swellendamm_haus'), $this->getRelatedArticlesForArticleId('swellendamm_haus'), $this->getCategoryWithId(7));
+		$tempArticleId = 'swellendamm_haus';
+		$lightArticles[] = new LightArticle($tempArticleId, 'SWELLENDAMM HAUS', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'swellendam_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(7));
 		
-		$lightArticles[] = new LightArticle(4, 'ASHKAN HONARVAR', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('ashkan_honarvar', 'Some image description',$testImagesDirectory.'ashkan_honarvar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('ashkan_honarvar'), $this->getRemoteImagesForArticleId('ashkan_honarvar'), $this->getRelatedArticlesForArticleId('ashkan_honarvar'), $this->getCategoryWithId(6));
+		$tempArticleId = 'ashkan_honarvar';
+		$lightArticles[] = new LightArticle($tempArticleId, 'ASHKAN HONARVAR', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'ashkan_honarvar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(6));
 		
-		$lightArticles[] = new LightArticle(5, 'Alicia', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('alicia', 'Some image description',$testImagesDirectory.'alicia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('alicia'), $this->getRemoteImagesForArticleId('alicia'), $this->getRelatedArticlesForArticleId('alicia'), $this->getCategoryWithId(5));
+		$tempArticleId = 'alicia';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Alicia', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'alicia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(5));
 		
-		$lightArticles[] = new LightArticle(6, 'BRIAN ', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('brian', 'Some image description',$testImagesDirectory.'brian_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('brian'), $this->getRemoteImagesForArticleId('brian'), $this->getRelatedArticlesForArticleId('brian'), $this->getCategoryWithId(4));
+		$tempArticleId = 'brian';
+		$lightArticles[] = new LightArticle($tempArticleId, 'BRIAN', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'brian_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(4));
 		
-		$lightArticles[] = new LightArticle(7, 'Henrique Oliviera ', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('henrique_oliveira', 'Some image description',$testImagesDirectory.'henrique_oliveira_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('henrique_oliveira'), $this->getRemoteImagesForArticleId('henrique_oliveira'), $this->getRelatedArticlesForArticleId('henrique_oliveira'), $this->getCategoryWithId(3));
+		$tempArticleId = 'henrique_oliveira';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Henrique Oliviera', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'henrique_oliveira_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(3));
 		
-		$lightArticles[] = new LightArticle(8, 'Wood', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('wood', 'Some image description',$testImagesDirectory.'wood_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('wood'), $this->getRemoteImagesForArticleId('wood'), $this->getRelatedArticlesForArticleId('wood'), $this->getCategoryWithId(2));
+		$tempArticleId = 'wood';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Wood', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'wood_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(2));
 		
-		$lightArticles[] = new LightArticle(9, 'Martins Edgar', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('martins_edgar', 'Some image description',$testImagesDirectory.'martins_edgar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('martins_edgar'), $this->getRemoteImagesForArticleId('martins_edgar'), $this->getRelatedArticlesForArticleId('martins_edgar'), $this->getCategoryWithId(1));
+		$tempArticleId = 'martins_edgar';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Martins Edgar', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'martins_edgar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
 		
+		$tempArticleId = 'imagine';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Imagine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'lego_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
+		
+		$tempArticleId = 'elodie_antoine';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Elodie Antoine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'elodie_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
+		
+		$tempArticleId = 'hui_yi';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
+		
+		return $lightArticles;
+		
+	}	
+	
+	public function getLightArticleForArticleId($articleId = ''){
+		
+		$lightArticles = $this->getLightArticlesArray();
 		
 		//iterate the articles and return the one that matches the id
 		foreach($lightArticles as $lightArticle)
@@ -444,7 +451,6 @@ class LightArticlesTest
 		
 		//no articles found with articleId
 		return null;
-		
 	}
 		
 	public function printJSONForRandomLightArticles($shouldIncludeImageBase64 = false, $saveToFile = false, $fileName = 'dump_LightArticlesTest.txt'){
@@ -452,40 +458,12 @@ class LightArticlesTest
 		$finalJSONArrayForExport = array();
 		
 		
-		global $categories;
-		
-		global $testImagesDirectory;
-		global $testImagesSuffix;
-		global $testImagesExtension;
-		
-		
 		//load meta data
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = YES;
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categories;
 		
-		
 		//-------------------------
-		
-		//create random test lightarticles
-		$lightArticles = array();
-		$lightArticles[] = new LightArticle(1, 'CECILIA PAREDES', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('cecilia_paredes', 'Some image description',$testImagesDirectory.'cecilia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('cecilia_paredes'), $this->getRemoteImagesForArticleId('cecilia_paredes'), $this->getRelatedArticlesForArticleId('cecilia_paredes'),  $this->getCategoryWithId(1));
-		
-		$lightArticles[] = new LightArticle(2, 'MARK POWELL', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('mark_powell', 'Some image description',$testImagesDirectory.'mark_powell_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('mark_powell'), $this->getRemoteImagesForArticleId('mark_powell'), $this->getRelatedArticlesForArticleId('mark_powell'), $this->getCategoryWithId(8));
-		
-		$lightArticles[] = new LightArticle(3, 'SWELLENDAMM HAUS', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('swellendamm_haus', 'Some image description',$testImagesDirectory.'swellendam_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('swellendamm_haus'), $this->getRemoteImagesForArticleId('swellendamm_haus'), $this->getRelatedArticlesForArticleId('swellendamm_haus'), $this->getCategoryWithId(7));
-		
-		$lightArticles[] = new LightArticle(4, 'ASHKAN HONARVAR', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('ashkan_honarvar', 'Some image description',$testImagesDirectory.'ashkan_honarvar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('ashkan_honarvar'), $this->getRemoteImagesForArticleId('ashkan_honarvar'), $this->getRelatedArticlesForArticleId('ashkan_honarvar'), $this->getCategoryWithId(6));
-		
-		$lightArticles[] = new LightArticle(5, 'Alicia', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('alicia', 'Some image description',$testImagesDirectory.'alicia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('alicia'), $this->getRemoteImagesForArticleId('alicia'), $this->getRelatedArticlesForArticleId('alicia'), $this->getCategoryWithId(5));
-		
-		$lightArticles[] = new LightArticle(6, 'BRIAN ', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('brian', 'Some image description',$testImagesDirectory.'brian_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('brian'), $this->getRemoteImagesForArticleId('brian'), $this->getRelatedArticlesForArticleId('brian'), $this->getCategoryWithId(4));
-		
-		$lightArticles[] = new LightArticle(7, 'Henrique Oliviera ', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('henrique_oliveira', 'Some image description',$testImagesDirectory.'henrique_oliveira_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('henrique_oliveira'), $this->getRemoteImagesForArticleId('henrique_oliveira'), $this->getRelatedArticlesForArticleId('henrique_oliveira'), $this->getCategoryWithId(3));
-		
-		$lightArticles[] = new LightArticle(8, 'Wood', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('wood', 'Some image description',$testImagesDirectory.'wood_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('wood'), $this->getRemoteImagesForArticleId('wood'), $this->getRelatedArticlesForArticleId('wood'), $this->getCategoryWithId(2));
-		
-		$lightArticles[] = new LightArticle(9, 'Martins Edgar', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('martins_edgar', 'Some image description',$testImagesDirectory.'martins_edgar_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId('martins_edgar'), $this->getRemoteImagesForArticleId('martins_edgar'), $this->getRelatedArticlesForArticleId('martins_edgar'), $this->getCategoryWithId(1));
-		
+		$lightArticles = $this->getLightArticlesArray();
 		
 		
 		//load light articles
@@ -495,7 +473,7 @@ class LightArticlesTest
 			$lightArticlesForExport[] = $article->getArrayForJSONEncoding();
 			$jsonExportString.= $article->getJSONRepresentation();
 		}
-		$finalJSONArrayForExport['articles'] = $lightArticlesForExport;
+		$finalJSONArrayForExport[TL_ARTICLES] = $lightArticlesForExport;
 		
 		//encode the final Array and print it our
 		$jsonExportString = json_encode($finalJSONArrayForExport);
@@ -507,15 +485,7 @@ class LightArticlesTest
 			fwrite($fp, utf8_encode($jsonExportString));
 			fclose($fp);
 		}	
-	}
-	
-	
-	public function getRandomArray($categoryId = -1){
-		$someArray = array('name'=>'someName','description'=>'some description');
-		return $someArray;
-	}
-	
-	
+	}	
 }
 
 
