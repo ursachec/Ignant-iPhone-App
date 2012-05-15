@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
+
 #import "IgnantImporterDelegate.h"
 
 #import "IGNViewController.h"
@@ -16,13 +18,8 @@
 @class Category;
 @class IGNDetailViewController;
 
-#import <CoreData/CoreData.h>
-
-
-
 @interface IGNMasterViewController : IGNViewController <NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, IgnantImporterDelegate, EGORefreshTableHeaderDelegate>
 {
-    
     @protected
     
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -30,7 +27,6 @@
     
     BOOL _showLoadMorePosts;
     BOOL _isLoadingMorePosts;
-
 }
 @property (nonatomic, retain, readonly) IgnantImporter *importer;
 

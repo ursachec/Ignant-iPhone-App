@@ -1040,7 +1040,7 @@
 #pragma mark - show mosaik / more
 - (IBAction)showShare:(id)sender {
     
-    UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook",@"Twitter", nil ];
+    UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Pinterest",@"Facebook",@"Twitter", nil ];
     
     [shareActionSheet showInView:self.view];
     [shareActionSheet release];

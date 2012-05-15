@@ -7,7 +7,7 @@
 //
 
 #import "IgnantCell.h"
-
+#import "Constants.h"
 
 @interface IgnantCellContentView : UIView 
 {
@@ -45,9 +45,6 @@
 - (void)drawRect:(CGRect)rect
 {
     
-#define IGNANT_GRAY_COLOR [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:1.0]
-#define IGNANT_BLACK_COLOR [UIColor blackColor]
-    
 #define CELL_PADDING_TOP 5.0f
     
 #define PADDING_RIGHT 0.0f
@@ -80,7 +77,7 @@
     CGSize titleSize = CGSizeMake(0, 0);
     
     
-    NSLog(@"contentRect: %@", NSStringFromCGRect(contentRect));
+//    NSLog(@"contentRect: %@", NSStringFromCGRect(contentRect));
     
     //draw the arrow
     [IGNANT_GRAY_COLOR set];

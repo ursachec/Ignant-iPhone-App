@@ -45,9 +45,6 @@
 @property(nonatomic, readwrite, strong) CategoriesViewController *categoriesViewController;
 @property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
 
-
-
-
 @property (readwrite, strong, nonatomic) IGNMasterViewController *masterViewController;
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 

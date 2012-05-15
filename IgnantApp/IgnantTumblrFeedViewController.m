@@ -10,22 +10,33 @@
 #import "HJObjManager.h"
 #import "HJManagedImageV.h"
 
+//imports for ASIHTTPRequest
+#import "ASIHTTPRequest.h"
+#import "NSURL+stringforurl.h"
+
+#import "Constants.h"
 
 #warning TODO: implement real data from tumblr
 
 @interface IgnantTumblrFeedViewController ()
 {
+    BOOL isLoadingMoreTumblr;
+    BOOL _showLoadMoreTumblr;
+    BOOL isLoadingLatestTumblrArticles;
+    
 
+    
     NSArray *_arrayWithTestImages;
+    
+    EGORefreshTableHeaderView *_refreshHeaderView;
 }
 
 @property(nonatomic, retain) HJObjManager *imageManager;
 @end
 
 @implementation IgnantTumblrFeedViewController
+@synthesize tumblrTableView = _tumblrTableView;
 @synthesize imageManager = _imageManager;
-
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,6 +44,8 @@
     if (self) {
         // Custom initialization
         
+        isLoadingMoreTumblr = NO;
+        isLoadingLatestTumblrArticles = NO;
         
         // Set up the image cache manager
         self.imageManager = [[HJObjManager alloc] init];
@@ -69,24 +82,42 @@
     return self;
 }
 
+- (void)dealloc {
+    [_tumblrTableView release];
+    [super dealloc];
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    //set up the refresh header view
+    if (_refreshHeaderView == nil) {
+        
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tumblrTableView.bounds.size.height, self.view.frame.size.width, self.tumblrTableView.bounds.size.height)];
+		view.delegate = self;
+		[self.tumblrTableView addSubview:view];
+		_refreshHeaderView = view;
+		[view release];
+	}
 }
 
 - (void)viewDidUnload
 {
+    [self setTumblrTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
+    [_refreshHeaderView release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 
 #pragma mark - Table view data source
 
@@ -117,8 +148,6 @@
     if (cell == nil)
     {
         cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];
-        
-        
         
         currentImage = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5,5,310,310)] autorelease];
         [currentImage setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.3]];
@@ -161,6 +190,8 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
 	
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+
     //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
     CGPoint offset = scrollView.contentOffset;
     CGRect bounds = scrollView.bounds;
@@ -172,14 +203,128 @@
     float reload_distance = 10;
     if(y > h + reload_distance) 
     {
-        NSLog(@"load more tumblr");
+        if (!isLoadingMoreTumblr) {
+            [self loadMoreTumblrArticles];
+        }
+
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
-    NSLog(@"scrollViewDidEndDragging");
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
+
+#pragma mark - server communication actions
+-(void)loadMoreTumblrArticles
+{    
+    if (isLoadingMoreTumblr) return;
+    isLoadingMoreTumblr = YES;
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, nil];
+    NSString *requestString = kAdressForContentServer;
+    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+    
+    NSLog(@"encodedString go: %@",encodedString);
+    
+	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+	[request setDelegate:self];
+	[request startAsynchronous];    
+}
+
+-(void)loadLatestTumblrArticles
+{
+    if (isLoadingLatestTumblrArticles) return;        
+    isLoadingLatestTumblrArticles = YES;
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetLatestTumblrArticles,kParameterAction, nil];
+    NSString *requestString = kAdressForContentServer;
+    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+    
+    NSLog(@"encodedString go: %@",encodedString);
+    
+	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+	[request setDelegate:self];
+	[request startAsynchronous]; 
+}
+
+- (void)requestStarted:(ASIHTTPRequest *)request
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    LOG_CURRENT_FUNCTION()
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (isLoadingMoreTumblr) {
+        
+        
+    }
+    else if (isLoadingLatestTumblrArticles) {
+        
+        
+    }
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    
+    LOG_CURRENT_FUNCTION()
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    
+    if (isLoadingMoreTumblr) {
+        
+        
+        _showLoadMoreTumblr = YES;
+        isLoadingMoreTumblr = NO;
+        
+    }
+    else if (isLoadingLatestTumblrArticles) {
+        
+        isLoadingLatestTumblrArticles = NO;
+        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
+    }
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+
+    LOG_CURRENT_FUNCTION()
+    
+#warning TODO: do something if the request has failed
+    
+    if (isLoadingMoreTumblr) {
+        
+        isLoadingMoreTumblr = NO;
+        
+    }
+    else if (isLoadingLatestTumblrArticles) {
+        
+        isLoadingLatestTumblrArticles = NO;
+        
+        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
+    }
+}
+
+#pragma mark - EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self loadLatestTumblrArticles];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return isLoadingLatestTumblrArticles; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+}
 
 @end

@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 c.v.ursache. All rights reserved.
 //
 
-
 #import "IGNMosaikViewController.h"
 
 #import "IGNDetailViewController.h"
@@ -47,17 +46,14 @@ NSString * const kImageFilename = @"filename";
 {
     BOOL isLoadingMoreMosaicImages;
         
-    IGNAppDelegate* appDelegate;
+    IGNAppDelegate* appDelegate;    
 }
-@property(nonatomic, assign) MosaicView* currentlySelectedMosaicView;
 
+@property(nonatomic,assign) MosaicView* currentlySelectedMosaicView;
 @property(nonatomic,retain) NSArray* savedMosaicImages;
+@property (nonatomic,retain) UIView* overlayView;
 
-@property (nonatomic, retain) UIView* overlayView;
-
-@property(retain, nonatomic) IGNDetailViewController* detailViewController;
-
--(UIColor*)randomColor;
+@property(nonatomic,retain) IGNDetailViewController* detailViewController;
 
 -(void)drawSavedMosaicImages;
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages;
@@ -67,7 +63,6 @@ NSString * const kImageFilename = @"filename";
 
 -(void)beginFinalAnimationForView:(MosaicView*)view;
 -(CABasicAnimation*)animationForView:(UIView*)view;
-
 
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId;
 
@@ -90,6 +85,7 @@ NSString * const kImageFilename = @"filename";
     if (self) {
         // Custom initialization
         
+        isLoadingMoreMosaicImages = NO;
         
         appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
@@ -178,7 +174,6 @@ NSString * const kImageFilename = @"filename";
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
 	[request startAsynchronous];    
@@ -232,7 +227,6 @@ NSString * const kImageFilename = @"filename";
     else
     images = [[NSArray alloc] init];
     
-    
     return [[images copy] autorelease];
 }
 
@@ -282,7 +276,6 @@ NSString * const kImageFilename = @"filename";
         UIImage* currentImageFromBundle = [UIImage imageNamed:imageFilename];
         UIImage *scaledImage = [UIImage imageWithCGImage:[currentImageFromBundle CGImage] scale:0.5 orientation:UIImageOrientationUp];
         [scaledImage retain];
-        
         
         //calculate the column with the smallest height
         int smallestHeight = 0, i = 0;        
@@ -352,10 +345,8 @@ NSString * const kImageFilename = @"filename";
             [self.bigMosaikView addSubview:oneView];
         }
         
-        
         //add one of the columnHeights value to the relevant columnHeight
         columnHeights[activeColumn] += (imageHeight+PADDING_BOTTOM);
-        
         
         imageCounter--;
     }
@@ -374,10 +365,8 @@ NSString * const kImageFilename = @"filename";
     CGRect frameOfBigMosaicView = self.bigMosaikView.frame;
     self.bigMosaikView.frame = CGRectMake(frameOfBigMosaicView.origin.x, frameOfBigMosaicView.origin.y, frameOfBigMosaicView.size.width, heightOfLargestColumn+PADDING_BOTTOM);
     
-    
     //resize the scrollview to fit the content properly
     [self.mosaikScrollView setContentSize:self.bigMosaikView.frame.size];
-      
 }
 
 #pragma mark - some help methods
@@ -392,22 +381,14 @@ NSString * const kImageFilename = @"filename";
     return xpos;
 }
 
--(UIColor*)randomColor
-{
-    CGFloat redValue = (CGFloat)((rand()%255)/255.0f);
-    CGFloat greenValue = (CGFloat)((rand()%255)/255.0f);
-    CGFloat blueValue = (CGFloat)((rand()%255)/255.0f);
-    CGFloat alpha = 0.5;
-    
-    UIColor *randColor = [UIColor colorWithRed:redValue green:greenValue blue:blueValue alpha:alpha];
-    return randColor;    
-}
-
-
 #pragma mark - ASIHTTP request delegate
 
 - (void)requestStarted:(ASIHTTPRequest *)request
 {
+    isLoadingMoreMosaicImages = YES;
+    
+    NSLog(@"show is loading");
+    
     LOG_CURRENT_FUNCTION()
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -415,7 +396,12 @@ NSString * const kImageFilename = @"filename";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {    
+    
+    isLoadingMoreMosaicImages = NO;
+    
     LOG_CURRENT_FUNCTION()
+    
+    NSLog(@"show is NOT loading");
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"mosaic_images" ofType:@"plist"];
     NSData* data = [NSData dataWithContentsOfFile:path];
@@ -423,21 +409,24 @@ NSString * const kImageFilename = @"filename";
                                                                   mutabilityOption:NSPropertyListImmutable
                                                                             format:NULL 
                                                                   errorDescription:NULL];
+        
     NSArray* images = [plist objectForKey:kImagesKey];
     
     [self addMoreMosaicImages:[[images copy] autorelease]];
     
-    
     //redraw the images
     [self drawSavedMosaicImages];
-    
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    isLoadingMoreMosaicImages = NO;
+    
     LOG_CURRENT_FUNCTION()
+    
+    NSLog(@"show is NOT loading");
     
 #warning TODO: do something if the request failed!
     
@@ -496,18 +485,14 @@ NSString * const kImageFilename = @"filename";
     [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
 
-
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId
 {
-
     NSLog(@"transitionToDetailViewControllerForArticleId: %@", articleId);
-    
     
     //blog entry to be shown is set, show the view controller loading the article data
     if (!self.detailViewController) {
         self.detailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
     }
-    
     
     self.detailViewController.currentArticleId = articleId;
     self.detailViewController.didLoadContentForRemoteArticle = NO;
@@ -531,5 +516,26 @@ NSString * const kImageFilename = @"filename";
 
 
 
+#pragma mark - UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
+	
+    //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance) 
+    {
+        if (!isLoadingMoreMosaicImages) 
+        {
+            [self loadMoreMosaicImages];
+        }
+    }
+}
 
 @end

@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "IGNViewController.h"
 
-@interface IgnantTumblrFeedViewController : IGNViewController
+#import "EGORefreshTableHeaderView.h"
+
+@interface IgnantTumblrFeedViewController : IGNViewController <EGORefreshTableHeaderDelegate>
+@property (retain, nonatomic) IBOutlet UITableView *tumblrTableView;
 
 @end

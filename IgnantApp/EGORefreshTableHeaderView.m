@@ -71,7 +71,7 @@
         CGFloat resizeRatio = 1.0f;
 		layer.frame = CGRectMake(25.0f, frame.size.height - 65.0f, 30.0f*resizeRatio, 55.0f*resizeRatio);
 		layer.contentsGravity = kCAGravityResizeAspect;
-		layer.contents = (id)[UIImage imageNamed:@"whiteArrow.png"].CGImage;
+//		layer.contents = (id)[UIImage imageNamed:@"whiteArrow.png"].CGImage;
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {

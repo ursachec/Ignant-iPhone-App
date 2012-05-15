@@ -16,6 +16,8 @@
 
 @implementation LoadMoreMosaicView
 
+@synthesize isLoading = _isLoading;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -23,6 +25,11 @@
         // Initialization code
     }
     return self;
+}
+
+-(void)setIsLoading:(BOOL)isLoading
+{
+    NSLog(@"setIsLoading: %@", isLoading ? @"TRUE" : @"FALSE");
 }
 
 /*

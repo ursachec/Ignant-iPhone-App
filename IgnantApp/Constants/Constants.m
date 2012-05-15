@@ -20,8 +20,6 @@ int const kThirdRelatedArticleTag = 503;
 int const kCategoryIndexForHome = -1;
 int const kCategoryIndexForMostRed = -500;
 
-
-
 //################################################################################
 
 //server stuff
@@ -29,14 +27,12 @@ int const kCategoryIndexForMostRed = -500;
 
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
-NSString * const kAdressForContentServer = @"http://localhost/ignant/ignant.php";
+NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/ignant.php";
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.44.217/ignant/ignant.php";
+NSString * const kAdressForContentServer = @"http://192.168.44.113/ignant/ignant.php";
 #endif
-
-
 
 NSString * const kParameterAction = @"action";
 
@@ -47,7 +43,8 @@ NSString * const kAPICommandGetMorePosts = @"getMorePosts";
 NSString * const kAPICommandGetArticlesForCategory = @"getArticlesForCategory";
 NSString * const kAPICommandGetSingleArticle = @"getSingleArticle";
 NSString * const kAPICommandGetSetOfMosaicImages = @"getSetOfMosaicImages";
-
+NSString * const kAPICommandGetMoreTumblrArticles = @"getMoreTumblrArticles";
+NSString * const kAPICommandGetLatestTumblrArticles = @"getLatestTumblrArticles";
 
 
 NSString * const kCategoryId = @"categoryId";

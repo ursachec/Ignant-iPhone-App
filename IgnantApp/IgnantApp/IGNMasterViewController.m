@@ -530,16 +530,14 @@
     [self.blogEntriesTableView reloadData];
 }
  
-
 - (void)configureCell:(IgnantCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.title = [blogEntry.title uppercaseString];
     
-    
     cell.categoryName = blogEntry.categoryName;
     
-    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
+//    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
         
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];

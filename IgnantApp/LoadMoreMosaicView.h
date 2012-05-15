@@ -10,4 +10,6 @@
 
 @interface LoadMoreMosaicView : UIView
 
+@property(nonatomic,assign)BOOL isLoading;
+
 @end

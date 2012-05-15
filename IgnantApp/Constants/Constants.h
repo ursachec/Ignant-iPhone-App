@@ -6,9 +6,11 @@
 //  Copyright (c) 2012 c.v.ursache. All rights reserved.
 //
 
+#import "Constants_Colors.h"
 
 //some preprocessor commans
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
+#define LOG_CURRENT_FUNCTION_AND_CLASS() NSLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
 
 
 //################################################################################
@@ -43,7 +45,8 @@ extern NSString * const kAPICommandGetMorePosts;
 extern NSString * const kAPICommandGetArticlesForCategory;
 extern NSString * const kAPICommandGetSingleArticle;
 extern NSString * const kAPICommandGetSetOfMosaicImages;
-
+extern NSString * const kAPICommandGetMoreTumblrArticles;
+extern NSString * const kAPICommandGetLatestTumblrArticles;
 
 //getting content
 extern NSString * const kCategoryId;
