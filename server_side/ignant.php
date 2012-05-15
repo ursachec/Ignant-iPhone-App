@@ -12,7 +12,8 @@ define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
 define('API_COMMAND_GET_MORE_POSTS','getMorePosts');
 define('API_COMMAND_GET_ARTICLES_FOR_CATEGORY','getArticlesForCategory');
 define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
-
+define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
+define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
 
 
 //-- general
@@ -48,17 +49,22 @@ $apiCommand = $_GET[GET_ACTION];
 //that should be returned the first time a user opens the app
  if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 {
+	$categoriesList = array();
+	$articlesForFirstRun = array();
 
 	//1. get categories list
+	
+	
 	//2. get latest articles
 	// 
 	
 	/*
 	*/
+	
+	$finalJSONArrayForExport[TL_CATEGORIES_LIST] = $categoriesList;
+	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
 	
-	
-	printf('API_COMMAND_GET_DATA_FOR_FIRST_RUN');
 }
 
 
@@ -146,6 +152,116 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
 	}
 }
+else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
+{
+	//input parameters
+	$pArticleID = $_GET[ARTICLE_ID];
+	
+	//---------------------------------------------------------------------
+
+	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
+	// $finalJSONArrayForExport[TL_ERROR] = true;
+	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
+	
+	
+	//make sure articleId properly escapes characters, and so on
+	
+	sleep(1);
+	
+	
+	//article found
+	$oneArticle = null;
+	
+	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
+	
+	
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_SET_OF_MOSAIC_IMAGES';
+
+	if($oneArticle==null)
+	{
+		
+		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+	}
+	else
+	{
+		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+	}
+}
+
+else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
+{
+	//input parameters
+	$pArticleID = $_GET[ARTICLE_ID];
+	
+	//---------------------------------------------------------------------
+
+	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
+	// $finalJSONArrayForExport[TL_ERROR] = true;
+	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
+	
+	
+	//make sure articleId properly escapes characters, and so on
+	
+	sleep(1);
+	
+	
+	//article found
+	$oneArticle = null;
+	
+	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
+	
+	
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_MORE_TUMBLR_ARTICLES';
+
+	if($oneArticle==null)
+	{
+		
+		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+	}
+	else
+	{
+		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+	}
+}
+
+else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
+{
+	//input parameters
+	$pArticleID = $_GET[ARTICLE_ID];
+	
+	//---------------------------------------------------------------------
+
+	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
+	// $finalJSONArrayForExport[TL_ERROR] = true;
+	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
+	
+	
+	//make sure articleId properly escapes characters, and so on
+	
+	sleep(1);
+	
+	
+	//article found
+	$oneArticle = null;
+	
+	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
+	
+	
+	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_LATEST_TUMBLR_ARTICLES';
+
+	if($oneArticle==null)
+	{
+		
+		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+	}
+	else
+	{
+		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+	}
+}
+
+
+
 
 
 else
