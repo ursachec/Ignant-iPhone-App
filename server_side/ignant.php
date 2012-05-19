@@ -85,12 +85,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_POSTS)==0)
 	//optional parameters
 	$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
-	
-	//---------------------------------------------------------------------
-
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_MORE_POSTS';
-	
-	sleep(3);
+	//---------------------------------------------------------------------	
+	sleep(1);
 	
 	//get the array with articles
 	$arrayWithMorePosts = $contentProxy->getJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
@@ -98,10 +94,11 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_POSTS)==0)
 	// no articles found, do something
 	if(count($arrayWithMorePosts)==0)
 	{
-		
+		$finalJSONArrayForExport['no_more_articles'] = true;
 	}
 	else
 	{
+		$finalJSONArrayForExport[TL_ARTICLES] = $arrayWithMorePosts;
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
 	}	
 }

@@ -12,24 +12,24 @@ class JSONContentProxy{
 	function getJSONReadyCategories()
 	{
 		global $testingUnit;
+		
 		$categoriesArray = array();
-		foreach($testingUnit->getAllCategories() as $oneCategory){
+		
+		$testCategories = array();
+		$testCategories = $testingUnit->getAllCategories();
+		if(is_array($testCategories) && count($testCategories)>0)
+		foreach($testCategories as $oneCategory){
 			$categoriesArray[] = $oneCategory->getArrayForJSONEncoding();
 		};
+		
 		return $categoriesArray;
 	}
 	
 	//----------
 	function getJSONReadyArrayForArticleWithId($articleId = '')
 	{
-		
 		global $testingUnit;
-		
-		//TODO: check if category id exists
-		//TODO: no article id, return that
-		
 		$articleArray = $testingUnit->getJSONReadyArrayForArticleForId($articleId);
-		
 		return $articleArray;
 	}
 	
@@ -39,7 +39,10 @@ class JSONContentProxy{
 		global $testingUnit;
 		
 		$articlesArray = array();
-		foreach($testingUnit->getLastestArticlesForCategory() as $oneArticle){
+		$testArticles = $testingUnit->getLastestArticlesForCategory();
+		
+		if(is_array($testArticles) && count($testArticles)>0)			
+		foreach($testArticles as $oneArticle){
 			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
 		};
 		
@@ -50,19 +53,21 @@ class JSONContentProxy{
 	//----------
 	function getJSONReadyArrayForMorePosts($pCategoryId='', $pDateOfOldestArticle='0000-00-00' )
 	{
-		
-		$pCategoryId = $_GET[CATEGORY_ID];
-		$pDateOfOldestArticle = $_GET[DATE_OF_OLDEST_ARTICLE];
-		
+		global $testingUnit;
 		
 		//TODO: check if category id exists
 		
-		
-		//TODO: no more articles found, return this result
+		$articlesArray = array();
+		$articlesArray = $testingUnit->getMoreArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
+	
+		$testMorePostsForCategory = array();
+		if(is_array($testMorePostsForCategory) && count($testMorePostsForCategory)>0)
+		foreach($testMorePostsForCategory as $oneArticle){
+			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
+		};
 		
 	
-		$returnArray = array('what?'=>'morePosts');
-		return $returnArray;
+		return $articlesArray;
 	}
 
 	function getJSONReadyArrayForMoreTumblr($pTimestampOfLastTumblrPost = 0, $limit = 10)

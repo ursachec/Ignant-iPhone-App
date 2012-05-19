@@ -462,7 +462,18 @@ class LightArticlesTest
 		return null;
 	}
 	
-	public function getLastestArticlesForCategory(){
+	
+	public function getMoreArticlesForCategory($pCategoryId = 0, $pDateOfLatestArticle = '0000-00-00'){
+		$latestArticlesArray = array();
+		
+		$latestArticlesArray[] = $this->getLightArticleForArticleId('imagine');
+		$latestArticlesArray[] = $this->getLightArticleForArticleId('hui_yi');
+		$latestArticlesArray[] = $this->getLightArticleForArticleId('elodie_antoine');
+			
+		return $latestArticlesArray;
+	}
+	
+	public function getLastestArticlesForCategory($pCategoryId = 0){
 		$latestArticlesArray = array();
 		
 		//WARNING: just temp, just for testing
