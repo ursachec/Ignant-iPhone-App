@@ -14,9 +14,6 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 	
 	public $rCategory;
 	
-	
-	
-	
 	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleThumbImage=null,$pArticleTemplate = null, $pArticleDescriptionText = '', $pRemoteImages = array(),$pRelatedArticles = array(), $pArticleCategory = null){
 		$this->id = $pArticleId;
 		$this->title = $pArticleTitle;
@@ -42,8 +39,10 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$returnArray[FK_ARTICLE_DESCRIPTION_TEXT]=$this->descriptionText;
 		
 		//thumb image
-		if($this->thumbImage!=null)
-		$returnArray[FK_ARTICLE_THUMB_IMAGE]=$this->thumbImage->getArrayForJSONEncoding();
+ 		
+		$includeThumb = true;
+		if($this->thumbImage!=null && $includeThumb)
+ 		$returnArray[FK_ARTICLE_THUMB_IMAGE]=$this->thumbImage->getArrayForJSONEncoding();
 		
 		//article template
 		if($this->template!=null)
@@ -54,7 +53,7 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		if(is_array($this->remoteImages))
 		{
 			$remoteImagesForJSONEncoding = $this->remoteImages;
-			
+	
 			foreach($remoteImagesForJSONEncoding as $aImage){
 				if($aImage!=null)
 				$returnArray[FK_ARTICLE_REMOTE_IMAGES][]=$aImage->getArrayForJSONEncoding();
@@ -65,14 +64,13 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		if(is_array($this->relatedArticles))
 		{
 			$relatedArticlesForJSONEncoding = $this->relatedArticles;
-			
+	
 			foreach($relatedArticlesForJSONEncoding as $aRelatedArticle){
 				if($aRelatedArticle!=null)
 				$returnArray[FK_ARTICLE_RELATED_ARTICLES][]=$aRelatedArticle->getArrayForJSONEncoding();
 			}
 		}
-		
-		
+ 
 		//category
 		if($this->rCategory!=null)
 		{
@@ -80,8 +78,8 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 			$returnArray[FK_ARTICLE_CATEGORY_NAME]=$this->rCategory->name;
 		}
 		
-		return $returnArray;
-	}
+			return $returnArray;
+		}
 };
 
 ?>

@@ -53,15 +53,12 @@ $apiCommand = $_GET[GET_ACTION];
 	$articlesForFirstRun = array();
 
 	//1. get categories list
-	
-	
+	$categoriesList = $contentProxy->getJSONReadyCategories();
+	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
+		
 	//2. get latest articles
-	// 
-	
-	/*
-	*/
-	
-	$finalJSONArrayForExport[TL_CATEGORIES_LIST] = $categoriesList;
+	$articlesForFirstRun = $contentProxy->getJSONReadyLatestArticlesForCategory(-1);
+	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
 	
@@ -123,17 +120,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 	$pArticleID = $_GET[ARTICLE_ID];
 	
 	//---------------------------------------------------------------------
-
-	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
-	// $finalJSONArrayForExport[TL_ERROR] = true;
-	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
-	
-	
-	//make sure articleId properly escapes characters, and so on
-	
-	// sleep(3);
-	
-	
 	//article found
 	$oneArticle = null;
 	
@@ -188,28 +174,23 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	}
 }
 
+
 else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
 {
 	//input parameters
-	$pArticleID = $_GET[ARTICLE_ID];
+	$pTimestampOfLastTumblrPost = $_GET[DATE_OF_OLDEST_ARTICLE];
+	
 	
 	//---------------------------------------------------------------------
-
-	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
-	// $finalJSONArrayForExport[TL_ERROR] = true;
-	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
+	$postModifiedResponseFromTumblrApiArray = array();	
+	$postModifiedResponseFromTumblrApiArray =	$contentProxy->getJSONReadyArrayForMoreTumblr($pTimestampOfLastTumblrPost,20);
 	
-	
-	//make sure articleId properly escapes characters, and so on
-	
-	sleep(1);
-	
+	var_dump($postModifiedResponseFromTumblrApiArray);
+	exit;
 	
 	//article found
 	$oneArticle = null;
-	
 	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_MORE_TUMBLR_ARTICLES';
 
@@ -224,43 +205,27 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
 	}
 }
 
+/**
+ * get the latest 20 articles and return them to the app
+ * the app should then compare the latest saved posts and add the ones that are newer
+ */
 else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
-{
-	//input parameters
-	$pArticleID = $_GET[ARTICLE_ID];
-	
-	//---------------------------------------------------------------------
-
-	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
-	// $finalJSONArrayForExport[TL_ERROR] = true;
-	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
-	
-	
-	//make sure articleId properly escapes characters, and so on
-	
-	sleep(1);
-	
-	
-	//article found
-	$oneArticle = null;
-	
-	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
+{	
+	$latestTumblrPosts = array();
+	$latestTumblrPosts = $contentProxy->getJSONReadyArrayForLatestTumblr();
 	
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_LATEST_TUMBLR_ARTICLES';
 
-	if($oneArticle==null)
+	if(count($latestTumblrPosts)==0)
 	{
-		
 		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
 	}
 	else
 	{
-		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+		$finalJSONArrayForExport[TL_POSTS] = $latestTumblrPosts;
 	}
 }
-
-
 
 
 

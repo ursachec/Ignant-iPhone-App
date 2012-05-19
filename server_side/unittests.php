@@ -28,7 +28,7 @@ function encode_img($img)
 function createBase64Image($id = '', $imageDescription = 'default', $imageFilename = '')
 {
 	if($id=='' || $imageFilename=='') return null;
-	return new Base64Image($id, encode_img($imageFilename), $imageDescription);
+	return new Base64Image($id, encode_img($imageFilename) , $imageDescription); //encode_img($imageFilename)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +82,11 @@ $testImagesExtension = 'jpg';
 
 class LightArticlesTest
 {
+	public function getAllCategories()
+	{
+		global $categories;		
+		return $categories;
+	}
 
 	public function getRelatedArticlesForArticleId($articleID='')
 	{
@@ -94,18 +99,19 @@ class LightArticlesTest
 		//------
 		$imageDirectoryPath = $testImagesDirectory.'lego_pre'.$testImagesSuffix.'.'.$testImagesExtension;
 		$base64Image = createBase64Image('imagine', 'Some image description', $imageDirectoryPath);
-		$relatedArticlesArray[] = new RelatedArticle('imagine', 'Imagine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(6), $base64Image);
+		 $relatedArticlesArray[] = new RelatedArticle('imagine', 'Imagine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(6), $base64Image);
 		
 		//------
-		$imageDirectoryPath2 = $testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension;
-		$base64Image2 = createBase64Image('hui_yi', 'Some image description', $imageDirectoryPath2);
-		$relatedArticlesArray[] = new RelatedArticle('hui_yi', 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(3), $base64Image2);
+		$tempArticleId = 'hui_yi';
+		$base64Image2 = createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension);
+		 $relatedArticlesArray[] = new RelatedArticle($tempArticleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(3), $base64Image2);
+		
 		
 		//------
 		$imageDirectoryPath3 = $testImagesDirectory.'elodie_pre'.$testImagesSuffix.'.'.$testImagesExtension;
 		$base64Image3 = createBase64Image('elodie_antoine', 'Some image description', $imageDirectoryPath3);
 		
-		$relatedArticlesArray[] = new RelatedArticle('elodie_antoine', 'Elodie Antoine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(1), $base64Image3);
+		 $relatedArticlesArray[] = new RelatedArticle('elodie_antoine', 'Elodie Antoine', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)),$this->getCategoryWithId(1), $base64Image3);
 		
 		
 		return $relatedArticlesArray;
@@ -433,6 +439,9 @@ class LightArticlesTest
 		$tempArticleId = 'hui_yi';
 		$lightArticles[] = new LightArticle($tempArticleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
 		
+		$tempArticleId = 'test';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(1));
+		
 		return $lightArticles;
 		
 	}	
@@ -452,7 +461,29 @@ class LightArticlesTest
 		//no articles found with articleId
 		return null;
 	}
+	
+	public function getLastestArticlesForCategory(){
+		$latestArticlesArray = array();
 		
+		//WARNING: just temp, just for testing
+		$tempArticles = 8;	
+		
+		//-------
+		$lightArticles = $this->getLightArticlesArray();
+		
+		//iterate the articles and return the one that matches the id
+		$counter = 0;
+		foreach($lightArticles as $lightArticle)
+		{
+			if($counter>$tempArticles) break;
+			
+			$latestArticlesArray[] = $lightArticle;
+			$counter++;
+		}
+		
+		return $latestArticlesArray;
+	}
+	
 	public function printJSONForRandomLightArticles($shouldIncludeImageBase64 = false, $saveToFile = false, $fileName = 'dump_LightArticlesTest.txt'){
 		
 		$finalJSONArrayForExport = array();
@@ -489,9 +520,9 @@ class LightArticlesTest
 }
 
 
-$lightArticlesTest = new LightArticlesTest();
+// $lightArticlesTest = new LightArticlesTest();
 
-$lightArticlesTest->printJSONForRandomLightArticles(true);
+// $lightArticlesTest->printJSONForRandomLightArticles(true);
 
 
 
