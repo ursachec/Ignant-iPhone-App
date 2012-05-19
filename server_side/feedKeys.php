@@ -7,6 +7,7 @@
 //TOP LEVEL
 define('TL_SINGLE_ARTICLE','singleArticle');
 define('TL_ARTICLES','articles');
+define('TL_POSTS','posts');
 define('TL_OVERWRITE','overwrite');
 define('TL_ERROR','error');
 define('TL_ERROR_MESSAGE','error_message');
@@ -23,6 +24,11 @@ define('IGNANT_OBJECT_TYPE_BASE64_IMAGE','base64_image');
 define('IGNANT_OBJECT_TYPE_REMOTE_IMAGE','remote_image');
 define('IGNANT_OBJECT_TYPE_TEMPLATE','template');
 define('IGNANT_OBJECT_TYPE_CATEGORY','category');
+
+//TUMBLR
+define('TUMBLR_POST_PUBLISHING_DATE','publishingDate');
+define('TUMBLR_POST_IMAGE_URL','url');
+
 
 
 //ARTICLE

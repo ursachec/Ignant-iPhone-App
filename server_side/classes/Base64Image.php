@@ -17,6 +17,9 @@ class Base64Image extends BasicImage implements JSONexportableObject
 		$returnArray[IMAGE_ID]=$this->id;
 		$returnArray[IMAGE_DESCRIPTION]=$this->description;
 		$returnArray[IMAGE_BASE64_REPRESENTATION]=$this->base64Representation;
+		
+		
+		// $returnArray[IMAGE_BASE64_REPRESENTATION]="AAQQAA\//j\/";
 		return $returnArray;
 	}
 }
