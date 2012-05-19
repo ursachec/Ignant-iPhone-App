@@ -29,6 +29,13 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$this->rCategory = $pArticleCategory;
 	}
 	
+	public function getAsRelatedArticle()
+	{
+		$relatedArticle = null;
+		$relatedArticle = new RelatedArticle($this->id, $this->title, $this->publishingDate,$this->rCategory, $this->thumbImage);
+		return $relatedArticle;
+	}
+	
 	public function getArrayForJSONEncoding()
 	{
 		$returnArray = array();
@@ -47,7 +54,6 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		//article template
 		if($this->template!=null)
 		$returnArray[FK_ARTICLE_TEMPLATE]=$this->template->getArrayForJSONEncoding();
-		
 		
 		//remote images
 		if(is_array($this->remoteImages))
