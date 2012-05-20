@@ -382,9 +382,7 @@ class LightArticlesTest
 	{
 		$articleArray =  null;
 		$oneArticle = null;
-		
 		$oneArticle = $this->getLightArticleForArticleId($articleId);
-		
 		$articleArray = ($oneArticle == null) ?  array() : $oneArticle->getArrayForJSONEncoding();
 		
 		return $articleArray;

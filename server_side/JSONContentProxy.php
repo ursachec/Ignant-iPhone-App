@@ -58,9 +58,8 @@ class JSONContentProxy{
 		//TODO: check if category id exists
 		
 		$articlesArray = array();
-		$articlesArray = $testingUnit->getMoreArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
-	
-		$testMorePostsForCategory = array();
+		
+		$testMorePostsForCategory = $testingUnit->getMoreArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
 		if(is_array($testMorePostsForCategory) && count($testMorePostsForCategory)>0)
 		foreach($testMorePostsForCategory as $oneArticle){
 			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
