@@ -48,8 +48,7 @@ class JSONContentProxy{
 		
 		return $articlesArray;
 	}
-	
-	
+		
 	//----------
 	function getJSONReadyArrayForMorePosts($pCategoryId='', $pDateOfOldestArticle='0000-00-00' )
 	{
@@ -64,15 +63,26 @@ class JSONContentProxy{
 		foreach($testMorePostsForCategory as $oneArticle){
 			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
 		};
-		
 	
 		return $articlesArray;
 	}
 
 	function getJSONReadyArrayForMoreTumblr($pTimestampOfLastTumblrPost = 0, $limit = 10)
 	{
-		$responseFromTumblrApiArray = array();	
+		
+		global $testingUnit;
+		
+		
+		$moreTumblPostsArray = array();	
 		$postProcessedResponseFromTumblrAPI = array();
+		
+		
+		//get the JSON from the local file
+		
+		
+		$moreTumblPostsArray = $testingUnit->getMoreTumblrPosts($pCategoryId, $pDateOfOldestArticle);
+		
+		
 		
 		//get the JSON from the Tumblr API
 		$url = "http://api.tumblr.com/v2/blog/ignant.tumblr.com/posts?api_key=I5QACSezTzCjvkHXaiEaXrD3t9cb8Ahmpyv7MqGIRPhdEfg2Yw";
@@ -92,6 +102,7 @@ class JSONContentProxy{
 		
 		//filter the relevant information from the posts
 		$filteredInformationPosts = array();
+		if(is_array($postsFromTumblrAPI) && count($postsFromTumblrAPI)>0)
 		foreach($postsFromTumblrAPI as $post){
 			$newPost = array();
 			$newPost[TUMBLR_POST_PUBLISHING_DATE] = $post['timestamp'];
@@ -101,6 +112,7 @@ class JSONContentProxy{
 		
 		//filter the posts to get after lastTumblrPosts
 		$numberOfPostsToReturn = 0;
+		if(is_array($filteredInformationPosts) && count($filteredInformationPosts)>0)
 		foreach($filteredInformationPosts as $post){
 			
 			if($numberOfPostsToReturn>$limit)
@@ -142,6 +154,8 @@ class JSONContentProxy{
 		
 		//filter the relevant information from the posts
 		$filteredInformationPosts = array();
+		
+		if(is_array($postsFromTumblrAPI) && count($postsFromTumblrAPI)>0)
 		foreach($postsFromTumblrAPI as $post){
 			$newPost = array();
 			$newPost[TUMBLR_POST_PUBLISHING_DATE] = $post['timestamp'];
@@ -151,6 +165,8 @@ class JSONContentProxy{
 		
 		//filter the posts to get after lastTumblrPosts
 		$numberOfPostsToReturn = 0;
+		
+		if(is_array($filteredInformationPosts) && count($filteredInformationPosts)>0)
 		foreach($filteredInformationPosts as $post){
 			
 			if($numberOfPostsToReturn>$limit)

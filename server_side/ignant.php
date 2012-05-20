@@ -211,10 +211,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 	$latestTumblrPosts = array();
 	$latestTumblrPosts = $contentProxy->getJSONReadyArrayForLatestTumblr();
 	
-	
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_LATEST_TUMBLR_ARTICLES';
-
-	if(count($latestTumblrPosts)==0)
+	if(!is_array($latestTumblrPosts) || count($latestTumblrPosts)==0)
 	{
 		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
 	}
@@ -223,7 +220,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 		$finalJSONArrayForExport[TL_POSTS] = $latestTumblrPosts;
 	}
 }
-
 
 
 else
