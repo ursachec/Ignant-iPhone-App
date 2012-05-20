@@ -60,6 +60,7 @@ extern NSString * const kDateOfOldestArticle;
 
 extern NSString * const kTLSingleArticle;
 extern NSString * const kTLArticles;
+extern NSString * const kTLPosts;
 extern NSString * const kTLOverwrite;
 extern NSString * const kTLError;
 extern NSString * const kTLErrorMessage;
@@ -79,6 +80,11 @@ extern NSString * const kIgnantObjectTypeRemoteImage;
 extern NSString * const kIgnantObjectTypeTemplate;
 extern NSString * const kIgnantObjectTypeCategory;
 
+//TUMBLR
+extern NSString * const kTumblrPostPublishingDate;
+extern NSString * const kTumblrPostImageUrl;
+
+//ARTICLE
 extern NSString * const kFKArticleType;
 extern NSString * const kFKArticleId;
 extern NSString * const kFKArticleTitle;

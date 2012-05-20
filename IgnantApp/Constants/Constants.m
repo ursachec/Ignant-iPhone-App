@@ -31,7 +31,7 @@ NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPho
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.44.113/ignant/ignant.php";
+NSString * const kAdressForContentServer = @"http://192.168.44.30/ignant/Ignant-iPhone-App/server_side/ignant.php";
 #endif
 
 NSString * const kParameterAction = @"action";
@@ -61,6 +61,7 @@ NSString * const kDateOfOldestArticle = @"dateOfOldestArticle";
 //TOP LEVEL
 NSString * const kTLSingleArticle = @"singleArticle";
 NSString * const kTLArticles = @"articles";
+NSString * const kTLPosts = @"posts";
 NSString * const kTLOverwrite = @"overwrite";
 NSString * const kTLError = @"error";
 NSString * const kTLErrorMessage = @"error_message";
@@ -83,6 +84,10 @@ NSString * const kIgnantObjectTypeRemoteImage = @"remote_image";
 NSString * const kIgnantObjectTypeTemplate = @"template";
 NSString * const kIgnantObjectTypeCategory = @"category";
 
+
+//TUMBLR
+NSString * const kTumblrPostPublishingDate = @"publishingDate";
+NSString * const kTumblrPostImageUrl = @"url";
 
 
 //ARTICLE

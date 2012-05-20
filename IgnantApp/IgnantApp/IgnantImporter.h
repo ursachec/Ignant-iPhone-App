@@ -32,5 +32,6 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 -(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle;
 
+-(void)importJSONStringForTumblrPosts:(NSString*)jsonString;
 
 @end

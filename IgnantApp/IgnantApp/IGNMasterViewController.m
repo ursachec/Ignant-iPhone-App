@@ -59,7 +59,6 @@
 
 @property (assign, readwrite) BOOL isHomeCategory;
 
-
 @property (retain, nonatomic, readwrite) Category* currentCategory;
 
 @end
@@ -136,18 +135,14 @@
 #pragma mark - show mosaik / more
 - (IBAction)showMosaik:(id)sender 
 {
-    
     IGNMosaikViewController *mosaikVC = appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
-
-
 }
 
 - (IBAction)showMore:(id)sender 
 {
-        
     IGNMoreOptionsViewController *moreOptionsVC = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil];
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
     [moreOptionsVC release];
@@ -198,6 +193,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    
+    
     
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
@@ -555,7 +553,6 @@
     UIImage* athumbImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:storePath]];
     
     cell.thumbImage = athumbImage;
-    
 }
 
 #pragma mark -

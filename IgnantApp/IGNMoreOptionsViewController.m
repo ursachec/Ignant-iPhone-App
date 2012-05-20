@@ -183,6 +183,7 @@ typedef enum _moreOptionsIndeces  {
             NSLog(@"something");
             
             IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
+            tumblrVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:tumblrVC animated:YES];
             
             break;

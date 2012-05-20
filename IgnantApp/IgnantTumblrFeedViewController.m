@@ -10,13 +10,25 @@
 #import "HJObjManager.h"
 #import "HJManagedImageV.h"
 
+#import "IgnantImporter.h"
+#import "IGNAppDelegate.h"
+
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
 
 #import "Constants.h"
 
+#import "TumblrEntry.h"
+
+
+#define kTumblrAPIKey I5QACSezTzCjvkHXaiEaXrD3t9cb8Ahmpyv7MqGIRPhdEfg2Yw
+// http://api.tumblr.com/v2/blog/ignant.tumblr.com/posts?api_key=
+
 #warning TODO: implement real data from tumblr
+
+
+#define kMinimumNumberOfPostsOnLoad 5
 
 @interface IgnantTumblrFeedViewController ()
 {
@@ -25,24 +37,43 @@
     BOOL isLoadingLatestTumblrArticles;
     
 
-    
     NSArray *_arrayWithTestImages;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
+    
+    IGNAppDelegate *appDelegate;
+    
+    
+    BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
 }
 
 @property(nonatomic, retain) HJObjManager *imageManager;
+@property(nonatomic, retain) IgnantImporter* importer;
 @end
 
 @implementation IgnantTumblrFeedViewController
 @synthesize tumblrTableView = _tumblrTableView;
 @synthesize imageManager = _imageManager;
+@synthesize importer = _importer;
+
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize fetchedResultsController = __fetchedResultsController;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+        _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
+        
+        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        
         // Custom initialization
+        [self createImporter];
+        
         
         isLoadingMoreTumblr = NO;
         isLoadingLatestTumblrArticles = NO;
@@ -63,20 +94,18 @@
         
         self.imageManager.fileCache = fileCache;
         
-        
-        
         _arrayWithTestImages = [[NSArray alloc] initWithObjects:
-        
-    @"http://29.media.tumblr.com/tumblr_m1w8emWNTe1qztdbbo1_400.png",
-    @"http://27.media.tumblr.com/tumblr_m1w8af4yZr1qztdbbo1_400.png",
-    @"http://24.media.tumblr.com/tumblr_m1pxjwDgpS1qztdbbo1_400.png",
-    @"http://29.media.tumblr.com/tumblr_m1pxizsIDB1qztdbbo1_400.png",
-    @"http://26.media.tumblr.com/tumblr_m1jx641OGr1qztdbbo1_400.png",
-    @"http://27.media.tumblr.com/tumblr_m1fk3dT2Dp1qztdbbo1_400.png",
-    @"http://25.media.tumblr.com/tumblr_m1fk1o7w4Z1qztdbbo1_400.png",
-    @"http://24.media.tumblr.com/tumblr_m1fk0oM2GF1qztdbbo1_400.png",
-    @"http://29.media.tumblr.com/tumblr_m18c8zq3Fv1qztdbbo1_400.png",
-                                @"http://29.media.tumblr.com/tumblr_m18c6zOqoo1qztdbbo1_400.png", nil];
+                
+            @"http://29.media.tumblr.com/tumblr_m1w8emWNTe1qztdbbo1_400.png",
+            @"http://27.media.tumblr.com/tumblr_m1w8af4yZr1qztdbbo1_400.png",
+            @"http://24.media.tumblr.com/tumblr_m1pxjwDgpS1qztdbbo1_400.png",
+            @"http://29.media.tumblr.com/tumblr_m1pxizsIDB1qztdbbo1_400.png",
+            @"http://26.media.tumblr.com/tumblr_m1jx641OGr1qztdbbo1_400.png",
+            @"http://27.media.tumblr.com/tumblr_m1fk3dT2Dp1qztdbbo1_400.png",
+            @"http://25.media.tumblr.com/tumblr_m1fk1o7w4Z1qztdbbo1_400.png",
+            @"http://24.media.tumblr.com/tumblr_m1fk0oM2GF1qztdbbo1_400.png",
+            @"http://29.media.tumblr.com/tumblr_m18c8zq3Fv1qztdbbo1_400.png",
+            @"http://29.media.tumblr.com/tumblr_m18c6zOqoo1qztdbbo1_400.png", nil];
         
     }
     return self;
@@ -92,6 +121,12 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    if (_managedObjectContext == nil) 
+    {
+        _managedObjectContext = appDelegate.managedObjectContext; 
+    }
+    
     
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
@@ -126,24 +161,29 @@
     return 1;
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return [_arrayWithTestImages count];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
+    
+    if (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad) {
+        _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
+        [self loadLatestTumblrArticles];
+    }
+    
+    return numberOfLoadedPosts;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
-    
     HJManagedImageV* currentImage;
     
-    NSURL *urlAtCurrentIndex = [NSURL URLWithString:[_arrayWithTestImages objectAtIndex:indexPath.row]];
+    NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
     
     if (cell == nil)
     {
@@ -175,23 +215,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
 }
-
 
 #pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
 	
     [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-
+    
     //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
     CGPoint offset = scrollView.contentOffset;
     CGRect bounds = scrollView.bounds;
@@ -206,7 +237,6 @@
         if (!isLoadingMoreTumblr) {
             [self loadMoreTumblrArticles];
         }
-
     }
 }
 
@@ -214,7 +244,6 @@
 	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
-
 
 #pragma mark - server communication actions
 -(void)loadMoreTumblrArticles
@@ -259,9 +288,14 @@
     if (isLoadingMoreTumblr) {
         
         
+        
+        
     }
     else if (isLoadingLatestTumblrArticles) {
         
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            [self setIsLoadingViewHidden:NO];
+        }
         
     }
 }
@@ -282,6 +316,13 @@
         
     }
     else if (isLoadingLatestTumblrArticles) {
+        
+        NSLog(@"request: %@", [request responseString]);
+        
+        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+        dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONStringForTumblrPosts:[request responseString]];
+        });
         
         isLoadingLatestTumblrArticles = NO;
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
@@ -325,6 +366,112 @@
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
 	return [NSDate date]; // should return date data source was last changed
+}
+
+#pragma mark - core data stuff
+-(void)createImporter
+{
+    //use the persistent store from the appDelegate       
+    _importer = [[IgnantImporter alloc] init];
+    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
+    _importer.delegate = self;
+}
+
+
+#pragma mark - Fetched results controller
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (__fetchedResultsController != nil) {
+        return __fetchedResultsController;
+    }
+    
+    // Set up the fetched results controller.
+    // Create the fetch request for the entity.
+    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+    // Edit the entity name as appropriate.
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    // Set the batch size to a suitable number.
+    [fetchRequest setFetchBatchSize:20];
+    
+    // Edit the sort key as appropriate.
+    NSSortDescriptor *sortDescriptorForDate = [[[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO] autorelease];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    
+    // Edit the section name key path and cache name if appropriate.
+    // nil for section name key path means "no sections".
+    NSFetchedResultsController *aFetchedResultsController = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil] autorelease];
+    aFetchedResultsController.delegate = self;
+    self.fetchedResultsController = aFetchedResultsController;
+    
+	NSError *error = nil;
+	if (![self.fetchedResultsController performFetch:&error]) {
+        
+	    /*
+	     Replace this implementation with code to handle the error appropriately.
+         
+	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+	     */
+	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    abort();
+	}
+    
+    return __fetchedResultsController;
+}    
+
+- (void)fetch 
+{
+    NSError *error = nil;
+    BOOL success = [self.fetchedResultsController performFetch:&error];
+    NSAssert2(success, @"Unhandled error performing fetch at SongsViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
+    [self.tumblrTableView reloadData];
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    // In the simplest, most efficient, case, reload the table view.
+    [self.tumblrTableView reloadData];
+}
+
+
+#pragma mark - IgnantImporterDelegate
+
+-(void)didStartImportingRSSData
+{
+    LOG_CURRENT_FUNCTION()
+    NSLog(@"tumblrFeed didStartImportingRSSData");
+    
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        
+    //        [self showLoadingViewAnimated:YES];
+    //    
+    //    });
+}
+
+-(void)didFinishImportingRSSData
+{
+    LOG_CURRENT_FUNCTION() 
+    NSLog(@"tumblrFeed didStartImportingRSSData");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self fetch];
+        [self.tumblrTableView reloadData];
+        
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            [self setIsLoadingViewHidden:YES];
+            _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
+        }
+        
+    });
+}
+
+- (void)importerDidSave:(NSNotification *)saveNotification {  
+    [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
 
 @end
