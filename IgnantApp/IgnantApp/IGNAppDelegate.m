@@ -138,8 +138,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     }
         
     
-    
-    
 //    //initialize the facebook object
 //    _facebook = [[Facebook alloc] initWithAppId:@"270065646390191" andDelegate:self];
 //    
@@ -154,10 +152,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 //    if (![_facebook isSessionValid]) {
 //        [_facebook authorize:nil];
 //    }
-    
-    
-    
-    
 
     UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
     IGNMasterViewController *mVC = [[[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil] autorelease];
@@ -304,8 +298,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     }
     return _mosaikViewController;
 }
-
-
 
 #pragma mark - facebook integration
 // Pre 4.2 support
@@ -496,7 +488,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 #pragma mark - getting content from the server
 -(void)startGettingDataForFirstRun
 {
-    
     //show the loading view here
     [self showLoadingViewAnimated:YES];
     

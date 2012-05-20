@@ -10,9 +10,10 @@
 
 #import "IGNViewController.h"
 
-
 @interface RelatedArticleViewController : IGNViewController
+
 @property (retain, nonatomic) IBOutlet UIButton *dismissViewController;
+
 - (IBAction)dismissViewController:(id)sender;
 
 @end

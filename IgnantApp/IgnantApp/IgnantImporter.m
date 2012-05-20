@@ -33,7 +33,9 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 
 #import "Image.h"
 #import "BlogEntry.h"
+#import "TumblrEntry.h"
 
+#warning DO APPROPRIATE memory management before releasing app
 #warning DELETE RSS Parser entries before releasing app
 
 @interface IgnantImporter() 
@@ -60,10 +62,13 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @property (nonatomic, retain) Image* currentImage;
 @property (nonatomic, retain) BlogEntry* currentBlogEntry;
 @property (nonatomic, retain) Category* currentCategory;
+@property (nonatomic, retain) TumblrEntry* currentTumblrEntry;
+
 
 
 @property (nonatomic, retain, readonly) NSEntityDescription *currentImageDescription;
 @property (nonatomic, retain, readonly) NSEntityDescription *currentBlogEntryDescription;
+@property (nonatomic, retain, readonly) NSEntityDescription *currentTumblrEntryDescription;
 @property (nonatomic, retain, readonly) NSEntityDescription *currentCategoryDescription;
 
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
@@ -71,6 +76,11 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @property NSUInteger countForNumberOfCommentsToBeSaved;
 
 @property (nonatomic, retain) NSDate *latestDayOfCurrentFeed;
+
+
+@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForBlogEntries;
+@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForTumblrEntries;
+@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForCategories;
 
 @end
 
@@ -81,13 +91,18 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @synthesize insertionContext = _insertionContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-@synthesize currentImage, currentBlogEntry, currentImageDescription, currentBlogEntryDescription, currentCategory, currentCategoryDescription;
+@synthesize currentImage, currentBlogEntry, currentTumblrEntry, currentImageDescription, currentBlogEntryDescription, currentTumblrEntryDescription, currentCategory, currentCategoryDescription;
 
 @synthesize countForNumberOfBlogEntriesToBeSaved, countForNumberOfImagesToBeSaved, countForNumberOfCommentsToBeSaved;
 
 @synthesize latestDayOfCurrentFeed = _latestDayOfCurrentFeed;
 
 @synthesize lastImportDateForMainPageArticle = _lastImportDateForMainPageArticle;
+
+//fetch request for checking existence
+@synthesize checkingFetchRequestForBlogEntries = _checkingFetchRequestForBlogEntries;
+@synthesize checkingFetchRequestForTumblrEntries = _checkingFetchRequestForTumblrEntries;
+@synthesize checkingFetchRequestForCategories = _checkingFetchRequestForCategories;
 
 -(id)init
 {
@@ -106,6 +121,10 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 
 -(void)dealloc
 {
+    
+    [_checkingFetchRequestForBlogEntries release];
+    [_checkingFetchRequestForTumblrEntries release];
+    [_checkingFetchRequestForCategories release];
     
 #warning IMPLEMENT DEALLOC
     
@@ -312,6 +331,19 @@ static const NSUInteger kImportBatchSize = 5;
     return currentBlogEntry;
 }
 
+- (NSEntityDescription *)currentTumblrEntryDescription {
+    if (currentTumblrEntryDescription == nil) {
+        currentTumblrEntryDescription = [[NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.insertionContext] retain];
+    }
+    return currentTumblrEntryDescription;
+}
+- (TumblrEntry *)currentTumblrEntry {
+    if (currentTumblrEntry == nil) {
+        currentTumblrEntry = [[TumblrEntry alloc] initWithEntity:self.currentTumblrEntryDescription insertIntoManagedObjectContext:self.insertionContext];
+    }
+    return currentTumblrEntry;
+}
+
 - (NSEntityDescription *)currentImageDescription {
     if (currentImageDescription == nil) {
         currentImageDescription = [[NSEntityDescription entityForName:@"Image" inManagedObjectContext:self.insertionContext] retain];
@@ -350,11 +382,6 @@ static const NSUInteger kImportBatchSize = 5;
     
     SBJSON *parser = [[SBJSON alloc] init];
     
-#warning TODO: add this code to some unit testing or remove it from the class
-//    NSString *filePath = TEST_JSON_DUMP;
-//    NSData *response = [NSData dataWithContentsOfFile:filePath];
-    
-    
     NSString *json_string = [jsonString copy];
     NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
 
@@ -378,7 +405,6 @@ static const NSUInteger kImportBatchSize = 5;
     //import categories if needed
     for (NSDictionary* oneCategory in categoriesArray) 
     {
-    
         NSString *categoryName = [oneCategory objectForKey:kFKCategoryName];
         NSString *categoryId = [[oneCategory objectForKey:kFKCategoryId] stringValue];
         NSString *categoryDescription = [oneCategory objectForKey:kFKCategoryDescription];
@@ -389,7 +415,6 @@ static const NSUInteger kImportBatchSize = 5;
         self.currentCategory.name = categoryName;
         self.currentCategory.categoryDescription = categoryDescription;
     }
-    
     
     //----------------------------------------------------
     //IMPORT ARTICLES
@@ -461,6 +486,26 @@ static const NSUInteger kImportBatchSize = 5;
         blogEntryNumberOfViews = unconvertedBlogEntryNumberOfViews;
     }
     
+    //check if entry with this articleId already exists
+    NSFetchRequest *checkRequest = self.checkingFetchRequestForBlogEntries; 
+    [checkRequest setPredicate:[NSPredicate predicateWithFormat:@"articleId == %@", blogEntryArticleId]];
+    
+    NSError *error = nil;
+    NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
+    if (error==nil) {
+        
+        //rewrite logic can be implemented here
+        if ([result count]>0) {
+            BlogEntry* entry = (BlogEntry*)[result objectAtIndex:0];
+            NSLog(@"skipping found entry: %@",entry.title);
+            
+            return;
+        }
+    }
+    else {
+#warning handle fetch error
+        NSLog(@"error is not nil this should be handled");
+    }
     
     
 #warning fix date to take GMT into consideration
@@ -481,26 +526,14 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.relatedArticles = blogEntryRelatedArticles;
     self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
         
-    
-    //add the article to the specific category
-    
-    //fetch the category
-#warning TODO: fetch the category and add it to the viewcontroller
-    
-    
-    
-    
-    
     /////////////////////////// handle the thumb image image
     NSDictionary *aImageDictionary = [oneArticle objectForKey:kFKArticleThumbImage];
-    
     
     if (aImageDictionary!=nil) {
         
         NSString* imageIdentifier = [aImageDictionary objectForKey:kFKImageId];
         NSString* imageCaption = [aImageDictionary objectForKey:kFKImageDescription];
         NSString* imageBase64String =  [aImageDictionary objectForKey:kFKImageBase64Representation];
-        
         
         self.currentBlogEntry.thumbIdentifier = imageIdentifier;
         
@@ -510,12 +543,10 @@ static const NSUInteger kImportBatchSize = 5;
         self.currentImage.identifier = imageIdentifier; 
         self.currentImage.caption = imageCaption; 
         
-        
         //save the image file
         NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         applicationDocumentsDir = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
         NSString *storePath = [applicationDocumentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpeg",imageIdentifier]];
-        
         
         //imagefile already exists, don't save it
         if ([[NSFileManager defaultManager] fileExistsAtPath:storePath]){
@@ -540,10 +571,8 @@ static const NSUInteger kImportBatchSize = 5;
             [image release];
         }
         
-        
         //handle remote images urls
         NSArray *remoteImages = [oneArticle objectForKey:kFKArticleRemoteImages];
-        
         
         if (remoteImages!=nil) 
         {    
@@ -567,12 +596,9 @@ static const NSUInteger kImportBatchSize = 5;
     
     
     NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];
-    NSArray *categoriesArray = [metaInformationDictionary objectForKey:kTLCategoriesList];
     
     NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
     
-    
-
     //prepare importing
     NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
     [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
@@ -582,9 +608,7 @@ static const NSUInteger kImportBatchSize = 5;
     
     BOOL savedOk = NO;
     
-    
     NSLog(@"numberOfArticlesToImport: %d", [articlesArray count]);
-
     
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
@@ -592,10 +616,7 @@ static const NSUInteger kImportBatchSize = 5;
         [self importOneArticleFromDictionary:oneArticle];
     }
     
-    
-    
 #warning IMPLEMENT "no more articles available for this category" in User Defaults
-    
     
     if (errorOccured) {
         
@@ -634,11 +655,14 @@ static const NSUInteger kImportBatchSize = 5;
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     
+    
+    [parser release];
+    
 }
 
 -(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle
 {
-    NSLog(@"importJSONStringForSingleArticle");
+    LOG_CURRENT_FUNCTION()
     
     if(delegate!=nil){
         [delegate importerDidStartParsingSingleArticle:self];
@@ -667,14 +691,134 @@ static const NSUInteger kImportBatchSize = 5;
         [delegate importer:self didFinishParsingSingleArticleWithDictionary:articleDictionary];
     }
     
+    [parser release];
+    
 }
 
+#pragma mark - import TUMBLR data
+
+-(void)importJSONStringForTumblrPosts:(NSString*)jsonString{
+    LOG_CURRENT_FUNCTION()
+    
+    if([delegate respondsToSelector:@selector(didStartImportingRSSData)]){
+        [delegate didStartImportingRSSData];
+    }
+    
+    
+    SBJSON *parser = [[SBJSON alloc] init];
+    NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonString error:nil];
+    NSArray *tumblrPostsArray = [dictionaryFromJSON objectForKey:kTLPosts];
+    
+    for (NSDictionary* oneTumblrPost in tumblrPostsArray) {
+        [self importOneTumblrPostFromDictionary:oneTumblrPost];
+    }
+    
+    BOOL savedOk = NO;
+    NSError *saveError = nil;
+    
+    //try to save the context with the imported articles
+    savedOk = [insertionContext save:&saveError];
+    
+    if (savedOk) {
+        NSLog(@"could save tumblr posts");
+    }
+    else {
+        NSLog(@"ERROR: exporting tumblr posts");
+    }
+    
+    [parser release];
+    
+    
+    
+    if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
+        [delegate didFinishImportingRSSData];
+    }
+    
+}
+
+
+-(void)importOneTumblrPostFromDictionary:(NSDictionary*)oneTumblrPost
+{
+    LOG_CURRENT_FUNCTION()
+    
+    NSString *tumblrEntryUrl = [oneTumblrPost objectForKey:kTumblrPostImageUrl];
+    NSNumber *tumblrEntryPublishingDateTimestamp = [oneTumblrPost objectForKey:kTumblrPostPublishingDate]; 
+    NSDate* tumblrEntryPublishingDate = [NSDate dateWithTimeIntervalSince1970:[tumblrEntryPublishingDateTimestamp intValue]];
+    
+    //check if entry with this articleId already exists
+    NSFetchRequest *checkRequest = self.checkingFetchRequestForTumblrEntries; 
+    [checkRequest setPredicate:[NSPredicate predicateWithFormat:@"publishingDate == %@", tumblrEntryPublishingDate]];
+    
+    NSError *error = nil;
+    NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
+    if (error==nil) {
+        
+        //rewrite logic can be implemented here
+        if ([result count]>0) {
+            TumblrEntry* entry = (TumblrEntry*)[result objectAtIndex:0];
+            NSLog(@"skipping found tumblr entry: %@",entry.publishingDate);
+            
+            return;
+        }
+    }
+    else {
+#warning handle fetch error
+        NSLog(@"error is not nil this should be handled");
+    }
+    
+    self.currentTumblrEntry = nil;
+    self.currentTumblrEntry.imageUrl = tumblrEntryUrl;
+    self.currentTumblrEntry.publishingDate = tumblrEntryPublishingDate;
+    
+}
 
 -(void)updateLastDateForImportedArticleForMainPage {
 	[[NSUserDefaults standardUserDefaults] setObject:self.lastImportDateForMainPageArticle forKey:kUserDefaultsLastImportDateForMainPageArticle];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+#pragma mark - fetch requests for checking existence
 
+-(NSFetchRequest*)checkingFetchRequestForTumblrEntries
+{
+    if (_checkingFetchRequestForTumblrEntries==nil) {
+        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.insertionContext];
+        [fetchRequest setEntity:entity];
+        [fetchRequest setFetchLimit:1];
+        [fetchRequest setFetchBatchSize:1];
+        self.checkingFetchRequestForTumblrEntries = fetchRequest;
+    }
+    
+    return _checkingFetchRequestForTumblrEntries;
+}
+
+-(NSFetchRequest*)checkingFetchRequestForBlogEntries
+{
+    if (_checkingFetchRequestForBlogEntries==nil) {
+        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.insertionContext];
+        [fetchRequest setEntity:entity];
+        [fetchRequest setFetchLimit:1];
+        [fetchRequest setFetchBatchSize:1];
+        self.checkingFetchRequestForBlogEntries = fetchRequest;
+    }
+    
+    return _checkingFetchRequestForBlogEntries;
+}
+
+-(NSFetchRequest*)checkingFetchRequestForCategories
+{
+    if (_checkingFetchRequestForCategories==nil) {
+        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.insertionContext];
+        [fetchRequest setEntity:entity];
+        [fetchRequest setFetchLimit:1];
+        [fetchRequest setFetchBatchSize:1];
+        self.checkingFetchRequestForCategories = fetchRequest;
+    }
+    
+    return _checkingFetchRequestForCategories;
+}
 
 @end

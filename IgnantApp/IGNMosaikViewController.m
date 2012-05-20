@@ -22,7 +22,6 @@
 
 #import "Constants.h"
 
-
 #warning TODO: see what image size to use / maybe do some server directory selection to differentiate between Retina and NON-Retina display versions
 
 
@@ -457,7 +456,6 @@ NSString * const kImageFilename = @"filename";
     view.layer.borderWidth = 2.0f;
     view.layer.opacity = 0.7f;
     
-    
     //add the name label to the overlay view
     CGSize labelSize = CGSizeMake(_overlayView.frame.size.width, 20.0f);
     CGFloat paddingTop = 5.0f;
@@ -468,7 +466,6 @@ NSString * const kImageFilename = @"filename";
     nameLabel.textAlignment = UITextAlignmentCenter;
     [_overlayView addSubview:nameLabel];
     [nameLabel release];
-    
     
     //customize the overlayview a bit
     _overlayView.layer.borderWidth = 2.0f;
@@ -513,8 +510,6 @@ NSString * const kImageFilename = @"filename";
     
     [self dismissModalViewControllerAnimated:YES];
 }
-
-
 
 #pragma mark - UIScrollViewDelegate Methods
 

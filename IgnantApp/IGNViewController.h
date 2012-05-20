@@ -11,4 +11,6 @@
 @interface IGNViewController : UIViewController
 
 
+-(void)setIsLoadingViewHidden:(BOOL)hidden;
+
 @end
