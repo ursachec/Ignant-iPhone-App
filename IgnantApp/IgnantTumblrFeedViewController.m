@@ -22,6 +22,9 @@
 #import "TumblrEntry.h"
 
 
+#import "IgnantLoadMoreCell.h"
+#import "IgnantLoadingMoreCell.h"
+
 #define kTumblrAPIKey I5QACSezTzCjvkHXaiEaXrD3t9cb8Ahmpyv7MqGIRPhdEfg2Yw
 // http://api.tumblr.com/v2/blog/ignant.tumblr.com/posts?api_key=
 
@@ -32,7 +35,7 @@
 
 @interface IgnantTumblrFeedViewController ()
 {
-    BOOL isLoadingMoreTumblr;
+    BOOL _isLoadingMoreTumblr;
     BOOL _showLoadMoreTumblr;
     BOOL isLoadingLatestTumblrArticles;
     
@@ -75,7 +78,8 @@
         [self createImporter];
         
         
-        isLoadingMoreTumblr = NO;
+        _showLoadMoreTumblr = YES;
+        _isLoadingMoreTumblr = NO;
         isLoadingLatestTumblrArticles = NO;
         
         // Set up the image cache manager
@@ -127,7 +131,6 @@
         _managedObjectContext = appDelegate.managedObjectContext; 
     }
     
-    
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
         
@@ -171,50 +174,112 @@
         [self loadLatestTumblrArticles];
     }
     
-    return numberOfLoadedPosts;
+    return numberOfLoadedPosts + _showLoadMoreTumblr;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    HJManagedImageV* currentImage;
+    static NSString *CellIdentifier = @"IgnantCell";
+    static NSString *CellIdentifierLoadMore = @"LoadMoreCell";
+    static NSString *CellIdentifierLoading = @"LoadingCell";
     
-    NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
     
-    if (cell == nil)
+    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMoreTumblr  ) 
     {
-        cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];
         
-        currentImage = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5,5,310,310)] autorelease];
-        [currentImage setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.3]];
-        currentImage.tag = 999;
+        IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
+        if (cell == nil) {
+            cell = [[[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore] autorelease];
+            
+        }
+        
+        
+        return cell;
+        
+    }
+    else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreTumblr)
+    {
+        
+        IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
+        if (cell == nil) {
+            cell = [[[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading] autorelease];
+        }
+        
+        return cell;
+    }
+    else
+    {
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+        HJManagedImageV* currentImage;
+        
+        NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
+        
+        if (cell == nil)
+        {
+            cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];
+            
+            currentImage = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5,5,310,310)] autorelease];
+            [currentImage setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.3]];
+            currentImage.tag = 999;
+            currentImage.url = urlAtCurrentIndex;
+            [self.imageManager manage:currentImage];
+            
+            
+            [cell addSubview:currentImage];
+            
+        } else{
+            currentImage = (HJManagedImageV*)[cell viewWithTag:999];
+            [currentImage clear];
+        }
+        
         currentImage.url = urlAtCurrentIndex;
+        [currentImage.loadingWheel setColor:[UIColor whiteColor]];
         [self.imageManager manage:currentImage];
         
-        
-        [cell addSubview:currentImage];
-        
-    } else{
-        currentImage = (HJManagedImageV*)[cell viewWithTag:999];
-        [currentImage clear];
+        return cell;
     }
     
     
-    currentImage.url = urlAtCurrentIndex;
-    [currentImage.loadingWheel setColor:[UIColor whiteColor]];
-    [self.imageManager manage:currentImage];
-
-    return cell;
+    return nil;
+    
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+}
+
+//set up the height of the given cell, taken into account the "load more posts" cell 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    if ( [self isIndexPathLastRow:indexPath]  ) 
+    {
+        return 60.0f;
+    }
+    else
+    {
+        return 315.0f;
+    }
+}
+
+#pragma mark -
+-(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
+    NSUInteger numberOfObjects = [sectionInfo numberOfObjects];
+    
+    if(indexPath.row >= numberOfObjects && _showLoadMoreTumblr)
+    {
+        return YES;
+    }
+    
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -234,7 +299,7 @@
     float reload_distance = 10;
     if(y > h + reload_distance) 
     {
-        if (!isLoadingMoreTumblr) {
+        if (!_isLoadingMoreTumblr) {
             [self loadMoreTumblrArticles];
         }
     }
@@ -248,8 +313,8 @@
 #pragma mark - server communication actions
 -(void)loadMoreTumblrArticles
 {    
-    if (isLoadingMoreTumblr) return;
-    isLoadingMoreTumblr = YES;
+    if (_isLoadingMoreTumblr) return;
+    _isLoadingMoreTumblr = YES;
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, nil];
     NSString *requestString = kAdressForContentServer;
@@ -285,7 +350,7 @@
     LOG_CURRENT_FUNCTION()
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    if (isLoadingMoreTumblr) {
+    if (_isLoadingMoreTumblr) {
         
         
         
@@ -308,11 +373,10 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     
-    if (isLoadingMoreTumblr) {
-        
+    if (_isLoadingMoreTumblr) {
         
         _showLoadMoreTumblr = YES;
-        isLoadingMoreTumblr = NO;
+        _isLoadingMoreTumblr = NO;
         
     }
     else if (isLoadingLatestTumblrArticles) {
@@ -337,9 +401,9 @@
     
 #warning TODO: do something if the request has failed
     
-    if (isLoadingMoreTumblr) {
+    if (_isLoadingMoreTumblr) {
         
-        isLoadingMoreTumblr = NO;
+        _isLoadingMoreTumblr = NO;
         
     }
     else if (isLoadingLatestTumblrArticles) {
@@ -376,7 +440,6 @@
     _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
     _importer.delegate = self;
 }
-
 
 #pragma mark - Fetched results controller
 
@@ -437,7 +500,6 @@
     // In the simplest, most efficient, case, reload the table view.
     [self.tumblrTableView reloadData];
 }
-
 
 #pragma mark - IgnantImporterDelegate
 
