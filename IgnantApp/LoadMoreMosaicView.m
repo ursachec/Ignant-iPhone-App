@@ -11,34 +11,48 @@
 
  */
 
-
 #import "LoadMoreMosaicView.h"
 
-@implementation LoadMoreMosaicView
+@interface LoadMoreMosaicView ()
+@property(nonatomic,retain) UIActivityIndicatorView* activityIndicator;
+@end
 
+@implementation LoadMoreMosaicView
+@synthesize activityIndicator = _activityIndicator;
 @synthesize isLoading = _isLoading;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        CGSize activityIndicatorSize = CGSizeMake(20.0f, 20.0f);
+        CGRect activityIndicatorFrame = CGRectMake(0.0f, 0.0f, activityIndicatorSize.width, activityIndicatorSize.height);
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.frame = activityIndicatorFrame;
+        [_activityIndicator setHidesWhenStopped:YES];
+        [self addSubview:_activityIndicator];
+        
     }
     return self;
 }
 
--(void)setIsLoading:(BOOL)isLoading
+-(void)dealloc
 {
-    NSLog(@"setIsLoading: %@", isLoading ? @"TRUE" : @"FALSE");
+    [_activityIndicator release];
+    
+    [super dealloc];
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+-(void)setIsLoading:(BOOL)isLoading
+{    
+    if (isLoading) {
+        [_activityIndicator startAnimating];
+    }
+    else {
+        [_activityIndicator stopAnimating];
+    }
+
+    [self setNeedsDisplay];
 }
-*/
 
 @end
