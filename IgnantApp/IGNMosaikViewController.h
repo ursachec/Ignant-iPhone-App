@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "IGNViewController.h"
+
 extern NSString * const kImagesKey;
 
 extern NSString * const kImageWidth;
@@ -18,7 +20,7 @@ extern NSString * const kImageFilename;
 
 #import "MosaicView.h"
 
-@interface IGNMosaikViewController : UIViewController <MosaicViewDelegate>
+@interface IGNMosaikViewController : IGNViewController <MosaicViewDelegate>
 
 -(IBAction)handleBack:(id)sender;
 

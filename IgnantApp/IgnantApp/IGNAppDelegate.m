@@ -27,7 +27,6 @@
 #import "NSURL+stringforurl.h"
 
 
-
 #define kForceReloadCoreData NO
 
 
@@ -162,8 +161,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     self.navigationController = nav;
     self.window.rootViewController = self.navigationController;
     
-    
-    
     //initialize the importer
     self.importer = [[IgnantImporter alloc] init];
     _importer.persistentStoreCoordinator = self.persistentStoreCoordinator;
@@ -175,12 +172,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     
     // check the last update, stored in NSUserDefaults
     NSDate *lastUpdate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
-    NSString *lastUpdateString = [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
-    
-    
-    NSString *somekSomeTestUpdateKey = [[NSUserDefaults standardUserDefaults] objectForKey:kSomeTestUpdateKey]; 
-    
-    NSLog(@"lastUpdate: %@ // lastUpdateString: %@ // somekSomeTestUpdateKey: %@", lastUpdate, lastUpdateString, somekSomeTestUpdateKey);
     
     if (kForceReloadCoreData || lastUpdate == nil) {
         NSLog(@"new store");
