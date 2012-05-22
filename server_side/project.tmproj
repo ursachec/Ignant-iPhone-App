@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>JSONContentProxy.php</string>
+	<string>ignant.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -20,21 +20,21 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-19T13:33:43Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-05-21T20:36:00Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-19T13:33:43Z</date>
+			<date>2012-05-21T20:36:00Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-19T13:30:23Z</date>
+			<date>2012-05-21T20:35:43Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -46,13 +46,19 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-19T13:33:43Z</date>
+			<date>2012-05-21T20:31:12Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>getTumblrContent.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-19T13:30:22Z</date>
+			<date>2012-05-21T20:31:06Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>tumblrDataDump.txt</string>
+			<key>lastUsed</key>
+			<date>2012-05-21T20:23:09Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -64,14 +70,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>9</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>143</integer>
+				<integer>120</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>118</integer>
+			<integer>91</integer>
 		</dict>
 		<key>classes/Base64Image.php</key>
 		<dict>
@@ -226,9 +232,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>28</integer>
+				<integer>9</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -239,16 +245,16 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>38</integer>
+				<integer>8</integer>
 				<key>line</key>
-				<integer>29</integer>
+				<integer>9</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>28</integer>
+				<integer>9</integer>
 			</dict>
 		</dict>
 		<key>getTumblrContent.php</key>
@@ -256,30 +262,44 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>22</integer>
 				<key>line</key>
-				<integer>69</integer>
+				<integer>61</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>4</integer>
+			<integer>53</integer>
 		</dict>
 		<key>ignant.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>201</integer>
+				<integer>148</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>169</integer>
+			<integer>163</integer>
 		</dict>
 		<key>script_to_get_images.sh</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>tumblrDataDump.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -298,30 +318,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>114</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>455</integer>
+				<integer>493</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>448</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>106</integer>
-				<key>line</key>
-				<integer>455</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>114</integer>
-				<key>line</key>
-				<integer>455</integer>
-			</dict>
+			<integer>82</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -336,11 +340,12 @@
 		<string>classes/Template.php</string>
 		<string>JSONContentProxy.php</string>
 		<string>getTumblrContent.php</string>
+		<string>tumblrDataDump.txt</string>
 		<string>feedKeys.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{349, 61}, {919, 717}}</string>
+	<string>{{322, 61}, {919, 717}}</string>
 </dict>
 </plist>

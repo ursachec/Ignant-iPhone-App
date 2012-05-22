@@ -151,12 +151,9 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	
 	sleep(1);
 	
-	
 	//article found
 	$oneArticle = null;
-	
 	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_SET_OF_MOSAIC_IMAGES';
 
@@ -171,34 +168,22 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	}
 }
 
-
 else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
 {
 	//input parameters
-	$pTimestampOfLastTumblrPost = $_GET[DATE_OF_OLDEST_ARTICLE];
-	
-	
-	//---------------------------------------------------------------------
-	$postModifiedResponseFromTumblrApiArray = array();	
-	$postModifiedResponseFromTumblrApiArray =	$contentProxy->getJSONReadyArrayForMoreTumblr($pTimestampOfLastTumblrPost,20);
-	
-	var_dump($postModifiedResponseFromTumblrApiArray);
-	exit;
-	
-	//article found
-	$oneArticle = null;
-	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_MORE_TUMBLR_ARTICLES';
-
-	if($oneArticle==null)
-	{
+	$pTimestamp = $_GET[DATE_OF_OLDEST_ARTICLE];
 		
+	//---------------------------------------------------------------------
+	$moreTumblrPosts = array();	
+	$moreTumblrPosts =	$contentProxy->getJSONReadyArrayForMoreTumblr($pTimestamp,10);
+	
+	if(!is_array($moreTumblrPosts) || count($moreTumblrPosts)<=0)
+	{
 		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
 	}
 	else
 	{
-		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+		$finalJSONArrayForExport[TL_POSTS] = $moreTumblrPosts;
 	}
 }
 

@@ -19,6 +19,14 @@ printf("Downloading tumblr data...\n");
 
 $time_start = microtime(true);
 
+//add appropriate begining of file for corect JSON encoding
+$fp = fopen($fileName, 'w');
+$beginString = '{"posts":';
+fwrite($fp, utf8_encode($beginString));
+fclose($fp);
+
+
+//add the posts
 do
 {
 		$offset = $simpleCounter*$limit+$diffForTotalPosts;
@@ -71,6 +79,13 @@ do
 		$simpleCounter++;		
 }
 while($loadedPosts<$lastNumberOfTotalPosts && $totalNumberOfPosts-$offset>limit);
+
+//add appropriate end of file for corect JSON encoding
+$fp = fopen($fileName, 'w');
+$beginString = '}';
+fwrite($fp, utf8_encode($beginString));
+fclose($fp);
+
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;

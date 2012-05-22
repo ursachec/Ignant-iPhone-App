@@ -460,6 +460,40 @@ class LightArticlesTest
 		return null;
 	}
 	
+	public function getMoreTumblrPosts($pTimestamp=0, $limit=10)
+	{
+		$moreTumblrPosts = array();
+		
+		if($pTimestamp==0) return $moreTumblrPosts;
+		
+		//read contents from saved tumblr file into string
+		$tumblrContentString = null;
+		
+		$myFile = "tumblrDataDump.txt";
+		$fh = fopen($myFile, 'r');
+		$tumblrContentString = fread($fh, filesize($myFile));
+		fclose($fh);
+		
+		//read all the posts from the saved file
+		$jsonObject = json_decode($tumblrContentString);
+		$postsFromSavedFile = $jsonObject->{TL_POSTS};
+		
+		//retrieve $limit posts after the given timestamp
+		$validCounter = 1;
+		
+		if(is_array($postsFromSavedFile) && count($postsFromSavedFile)>0)
+		foreach($postsFromSavedFile as $onePost)
+		{
+			if($validCounter>$limit) break;
+			
+			if($onePost->{TUMBLR_POST_PUBLISHING_DATE}<$pTimestamp){
+				$moreTumblrPosts[] = $onePost;
+				$validCounter++;
+			}
+		}
+		
+		return $moreTumblrPosts;
+	}
 	
 	public function getMoreArticlesForCategory($pCategoryId = 0, $pDateOfLatestArticle = '0000-00-00'){
 		$latestArticlesArray = array();
@@ -497,7 +531,6 @@ class LightArticlesTest
 		
 		$finalJSONArrayForExport = array();
 		
-		
 		//load meta data
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = YES;
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categories;
@@ -528,11 +561,7 @@ class LightArticlesTest
 	}	
 }
 
-
 // $lightArticlesTest = new LightArticlesTest();
-
 // $lightArticlesTest->printJSONForRandomLightArticles(true);
-
-
 
 ?>
