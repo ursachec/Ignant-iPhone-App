@@ -157,7 +157,6 @@
     //check when was the last time updating the currently set category and trigger load latest/load more
     
     NSString* currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
-    
     NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:currentCategoryId];
     NSLog(@"dateForLastUpdate: %@, catgoryId: %@", dateForLastUpdate, currentCategoryId);
     
@@ -492,12 +491,10 @@
     cell.thumbImage = athumbImage;
 }
 
-#pragma mark -
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
-    NSUInteger numberOfObjects = [sectionInfo numberOfObjects];
-    
+    NSUInteger numberOfObjects = [sectionInfo numberOfObjects];    
     
     if(indexPath.row >= numberOfObjects && _showLoadMoreContent)
     {
@@ -535,6 +532,16 @@
         [self.blogEntriesTableView reloadData];
         
     });
+    
+    
+#warning NEW IMPLEMENTATION
+    
+    NSString *currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome]; 
+    NSDate* newImplementationDateForMost = [appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:currentCategoryId];
+    NSLog(@"newImplementationDateForMost: %@, currentCategory: %@", newImplementationDateForMost, currentCategoryId);
+
+#warning END OF NEW IMPLEMENTATION
+    
         
     NSDate* lastImportDateForMainPageArticle = (NSDate*) [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultsLastImportDateForMainPageArticle];
     
@@ -569,6 +576,10 @@
     
     NSLog(@"requestStarted");
     
+    NSString *currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome]; 
+    NSDate *lastUpdateDateForCurrentCategoryId = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:currentCategoryId];
+    
+    
     if (_isLoadingMoreContent) {
         
         
@@ -577,7 +588,7 @@
     }
     else if (_isLoadingLatestContent) {
         
-        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId]==nil) {
+        if (lastUpdateDateForCurrentCategoryId==nil) {
             [self setIsLoadingViewHidden:NO];
         }
         
@@ -647,15 +658,15 @@
 
 #pragma mark - IgnantImporterDelegate
 
--(void)didStartImportingRSSData
+-(void)didStartImportingData
 {
-    NSLog(@"MasterVC didStartImportingRSSData");
+    NSLog(@"MasterVC didStartImportingData");
     
     LOG_CURRENT_FUNCTION_AND_CLASS()
         
 }
 
--(void)didFailImportingRSSData
+-(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
@@ -664,7 +675,7 @@
     });
 
 }
--(void)didFinishImportingRSSData
+-(void)didFinishImportingData
 {
     
     LOG_CURRENT_FUNCTION_AND_CLASS()

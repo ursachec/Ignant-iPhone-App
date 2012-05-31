@@ -40,7 +40,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 {
     
 	MWFeedParser *feedParser;
-	NSMutableArray *parsedItems;
 	NSDateFormatter *formatter;
     
     NSManagedObjectContext *insertionContext;
@@ -61,8 +60,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @property (nonatomic, retain) BlogEntry* currentBlogEntry;
 @property (nonatomic, retain) Category* currentCategory;
 @property (nonatomic, retain) TumblrEntry* currentTumblrEntry;
-
-
 
 @property (nonatomic, retain, readonly) NSEntityDescription *currentImageDescription;
 @property (nonatomic, retain, readonly) NSEntityDescription *currentBlogEntryDescription;
@@ -110,7 +107,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
         formatter = [[NSDateFormatter alloc] init];
         [formatter setDateStyle:NSDateFormatterShortStyle];
         [formatter setTimeStyle:NSDateFormatterNoStyle];
-        parsedItems = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -218,10 +214,18 @@ static const NSUInteger kImportBatchSize = 5;
 
 
 #pragma mark - JSON importing
+
+-(void)importJSONWithMorePosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
+{
+
+
+
+}
+
 -(void)importJSONString:(NSString*)jsonString{
     
-    if([delegate respondsToSelector:@selector(didStartImportingRSSData)]){
-        [delegate didStartImportingRSSData];
+    if([delegate respondsToSelector:@selector(didStartImportingData)]){
+        [delegate didStartImportingData];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
@@ -287,20 +291,20 @@ static const NSUInteger kImportBatchSize = 5;
     
     NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
     
-    NSLog(@"importJSONString __onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    NSLog(@"importJSONString __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     
     if (savedOk) {
-        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-            [delegate didFinishImportingRSSData];
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
         }
     }
     else {
-        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
-            [delegate didFailImportingRSSData];
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
         }
     }
     
@@ -438,89 +442,6 @@ static const NSUInteger kImportBatchSize = 5;
     }
 }
 
--(void)importJSONStringWithMorePosts:(NSString*)jsonStringWithPosts
-{
- 
-    NSLog(@"importJSONStringWithMorePosts: %@",jsonStringWithPosts);
-    
-    SBJSON *parser = [[SBJSON alloc] init];
-    NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonStringWithPosts error:nil];
-    
-    BOOL errorOccured = [[dictionaryFromJSON objectForKey:kTLError] boolValue];
-    
-    
-    NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];
-    
-    NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
-    
-    //prepare importing
-    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
-    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
-    NSError *saveError = nil;
-    
-    BOOL savedOk = NO;
-    
-    NSLog(@"numberOfArticlesToImport: %d", [articlesArray count]);
-    
-    //enumerate articles
-    for (NSDictionary* oneArticle in articlesArray) 
-    {
-        [self importOneArticleFromDictionary:oneArticle];
-    }
-    
-#warning IMPLEMENT "no more articles available for this category" in User Defaults
-    
-    if (errorOccured) {
-        
-        NSLog(@"error sent from server, handle it!");
-#warning TODO: handle Server error
-        
-        return;
-    }
-    
-    //try to save the context with the imported articles
-    savedOk = [insertionContext save:&saveError];
-    
-    //update the date of the last imported article for the main page
-    if (savedOk && self.currentBlogEntry.publishingDate!=nil) 
-    {
-        self.lastImportDateForMainPageArticle = self.currentBlogEntry.publishingDate;
-        [self updateLastDateForImportedArticleForMainPage];
-    }
-    else 
-    {
-        NSLog(@"did not save or publishing date is nil");
-    }
-    
-    
-    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
-    
-    
-    NSLog(@"importJSONStringWithMorePosts __onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
-    
-    if (savedOk) {
-        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-            [delegate didFinishImportingRSSData];
-        }
-    }
-    else {
-        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
-            [delegate didFailImportingRSSData];
-        }
-    }
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
-    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
-    
-    
-    [parser release];
-    
-}
-
 -(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle
 {
     LOG_CURRENT_FUNCTION()
@@ -547,24 +468,23 @@ static const NSUInteger kImportBatchSize = 5;
     NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];    
     NSDictionary *articleDictionary = [dictionaryFromJSON objectForKey:kTLSingleArticle];
     
-        
     if(delegate!=nil){
         [delegate importer:self didFinishParsingSingleArticleWithDictionary:articleDictionary];
     }
     
     [parser release];
-    
 }
+
+
 
 #pragma mark - import TUMBLR data
 
 -(void)importJSONStringForTumblrPosts:(NSString*)jsonString{
     LOG_CURRENT_FUNCTION()
     
-    if([delegate respondsToSelector:@selector(didStartImportingRSSData)]){
-        [delegate didStartImportingRSSData];
+    if([delegate respondsToSelector:@selector(didStartImportingData)]){
+        [delegate didStartImportingData];
     }
-    
     
     SBJSON *parser = [[SBJSON alloc] init];
     NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonString error:nil];
@@ -591,13 +511,13 @@ static const NSUInteger kImportBatchSize = 5;
     
     
     if (savedOk) {
-        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-            [delegate didFinishImportingRSSData];
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
         }
     }
     else {
-        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
-            [delegate didFailImportingRSSData];
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
         }
     }
     

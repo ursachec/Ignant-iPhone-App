@@ -8,3 +8,80 @@
 
 #import "Constants_API_Fields.h"
 
+//----------------------------
+
+
+//TOP LEVEL
+NSString * const kTLSingleArticle = @"singleArticle";
+NSString * const kTLArticles = @"articles";
+NSString * const kTLPosts = @"posts";
+NSString * const kTLOverwrite = @"overwrite";
+NSString * const kTLError = @"error";
+NSString * const kTLErrorMessage = @"error_message";
+NSString * const kTLMetaInformation = @"meta_information";
+NSString * const kTLResponseStatus = @"response_status";
+NSString * const kTLCategoriesList = @"categories";
+NSString * const kTLMosaicImages = @"mosaicImages";
+
+
+
+//METAINFORMATION
+NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";
+
+//OBJECT TYPES
+NSString * const kIgnantObjectTypeLightArticle = @"light_article";
+NSString * const kIgnantObjectTypeRelatedArticle = @"related_article";
+NSString * const kIgnantObjectTypeFullArticle = @"full_article";
+NSString * const kIgnantObjectTypeBase64Image = @"base64_image";
+NSString * const kIgnantObjectTypeRemoteImage = @"remote_image";
+NSString * const kIgnantObjectTypeTemplate = @"template";
+NSString * const kIgnantObjectTypeCategory = @"category";
+
+
+//TUMBLR
+NSString * const kTumblrPostPublishingDate = @"publishingDate";
+NSString * const kTumblrPostImageUrl = @"url";
+
+
+//ARTICLE
+NSString * const kFKArticleType = @"type";
+NSString * const kFKArticleId = @"articleId";
+NSString * const kFKArticleTitle = @"title";
+NSString * const kFKArticlePublishingDate = @"publishingDate";
+NSString * const kFKArticleThumbImage = @"thumbImage";
+NSString * const kFKArticleRemoteImages = @"remoteImages";
+NSString * const kFKArticleNumberOfViews = @"numberOfViews";
+
+
+NSString * const kFKArticleCategoryId = @"categoryId";
+NSString * const kFKArticleCategoryName = @"categoryName";
+
+
+NSString * const kFKArticleCategory = @"rCategory";
+NSString * const kFKArticleTemplate = @"rTemplate";
+NSString * const kFKArticleDescriptionText = @"descriptionText";
+NSString * const kFKArticleDescriptionRichText = @"descriptionRichText";
+NSString * const kFKArticleImages = @"images";
+NSString * const kFKArticleRelatedArticles = @"relatedArticles";
+
+//RELATED ARTICLE
+NSString * const kFKRelatedArticleCategoryText = @"categoryText";
+NSString * const kFKRelatedArticleBase64Thumbnail = @"base64Thumbnail";
+
+
+//CATEGORY
+NSString * const kFKCategoryType = @"type";
+NSString * const kFKCategoryId = @"id";
+NSString * const kFKCategoryName = @"name";
+NSString * const kFKCategoryDescription = @"description";
+
+//IMAGE
+NSString * const kFKImageType = @"type";
+NSString * const kFKImageId = @"id";
+NSString * const kFKImageDescription = @"description";
+NSString * const kFKImageBase64Representation = @"base64Representation";
+NSString * const kFKImageURL = @"url";
+
+NSString * const kFKImageWidth = @"width";
+NSString * const kFKImageHeight = @"height";
+NSString * const kFKImageReferenceArticleId = @"refArticleId";

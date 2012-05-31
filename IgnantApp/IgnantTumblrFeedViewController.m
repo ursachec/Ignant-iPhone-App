@@ -494,20 +494,20 @@
 
 #pragma mark - IgnantImporterDelegate
 
--(void)didStartImportingRSSData
+-(void)didStartImportingData
 {
     LOG_CURRENT_FUNCTION()
-    NSLog(@"tumblrFeed didStartImportingRSSData");
+    NSLog(@"tumblrFeed didStartImportingData");
     
     
 //        [self showLoadingViewAnimated:YES];
 
 }
 
--(void)didFinishImportingRSSData
+-(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION() 
-    NSLog(@"tumblrFeed didStartImportingRSSData");
+    NSLog(@"tumblrFeed didStartImportingData");
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self fetch];

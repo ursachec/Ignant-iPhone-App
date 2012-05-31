@@ -10,6 +10,7 @@
 
 #import "IgnantImporter.h"
 
+#import "UserDefaultsManager.h"
 #import "FBConnect.h"
 
 

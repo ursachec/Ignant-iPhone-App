@@ -19,13 +19,9 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 @protocol IgnantImporterDelegate <NSObject>
 
 @optional
--(void)didStartImportingRSSData;
--(void)didFailImportingRSSData;
--(void)didFinishImportingRSSData;
-
--(void)didStartParsingRSSData;
--(void)didFinishParsingRSSData;
-
+-(void)didStartImportingData;
+-(void)didFinishImportingData;
+-(void)didFinishImportingData;
 
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer;
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary;

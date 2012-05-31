@@ -433,19 +433,19 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 
 #pragma mark - IgnantImporterDelegate
 
--(void)didStartImportingRSSData
+-(void)didStartImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
   
 }
 
--(void)didFailImportingRSSData
+-(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
 }
 
--(void)didFinishImportingRSSData
+-(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
@@ -455,7 +455,7 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
         self.isLoadingDataForFirstRun = NO;
         
         NSDate *dateToBeSaved = [NSDate date];
-        NSLog(@"appdelegate: didFinishImportingRSSData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
+        NSLog(@"appdelegate: didFinishImportingData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
         
         [[NSUserDefaults standardUserDefaults] setObject:dateToBeSaved forKey:kLastStoreUpdateKey];        
         [[NSUserDefaults standardUserDefaults] synchronize];
