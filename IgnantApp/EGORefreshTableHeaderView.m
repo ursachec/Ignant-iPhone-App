@@ -107,15 +107,24 @@
 		
 		NSDate *date = [_delegate egoRefreshTableHeaderDataSourceLastUpdated:self];
 		
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setAMSymbol:@"AM"];
-		[formatter setPMSymbol:@"PM"];
-		[formatter setDateFormat:@"MM/dd/yyyy hh:mm:a"];
-		_lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:date]];
-		[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[formatter release];
-		
+        
+        //date is set to default
+        if ([date compare:[NSDate dateWithTimeIntervalSince1970:0]]==NSOrderedSame) 
+        {
+            _lastUpdatedLabel.text = @"-";
+        }
+        else
+        {
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setAMSymbol:@"AM"];
+            [formatter setPMSymbol:@"PM"];
+            [formatter setDateFormat:@"MM/dd/yyyy hh:mm:a"];
+            _lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:date]];
+            [[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [formatter release];
+        }
+        
 	} else {
 		
 		_lastUpdatedLabel.text = nil;

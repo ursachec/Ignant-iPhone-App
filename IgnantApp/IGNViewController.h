@@ -12,5 +12,7 @@
 
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden;
+-(void)setUpForOfflineUse;
+-(void)setUpForOnlineUse;
 
 @end

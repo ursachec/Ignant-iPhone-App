@@ -119,5 +119,15 @@
     }
 }
 
+-(void)setUpForOfflineUse
+{
+
+}
+
+-(void)setUpForOnlineUse
+{
+    
+}
+
 
 @end
