@@ -440,7 +440,7 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
   
 }
 
--(void)didFinishImportingData
+-(void)didFailImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
 }

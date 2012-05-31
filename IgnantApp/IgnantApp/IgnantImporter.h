@@ -20,7 +20,7 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 @optional
 -(void)didStartImportingData;
--(void)didFinishImportingData;
+-(void)didFailImportingData;
 -(void)didFinishImportingData;
 
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer;
