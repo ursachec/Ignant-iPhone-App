@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "IGNViewController.h"
 
-#import "IgnantImporterDelegate.h"
+#import "IgnantImporter.h"
 
 #import "EGORefreshTableHeaderView.h"
 

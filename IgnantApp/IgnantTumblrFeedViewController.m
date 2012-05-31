@@ -39,8 +39,7 @@
     BOOL _showLoadMoreTumblr;
     BOOL isLoadingLatestTumblrArticles;
     
-
-    NSArray *_arrayWithTestImages;
+    int _numberOfActiveRequests;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     
@@ -69,6 +68,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
+        _numberOfActiveRequests = 0;
         _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         
         appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -97,19 +97,6 @@
         
         
         self.imageManager.fileCache = fileCache;
-        
-        _arrayWithTestImages = [[NSArray alloc] initWithObjects:
-                
-            @"http://29.media.tumblr.com/tumblr_m1w8emWNTe1qztdbbo1_400.png",
-            @"http://27.media.tumblr.com/tumblr_m1w8af4yZr1qztdbbo1_400.png",
-            @"http://24.media.tumblr.com/tumblr_m1pxjwDgpS1qztdbbo1_400.png",
-            @"http://29.media.tumblr.com/tumblr_m1pxizsIDB1qztdbbo1_400.png",
-            @"http://26.media.tumblr.com/tumblr_m1jx641OGr1qztdbbo1_400.png",
-            @"http://27.media.tumblr.com/tumblr_m1fk3dT2Dp1qztdbbo1_400.png",
-            @"http://25.media.tumblr.com/tumblr_m1fk1o7w4Z1qztdbbo1_400.png",
-            @"http://24.media.tumblr.com/tumblr_m1fk0oM2GF1qztdbbo1_400.png",
-            @"http://29.media.tumblr.com/tumblr_m18c8zq3Fv1qztdbbo1_400.png",
-            @"http://29.media.tumblr.com/tumblr_m18c6zOqoo1qztdbbo1_400.png", nil];
         
     }
     return self;
@@ -299,7 +286,7 @@
     float reload_distance = 10;
     if(y > h + reload_distance) 
     {
-        if (!_isLoadingMoreTumblr) {
+        if (!_isLoadingMoreTumblr && _numberOfActiveRequests==0) {
             [self loadMoreTumblrArticles];
         }
     }
@@ -315,6 +302,8 @@
 {    
     if (_isLoadingMoreTumblr) return;
     _isLoadingMoreTumblr = YES;
+    
+    _numberOfActiveRequests++;
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, nil];
     NSString *requestString = kAdressForContentServer;
@@ -375,6 +364,7 @@
     
     if (_isLoadingMoreTumblr) {
         
+        _numberOfActiveRequests--;
         _showLoadMoreTumblr = YES;
         _isLoadingMoreTumblr = NO;
         
@@ -403,6 +393,7 @@
     
     if (_isLoadingMoreTumblr) {
         
+        _numberOfActiveRequests--;
         _isLoadingMoreTumblr = NO;
         
     }
@@ -508,11 +499,9 @@
     LOG_CURRENT_FUNCTION()
     NSLog(@"tumblrFeed didStartImportingRSSData");
     
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    //        
-    //        [self showLoadingViewAnimated:YES];
-    //    
-    //    });
+    
+//        [self showLoadingViewAnimated:YES];
+
 }
 
 -(void)didFinishImportingRSSData
