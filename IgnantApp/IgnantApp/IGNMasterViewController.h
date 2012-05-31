@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-#import "IgnantImporterDelegate.h"
+#import "IgnantImporter.h"
 
 #import "IGNViewController.h"
 
@@ -25,8 +25,13 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
 	BOOL _reloading;
     
-    BOOL _showLoadMorePosts;
-    BOOL _isLoadingMorePosts;
+    BOOL _showLoadMoreContent;
+    BOOL _isLoadingMoreContent;
+    
+    BOOL _isLoadingLatestContent;
+    
+    int _numberOfActiveRequests;
+    
 }
 @property (nonatomic, retain, readonly) IgnantImporter *importer;
 

@@ -17,6 +17,7 @@
 //import CoreData headers
 #import "BlogEntry.h"
 #import "Image.h"
+#import "Category.h"
 
 //import cell headers
 #import "IgnantCell.h"
@@ -49,18 +50,13 @@
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
--(void)startGettingMorePosts;
+-(void)loadMoreContent;
 
 @property (nonatomic, retain) HJObjManager *hjObjectManager;
-@property (nonatomic, retain) UIView *spinningLoadingView;
-@property (nonatomic, retain) UIImageView *spinningImageView;
-
 @property (nonatomic, retain, readwrite) IgnantImporter *importer;
 
-@property (assign, readwrite) BOOL isHomeCategory;
-
 @property (retain, nonatomic, readwrite) Category* currentCategory;
-
+@property (assign, readwrite) BOOL isHomeCategory;
 @end
 
 #pragma mark -
@@ -76,9 +72,6 @@
 @synthesize blogEntriesTableView = _blogEntriesTableView;
 @synthesize detailViewController = _detailViewController;
 
-@synthesize spinningLoadingView = _spinningLoadingView;
-@synthesize spinningImageView = _spinningImageView;
-
 @synthesize importer = _importer;
 
 @synthesize currentCategory = _currentCategory;
@@ -90,8 +83,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        _showLoadMorePosts = YES;
-        _isLoadingMorePosts = NO;
+        _showLoadMoreContent = YES;
+        _isLoadingMoreContent = NO;
+        _isLoadingLatestContent = NO;
         
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
@@ -154,20 +148,36 @@
     [self.navigationController pushViewController:tumblrVC animated:YES];
 }
 
-#pragma mark - spinning animation
--(void)startAnimation
-{
-    NSLog(@"startAnimation");
-}
-
-
 #pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+    //check when was the last time updating the currently set category and trigger load latest/load more
     
+    NSString* currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
+    
+    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:currentCategoryId];
+    NSLog(@"dateForLastUpdate: %@, catgoryId: %@", dateForLastUpdate, currentCategoryId);
+    
+    
+    //only check if data is here if not on first run
+    if (![appDelegate isLoadingDataForFirstRun])
+    if (dateForLastUpdate==nil) 
+    {
+        [self loadLatestContent];
+        NSLog(@"dateForLastUpdate is nil, loadLatestTumblrArticles");
+        
+    }
+    else if( [dateForLastUpdate timeIntervalSinceNow]) 
+    {
+        NSLog(@"dateForLastUpdate not nill, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
+    
+    }
+    
+    
+    //set up some ui elements
     if (self.isHomeCategory) 
     {
         
@@ -189,13 +199,17 @@
 }
 
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
-    
-    
     
     //set up the refresh header view
     if (_refreshHeaderView == nil) {
@@ -211,39 +225,16 @@
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
     
-    
-    
     if (self.isHomeCategory) 
     {
             self.navigationItem.leftBarButtonItem = nil;
     }
-    
-    
     
     //load the object manager and file cache
     self.hjObjectManager = [[[HJObjManager alloc] init] autorelease];
 	NSString* cacheDirectory = [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/imgcache/imgtable/"] ;
 	HJMOFileCache* fileCache = [[[HJMOFileCache alloc] initWithRootPath:cacheDirectory] autorelease];
 	self.hjObjectManager.fileCache = fileCache;
-    
-    
-    //adding spinning lloading view
-//    _spinningLoadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-//    _spinningLoadingView.backgroundColor = [UIColor whiteColor];
-//    
-//    UIButton *someButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [someButton addTarget:self action:@selector(startAnimation) forControlEvents:UIControlEventTouchDown];
-//    someButton.frame = CGRectMake(50, 50, 100, 100);
-//    [_spinningLoadingView addSubview:someButton];
-//    
-//    
-//    _spinningImageView = [[UIImageView alloc] initWithFrame:CGRectMake(85, 150, 150, 150)];
-//    _spinningImageView.image = [UIImage imageNamed:@"Icon"];
-//    [_spinningLoadingView addSubview:_spinningImageView];
-//
-//    
-//    [self.navigationController.view addSubview:_spinningLoadingView];
-//    [self.navigationController.view bringSubviewToFront:_spinningLoadingView];
     
 }
 
@@ -291,7 +282,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
-    return [sectionInfo numberOfObjects] + _showLoadMorePosts;
+    return [sectionInfo numberOfObjects] + _showLoadMoreContent;
 }
 
 // Customize the appearance of table view cells.
@@ -303,7 +294,7 @@
     static NSString *CellIdentifierLoading = @"LoadingCell";
     
     
-    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMorePosts  ) 
+    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMoreContent  ) 
     {
         
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
@@ -316,7 +307,7 @@
         return cell;
         
     }
-    else if([self isIndexPathLastRow:indexPath] && _isLoadingMorePosts)
+    else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreContent)
     {
     
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
@@ -358,9 +349,9 @@
 {    
     if ([self isIndexPathLastRow:indexPath]) 
     {
-        if (!_isLoadingMorePosts) 
+        if (!_isLoadingMoreContent) 
         {
-            [self startGettingMorePosts];       
+            [self loadMoreContent];       
             
 #warning TODO: check performance, maybe us something better to let the tableview know that the cell has changed
             [_blogEntriesTableView reloadData];
@@ -467,60 +458,6 @@
     NSAssert2(success, @"Unhandled error performing fetch at SongsViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
     [self.blogEntriesTableView reloadData];
 }
-
-//- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-//{
-//    [self.blogEntriesTableView beginUpdates];
-//    
-//}
-//
-//- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-//           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-//{
-//    switch(type) {
-//        case NSFetchedResultsChangeInsert:
-//            [self.blogEntriesTableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeDelete:
-//            [self.blogEntriesTableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//    }
-//}
-//
-//- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-//       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-//      newIndexPath:(NSIndexPath *)newIndexPath
-//{
-//    UITableView *tableView = self.blogEntriesTableView;
-//    
-//    switch(type) {
-//        case NSFetchedResultsChangeInsert:
-//            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeDelete:
-//            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeUpdate:
-//            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-//            break;
-//            
-//        case NSFetchedResultsChangeMove:
-//            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//    }
-//}
-//
-//- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-//{
-//    [self.blogEntriesTableView endUpdates];
-//}
-
-
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
  
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
@@ -562,7 +499,7 @@
     NSUInteger numberOfObjects = [sectionInfo numberOfObjects];
     
     
-    if(indexPath.row >= numberOfObjects && _showLoadMorePosts)
+    if(indexPath.row >= numberOfObjects && _showLoadMoreContent)
     {
         return YES;
     }
@@ -571,10 +508,30 @@
 }
 
 #pragma mark - getting content from the server
--(void)startGettingMorePosts
+-(void)loadLatestContent
 {
+    if (_isLoadingLatestContent) return;        
+    _isLoadingLatestContent = YES;
+    
+    NSString *categoryId = self.currentCategory!=nil ? self.currentCategory.categoryId : kUndefinedCategoryId;
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetLatestArticlesForCategory,kParameterAction,categoryId,kCurrentCategoryId, nil];
+    NSString *requestString = kAdressForContentServer;
+    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+    
+    NSLog(@"encodedString go: %@",encodedString);
+    
+	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+	[request setDelegate:self];
+	[request startAsynchronous]; 
+}
+
+-(void)loadMoreContent
+{
+    if (_isLoadingMoreContent) return;        
+    _isLoadingMoreContent = YES;
+    
+#warning IS THIS REALLY NECESSARY AT THIS POINT ? 
     dispatch_async(dispatch_get_main_queue(), ^{
-        _isLoadingMorePosts = YES;
         [self.blogEntriesTableView reloadData];
         
     });
@@ -595,7 +552,7 @@
         categoryId = [self.currentCategory categoryId];
     }
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMorePosts,kParameterAction,categoryId,kCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreArticlesForCategory,kParameterAction,categoryId,kCurrentCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
@@ -612,6 +569,19 @@
     
     NSLog(@"requestStarted");
     
+    if (_isLoadingMoreContent) {
+        
+        
+        
+        
+    }
+    else if (_isLoadingLatestContent) {
+        
+        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId]==nil) {
+            [self setIsLoadingViewHidden:NO];
+        }
+        
+    }
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -621,14 +591,33 @@
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
-    _showLoadMorePosts = YES;
-    _isLoadingMorePosts = NO;
     
-    dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
-    dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONStringWithMorePosts:[request responseString]];
-    });
+    if (_isLoadingMoreContent) {
+        
+        #warning IMPORTANT!!! TODO implement importing the string to CoreData
+        
+        NSLog(@"load more content: %@", [request responseString]);
+        
+        _numberOfActiveRequests--;
+        _showLoadMoreContent = YES;
+        _isLoadingMoreContent = NO;
+        
+    }
+    else if (_isLoadingLatestContent) {
+        
+        NSLog(@"request: %@", [request responseString]);
 
+
+        #warning IMPORTANT!!! TODO implement importing the string to CoreData
+        
+        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+        dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONString:[request responseString]];
+        });
+        
+        _isLoadingLatestContent = NO;
+        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
+    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -637,8 +626,24 @@
     NSLog(@"requestFailed");
     
 #warning TODO: do something if the request has failed
+    
+    if (_isLoadingMoreContent) {    
+        _numberOfActiveRequests--;
+        _isLoadingMoreContent = NO;
+    }
+    
+    else if (_isLoadingLatestContent) {
+        
+        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId]==nil) {
+            [self setIsLoadingViewHidden:YES];
+        }
+        
+        
+        _isLoadingLatestContent = NO;
+        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
+    }
+    
 }
-
 
 #pragma mark - IgnantImporterDelegate
 
@@ -646,22 +651,36 @@
 {
     NSLog(@"MasterVC didStartImportingRSSData");
     
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        
-//        [self showLoadingViewAnimated:YES];
-//    
-//    });
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+        
 }
 
+-(void)didFailImportingRSSData
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setIsLoadingViewHidden:YES];
+    });
+
+}
 -(void)didFinishImportingRSSData
 {
+    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+        
         [self fetch];
         [self.blogEntriesTableView reloadData];
+        
+        [self setIsLoadingViewHidden:YES];
+        [appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:self.currentCategory.categoryId];
     });
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {  
+    
     [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
 
@@ -687,8 +706,10 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
 	
-	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+//	[self reloadTableViewDataSource];
+//	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+    
+    [self loadLatestContent];
 	
 }
 
@@ -700,8 +721,8 @@
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-	return [NSDate date]; // should return date data source was last changed
-	
+    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId];
+	return dateForLastUpdate==nil ? [NSDate dateWithTimeIntervalSince1970:0] : dateForLastUpdate;
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -721,9 +742,9 @@
     float reload_distance = 10;
     if(y > h + reload_distance) 
     {
-        if (!_isLoadingMorePosts) 
+        if (!_isLoadingMoreContent) 
         {
-            [self startGettingMorePosts];
+            [self loadMoreContent];
         }
     }
 }
