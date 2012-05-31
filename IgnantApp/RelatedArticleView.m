@@ -10,7 +10,9 @@
 
 
 @implementation RelatedArticleView
-
+@synthesize thumbImage;
+@synthesize categoryName;
+@synthesize articleName;
 
 -(id)initWithFrame:(CGRect)frame articleName:(NSString*)articleName articleCategory:(NSString*)categoryName articleThumb:(UIImage*)articleThumbImage
 {

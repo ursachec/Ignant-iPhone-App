@@ -10,7 +10,7 @@
 
 #import "IGNViewController.h"
 
-#import "IgnantImporterDelegate.h"
+#import "IgnantImporter.h"
 
 @class BlogEntry;
 

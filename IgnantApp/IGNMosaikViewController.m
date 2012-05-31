@@ -63,9 +63,6 @@ NSString * const kImageFilename = @"filename";
 
 -(void)setUpOverlayViewForAnimationUsingMosaicView:(MosaicView*)view;
 
--(void)beginFinalAnimationForView:(MosaicView*)view;
--(CABasicAnimation*)animationForView:(UIView*)view;
-
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId;
 
 @end

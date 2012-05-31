@@ -169,37 +169,25 @@ typedef enum _moreOptionsIndeces  {
 {
 
     switch (indexPath.row) {
-        case indexForAboutIgnant:
-            
-            NSLog(@"something");
-            
+        case indexForAboutIgnant:;
             AboutViewController *aboutVC = [[AboutViewController alloc] initWithNibName:@"AboutViewController" bundle:nil];
             [self.navigationController pushViewController:aboutVC animated:YES];
             [aboutVC release];
             
             break;
-        case indexForTumblrFeed:
-            
-            NSLog(@"something");
-            
+        case indexForTumblrFeed:;
             IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
             tumblrVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:tumblrVC animated:YES];
             
             break;
-        case indexForCategories:
-            
-            NSLog(@"something");
-            
+        case indexForCategories:;
             CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
             categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:categoriesVC animated:YES];
             
             break;
-        case indexForMostRed:
-            
-            NSLog(@"something");
-            
+        case indexForMostRed:;
             MostViewedViewController *mostViewedVC = [[MostViewedViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil];
             mostViewedVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:mostViewedVC animated:YES];
@@ -207,10 +195,7 @@ typedef enum _moreOptionsIndeces  {
             
             break;
             
-        case indexForContact:
-            
-            NSLog(@"something");
-            
+        case indexForContact:;
             ContactViewController *contactVC = [[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil];
             [self.navigationController pushViewController:contactVC animated:YES];
             [contactVC release];
