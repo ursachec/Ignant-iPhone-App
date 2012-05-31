@@ -21,9 +21,21 @@ int const kCategoryIndexForHome = -1;
 int const kCategoryIndexForMostRed = -500;
 
 //################################################################################
+//user defaults keys
+
+NSString * const kUpdateDatesForCategoriesKey = @"updateDates";
+NSString * const kUpdateDatesForCategoriesKeyDateValue = @"updateDatesDate";
+NSString * const kUpdateDatesForCategoriesKeyCategoryIdValue = @"updateDatesCategoryId";
+
+
+NSString * const kDatesForLeastRecentArticleKey = @"leastRecentArticlesDates";
+NSString * const kDatesForLeastRecentArticleKeyDateValue = @"leastRecentArticleDate";
+NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue = @"leastRecentArticleCategoryId";
+
+//################################################################################
 
 //server stuff
-#define shouldUseRemoteServer FALSE
+#define shouldUseRemoteServer false
 
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
@@ -31,23 +43,26 @@ NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPho
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.44.249/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForContentServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/ignant.php";
 #endif
 
 NSString * const kParameterAction = @"action";
 
+
+
 //possible actions
 NSString * const kAPICommandSearch = @"search";
 NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";
-NSString * const kAPICommandGetMorePosts = @"getMorePosts";
-NSString * const kAPICommandGetArticlesForCategory = @"getArticlesForCategory";
+NSString * const kAPICommandGetMoreArticlesForCategory = @"getMoreArticlesForCategory";
+NSString * const kAPICommandGetLatestArticlesForCategory = @"getLatestArticlesForCategory";
 NSString * const kAPICommandGetSingleArticle = @"getSingleArticle";
 NSString * const kAPICommandGetSetOfMosaicImages = @"getSetOfMosaicImages";
 NSString * const kAPICommandGetMoreTumblrArticles = @"getMoreTumblrArticles";
 NSString * const kAPICommandGetLatestTumblrArticles = @"getLatestTumblrArticles";
 
 
-NSString * const kCategoryId = @"categoryId";
+NSString * const kUndefinedCategoryId = @"undefined";
+NSString * const kCurrentCategoryId = @"categoryId";
 NSString * const kNumberOfResultsToBeReturned = @"numberOfResultsToReturn";
 NSString * const kArticleId = @"articleId";
 

@@ -7,6 +7,7 @@
 //
 
 #import "Constants_Colors.h"
+#import "Constants_API_Flow_Control.h"
 
 //some preprocessor commans
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
@@ -17,6 +18,18 @@
 //categories
 extern int const kCategoryIndexForHome;
 extern int const kCategoryIndexForMostRed;
+
+//################################################################################
+//user defaults keys
+
+extern NSString * const kUpdateDatesForCategoriesKey;
+extern NSString * const kUpdateDatesForCategoriesKeyDateValue;
+extern NSString * const kUpdateDatesForCategoriesKeyCategoryIdValue;
+
+extern NSString * const kDatesForLeastRecentArticleKey;
+extern NSString * const kDatesForLeastRecentArticleKeyDateValue;
+extern NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue;
+
 
 //################################################################################
 //other constants
@@ -41,15 +54,16 @@ extern NSString * const kParameterAction;
 //possible API Commands
 extern NSString * const kAPICommandSearch;
 extern NSString * const kAPICommandGetDataForFirstRun;
-extern NSString * const kAPICommandGetMorePosts;
-extern NSString * const kAPICommandGetArticlesForCategory;
+extern NSString * const kAPICommandGetMoreArticlesForCategory;
+extern NSString * const kAPICommandGetLatestArticlesForCategory;
 extern NSString * const kAPICommandGetSingleArticle;
 extern NSString * const kAPICommandGetSetOfMosaicImages;
 extern NSString * const kAPICommandGetMoreTumblrArticles;
 extern NSString * const kAPICommandGetLatestTumblrArticles;
 
 //getting content
-extern NSString * const kCategoryId;
+extern NSString * const kUndefinedCategoryId;
+extern NSString * const kCurrentCategoryId;
 extern NSString * const kNumberOfResultsToBeReturned;
 extern NSString * const kArticleId;
 
