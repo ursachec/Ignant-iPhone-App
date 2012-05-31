@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import "IgnantImporterDelegate.h"
+#import "IgnantImporter.h"
 
 #import "FBConnect.h"
 
-@class IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
+
+@class UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
@@ -37,11 +38,14 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
+@property(nonatomic, assign) BOOL isLoadingDataForFirstRun;
+
 @property (strong, nonatomic) UINavigationController *navigationController;
 
 @property (strong, nonatomic) UISplitViewController *splitViewController;
 
 @property (strong, nonatomic) IgnantImporter *importer;
+@property (strong, nonatomic) UserDefaultsManager *userDefaultsManager;
 
 @property (readonly, strong, nonatomic) NSString *persistentStorePath;
 

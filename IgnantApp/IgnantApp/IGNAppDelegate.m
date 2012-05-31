@@ -20,6 +20,7 @@
 //import other needed classes
 #import "IgnantImporter.h"
 #import "IgnantLoadingView.h"
+#import "UserDefaultsManager.h"
 #import "Constants.h"
 
 //imports for ASIHTTPRequest
@@ -29,7 +30,10 @@
 
 #define kForceReloadCoreData NO
 
-
+#warning remove MWFeedParser from the project
+#warning TODO: IMPROVE SHOW OF IMAGE ARTICLES AND TUMBLR POSTS BY MANAGING HJIMAGES BETTER
+#warning TODO: add code completion snippets
+#warning TODO: add real logging instead of NSLog preprocessor commands!!!
 #warning TODO: before loading content from ignant, check if the internet connection is available!!!
 #warning TODO: ??? implement OpenUDID to know what mosaic images have already been loaded, or are there enough so that they won't be repeated ?
 
@@ -37,7 +41,6 @@
 {
     Facebook *facebook;
 }
-
 
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readwrite, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
@@ -51,11 +54,16 @@
 
 -(void)startGettingDataForFirstRun;
 
+-(void)createCacheFolders;
+
 @end
 
 #pragma mark -
 
 @implementation IGNAppDelegate
+@synthesize userDefaultsManager = _userDefaultsManager;
+
+@synthesize isLoadingDataForFirstRun;
 
 @synthesize window = _window;
 @synthesize managedObjectContext = __managedObjectContext;
@@ -76,21 +84,20 @@
 @synthesize facebook = _facebook;
 
 
-
 // String used to identify the update object in the user defaults storage.
 static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
-static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 
 
 - (void)dealloc
 {
+    [_userDefaultsManager release];
+    
     [_window release];
     [__managedObjectContext release];
     [__managedObjectModel release];
     [__persistentStoreCoordinator release];
     [_navigationController release];
     [_splitViewController release];
-    
     
     //release view controllers
     [_tumblrFeedViewController release];
@@ -101,6 +108,8 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     [super dealloc];
 }
 
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"didFinishLaunchingWithOptions");
@@ -109,32 +118,15 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     
+    //initialize utility objects
+    _userDefaultsManager = [[UserDefaultsManager alloc] init];
+    
     
     //set up loading view
     [self setUpLoadingView];
     
-    
-    //create cache folders
-    NSFileManager *fileManager= [NSFileManager defaultManager]; 
-    
-    NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *thumbImagesCacheDirectory = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
-    BOOL isDir;
-    if(![fileManager fileExistsAtPath:thumbImagesCacheDirectory isDirectory:&isDir])
-    {
-        if(![fileManager createDirectoryAtPath:thumbImagesCacheDirectory withIntermediateDirectories:YES attributes:nil error:NULL])
-        {
-            NSLog(@"Error: Create folder failed %@", thumbImagesCacheDirectory);
-        }
-        else
-        {
-            NSLog(@"created Folder");
-        }
-    }
-    else
-    {
-        NSLog(@"directory exists");
-    }
+    //create cache folders for the thumbs
+    [self createCacheFolders];
         
     
 //    //initialize the facebook object
@@ -166,9 +158,6 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     _importer.persistentStoreCoordinator = self.persistentStoreCoordinator;
     _importer.delegate = self;
     
-    //get data from ignant and parse it
-    
-    //    [_importer startImportingDataFromIgnant];
     
     // check the last update, stored in NSUserDefaults
     NSDate *lastUpdate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
@@ -189,6 +178,31 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
     
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void)createCacheFolders
+{
+    //create cache folders
+    NSFileManager *fileManager= [NSFileManager defaultManager]; 
+    
+    NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *thumbImagesCacheDirectory = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
+    BOOL isDir;
+    if(![fileManager fileExistsAtPath:thumbImagesCacheDirectory isDirectory:&isDir])
+    {
+        if(![fileManager createDirectoryAtPath:thumbImagesCacheDirectory withIntermediateDirectories:YES attributes:nil error:NULL])
+        {
+            NSLog(@"Error: Create folder failed %@", thumbImagesCacheDirectory);
+        }
+        else
+        {
+            NSLog(@"created Folder");
+        }
+    }
+    else
+    {
+        NSLog(@"directory exists");
+    }
 }
 
 - (NSString *)persistentStorePath {
@@ -421,22 +435,32 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 
 -(void)didStartImportingRSSData
 {
-    NSLog(@"didStartImportingRSSData");
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
   
 }
 
+-(void)didFailImportingRSSData
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+}
+
 -(void)didFinishImportingRSSData
 {
-    NSLog(@"didFinishImportingRSSData");
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        
+        self.isLoadingDataForFirstRun = NO;
         
         NSDate *dateToBeSaved = [NSDate date];
         NSLog(@"appdelegate: didFinishImportingRSSData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
         
         [[NSUserDefaults standardUserDefaults] setObject:dateToBeSaved forKey:kLastStoreUpdateKey];        
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [self.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForHome]];
         
         self.importer = nil;
         
@@ -464,8 +488,10 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 
 -(void)showLoadingViewAnimated:(BOOL)animated
 {    
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.navigationController.view addSubview:_customLoadingView];
         [self.navigationController.view bringSubviewToFront:_customLoadingView];
+    });
 }
 
 -(void)hideLoadingViewAnimated:(BOOL)animated
@@ -479,6 +505,8 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 #pragma mark - getting content from the server
 -(void)startGettingDataForFirstRun
 {
+    self.isLoadingDataForFirstRun = YES;
+    
     //show the loading view here
     [self showLoadingViewAnimated:YES];
     
@@ -506,6 +534,7 @@ static NSString * const kSomeTestUpdateKey = @"SomeTestUpdateKey";
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    self.isLoadingDataForFirstRun = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
