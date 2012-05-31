@@ -8,12 +8,9 @@
 
 #import "CategoriesViewController.h"
 
-#import "IGNCategoryViewController.h"
-
 #import "IGNMasterViewController.h"
 
 #import "IGNAppDelegate.h"
-
 
 #import "Category.h"
 

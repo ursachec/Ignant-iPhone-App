@@ -20,8 +20,6 @@
 
 #import "IGNMoreOptionsViewController.h"
 
-#import "RelatedArticleViewController.h"
-
 #import "IgnantLoadingView.h"
 
 #import "IgnantImporter.h"
