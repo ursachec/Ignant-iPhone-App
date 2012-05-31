@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		414A052C15760B3600DDB8EA /* EasySocialMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 414A052B15760B3600DDB8EA /* EasySocialMedia.m */; };
+		416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 416AB6EC1577A68100625B03 /* UserDefaultsManager.m */; };
 		41BBCCA11567D91D003DD66B /* TumblrEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BBCCA01567D91D003DD66B /* TumblrEntry.m */; };
+		41BC104E15726A140071A4D6 /* Constants_API_Flow_Control.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */; };
 		FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE014AE34D0003B8778 /* UIKit.framework */; };
 		FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE214AE34D0003B8778 /* Foundation.framework */; };
 		FE0DDCE514AE34D0003B8778 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE414AE34D0003B8778 /* CoreGraphics.framework */; };
@@ -230,8 +233,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		414A052A15760B3600DDB8EA /* EasySocialMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EasySocialMedia.h; path = EasySocialMedia/EasySocialMedia.h; sourceTree = "<group>"; };
+		414A052B15760B3600DDB8EA /* EasySocialMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EasySocialMedia.m; path = EasySocialMedia/EasySocialMedia.m; sourceTree = "<group>"; };
+		416AB6EB1577A68100625B03 /* UserDefaultsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserDefaultsManager.h; path = Managers/UserDefaultsManager.h; sourceTree = "<group>"; };
+		416AB6EC1577A68100625B03 /* UserDefaultsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserDefaultsManager.m; path = Managers/UserDefaultsManager.m; sourceTree = "<group>"; };
 		41BBCC9F1567D91D003DD66B /* TumblrEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TumblrEntry.h; sourceTree = "<group>"; };
 		41BBCCA01567D91D003DD66B /* TumblrEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TumblrEntry.m; sourceTree = "<group>"; };
+		41BC104C15726A140071A4D6 /* Constants_API_Flow_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants_API_Flow_Control.h; path = Constants/Constants_API_Flow_Control.h; sourceTree = "<group>"; };
+		41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Constants_API_Flow_Control.m; path = Constants/Constants_API_Flow_Control.m; sourceTree = "<group>"; };
 		FE0DDCDC14AE34D0003B8778 /* IgnantApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IgnantApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE0DDCE014AE34D0003B8778 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FE0DDCE214AE34D0003B8778 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -265,7 +274,6 @@
 		FE0DDD2E14AE36DC003B8778 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		FE0DDD3014AE374F003B8778 /* IgnantImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IgnantImporter.h; sourceTree = "<group>"; };
 		FE0DDD3114AE3750003B8778 /* IgnantImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IgnantImporter.m; sourceTree = "<group>"; };
-		FE0DDD3314AE3943003B8778 /* IgnantImporterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IgnantImporterDelegate.h; sourceTree = "<group>"; };
 		FE12C4CE14E3F08B008053ED /* ImageSlideshowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSlideshowViewController.h; path = IgnantApp/ImageSlideshowViewController.h; sourceTree = "<group>"; };
 		FE12C4CF14E3F08B008053ED /* ImageSlideshowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageSlideshowViewController.m; path = IgnantApp/ImageSlideshowViewController.m; sourceTree = "<group>"; };
 		FE12C4D014E3F08B008053ED /* ImageSlideshowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageSlideshowViewController.xib; path = IgnantApp/ImageSlideshowViewController.xib; sourceTree = "<group>"; };
@@ -582,18 +590,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		414A052715760B0000DDB8EA /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				414A052915760B0700DDB8EA /* Social Media */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		414A052915760B0700DDB8EA /* Social Media */ = {
+			isa = PBXGroup;
+			children = (
+				414A052A15760B3600DDB8EA /* EasySocialMedia.h */,
+				414A052B15760B3600DDB8EA /* EasySocialMedia.m */,
+			);
+			name = "Social Media";
+			sourceTree = "<group>";
+		};
+		416AB6EF1577A68600625B03 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				416AB6EB1577A68100625B03 /* UserDefaultsManager.h */,
+				416AB6EC1577A68100625B03 /* UserDefaultsManager.m */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
 		FE0DDCD114AE34D0003B8778 = {
 			isa = PBXGroup;
 			children = (
-				FEC36AE31528F9F0004F19C8 /* libxml2.dylib */,
-				FEC36AE11528F973004F19C8 /* Security.framework */,
-				FEBA71D0150CE0E40016AD6E /* libz.dylib */,
-				FEBA71CE150CDF4C0016AD6E /* SystemConfiguration.framework */,
-				FEBA71CC150CDF420016AD6E /* CoreLocation.framework */,
-				FEBA71CA150CDF390016AD6E /* CFNetwork.framework */,
-				FEBA71C8150CDF2E0016AD6E /* MapKit.framework */,
-				FEBA71C6150CDF270016AD6E /* MobileCoreServices.framework */,
-				FE8B35B814DC7B17008F0407 /* QuartzCore.framework */,
 				FE0DDD1014AE350F003B8778 /* Resources */,
 				FE0DDCE814AE34D0003B8778 /* IgnantApp */,
 				FE0DDD0F14AE34FF003B8778 /* Controllers */,
@@ -617,6 +642,15 @@
 		FE0DDCDF14AE34D0003B8778 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FEC36AE31528F9F0004F19C8 /* libxml2.dylib */,
+				FEC36AE11528F973004F19C8 /* Security.framework */,
+				FEBA71D0150CE0E40016AD6E /* libz.dylib */,
+				FEBA71CE150CDF4C0016AD6E /* SystemConfiguration.framework */,
+				FEBA71CC150CDF420016AD6E /* CoreLocation.framework */,
+				FEBA71CA150CDF390016AD6E /* CFNetwork.framework */,
+				FEBA71C8150CDF2E0016AD6E /* MapKit.framework */,
+				FEBA71C6150CDF270016AD6E /* MobileCoreServices.framework */,
+				FE8B35B814DC7B17008F0407 /* QuartzCore.framework */,
 				FE0DDCE014AE34D0003B8778 /* UIKit.framework */,
 				FE0DDCE214AE34D0003B8778 /* Foundation.framework */,
 				FE0DDCE414AE34D0003B8778 /* CoreGraphics.framework */,
@@ -628,6 +662,8 @@
 		FE0DDCE814AE34D0003B8778 /* IgnantApp */ = {
 			isa = PBXGroup;
 			children = (
+				416AB6EF1577A68600625B03 /* Managers */,
+				414A052715760B0000DDB8EA /* Utilities */,
 				FE0DDCF114AE34D0003B8778 /* IGNAppDelegate.h */,
 				FE0DDCF214AE34D0003B8778 /* IGNAppDelegate.m */,
 				FEC82EE0154B2FC9004F4E95 /* Data importers */,
@@ -1141,6 +1177,8 @@
 			children = (
 				FE775DD615585A1C006D1486 /* Constants.h */,
 				FE775DD715585A1C006D1486 /* Constants.m */,
+				41BC104C15726A140071A4D6 /* Constants_API_Flow_Control.h */,
+				41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */,
 				FE775DD3155859B9006D1486 /* Constants_API_Fields.h */,
 				FE775DD4155859B9006D1486 /* Constants_API_Fields.m */,
 				FE775DCD15585961006D1486 /* Constants_Fonts.h */,
@@ -1281,7 +1319,6 @@
 			children = (
 				FE0DDD3014AE374F003B8778 /* IgnantImporter.h */,
 				FE0DDD3114AE3750003B8778 /* IgnantImporter.m */,
-				FE0DDD3314AE3943003B8778 /* IgnantImporterDelegate.h */,
 			);
 			name = "Data importers";
 			sourceTree = "<group>";
@@ -1555,6 +1592,9 @@
 				FE775DD21558598A006D1486 /* Constants_Colors.m in Sources */,
 				FE775DD5155859B9006D1486 /* Constants_API_Fields.m in Sources */,
 				41BBCCA11567D91D003DD66B /* TumblrEntry.m in Sources */,
+				41BC104E15726A140071A4D6 /* Constants_API_Flow_Control.m in Sources */,
+				414A052C15760B3600DDB8EA /* EasySocialMedia.m in Sources */,
+				416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1644,11 +1684,13 @@
 					armv7,
 					armv6,
 				);
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IgnantApp/IgnantApp-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SDKROOT)/usr/include/libxml2/**";
 				INFOPLIST_FILE = "IgnantApp/IgnantApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
