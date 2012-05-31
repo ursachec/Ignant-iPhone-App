@@ -9,11 +9,29 @@
 #import <Foundation/Foundation.h>
 
 #import "MWFeedParser.h"
-#import "IgnantImporterDelegate.h"
+
 
 extern NSString *const kLastImportedBlogEntryDateKey;
 extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
+@class IgnantImporter;
+
+@protocol IgnantImporterDelegate <NSObject>
+
+@optional
+-(void)didStartImportingRSSData;
+-(void)didFailImportingRSSData;
+-(void)didFinishImportingRSSData;
+
+-(void)didStartParsingRSSData;
+-(void)didFinishParsingRSSData;
+
+
+-(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer;
+-(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary;
+-(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary;
+
+@end
 
 @interface IgnantImporter : NSObject <MWFeedParserDelegate>
 
@@ -21,9 +39,6 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 @property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *insertionContext;
-
--(void)startImportingDataFromIgnant;
--(void)finishImportingDataFromIgnantWithError:(NSError*)error;
 
 
 -(void)importJSONString:(NSString*)jsonString;

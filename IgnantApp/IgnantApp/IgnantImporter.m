@@ -29,8 +29,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 //NSString *const feedAdress = @"feed://www.google.com/reader/atom/feed/feed://feeds.feedburner.com/ignant?n=4&r=o&et=1325451846";
 
 
-
-
 #import "Image.h"
 #import "BlogEntry.h"
 #import "TumblrEntry.h"
@@ -76,7 +74,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @property NSUInteger countForNumberOfCommentsToBeSaved;
 
 @property (nonatomic, retain) NSDate *latestDayOfCurrentFeed;
-
 
 @property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForBlogEntries;
 @property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForTumblrEntries;
@@ -131,25 +128,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
     [super dealloc];
 }
 
--(void)startImportingDataFromIgnant
-{
-    if (delegate && [delegate respondsToSelector:@selector(importerDidSave:)]) {
-        [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
-    }
-    
-    if ([delegate respondsToSelector:@selector(didStartImportingRSSData)]) {
-        [delegate didStartImportingRSSData];
-    }
-    
-    NSURL *feedURL = [NSURL URLWithString:feedAdress];
-	feedParser = [[MWFeedParser alloc] initWithFeedURL:feedURL];
-	feedParser.delegate = self;
-	feedParser.feedParseType = ParseTypeFull; // Parse feed info and all items
-	feedParser.connectionType = ConnectionTypeAsynchronously;
-	[feedParser parse];
-}
-
-
 #pragma mark - parsing support methods
 
 static const NSUInteger kImportBatchSize = 5;
@@ -174,138 +152,6 @@ static const NSUInteger kImportBatchSize = 5;
 -(void)finishProcessingCurrentComment
 {
     countForNumberOfCommentsToBeSaved++;
-}
-
-
-#pragma mark - parsing
-
-
--(void)finishImportingDataFromIgnantWithError:(NSError*)error
-{
-    if ([delegate respondsToSelector:@selector(didFinishImportingRSSData)]) {
-        [delegate didFinishImportingRSSData];
-    }
-    
-    if (delegate && [delegate respondsToSelector:@selector(importerDidSave:)]) {
-        [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
-    }
-}
-
-#pragma - MWFeedParserDelegate DEBUGGING
-#warning debugging here
-- (void)feedParserDidStart:(MWFeedParser *)parser {
-    
-    if ([delegate respondsToSelector:@selector(didStartParsingRSSData)]) {
-        [delegate didStartParsingRSSData];
-    }
-}
-
-- (void)feedParser:(MWFeedParser *)parser didParseFeedInfo:(MWFeedInfo *)info {
-	NSLog(@"Parsed Feed Info: “%@”", info.title);
-}
-
-- (void)feedParser:(MWFeedParser *)parser didParseFeedItem:(MWFeedItem *)item {
-    
-    NSDate *lastSavedObjectDate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastImportedBlogEntryDateKey];
-    
-    //only use the feedItem if its date is newer than that of the last saved object 
-    if ( lastSavedObjectDate!=nil && ([item.date compare:lastSavedObjectDate]!=NSOrderedDescending) ) {
-        return;
-    }
-    //check if a BlogEntry with the same title already exists
-    NSString *decodedContentString = [item.content stringByDecodingHTMLEntities];
-    NSString *entitiesDecodedDescriptionString = [item.summary stringByDecodingHTMLEntities];
-    
-    //create new BlogEntry
-    self.currentBlogEntry = nil;
-    self.currentBlogEntry.title = item.title;
-    self.currentBlogEntry.publishingDate = item.date;
-    self.currentBlogEntry.descriptionText = entitiesDecodedDescriptionString;
-    
-    if ([item.date compare:self.latestDayOfCurrentFeed]==NSOrderedDescending) {
-        self.latestDayOfCurrentFeed = item.date;
-    }
-    
-    //find images using regex and import them
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\http://www.ignant.de/wp-content/uploads/([0-9]*)/([0-9]*)/([-_a-z]*)([0-9]*).(jpg|jpeg|png)+\\b"
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSArray *matches = [regex matchesInString:decodedContentString
-                                      options:0
-                                        range:NSMakeRange(0, [decodedContentString length])];
-    NSLog(@"matches number of: %d", [matches count]);
-    
-    BOOL thumbnailImageAdressResolved = NO;
-    NSString *thumbnailImageAdress = @"";
-    
-    for (NSTextCheckingResult *match in matches) {
-        
-        NSString *matchedString = [decodedContentString substringWithRange:[match range]];
-        NSString *firstMatchedString = [decodedContentString substringWithRange:[match rangeAtIndex:1]];
-        NSString *secondMatchedString = [decodedContentString substringWithRange:[match rangeAtIndex:2]];
-        NSString *thirdMatchedString = [decodedContentString substringWithRange:[match rangeAtIndex:3]];
-        NSString *fourthMatchedString = [decodedContentString substringWithRange:[match rangeAtIndex:4]]; 
-        NSString *fifthMatchedString = [decodedContentString substringWithRange:[match rangeAtIndex:5]]; 
-        NSString *imageFilenameWithExtention = [NSString stringWithFormat:@"%@.%@",fourthMatchedString,fifthMatchedString];
-        
-        //create new image
-        self.currentImage = nil;
-        self.currentImage.url = matchedString;
-        self.currentImage.filename = imageFilenameWithExtention;
-        self.currentImage.entry = self.currentBlogEntry;
-        
-        
-        if(!thumbnailImageAdressResolved)
-        {
-            thumbnailImageAdress = [NSString stringWithFormat:@"http://www.ignant.de/wp-content/uploads/%@/%@/%@pre.%@",firstMatchedString,secondMatchedString,thirdMatchedString,fifthMatchedString];
-            
-            NSLog(@"thumbnailImageAdress: %@", thumbnailImageAdress);
-            
-            self.currentBlogEntry.thumbImageFilename = thumbnailImageAdress;
-            
-            thumbnailImageAdressResolved=YES;
-        } 
-        //this is not needed yet
-//        [self finishProcessingCurrentImage];
-    }
-    
-    [self finishProcessingCurrentBlogEntry];
-    
-	if (item) [parsedItems addObject:item];	
-}
-
-- (void)feedParserDidFinish:(MWFeedParser *)parser {
-    
-    //save the publishing date of the latest object
-    [[NSUserDefaults standardUserDefaults] setObject:_latestDayOfCurrentFeed forKey:kLastImportedBlogEntryDateKey];
-    
-    
-    NSError *saveError = nil;
-    NSAssert1([insertionContext save:&saveError], @"Unhandled error saving managed object context in import thread: %@", [saveError localizedDescription]);
-    
-
-    if ([delegate respondsToSelector:@selector(didFinishParsingRSSData)]) {
-        [delegate didFinishParsingRSSData];
-    }
-    
-    [self finishImportingDataFromIgnantWithError:nil];
-}
-
-- (void)feedParser:(MWFeedParser *)parser didFailWithError:(NSError *)error {
-	NSLog(@"Finished Parsing With Error: %@", error);
-    if (parsedItems.count == 0) {
-        
-    } else {
-        // Failed but some items parsed, so show and inform of error
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Parsing Incomplete"
-                                                         message:@"There was an error during the parsing of this feed. Not all of the feed items could parsed."
-                                                        delegate:nil
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil] autorelease];
-        [alert show];
-    }
-    [self finishImportingDataFromIgnantWithError:error];
 }
 
 #pragma mark - appropriate getters
@@ -424,8 +270,8 @@ static const NSUInteger kImportBatchSize = 5;
     {
         [self importOneArticleFromDictionary:oneArticle];
     }
-    
     savedOk = [insertionContext save:&saveError];
+    
    
     //update the date of the last imported article for the main page
     if (savedOk && self.currentBlogEntry.publishingDate!=nil) 
@@ -441,15 +287,23 @@ static const NSUInteger kImportBatchSize = 5;
     
     NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
     
-    NSLog(@"__onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    NSLog(@"importJSONString __onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     
-    if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-        [delegate didFinishImportingRSSData];
+    if (savedOk) {
+        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
+            [delegate didFinishImportingRSSData];
+        }
     }
+    else {
+        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
+            [delegate didFailImportingRSSData];
+        }
+    }
+    
 }
 
 
@@ -644,12 +498,19 @@ static const NSUInteger kImportBatchSize = 5;
     NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
     
     
-    NSLog(@"__onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    NSLog(@"importJSONStringWithMorePosts __onecall_didFinishImportingRSSData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
-    
-    if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-        [delegate didFinishImportingRSSData];
+    if (savedOk) {
+        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
+            [delegate didFinishImportingRSSData];
+        }
     }
+    else {
+        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
+            [delegate didFailImportingRSSData];
+        }
+    }
+    
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
@@ -729,10 +590,17 @@ static const NSUInteger kImportBatchSize = 5;
     [parser release];
     
     
-    
-    if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
-        [delegate didFinishImportingRSSData];
+    if (savedOk) {
+        if([delegate respondsToSelector:@selector(didFinishImportingRSSData)]){
+            [delegate didFinishImportingRSSData];
+        }
     }
+    else {
+        if([delegate respondsToSelector:@selector(didFailImportingRSSData)]){
+            [delegate didFailImportingRSSData];
+        }
+    }
+    
     
 }
 
