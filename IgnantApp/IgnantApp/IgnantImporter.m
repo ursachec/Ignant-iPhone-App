@@ -16,6 +16,8 @@
 
 #import "Constants.h"
 
+#import "IGNAppDelegate.h"
+
 #define TEST_JSON_DUMP [[NSBundle mainBundle] pathForResource:@"dump_images_big_jpg" ofType:@"txt"]
 
 
@@ -38,6 +40,7 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 
 @interface IgnantImporter() 
 {
+    IGNAppDelegate* appDelegate;
     
 	MWFeedParser *feedParser;
 	NSDateFormatter *formatter;
@@ -45,7 +48,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
     NSManagedObjectContext *insertionContext;
     NSPersistentStoreCoordinator *_persistentStoreCoordinator;
     
-    NSDate *latestDayOfCurrentFeed;
 }
 
 -(void)updateLastDateForImportedArticleForMainPage;
@@ -70,7 +72,7 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 @property NSUInteger countForNumberOfImagesToBeSaved;
 @property NSUInteger countForNumberOfCommentsToBeSaved;
 
-@property (nonatomic, retain) NSDate *latestDayOfCurrentFeed;
+@property (nonatomic, retain) NSDate *currentDateForLeastRecentArticle;
 
 @property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForBlogEntries;
 @property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForTumblrEntries;
@@ -89,7 +91,7 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 
 @synthesize countForNumberOfBlogEntriesToBeSaved, countForNumberOfImagesToBeSaved, countForNumberOfCommentsToBeSaved;
 
-@synthesize latestDayOfCurrentFeed = _latestDayOfCurrentFeed;
+@synthesize currentDateForLeastRecentArticle = _currentDateForLeastRecentArticle;
 
 @synthesize lastImportDateForMainPageArticle = _lastImportDateForMainPageArticle;
 
@@ -103,6 +105,9 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
     self = [super init];
 
     if (self) {
+        
+        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         
         formatter = [[NSDateFormatter alloc] init];
         [formatter setDateStyle:NSDateFormatterShortStyle];
@@ -215,14 +220,129 @@ static const NSUInteger kImportBatchSize = 5;
 
 #pragma mark - JSON importing
 
--(void)importJSONWithMorePosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
+-(void)importJSONWithLatestPosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
 {
-
-
-
+    if([delegate respondsToSelector:@selector(didStartImportingData)]){
+        [delegate didStartImportingData];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+    
+    SBJSON *parser = [[SBJSON alloc] init];
+    
+    NSString *json_string = [jsonString copy];
+    NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
+    NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
+    
+    //prepare importing
+    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
+    NSError *saveError = nil;
+    
+    BOOL savedOk = NO;
+    
+    
+    //----------------------------------------------------
+    //IMPORT ARTICLES
+    
+    //enumerate articles
+    for (NSDictionary* oneArticle in articlesArray) 
+    {
+        [self importOneArticleFromDictionary:oneArticle];
+    }
+    savedOk = [insertionContext save:&saveError];
+    
+    
+    
+    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
+    NSLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
+    
+    if (savedOk) {
+        
+#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
+        //save date for least recent article
+        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        
+        
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
+        }
+    }
+    else {
+        if([delegate respondsToSelector:@selector(didFailImportingData)]){
+            [delegate didFailImportingData];
+        }
+    }
 }
 
--(void)importJSONString:(NSString*)jsonString{
+-(void)importJSONWithMorePosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
+{
+    if([delegate respondsToSelector:@selector(didStartImportingData)]){
+        [delegate didStartImportingData];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+    
+    SBJSON *parser = [[SBJSON alloc] init];
+    
+    NSString *json_string = [jsonString copy];
+    NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
+    NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
+    
+    //prepare importing
+    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
+    NSError *saveError = nil;
+    
+    BOOL savedOk = NO;
+
+    
+    //----------------------------------------------------
+    //IMPORT ARTICLES
+    
+    //enumerate articles
+    for (NSDictionary* oneArticle in articlesArray) 
+    {
+        [self importOneArticleFromDictionary:oneArticle];
+    }
+    savedOk = [insertionContext save:&saveError];
+    
+    
+    
+    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
+    NSLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+    [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
+    
+    if (savedOk) {
+        
+#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
+        //save date for least recent article
+        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        
+        
+        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
+            [delegate didFinishImportingData];
+        }
+    }
+    else {
+        if([delegate respondsToSelector:@selector(didFailImportingData)]){
+            [delegate didFailImportingData];
+        }
+    }
+}
+
+-(void)importJSONStringForFirstRun:(NSString*)jsonString{
     
     if([delegate respondsToSelector:@selector(didStartImportingData)]){
         [delegate didStartImportingData];
@@ -280,6 +400,13 @@ static const NSUInteger kImportBatchSize = 5;
     //update the date of the last imported article for the main page
     if (savedOk && self.currentBlogEntry.publishingDate!=nil) 
     {
+        
+#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
+#warning make sure this method (importJSONString) is only called when importing
+        //save date for least recent article
+        NSString* homeCategoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
+        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];
+        
         self.lastImportDateForMainPageArticle = self.currentBlogEntry.publishingDate;
         [self updateLastDateForImportedArticleForMainPage];
     }
@@ -303,8 +430,8 @@ static const NSUInteger kImportBatchSize = 5;
         }
     }
     else {
-        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
-            [delegate didFinishImportingData];
+        if([delegate respondsToSelector:@selector(didFailImportingData)]){
+            [delegate didFailImportingData];
         }
     }
     
@@ -326,6 +453,10 @@ static const NSUInteger kImportBatchSize = 5;
     id unconvertedBlogEntryCategoryId = [oneArticle objectForKey:kFKArticleCategoryId];
     id unconvertedBlogEntryArticleId = [oneArticle objectForKey:kFKArticleId]; 
     id unconvertedBlogEntryNumberOfViews = [oneArticle objectForKey:kFKArticleNumberOfViews]; 
+    id unconvertedBlogEntryShouldShowOnHomeCategory = [oneArticle objectForKey:kFKArticleShowOnHomeCategory];
+    
+    
+    NSNumber* blogEntryShouldShowOnHomeCategory = [NSNumber numberWithBool:[unconvertedBlogEntryShouldShowOnHomeCategory boolValue]];
     
     NSString *blogEntryCategoryId = [unconvertedBlogEntryCategoryId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryCategoryId stringValue] : unconvertedBlogEntryCategoryId;
     NSString *blogEntryArticleId = [unconvertedBlogEntryArticleId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryArticleId stringValue] : unconvertedBlogEntryArticleId;
@@ -372,6 +503,9 @@ static const NSUInteger kImportBatchSize = 5;
     [df setDateFormat:@"yyyy-MM-dd"];
     NSDate *myDate = [df dateFromString: blogEntryPublishDate];
     
+    //save to current date for least recent article
+    if(_currentDateForLeastRecentArticle==nil || [_currentDateForLeastRecentArticle compare:myDate]==NSOrderedDescending)
+    self.currentDateForLeastRecentArticle = myDate;
     
     //create new BlogEntry
     self.currentBlogEntry = nil;
@@ -383,7 +517,9 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.categoryId = blogEntryCategoryId;
     self.currentBlogEntry.relatedArticles = blogEntryRelatedArticles;
     self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
-        
+    self.currentBlogEntry.showInHomeCategory = blogEntryShouldShowOnHomeCategory;
+    
+    
     /////////////////////////// handle the thumb image image
     NSDictionary *aImageDictionary = [oneArticle objectForKey:kFKArticleThumbImage];
     
@@ -475,8 +611,6 @@ static const NSUInteger kImportBatchSize = 5;
     [parser release];
 }
 
-
-
 #pragma mark - import TUMBLR data
 
 -(void)importJSONStringForTumblrPosts:(NSString*)jsonString{
@@ -516,12 +650,10 @@ static const NSUInteger kImportBatchSize = 5;
         }
     }
     else {
-        if([delegate respondsToSelector:@selector(didFinishImportingData)]){
-            [delegate didFinishImportingData];
+        if([delegate respondsToSelector:@selector(didFailImportingData)]){
+            [delegate didFailImportingData];
         }
     }
-    
-    
 }
 
 

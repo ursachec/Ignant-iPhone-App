@@ -51,6 +51,7 @@
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 -(void)loadMoreContent;
+-(NSString*)currentCategoryId;
 
 @property (nonatomic, retain) HJObjManager *hjObjectManager;
 @property (nonatomic, retain, readwrite) IgnantImporter *importer;
@@ -120,6 +121,12 @@
     _importer.delegate = self;
 }
 
+-(NSString*)currentCategoryId
+{
+    NSString* categoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
+    return categoryId;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -155,26 +162,18 @@
     [super viewWillAppear:animated];
     
     //check when was the last time updating the currently set category and trigger load latest/load more
-    
-    NSString* currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
-    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:currentCategoryId];
-    NSLog(@"dateForLastUpdate: %@, catgoryId: %@", dateForLastUpdate, currentCategoryId);
-    
+    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
     
     //only check if data is here if not on first run
     if (![appDelegate isLoadingDataForFirstRun])
     if (dateForLastUpdate==nil) 
     {
-        [self loadLatestContent];
-        NSLog(@"dateForLastUpdate is nil, loadLatestTumblrArticles");
-        
+        [self loadLatestContent];        
     }
     else if( [dateForLastUpdate timeIntervalSinceNow]) 
     {
-        NSLog(@"dateForLastUpdate not nill, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
-    
+        NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
     }
-    
     
     //set up some ui elements
     if (self.isHomeCategory) 
@@ -203,7 +202,6 @@
     [super viewDidAppear:animated];
 
 }
-
 
 - (void)viewDidLoad
 {
@@ -302,10 +300,9 @@
             
         }
         
-        
         return cell;
-        
     }
+    
     else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreContent)
     {
     
@@ -316,6 +313,7 @@
         
         return cell;
     }
+    
     else
     {
     
@@ -428,6 +426,11 @@
     {
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"categoryId == %@", [self.currentCategory categoryId]]];
     }
+    else {
+        
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"showInHomeCategory == %@", [NSNumber numberWithBool:TRUE]]];
+        
+    }
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
@@ -536,30 +539,15 @@
     
 #warning NEW IMPLEMENTATION
     
-    NSString *currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome]; 
-    NSDate* newImplementationDateForMost = [appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:currentCategoryId];
-    NSLog(@"newImplementationDateForMost: %@, currentCategory: %@", newImplementationDateForMost, currentCategoryId);
+    NSDate* newImplementationDateForMost = [appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
+    NSLog(@"newImplementationDateForMost: %@, currentCategory: %@", newImplementationDateForMost, [self currentCategoryId]);
 
 #warning END OF NEW IMPLEMENTATION
     
-        
-    NSDate* lastImportDateForMainPageArticle = (NSDate*) [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultsLastImportDateForMainPageArticle];
+    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
     
-    NSLog(@"lastImportDateForMainPageArticle: %@", lastImportDateForMainPageArticle);
-    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[lastImportDateForMainPageArticle timeIntervalSince1970]];
     
-    //set the relevant categoryId
-    NSString *categoryId = @"";
-    if (self.isHomeCategory) 
-    {
-        categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
-    }
-    else 
-    {
-        categoryId = [self.currentCategory categoryId];
-    }
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreArticlesForCategory,kParameterAction,categoryId,kCurrentCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreArticlesForCategory,kParameterAction,[self currentCategoryId],kCurrentCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
@@ -576,8 +564,7 @@
     
     NSLog(@"requestStarted");
     
-    NSString *currentCategoryId = self.currentCategory ? self.currentCategory.categoryId : [NSString stringWithFormat:@"%d",kCategoryIndexForHome]; 
-    NSDate *lastUpdateDateForCurrentCategoryId = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:currentCategoryId];
+    NSDate *lastUpdateDateForCurrentCategoryId = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     
     
     if (_isLoadingMoreContent) {
@@ -600,14 +587,17 @@
     
     LOG_CURRENT_FUNCTION()
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     if (_isLoadingMoreContent) {
         
         #warning IMPORTANT!!! TODO implement importing the string to CoreData
         
-        NSLog(@"load more content: %@", [request responseString]);
+        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+        dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONWithMorePosts:[request responseString] forCategoryId:[self currentCategoryId]];
+        });
         
         _numberOfActiveRequests--;
         _showLoadMoreContent = YES;
@@ -616,14 +606,11 @@
     }
     else if (_isLoadingLatestContent) {
         
-        NSLog(@"request: %@", [request responseString]);
-
-
         #warning IMPORTANT!!! TODO implement importing the string to CoreData
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONString:[request responseString]];
+            [self.importer importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
         });
         
         _isLoadingLatestContent = NO;
@@ -686,7 +673,8 @@
         [self.blogEntriesTableView reloadData];
         
         [self setIsLoadingViewHidden:YES];
-        [appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:self.currentCategory.categoryId];
+        
+        [appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     });
 }
 
@@ -732,7 +720,7 @@
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId];
+    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
 	return dateForLastUpdate==nil ? [NSDate dateWithTimeIntervalSince1970:0] : dateForLastUpdate;
 }
 

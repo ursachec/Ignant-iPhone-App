@@ -37,9 +37,11 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *insertionContext;
 
 
--(void)importJSONString:(NSString*)jsonString;
+-(void)importJSONStringForFirstRun:(NSString*)jsonString;
 
--(void)importJSONStringWithMorePosts:(NSString*)jsonStringWithPosts;
+-(void)importJSONWithMorePosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId;
+
+-(void)importJSONWithLatestPosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId;
 
 -(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle;
 

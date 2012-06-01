@@ -35,7 +35,7 @@
 -(void)setLastUpdateDate:(NSDate*)date forCategoryId:(NSString*)categoryId
 {
     if (categoryId==nil) {
-        NSLog(@"You are trying to set the last update date for a nil categoryId, exiting method");
+        NSLog(@"setLastUpdateDate You are trying to set the last update date for a nil categoryId, exiting method");
         return;
     }
     
@@ -99,7 +99,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (categoryId==nil) {
-        NSLog(@"You are trying to set the last update date for a nil categoryId, exiting method");
+        NSLog(@"setDateForLeastRecentArticle: You are trying to set the last update date for a nil categoryId, exiting method");
         return;
     }
     
@@ -132,7 +132,7 @@
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kDatesForLeastRecentArticleKey];
+    NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kDatesForLeastRecentArticleKey];    
     if (updateDates==nil) {
         return [[[NSMutableArray alloc] initWithCapacity:1] autorelease];
     }

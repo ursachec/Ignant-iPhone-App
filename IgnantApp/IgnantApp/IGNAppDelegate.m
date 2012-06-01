@@ -449,20 +449,20 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
+    
+    self.isLoadingDataForFirstRun = NO;
+    
+    
+    
+    NSDate *dateToBeSaved = [NSDate date];
+    NSLog(@"appdelegate: didFinishImportingData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
+    
+    [[NSUserDefaults standardUserDefaults] setObject:dateToBeSaved forKey:kLastStoreUpdateKey];        
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [self.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForHome]];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        
-        self.isLoadingDataForFirstRun = NO;
-        
-        NSDate *dateToBeSaved = [NSDate date];
-        NSLog(@"appdelegate: didFinishImportingData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
-        
-        [[NSUserDefaults standardUserDefaults] setObject:dateToBeSaved forKey:kLastStoreUpdateKey];        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        [self.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForHome]];
-        
-        self.importer = nil;
         
         [self.masterViewController fetch];
         
@@ -528,7 +528,7 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {    
-    [self.importer importJSONString:[request responseString]];
+    [self.importer importJSONStringForFirstRun:[request responseString]];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];    
 }
 

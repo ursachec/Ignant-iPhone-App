@@ -43,7 +43,7 @@ NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPho
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.2.108/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForContentServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/ignant.php";
 #endif
 
 NSString * const kParameterAction = @"action";

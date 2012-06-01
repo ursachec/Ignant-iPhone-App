@@ -41,6 +41,7 @@ extern NSString * const kFKArticlePublishingDate;
 extern NSString * const kFKArticleThumbImage;
 extern NSString * const kFKArticleRemoteImages;
 extern NSString * const kFKArticleNumberOfViews;
+extern NSString * const kFKArticleShowOnHomeCategory;
 extern NSString * const kFKArticleCategoryId;
 extern NSString * const kFKArticleCategoryName;
 extern NSString * const kFKArticleCategory;

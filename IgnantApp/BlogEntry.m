@@ -2,7 +2,7 @@
 //  BlogEntry.m
 //  IgnantApp
 //
-//  Created by Claudiu-Vlad Ursache on 13.04.12.
+//  Created by Claudiu-Vlad Ursache on 01.06.12.
 //  Copyright (c) 2012 c.v.ursache. All rights reserved.
 //
 
@@ -24,6 +24,7 @@
 @dynamic thumbIdentifier;
 @dynamic thumbImageFilename;
 @dynamic title;
+@dynamic showInHomeCategory;
 @dynamic category;
 @dynamic images;
 

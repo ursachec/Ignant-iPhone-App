@@ -2,7 +2,7 @@
 //  BlogEntry.h
 //  IgnantApp
 //
-//  Created by Claudiu-Vlad Ursache on 13.04.12.
+//  Created by Claudiu-Vlad Ursache on 01.06.12.
 //  Copyright (c) 2012 c.v.ursache. All rights reserved.
 //
 
@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSString * thumbIdentifier;
 @property (nonatomic, retain) NSString * thumbImageFilename;
 @property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSNumber * showInHomeCategory;
 @property (nonatomic, retain) Category *category;
 @property (nonatomic, retain) NSSet *images;
 @end
