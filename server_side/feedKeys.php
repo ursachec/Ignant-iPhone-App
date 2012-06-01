@@ -3,6 +3,8 @@
 //ERRORS & WARNINGS
 // define('WARNING_');
 
+define('ID_FOR_HOME_CATEGORY',-1);
+
 
 //TOP LEVEL
 define('TL_SINGLE_ARTICLE','singleArticle');
@@ -38,6 +40,7 @@ define('FK_ARTICLE_TITLE','title');
 define('FK_ARTICLE_PUBLISHING_DATE','publishingDate');
 define('FK_ARTICLE_THUMB_IMAGE','thumbImage');
 define('FK_ARTICLE_REMOTE_IMAGES','remoteImages');
+define('FK_ARTICLE_SHOW_ON_HOME_CATEGORY','shouldShowOnHomeCategory');
 
 define('FK_ARTICLE_CATEGORY_ID','categoryId');
 define('FK_ARTICLE_CATEGORY_NAME','categoryName');

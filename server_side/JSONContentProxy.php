@@ -39,10 +39,12 @@ class JSONContentProxy{
 		global $testingUnit;
 		
 		$articlesArray = array();
-		$testArticles = $testingUnit->getLastestArticlesForCategory();
+		$testArticles = $testingUnit->getLastestArticlesForCategory($pCategoryId);
 		
 		if(is_array($testArticles) && count($testArticles)>0)			
 		foreach($testArticles as $oneArticle){
+			
+			$oneArticle->setIsForHomeCategory($pCategoryId);
 			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
 		};
 		
@@ -61,6 +63,7 @@ class JSONContentProxy{
 		$testMorePostsForCategory = $testingUnit->getMoreArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
 		if(is_array($testMorePostsForCategory) && count($testMorePostsForCategory)>0)
 		foreach($testMorePostsForCategory as $oneArticle){
+			$oneArticle->setIsForHomeCategory($pCategoryId);
 			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
 		};
 	

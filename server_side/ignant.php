@@ -9,8 +9,8 @@ define('API_COMMAND_ERROR','error');
 
 define('API_COMMAND_GET_DATA_FOR_FIRST_RUN','getDataForTheFirstRun');
 define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
-define('API_COMMAND_GET_MORE_POSTS','getMorePosts');
-define('API_COMMAND_GET_ARTICLES_FOR_CATEGORY','getArticlesForCategory');
+define('API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY','getMoreArticlesForCategory');
+define('API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY','getLatestArticlesForCategory');
 define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
 define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
 define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
@@ -18,7 +18,7 @@ define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
 
 //-- general
 define('GET_ACTION','action');
-define('CATEGORY_ID','categoryId');
+define('CURRENT_CATEGORY_ID','categoryId');
 define('NUMBER_OF_RESULTS_TO_BE_RETURNED','numberOfResultsToReturn');
 define('ARTICLE_ID','articleId');
 
@@ -57,7 +57,7 @@ $apiCommand = $_GET[GET_ACTION];
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
 		
 	//2. get latest articles
-	$articlesForFirstRun = $contentProxy->getJSONReadyLatestArticlesForCategory(-1);
+	$articlesForFirstRun = $contentProxy->getJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
@@ -65,7 +65,7 @@ $apiCommand = $_GET[GET_ACTION];
 }
 
 
-//this is called when the user wants to get the newest content
+//this is called when the user wants to get more articles
 //of a specific category, home being -1
 
 /*			
@@ -76,17 +76,65 @@ $apiCommand = $_GET[GET_ACTION];
 		- NAME: numberOFResultsToBeReturned  / VALUE: (int) number of articles to be returned
 */
 
-else if(strcmp($apiCommand,API_COMMAND_GET_MORE_POSTS)==0)
+else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
+{
+	$arrayWithMorePosts = array();
+	
+	if(isset($_GET[CURRENT_CATEGORY_ID]))
+	{
+		//input parameters
+		$pCategoryId = $_GET[CURRENT_CATEGORY_ID];
+	
+		//optional parameters
+		$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
+	
+		//---------------------------------------------------------------------	
+		// sleep(1);
+	
+		//get the array with articles
+		$arrayWithMorePosts = $contentProxy->getJSONReadyLatestArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
+	
+		// no articles found, do something
+		if(count($arrayWithMorePosts)==0)
+		{
+			$finalJSONArrayForExport['no_more_posts'] = true;
+		}
+		else
+		{
+			$finalJSONArrayForExport[TL_ARTICLES] = $arrayWithMorePosts;
+			$finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
+		}	
+	}
+	else
+	{
+		
+		$finalJSONArrayForExport['error_description'] = 'category_id_not_set';
+	}
+	
+}
+
+//this is called when the user wants to get more articles
+//of a specific category, home being -1
+
+/*			
+- get updated articles 
+	- PARAMS:
+		- NAME: category_id / VALUE: (int) or (string) with Category id, "home" for home articles 
+		- NAME: pDateOfOldestArticle / VALUE: (dateformat TBD)
+		- NAME: numberOFResultsToBeReturned  / VALUE: (int) number of articles to be returned
+*/
+
+else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 {
 	//input parameters
-	$pCategoryId = $_GET[CATEGORY_ID];
+	$pCategoryId = $_GET[CURRENT_CATEGORY_ID];
 	$pDateOfOldestArticle = $_GET[DATE_OF_OLDEST_ARTICLE];
 	
 	//optional parameters
 	$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
 	//---------------------------------------------------------------------	
-	sleep(1);
+	// sleep(1);
 	
 	//get the array with articles
 	$arrayWithMorePosts = $contentProxy->getJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
