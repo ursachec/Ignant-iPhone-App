@@ -12,6 +12,12 @@ class Category extends IgnantObject implements JSONexportableObject
 		$this->description = $pCategoryDescription;
 	}
 	
+	//TODO: implement this better, using constants
+	public function isHomeCategory()
+	{
+		return ($this->id==ID_FOR_HOME_CATEGORY);
+	}
+	
 	public function getArrayForJSONEncoding()
 	{		
 		$returnArray = array();

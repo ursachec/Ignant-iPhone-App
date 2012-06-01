@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>ignant.php</string>
+	<string>unittests.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -20,21 +20,21 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-21T20:36:00Z</date>
+			<date>2012-06-01T14:01:31Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-21T20:36:00Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-06-01T14:01:13Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-21T20:35:43Z</date>
+			<date>2012-06-01T14:02:38Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -46,13 +46,13 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-21T20:31:12Z</date>
+			<date>2012-06-01T10:52:35Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>getTumblrContent.php</string>
 			<key>lastUsed</key>
-			<date>2012-05-21T20:31:06Z</date>
+			<date>2012-06-01T10:40:02Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -70,14 +70,44 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>12</integer>
+				<integer>49</integer>
 				<key>line</key>
-				<integer>120</integer>
+				<integer>62</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>47</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>62</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>70</integer>
+				<key>line</key>
+				<integer>62</integer>
+			</dict>
+		</dict>
+		<key>classes/Article.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>58</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>91</integer>
+			<integer>0</integer>
 		</dict>
 		<key>classes/Base64Image.php</key>
 		<dict>
@@ -109,14 +139,28 @@
 				<integer>18</integer>
 			</dict>
 		</dict>
+		<key>classes/BasicImage.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>classes/Category.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>24</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>19</integer>
+				<integer>17</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -127,47 +171,89 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>19</integer>
+				<integer>17</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>28</integer>
+				<integer>41</integer>
 				<key>line</key>
-				<integer>19</integer>
+				<integer>17</integer>
 			</dict>
+		</dict>
+		<key>classes/IgnantInterfaces.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>classes/IgnantObject.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>classes/LightArticle.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>37</integer>
+				<integer>17</integer>
 				<key>line</key>
-				<integer>45</integer>
+				<integer>41</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>2</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>45</integer>
-			</dict>
-			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>37</integer>
 				<key>line</key>
-				<integer>45</integer>
+				<integer>41</integer>
 			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>17</integer>
+				<key>line</key>
+				<integer>41</integer>
+			</dict>
+		</dict>
+		<key>classes/Mosaic.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>classes/RelatedArticle.php</key>
 		<dict>
@@ -183,7 +269,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>8</integer>
+			<integer>3</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
@@ -234,7 +320,7 @@
 				<key>column</key>
 				<integer>13</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>5</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -247,14 +333,14 @@
 				<key>column</key>
 				<integer>8</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>5</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>16</integer>
+				<integer>28</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>5</integer>
 			</dict>
 		</dict>
 		<key>getTumblrContent.php</key>
@@ -276,14 +362,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>52</integer>
 				<key>line</key>
-				<integer>148</integer>
+				<integer>139</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>163</integer>
+			<integer>118</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>38</integer>
+				<key>line</key>
+				<integer>139</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>67</integer>
+				<key>line</key>
+				<integer>139</integer>
+			</dict>
 		</dict>
 		<key>script_to_get_images.sh</key>
 		<dict>
@@ -318,14 +420,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>71</integer>
 				<key>line</key>
-				<integer>493</integer>
+				<integer>550</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>0</integer>
+			<integer>403</integer>
 			<key>firstVisibleLine</key>
-			<integer>82</integer>
+			<integer>476</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -333,12 +435,17 @@
 		<string>unittests.php</string>
 		<string>classes/RemoteImage.php</string>
 		<string>classes/LightArticle.php</string>
+		<string>classes/IgnantInterfaces.php</string>
 		<string>classes/Category.php</string>
 		<string>classes/Base64Image.php</string>
 		<string>classes/RelatedArticle.php</string>
 		<string>ignant.php</string>
+		<string>classes/Article.php</string>
+		<string>classes/BasicImage.php</string>
 		<string>classes/Template.php</string>
 		<string>JSONContentProxy.php</string>
+		<string>classes/IgnantObject.php</string>
+		<string>classes/Mosaic.php</string>
 		<string>getTumblrContent.php</string>
 		<string>tumblrDataDump.txt</string>
 		<string>feedKeys.php</string>
@@ -346,6 +453,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{322, 61}, {919, 717}}</string>
+	<string>{{296, 61}, {919, 717}}</string>
 </dict>
 </plist>

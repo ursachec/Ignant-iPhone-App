@@ -9,6 +9,7 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 	public $thumbImage;
 	public $template;
 	public $descriptionText;
+	public $isArticleForHomeCategory;
 	public $remoteImages;
 	public $relatedArticles;
 	
@@ -27,13 +28,20 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$this->relatedArticles = $pRelatedArticles;
 		
 		$this->rCategory = $pArticleCategory;
+		
+		//default values
+		$this->isArticleForHomeCategory = false;
 	}
-	
+		
 	public function getAsRelatedArticle()
 	{
 		$relatedArticle = null;
 		$relatedArticle = new RelatedArticle($this->id, $this->title, $this->publishingDate,$this->rCategory, $this->thumbImage);
 		return $relatedArticle;
+	}
+	public function setIsForHomeCategory($categoryId = '')
+	{
+		$this->isArticleForHomeCategory = ($categoryId==ID_FOR_HOME_CATEGORY);	
 	}
 	
 	public function getArrayForJSONEncoding()
@@ -45,6 +53,9 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$returnArray[FK_ARTICLE_PUBLISHING_DATE]=$this->publishingDate;
 		$returnArray[FK_ARTICLE_DESCRIPTION_TEXT]=$this->descriptionText;
 		
+		//is article for home category
+		$returnArray[FK_ARTICLE_SHOW_ON_HOME_CATEGORY] = (bool)$this->isArticleForHomeCategory;
+			
 		//thumb image
  		
 		$includeThumb = true;
@@ -83,6 +94,8 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 			$returnArray[FK_ARTICLE_CATEGORY_ID]=$this->rCategory->id;
 			$returnArray[FK_ARTICLE_CATEGORY_NAME]=$this->rCategory->name;
 		}
+		
+
 		
 			return $returnArray;
 		}

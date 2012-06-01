@@ -341,8 +341,7 @@
 
 -(void)handleBack:(id)sender
 {
-//    [self.navigationController popViewControllerAnimated:YES];
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)navigateToNextArticle
