@@ -1,0 +1,5 @@
+---- when to show no internet connectivity white screen on view controller
+#implement in the app delegate
+#when a view controller is being shown, the data has not been yet loaded and there is no internet connectivity
+(MasterViewController, MosaikViewController, TumblrViewController, DetailViewController, MostRedViewController )
+
