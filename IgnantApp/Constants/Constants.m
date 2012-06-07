@@ -58,10 +58,16 @@ NSString * const kReachabilityHostnameToCheck = @"www.ignant.de";
 
 NSString * const kParameterAction = @"action";
 
+//server status
+NSString * const kAPICommandIsServerReachable = @"isServerReachable";
+NSString * const kAPIKeyIsServerReachable = @"status";
+NSString * const kAPIResponseServerOk = @"ok";
+NSString * const kAPIResponseServerError = @"error";
+
 
 
 //possible actions
-NSString * const kAPICommandSearch = @"search";
+
 NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";
 NSString * const kAPICommandGetMoreArticlesForCategory = @"getMoreArticlesForCategory";
 NSString * const kAPICommandGetLatestArticlesForCategory = @"getLatestArticlesForCategory";

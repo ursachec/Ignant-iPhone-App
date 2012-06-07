@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol IgnantNoInternetConnectionViewDelegate <NSObject>
+@optional
+-(void)retryToLoadData;
+@end
+
 @interface IgnantNoInternetConnectionView : UIView
 
+@property(nonatomic, assign) id<IgnantNoInternetConnectionViewDelegate> delegate;
+- (IBAction)retryToLoadData:(id)sender;
 @end

@@ -49,6 +49,8 @@
     BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
 }
 
+@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
+
 @property(nonatomic, retain) HJObjManager *imageManager;
 @property(nonatomic, retain) IgnantImporter* importer;
 @end
@@ -61,6 +63,8 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize fetchedResultsController = __fetchedResultsController;
+
+@synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -139,18 +143,24 @@
     [_refreshHeaderView release];
 }
 
+#pragma mark - helpful methods
+-(BOOL)isTumblrEntriesArrayNotEmpty
+{
+    #warning THIS CAN BE MADE FASTER
+    
+    //decide if to load posts for the first time or not
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
+    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
+    return (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad);
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
     [self setIsNoConnectionViewHidden:YES];
     
-    
-#warning THIS CAN BE MADE FASTER
-    //decide if to load posts for the first time or not
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
-    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
-    if (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad) {
+    if ([self isTumblrEntriesArrayNotEmpty]) {
         
         if ([appDelegate isAppOnline]) {
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
@@ -332,7 +342,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    NSLog(@"LOAD MORE TUMBLR encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -348,7 +358,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    NSLog(@"LOAD LATEST TUMBLR encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -425,7 +435,7 @@
         isLoadingLatestTumblrArticles = NO;
         
         if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
-            [self setIsLoadingViewHidden:YES];
+            [self setIsCouldNotLoadDataViewHidden:NO];
         }
         
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
@@ -546,8 +556,23 @@
     });
 }
 
+-(void)didFailImportingData
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+}
+
 - (void)importerDidSave:(NSNotification *)saveNotification {  
     [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
+}
+
+#pragma mark - custom special views
+-(void)setUpCouldNotLoadDataView
+{
+    [super setUpCouldNotLoadDataView];
+ 
+#warning BETTER TEXT!
+    self.couldNotLoadDataLabel.text = @"Could not load tumblr feed";
 }
 
 @end

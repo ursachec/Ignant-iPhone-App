@@ -52,18 +52,20 @@ extern int const kThirdRelatedArticleTag;
 
 //################################################################################
 
-
 //server adresses
 extern NSString * const kAdressForContentServer;
-
 extern NSString * const kReachabilityHostnameToCheck;
-
 
 //top parameter names
 extern NSString * const kParameterAction;
 
+//server status
+extern NSString * const kAPICommandIsServerReachable;
+extern NSString * const kAPIKeyIsServerReachable;
+extern NSString * const kAPIResponseServerOk;
+extern NSString * const kAPIResponseServerError;
+
 //possible API Commands
-extern NSString * const kAPICommandSearch;
 extern NSString * const kAPICommandGetDataForFirstRun;
 extern NSString * const kAPICommandGetMoreArticlesForCategory;
 extern NSString * const kAPICommandGetLatestArticlesForCategory;

@@ -111,10 +111,7 @@ NSString * const kImageFilename = @"filename";
 #pragma mark - helpful methods
 -(BOOL)isMosaicImagesArrayNotEmpty
 {
-    NSArray *s = self.savedMosaicImages;
-    
-    
-    return [self.savedMosaicImages count]<kMinimumMosaicImagesLoaded;
+    return [self.savedMosaicImages count]>=kMinimumMosaicImagesLoaded;
 }
 
 #pragma mark - handle going back
@@ -124,6 +121,17 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - View lifecycle
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //if mosaic empty, try to load
+    if (!self.isMosaicImagesArrayNotEmpty) {
+        [self loadMoreMosaicImages];
+    }
+    
+}
 
 - (void)viewDidLoad
 {
@@ -143,7 +151,7 @@ NSString * const kImageFilename = @"filename";
     [self drawSavedMosaicImages];
     
     //check if the mosaicImages are loaded and trigger a load if not
-    if(self.isMosaicImagesArrayNotEmpty)
+    if(!self.isMosaicImagesArrayNotEmpty)
     {
         [self loadMoreMosaicImages];
     }
@@ -190,10 +198,12 @@ NSString * const kImageFilename = @"filename";
 #pragma mark - server communication actions
 -(void)loadMoreMosaicImages
 {    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     _numberOfActiveRequests++;
     
     //show a covering loading view if mosaic images array is empty
-    if(self.isMosaicImagesArrayNotEmpty)
+    if(!self.isMosaicImagesArrayNotEmpty)
     {
         [self setIsLoadingViewHidden:NO];
     }
@@ -204,7 +214,7 @@ NSString * const kImageFilename = @"filename";
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    NSLog(@"LOAD MORE MOSAIK encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -341,13 +351,6 @@ NSString * const kImageFilename = @"filename";
             oneView.backgroundColor = [UIColor clearColor];
             oneView.alpha = 1.0f;
             
-//            UIButton *loadMoreMosaicButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//            loadMoreMosaicButton.frame = CGRectMake(0, 0, 100, 50);
-//            [loadMoreMosaicButton addTarget:self action:@selector(loadMoreMosaicImages) forControlEvents:UIControlEventTouchDown];
-//            [loadMoreMosaicButton setImage:[UIImage imageNamed:@"mosaicLoadMore"] forState:UIControlStateNormal];
-//            [oneView addSubview:loadMoreMosaicButton];
-            
-            
             self.loadingMoreMosaicView = oneView;
             [oneView release];
             
@@ -403,6 +406,11 @@ NSString * const kImageFilename = @"filename";
     
     //resize the scrollview to fit the content properly
     [self.mosaikScrollView setContentSize:self.bigMosaikView.frame.size];
+    
+    
+    //add the closeButton to the view
+    [self.view addSubview:self.closeMosaikButton];
+    
 }
 
 #pragma mark - some help methods
@@ -421,19 +429,17 @@ NSString * const kImageFilename = @"filename";
 
 - (void)requestStarted:(ASIHTTPRequest *)request
 {
-    _isLoadingMoreMosaicImages = YES;
-    
     LOG_CURRENT_FUNCTION()
     
+    _isLoadingMoreMosaicImages = YES;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
     _isLoadingMoreMosaicImages = NO;
-    
-    LOG_CURRENT_FUNCTION()
     
     //currently using dummy mosaik images
     NSString *path = [[NSBundle mainBundle] pathForResource:@"mosaic_images" ofType:@"plist"];
@@ -464,22 +470,19 @@ NSString * const kImageFilename = @"filename";
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+
+    
+    if (!self.isMosaicImagesArrayNotEmpty){
+        [self setIsCouldNotLoadDataViewHidden:NO];
+    }
+    
     _isLoadingMoreMosaicImages = NO;
-    
     self.loadingMoreMosaicView.isLoading = NO;
-    
-    LOG_CURRENT_FUNCTION()
-    
-    NSLog(@"show is NOT loading");
     
 #warning THIS could be a problem for the loading view
     [self setIsLoadingViewHidden:YES]; 
-    
-#warning TODO: do something if the request failed!
-    
     _numberOfActiveRequests--;
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
 #pragma mark - overlay view
@@ -583,6 +586,24 @@ NSString * const kImageFilename = @"filename";
             [self loadMoreMosaicImages];
         }
     }
+}
+
+#pragma mark - custom special views
+-(void)setUpCouldNotLoadDataView
+{    
+    [super setUpCouldNotLoadDataView];
+    
+#warning BETTER TEXT!
+    self.couldNotLoadDataLabel.text = @"Could not load data for the mosaic";
+}
+
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
+{
+    [super setIsCouldNotLoadDataViewHidden:hidden];
+
+    //add the closeButton to the view
+    [self.couldNotLoadDataView addSubview:self.closeMosaikButton];
+    [self.couldNotLoadDataView bringSubviewToFront:self.closeMosaikButton];
 }
 
 @end

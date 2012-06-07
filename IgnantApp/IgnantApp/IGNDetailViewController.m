@@ -88,14 +88,11 @@
 @property (retain, nonatomic) IBOutlet UIView *articleContentView;
 @property (retain, nonatomic) IBOutlet UIView *relatedArticlesView;
 
-//loading view
-@property (retain, nonatomic) IBOutlet UIView *loadingView;
-
+@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
 
 
 -(void)configureView;
 -(void)setupNavigationButtons;
--(void)setupLoadingView;
 
 - (IBAction)showPictureSlideshow:(id)sender;
 
@@ -163,8 +160,6 @@
 @synthesize secondRelatedArticleShowDetailsButton = _secondRelatedArticleShowDetailsButton;
 @synthesize thirdRelatedArticleShowDetailsButton = _thirdRelatedArticleShowDetailsButton;
 
-@synthesize loadingView = _loadingView;
-
 @synthesize currentBlogEntryIndex = _currentBlogEntryIndex;
 @synthesize nextBlogEntryIndex = _nextBlogEntryIndex;
 @synthesize previousBlogEntryIndex = _previousBlogEntryIndex;
@@ -174,6 +169,9 @@
 
 
 @synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
+
+
+@synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -750,14 +748,6 @@
     
 }
 
--(void)setupLoadingView
-{
-    IgnantLoadingView *someView = [[IgnantLoadingView alloc] initWithFrame:self.view.frame];
-    self.loadingView = someView;
-    [someView release];
-    
-    [self.view addSubview:self.loadingView];    
-}
 
 - (void)configureView
 {
@@ -769,8 +759,7 @@
     //if article still needs to be loaded, show loading view
     if (_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==YES) 
     {
-        //setup the loading view
-        [self setupLoadingView];
+        [self setIsLoadingViewHidden:NO];
         
         return;
     }
@@ -1241,7 +1230,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    NSLog(@"DETAIL encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -1270,9 +1259,13 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
 #warning TODO: do something with the request
+    NSLog(@"requestFailed");
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
+        
+    [self setIsCouldNotLoadDataViewHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 
@@ -1310,7 +1303,7 @@
     
     [self configureView];
     
-    [self.loadingView removeFromSuperview];
+    [self setIsLoadingViewHidden:YES];
 }
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
@@ -1368,6 +1361,15 @@
     LOG_CURRENT_FUNCTION()
     
     [self navigateToPreviousArticle];
+}
+
+#pragma mark - custom special views
+-(void)setUpCouldNotLoadDataView
+{
+    [super setUpCouldNotLoadDataView];
+    
+#warning BETTER TEXT!
+    self.couldNotLoadDataLabel.text = @"Could not load data for this article";
 }
 
 @end

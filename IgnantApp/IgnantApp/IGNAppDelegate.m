@@ -47,8 +47,6 @@
 @property(nonatomic, assign, readwrite) BOOL shouldLoadDataForFirstRun;
 @property(nonatomic, assign, readwrite) BOOL isLoadingDataForFirstRun;
 
--(void)startGettingDataForFirstRun;
-
 -(void)createCacheFolders;
 
 @end
@@ -120,6 +118,8 @@
     NSDate *lastUpdate = [_userDefaultsManager lastUpdateForFirstRun];
     self.shouldLoadDataForFirstRun = (kForceReloadCoreData || lastUpdate == nil);
         
+    NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    
     //create cache folders for the thumbs
     [self createCacheFolders];
     
@@ -132,6 +132,7 @@
     IGNMasterViewController *mVC = [[[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil] autorelease];
     mVC.managedObjectContext = self.managedObjectContext;
     self.masterViewController = mVC;
+        
     NSArray *viewControllers = [[NSArray alloc] initWithObjects:mVC, nil];
     nav.viewControllers = viewControllers;
     self.navigationController = nav;
@@ -152,10 +153,12 @@
         
 #warning CHECK IF internet connection exists and show screen if not ("Ignant needs an internet connection for this", <load again button>)
         if([self isAppOnline]){
-            [self startGettingDataForFirstRun];
+            [self fetchAndLoadDataForFirstRun];
         }
         else {
             //show relvant window
+            
+            
         }
     }
     
@@ -257,7 +260,8 @@
 {
 #warning USE IP ADRESS OF THE CONTENT SERVER, NOT OF IGNANT
     Reachability* r = [Reachability reachabilityWithHostName:kReachabilityHostnameToCheck];
-    return [r isReachable];
+    BOOL reachable = [r isReachable];    
+    return reachable;
 }
 
 
@@ -461,6 +465,11 @@
 -(void)didFailImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.masterViewController setIsLoadingViewHidden:YES];
+    });
 }
 
 -(void)didFinishImportingData
@@ -468,6 +477,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     self.isLoadingDataForFirstRun = NO;
+    self.shouldLoadDataForFirstRun = NO;
     
     NSDate *dateToBeSaved = [NSDate date];
     [self.userDefaultsManager setLastUpdateDateForFirstRun:dateToBeSaved];
@@ -475,12 +485,13 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.masterViewController fetch];
-        [self.masterViewController setIsFullscreenLoadingViewHidden:YES];
+        self.navigationController.navigationBarHidden = NO;
+        [self.masterViewController setIsLoadingViewHidden:YES];
     });
 }
 
 #pragma mark - getting content from the server
--(void)startGettingDataForFirstRun
+-(void)fetchAndLoadDataForFirstRun
 {
     self.isLoadingDataForFirstRun = YES;
     
@@ -488,7 +499,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
         
-    NSLog(@"encodedString: %@", encodedString);
+    NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@", encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -508,6 +519,12 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    
+    NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    
+    NSLog(@"requestFailed");
+    [self.masterViewController setIsCouldNotLoadDataViewHidden:NO];
+    
     self.isLoadingDataForFirstRun = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }

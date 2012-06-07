@@ -7,8 +7,6 @@
 //
 
 #import "IGNViewController.h"
-#import "IgnantLoadingView.h"
-#import "IgnantNoInternetConnectionView.h"
 
 #import "Constants.h"
 
@@ -16,35 +14,37 @@
 {
 
 }
-@property(nonatomic, retain) UIView* loadingView;
-@property(nonatomic, retain) UIView* noInternetConnectionView;
 
-
-@property(nonatomic, retain) IgnantLoadingView* fullscreenLoadingView;
-@property(nonatomic, retain) IgnantNoInternetConnectionView* fullscreenNoInternetConnectionView;
-
+@property(nonatomic, retain, readwrite) UIView* loadingView;
+@property(nonatomic, retain, readwrite) UIView* noInternetConnectionView;
+@property(nonatomic, retain, readwrite) UIView* couldNotLoadDataView;
+@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
 
 -(void)setUpFullscreenNoInternetConnectionView;
 -(void)setUpFullscreenLoadingView;
-
 
 @end
 
 @implementation IGNViewController
 @synthesize loadingView = _loadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
-@synthesize fullscreenLoadingView = _fullscreenLoadingView;
-@synthesize fullscreenNoInternetConnectionView = _fullscreenNoInternetConnectionView;
+@synthesize couldNotLoadDataView = _couldNotLoadDataView;
+@synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
+
+-(void)dealloc
+{
+    [super dealloc];
+    
+#warning IMPLEMENT THIS!!!
+    
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
-        [self setUpFullscreenLoadingView];
-        [self setUpFullscreenNoInternetConnectionView];
-        
+                
     }
     return self;
 }
@@ -71,6 +71,84 @@
 {
     [super viewDidLoad];
 
+    [self setUpBackButton];
+    
+    [self setUpLoadingView];
+    
+    [self setUpNoConnectionView];
+    
+    [self setUpCouldNotLoadDataView];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+    self.loadingView = nil;
+    self.noInternetConnectionView = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+
+#pragma mark - special views
+
+-(void)setUpCouldNotLoadDataView
+{
+    //set up the no internet connection view
+    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
+    someView.backgroundColor = [UIColor whiteColor];
+    someView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    
+    //set up the label
+    CGSize labelSize = CGSizeMake(280.0f, 40.0f);
+    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+    someLabel.textAlignment = UITextAlignmentCenter;
+    someLabel.numberOfLines = 2;
+#warning find better text!
+#warning add fonts to constants    
+    someLabel.text = @"Sorry, but you need an internet connection to load this data"; 
+    someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+    someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    self.couldNotLoadDataLabel = someLabel;
+    
+    [someView addSubview:someLabel];
+    [someLabel release];
+    
+    
+    //set up the image view
+    
+    self.couldNotLoadDataView = someView;
+    [someView release];
+}
+
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (hidden) {
+        [_couldNotLoadDataView removeFromSuperview];
+    }
+    else {
+        CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.couldNotLoadDataView.frame = newFrame;
+        [self.view addSubview:_couldNotLoadDataView];        
+        [self setIsLoadingViewHidden:YES];
+        [self setIsNoConnectionViewHidden:YES];
+        
+    }
+}
+
+-(void)setUpBackButton
+{
     //add the back-to-start button
     UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonBack"];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -82,54 +160,27 @@
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
     [backBarButtonItem release];
-    
-    
+}
+
+-(void)setUpLoadingView
+{
     //set up the loading view
     CGRect loadingViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
+    aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     aView.backgroundColor = [UIColor whiteColor];
     
     CGSize activityIndicatorSize = CGSizeMake(44.0f, 44.0f);
     CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, (loadingViewFrame.size.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.frame = activityIndicatorFrame;
+    activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [aView addSubview:activityIndicator];
     [activityIndicator startAnimating];
     [activityIndicator release];
     
-    
     self.loadingView = aView;
     [aView release];
-    
-    
-    //set up the no internet connection view
-    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
-    someView.backgroundColor = [UIColor redColor];
-    self.noInternetConnectionView = someView;
-    [someView release];
-    
-}
-
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    self.loadingView = nil;
-    self.noInternetConnectionView = nil;
-
-    self.fullscreenNoInternetConnectionView = nil;
-    self.fullscreenLoadingView = nil;
-}
-
-
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden
@@ -139,21 +190,64 @@
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     if (hidden) {
         [_loadingView removeFromSuperview];
     }
     else {
-        [self.view addSubview:_loadingView];        
+        CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.loadingView.frame = newFrame;
+        [self.view addSubview:_loadingView];   
+        [self setIsCouldNotLoadDataViewHidden:YES];
+        [self setIsNoConnectionViewHidden:YES];
     }
 }
 
+
+-(void)setUpNoConnectionView
+{
+    //set up the no internet connection view
+    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
+    someView.backgroundColor = [UIColor whiteColor];
+    
+    //set up the label
+    CGSize labelSize = CGSizeMake(280.0f, 40.0f);
+    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+    someLabel.textAlignment = UITextAlignmentCenter;
+    someLabel.numberOfLines = 2;
+    someLabel.text = @"Sorry, but you need an internet connection to view this tumblr feed"; 
+#warning find better text!
+#warning add fonts to constants    
+    someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+    
+    [someView addSubview:someLabel];
+    [someLabel release];
+    
+    
+    //set up the image view
+    
+    self.noInternetConnectionView = someView;
+    [someView release];
+
+}
+
 -(void)setIsNoConnectionViewHidden:(BOOL)hidden
-{        
+{     
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     if (hidden) {
         [_noInternetConnectionView removeFromSuperview];
     }
     else {
-        [self.view addSubview:_noInternetConnectionView];        
+        CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.noInternetConnectionView.frame = newFrame;
+        [self.view addSubview:_noInternetConnectionView];     
+        [self setIsCouldNotLoadDataViewHidden:YES];
+        [self setIsLoadingViewHidden:YES];
     }
 }
 
@@ -167,68 +261,5 @@
     [self setIsNoConnectionViewHidden:YES];    
 }
 
-#pragma mark - special views
--(void)setUpFullscreenNoInternetConnectionView
-{
-    //loading the custom loading view from a nib file
-    NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:@"IgnantNoInternetConnectionView"
-                                                    owner:self 
-                                                  options:nil];
-    IgnantNoInternetConnectionView *view;
-    for (id object in bundle) {
-        if ([object isKindOfClass:[IgnantNoInternetConnectionView class]])
-            view = (IgnantNoInternetConnectionView *)object;
-    }
-    self.fullscreenNoInternetConnectionView = view;
-}
-
--(void)setIsFullscreenNoInternetConnectionViewHidden:(BOOL)hidden
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        if (hidden) {
-            [_fullscreenNoInternetConnectionView removeFromSuperview];
-        }
-        
-        else {
-            [self.navigationController.view addSubview:_fullscreenNoInternetConnectionView];
-            [self.navigationController.view bringSubviewToFront:_fullscreenNoInternetConnectionView];
-            [self setIsFullscreenLoadingViewHidden:YES];
-        }
-    });
-}
-
--(void)setUpFullscreenLoadingView
-{
-    //loading the custom loading view from a nib file
-    NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:@"IgnantLoadingView"
-                                                    owner:self 
-                                                  options:nil];
-    IgnantLoadingView *view;
-    for (id object in bundle) {
-        if ([object isKindOfClass:[IgnantLoadingView class]])
-            view = (IgnantLoadingView *)object;
-    }
-    self.fullscreenLoadingView = view;
-}
-
--(void)setIsFullscreenLoadingViewHidden:(BOOL)hidden
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        NSLog(@"setIsFullscreenLoadingViewHidden: %@", hidden ? @"TRUE" : @"FALSE");
-        
-        if (hidden) {
-            [_fullscreenLoadingView removeFromSuperview];
-        }
-        
-        else {
-            [self.navigationController.view addSubview:_fullscreenLoadingView];
-            [self.navigationController.view bringSubviewToFront:_fullscreenLoadingView];
-        }
-        
-    });
-    
-}
 
 @end

@@ -8,17 +8,36 @@
 
 #import <UIKit/UIKit.h>
 
-@interface IGNViewController : UIViewController
+#import "IgnantNoInternetConnectionView.h"
 
+@class IgnantLoadingView, IgnantNoInternetConnectionView;
+
+
+@interface IGNViewController : UIViewController <IgnantNoInternetConnectionViewDelegate>
+{
+    @protected
+    UIView* _loadingView;
+    UIView* _noInternetConnectionView;
+}
+
+@property(nonatomic, retain, readonly) UIView* loadingView;
+@property(nonatomic, retain, readonly) UIView* noInternetConnectionView;
+@property(nonatomic, retain, readonly) UIView* couldNotLoadDataView;
+@property(nonatomic, retain, readonly) UILabel* couldNotLoadDataLabel;
+
+-(void)setUpBackButton;
+
+-(void)setUpLoadingView;
 -(void)setIsLoadingViewHidden:(BOOL)hidden;
 -(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
+-(void)setUpNoConnectionView;
 -(void)setIsNoConnectionViewHidden:(BOOL)hidden;
 
 -(void)setUpForOfflineUse;
 -(void)setUpForOnlineUse;
 
--(void)setIsFullscreenNoInternetConnectionViewHidden:(BOOL)hidden;
--(void)setIsFullscreenLoadingViewHidden:(BOOL)hidden;
+-(void)setUpCouldNotLoadDataView;
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden;
 
 @end

@@ -11,6 +11,9 @@
 		416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 416AB6EC1577A68100625B03 /* UserDefaultsManager.m */; };
 		41B30984157FD87500C65CBA /* IgnantNoInternetConnectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B30983157FD87500C65CBA /* IgnantNoInternetConnectionView.m */; };
 		41B30987157FD89600C65CBA /* IgnantNoInternetConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41B30986157FD89600C65CBA /* IgnantNoInternetConnectionView.xib */; };
+		41B3098B1580D7EE00C65CBA /* IntroductionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B309891580D7ED00C65CBA /* IntroductionViewController.m */; };
+		41B3098C1580D7EE00C65CBA /* IntroductionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */; };
+		41B309901580E54900C65CBA /* AlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B3098F1580E54900C65CBA /* AlertManager.m */; };
 		41B60711157F86A0002FCA8C /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B60710157F86A0002FCA8C /* BlogEntry.m */; };
 		41BBCCA11567D91D003DD66B /* TumblrEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BBCCA01567D91D003DD66B /* TumblrEntry.m */; };
 		41BC104E15726A140071A4D6 /* Constants_API_Flow_Control.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */; };
@@ -232,6 +235,11 @@
 		41B30982157FD87500C65CBA /* IgnantNoInternetConnectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IgnantNoInternetConnectionView.h; path = Views/IgnantNoInternetConnectionView.h; sourceTree = "<group>"; };
 		41B30983157FD87500C65CBA /* IgnantNoInternetConnectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IgnantNoInternetConnectionView.m; path = Views/IgnantNoInternetConnectionView.m; sourceTree = "<group>"; };
 		41B30986157FD89600C65CBA /* IgnantNoInternetConnectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IgnantNoInternetConnectionView.xib; path = Views/IgnantNoInternetConnectionView.xib; sourceTree = "<group>"; };
+		41B309881580D7ED00C65CBA /* IntroductionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroductionViewController.h; path = ViewControllers/IntroductionViewController.h; sourceTree = "<group>"; };
+		41B309891580D7ED00C65CBA /* IntroductionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IntroductionViewController.m; path = ViewControllers/IntroductionViewController.m; sourceTree = "<group>"; };
+		41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IntroductionViewController.xib; path = ViewControllers/IntroductionViewController.xib; sourceTree = "<group>"; };
+		41B3098E1580E54900C65CBA /* AlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertManager.h; path = Managers/AlertManager.h; sourceTree = "<group>"; };
+		41B3098F1580E54900C65CBA /* AlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertManager.m; path = Managers/AlertManager.m; sourceTree = "<group>"; };
 		41B6070F157F86A0002FCA8C /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		41B60710157F86A0002FCA8C /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		41BBCC9F1567D91D003DD66B /* TumblrEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TumblrEntry.h; sourceTree = "<group>"; };
@@ -589,6 +597,8 @@
 			children = (
 				416AB6EB1577A68100625B03 /* UserDefaultsManager.h */,
 				416AB6EC1577A68100625B03 /* UserDefaultsManager.m */,
+				41B3098E1580E54900C65CBA /* AlertManager.h */,
+				41B3098F1580E54900C65CBA /* AlertManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -600,6 +610,16 @@
 				FEE61BE014DD974A00A169BF /* IGNViewController.m */,
 			);
 			name = "Abstract Controllers";
+			sourceTree = "<group>";
+		};
+		41B3098D1580D80B00C65CBA /* Introduction */ = {
+			isa = PBXGroup;
+			children = (
+				41B309881580D7ED00C65CBA /* IntroductionViewController.h */,
+				41B309891580D7ED00C65CBA /* IntroductionViewController.m */,
+				41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */,
+			);
+			name = Introduction;
 			sourceTree = "<group>";
 		};
 		FE0DDCD114AE34D0003B8778 = {
@@ -689,6 +709,7 @@
 		FE0DDD0F14AE34FF003B8778 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				41B3098D1580D80B00C65CBA /* Introduction */,
 				416AB6F01577FCE600625B03 /* Abstract Controllers */,
 				FEC82EDC154B2E45004F4E95 /* Home */,
 				FEC82EDD154B2E52004F4E95 /* Article Detail  */,
@@ -1441,6 +1462,7 @@
 				FE1B2C671559A03300F7FFF8 /* toolbarTopWithHexagon.png in Resources */,
 				FE1B2C681559A03300F7FFF8 /* toolbarTopWithHexagon@2x.png in Resources */,
 				41B30987157FD89600C65CBA /* IgnantNoInternetConnectionView.xib in Resources */,
+				41B3098C1580D7EE00C65CBA /* IntroductionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1539,6 +1561,8 @@
 				416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */,
 				41B60711157F86A0002FCA8C /* BlogEntry.m in Sources */,
 				41B30984157FD87500C65CBA /* IgnantNoInternetConnectionView.m in Sources */,
+				41B3098B1580D7EE00C65CBA /* IntroductionViewController.m in Sources */,
+				41B309901580E54900C65CBA /* AlertManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

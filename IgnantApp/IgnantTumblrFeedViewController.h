@@ -20,4 +20,6 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
+-(BOOL)isTumblrEntriesArrayNotEmpty;
+
 @end

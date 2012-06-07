@@ -9,6 +9,7 @@
 #import "IgnantNoInternetConnectionView.h"
 
 @implementation IgnantNoInternetConnectionView
+@synthesize delegate = _delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -35,4 +36,9 @@
 }
 */
 
+- (IBAction)retryToLoadData:(id)sender {
+    if ([_delegate respondsToSelector:@selector(retryToLoadData)]) {
+        [_delegate retryToLoadData];
+    }
+}
 @end

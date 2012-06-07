@@ -171,7 +171,6 @@
 }
 
 - (IBAction)showTumblr:(id)sender {
-    
     IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
     [self.navigationController pushViewController:tumblrVC animated:YES];
 }
@@ -187,7 +186,7 @@
     NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
     
     //only check if data is here if not on first run
-    if (![appDelegate isLoadingDataForFirstRun])
+    if (![appDelegate isLoadingDataForFirstRun] && [appDelegate isAppOnline])
     if (dateForLastUpdate==nil) 
     {
         [self loadLatestContent];        
@@ -215,10 +214,15 @@
         [someLabel release];
     }
     
-    if (appDelegate.shouldLoadDataForFirstRun) {
-        [self setIsFullscreenLoadingViewHidden:NO];
+    if (appDelegate.shouldLoadDataForFirstRun && [appDelegate isAppOnline]) {
+        [self setIsLoadingViewHidden:NO];
+        self.navigationController.navigationBarHidden = YES;
     }
     
+    else if (appDelegate.shouldLoadDataForFirstRun && ![appDelegate isAppOnline]) {
+        [self setIsCouldNotLoadDataViewHidden:NO];
+        self.navigationController.navigationBarHidden = YES;
+    }
 }
 
 
@@ -341,7 +345,6 @@
     
     else
     {
-    
         
         IgnantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
@@ -543,7 +546,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    NSLog(@"MASTER LOAD LATEST CONTENT encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -658,9 +661,8 @@
     else if (_isLoadingLatestContent) {
         
         if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId]==nil) {
-            [self setIsLoadingViewHidden:YES];
+            [self setIsCouldNotLoadDataViewHidden:NO];
         }
-        
         
         _isLoadingLatestContent = NO;
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
@@ -696,7 +698,6 @@
         
         [self fetch];
         [self.blogEntriesTableView reloadData];
-        
         [self setIsLoadingViewHidden:YES];
         
         [appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
@@ -776,6 +777,55 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - IgnantNoInternetConnectionViewDelegate
+-(void)retryToLoadData
+{
+    if ([appDelegate isAppOnline]) {
+        
+        [appDelegate fetchAndLoadDataForFirstRun];
+        
+    }
+    else {
+#warning TODO: show this in a better way
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
+                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                    delegate:self 
+                                           cancelButtonTitle:@"Dismiss" 
+                                           otherButtonTitles:nil];
+        [av show];
+        [av release];
+        
+        return;
+    }
+    
+    NSLog(@"retryToLoadData");
+}
+
+#pragma mark - custom special views
+-(void)setUpCouldNotLoadDataView
+{
+    [super setUpCouldNotLoadDataView];
+    
+    
+    NSLog(@"MASTER shouldLoadData: %@", appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    
+#warning BETTER TEXT!
+    
+    
+    if (appDelegate.shouldLoadDataForFirstRun && [appDelegate isAppOnline]) {
+        self.couldNotLoadDataLabel.text = @"Could not load data from SERVER for first RUN, sorry!";
+    }
+    
+    else if (appDelegate.shouldLoadDataForFirstRun && ![appDelegate isAppOnline]) {
+        self.couldNotLoadDataLabel.text = @"You need an internet connection to load data for the first time.";
+    }
+    
+    else {
+        self.couldNotLoadDataLabel.text = @"Could not load data, sorry double!";
+    }
+
 }
 
 @end

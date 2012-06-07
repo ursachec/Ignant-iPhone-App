@@ -53,6 +53,7 @@
 @property (readonly, strong, nonatomic) NSString *persistentStorePath;
 
 
+-(void)fetchAndLoadDataForFirstRun;
 -(void)initializeFacebook;
 
 -(BOOL)isAppOnline;
