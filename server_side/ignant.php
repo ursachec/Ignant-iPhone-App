@@ -7,6 +7,11 @@ require_once('JSONContentProxy.php');
 define('API_COMMAND_ERROR','error');
 
 
+define('API_COMMAND_IS_SERVER_REACHABLE','isServerReachable');
+define('API_KEY_IS_SERVER_REACHABLE','status');
+define('API_RESPONSE_SERVER_OK','ok');
+define('API_RESPONSE_SERVER_ERROR','error');
+
 define('API_COMMAND_GET_DATA_FOR_FIRST_RUN','getDataForTheFirstRun');
 define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
 define('API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY','getMoreArticlesForCategory');
@@ -40,14 +45,18 @@ $contentProxy = new JSONContentProxy();
 $apiCommand = $_GET[GET_ACTION];
 
 
+if(strcmp($apiCommand,API_COMMAND_IS_SERVER_REACHABLE)==0)
+{
+	//TODO: define when the server is defined as not reachable
+	$finalJSONArrayForExport[API_KEY_IS_SERVER_REACHABLE] = API_RESPONSE_SERVER_OK;
+}
 //in case error happens, return it to the user!
 // $finalJSONArrayForExport[TL_ERROR] = YES;
 // $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'unknown_api_command';
 
-
 //this is combined data from more commands
 //that should be returned the first time a user opens the app
- if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
+else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 {
 	$categoriesList = array();
 	$articlesForFirstRun = array();
