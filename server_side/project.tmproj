@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>unittests.php</string>
+	<string>classes/LightArticle.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -20,21 +20,19 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-01T14:01:31Z</date>
+			<date>2012-06-06T12:30:26Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-01T14:01:13Z</date>
+			<date>2012-06-06T12:30:33Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-01T14:02:38Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-06-06T14:37:38Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -46,7 +44,7 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-01T10:52:35Z</date>
+			<date>2012-06-06T13:11:23Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -216,30 +214,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>51</integer>
 				<key>line</key>
-				<integer>41</integer>
+				<integer>58</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>37</integer>
-				<key>line</key>
-				<integer>41</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>17</integer>
-				<key>line</key>
-				<integer>41</integer>
-			</dict>
+			<integer>28</integer>
 		</dict>
 		<key>classes/Mosaic.php</key>
 		<dict>
@@ -318,30 +300,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>5</integer>
+				<integer>39</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>8</integer>
-				<key>line</key>
-				<integer>5</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>28</integer>
-				<key>line</key>
-				<integer>5</integer>
-			</dict>
+			<integer>6</integer>
 		</dict>
 		<key>getTumblrContent.php</key>
 		<dict>
@@ -362,30 +328,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>52</integer>
+				<integer>19</integer>
 				<key>line</key>
-				<integer>139</integer>
+				<integer>132</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>118</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>38</integer>
-				<key>line</key>
-				<integer>139</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>67</integer>
-				<key>line</key>
-				<integer>139</integer>
-			</dict>
+			<integer>36</integer>
 		</dict>
 		<key>script_to_get_images.sh</key>
 		<dict>
@@ -420,14 +370,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>71</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>550</integer>
+				<integer>409</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>403</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>476</integer>
+			<integer>381</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -453,6 +403,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{296, 61}, {919, 717}}</string>
+	<string>{{241, 61}, {919, 717}}</string>
 </dict>
 </plist>
