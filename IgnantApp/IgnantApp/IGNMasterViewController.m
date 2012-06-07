@@ -77,6 +77,8 @@
 
 @synthesize currentCategory = _currentCategory;
 
+@synthesize fetchingDataForFirstRun;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category
 {
@@ -139,7 +141,26 @@
     IGNMosaikViewController *mosaikVC = appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
-    [self.navigationController presentModalViewController:mosaikVC animated:YES];
+    
+    
+    if (!mosaikVC.isMosaicImagesArrayNotEmpty && ![appDelegate isAppOnline]) 
+    {
+#warning TODO: show this in a better way
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
+                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                    delegate:self 
+                                           cancelButtonTitle:@"Dismiss" 
+                                           otherButtonTitles:nil];
+        [av show];
+        [av release];
+        
+        return;
+        
+    }
+    else 
+    {
+        [self.navigationController presentModalViewController:mosaikVC animated:YES];
+    }
 }
 
 - (IBAction)showMore:(id)sender 
@@ -161,6 +182,7 @@
 {
     [super viewWillAppear:animated];
     
+    
     //check when was the last time updating the currently set category and trigger load latest/load more
     NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
     
@@ -178,12 +200,10 @@
     //set up some ui elements
     if (self.isHomeCategory) 
     {
-        
         UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ignantLogoForTopBarSmall.png"]];
         aImageView.frame = CGRectMake(0, 0, 35.0f, 35.0f);
         self.navigationItem.titleView = aImageView;
-        [aImageView release];
-        
+        [aImageView release];   
     }
     else 
     {
@@ -194,6 +214,11 @@
         self.navigationItem.titleView = someLabel;
         [someLabel release];
     }
+    
+    if (appDelegate.shouldLoadDataForFirstRun) {
+        [self setIsFullscreenLoadingViewHidden:NO];
+    }
+    
 }
 
 

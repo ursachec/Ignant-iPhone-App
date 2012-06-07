@@ -43,13 +43,13 @@
 @property (retain, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (assign, readonly) BOOL isHomeCategory;
+@property (assign, readonly) BOOL fetchingDataForFirstRun;
+
 
 @property (retain, nonatomic, readonly) Category* currentCategory;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category;
-
-
 
 - (IBAction)showTumblr:(id)sender;
 

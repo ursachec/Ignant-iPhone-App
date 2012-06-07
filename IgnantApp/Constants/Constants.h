@@ -19,9 +19,16 @@
 //categories
 extern int const kCategoryIndexForHome;
 extern int const kCategoryIndexForMostRed;
+extern int const kCategoryIndexForTumblr;
+extern int const kCategoryIndexForMosaik;
+
+//################################################################################
+//social media constants
+extern NSString *const kFacebookAppId;
 
 //################################################################################
 //user defaults keys
+extern NSString * const kLastStoreUpdateKey;
 
 extern NSString * const kUpdateDatesForCategoriesKey;
 extern NSString * const kUpdateDatesForCategoriesKeyDateValue;
@@ -48,6 +55,9 @@ extern int const kThirdRelatedArticleTag;
 
 //server adresses
 extern NSString * const kAdressForContentServer;
+
+extern NSString * const kReachabilityHostnameToCheck;
+
 
 //top parameter names
 extern NSString * const kParameterAction;

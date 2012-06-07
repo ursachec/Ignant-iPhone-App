@@ -14,13 +14,14 @@
 #import "FBConnect.h"
 
 
-@class UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
+@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
     NSString *persistentStorePath;
 }
 
+@property (nonatomic, retain) Facebook *facebook;
 
 @property(nonatomic, readonly, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readonly, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
@@ -33,13 +34,14 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 @property (readonly, strong, nonatomic) IGNMasterViewController *masterViewController;
+
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
-@property(nonatomic, assign) BOOL isLoadingDataForFirstRun;
+@property(nonatomic, assign, readonly) BOOL shouldLoadDataForFirstRun;
+@property(nonatomic, assign, readonly) BOOL isLoadingDataForFirstRun;
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 
@@ -50,8 +52,9 @@
 
 @property (readonly, strong, nonatomic) NSString *persistentStorePath;
 
--(void)setUpLoadingView;
--(void)showLoadingViewAnimated:(BOOL)animated;
--(void)hideLoadingViewAnimated:(BOOL)animated;
+
+-(void)initializeFacebook;
+
+-(BOOL)isAppOnline;
 
 @end

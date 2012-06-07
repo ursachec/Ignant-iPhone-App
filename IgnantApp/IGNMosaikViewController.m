@@ -53,7 +53,6 @@ NSString * const kImageFilename = @"filename";
 @property (nonatomic,retain) UIView* overlayView;
 
 @property(nonatomic,retain) IGNDetailViewController* detailViewController;
-@property(nonatomic,assign) BOOL isMosaicImagesArrayNotEmpty;
 
 @property(nonatomic,retain) LoadMoreMosaicView* loadingMoreMosaicView;
 
@@ -103,9 +102,18 @@ NSString * const kImageFilename = @"filename";
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(NSString*)currentCategoryId
+{
+    NSString* categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForMosaik];
+    return categoryId;
+}
+
 #pragma mark - helpful methods
 -(BOOL)isMosaicImagesArrayNotEmpty
 {
+    NSArray *s = self.savedMosaicImages;
+    
+    
     return [self.savedMosaicImages count]<kMinimumMosaicImagesLoaded;
 }
 
@@ -149,9 +157,6 @@ NSString * const kImageFilename = @"filename";
     overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView = overlayView;
     [overlayView release];
-    
-    
-    
 }
 
 - (void)viewDidUnload

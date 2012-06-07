@@ -51,6 +51,7 @@ NSString * const kFKArticlePublishingDate = @"publishingDate";
 NSString * const kFKArticleThumbImage = @"thumbImage";
 NSString * const kFKArticleRemoteImages = @"remoteImages";
 NSString * const kFKArticleNumberOfViews = @"numberOfViews";
+NSString * const kFKArticleWebLink = @"webLink";
 NSString * const kFKArticleShowOnHomeCategory = @"shouldShowOnHomeCategory";
 
 NSString * const kFKArticleCategoryId = @"categoryId";

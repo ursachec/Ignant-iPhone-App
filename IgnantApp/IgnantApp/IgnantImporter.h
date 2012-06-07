@@ -8,13 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MWFeedParser.h"
-
 
 extern NSString *const kLastImportedBlogEntryDateKey;
 extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
-@class IgnantImporter;
+@class IgnantImporter, BlogEntry;
 
 @protocol IgnantImporterDelegate <NSObject>
 
@@ -29,7 +27,7 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 @end
 
-@interface IgnantImporter : NSObject <MWFeedParserDelegate>
+@interface IgnantImporter : NSObject
 
 @property(nonatomic,assign) id<IgnantImporterDelegate> delegate;
 
@@ -46,5 +44,8 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 -(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle;
 
 -(void)importJSONStringForTumblrPosts:(NSString*)jsonString;
+
+
+-(BlogEntry*)blogEntryWithId:(NSString*)blogEntryId;
 
 @end

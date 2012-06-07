@@ -10,6 +10,8 @@
 #import "IgnantImporter.h"
 #import "IGNAppDelegate.h"
 
+#import "Constants.h"
+
 @interface MostViewedViewController()
 
 @property (nonatomic, retain, readwrite) IgnantImporter *importer;
@@ -52,13 +54,17 @@
     _importer.delegate = self;
 }
 
+-(NSString*)currentCategoryId
+{
+    NSString* categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForMosaik];
+    return categoryId;
+}
+
 #pragma mark - View lifecycle
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-        
-    
     
     UILabel *someLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150.0f, 40.0f)];
     someLabel.text = @"Am meisten gelesen";
@@ -66,8 +72,6 @@
     someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
     self.navigationItem.titleView = someLabel;
     [someLabel release];
-    
-
 }
 
 

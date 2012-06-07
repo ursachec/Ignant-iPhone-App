@@ -50,6 +50,12 @@
 
 -(void)setupNavigationEntries;
 
+//social media
+-(void)postToFacebook;
+-(void)postToPinterest;
+-(void)postToTwitter;
+
+
 @property (nonatomic, retain) NSString *firstRelatedArticleId;
 @property (nonatomic, retain) NSString *secondRelatedArticleId;
 @property (nonatomic, retain) NSString *thirdRelatedArticleId;
@@ -307,6 +313,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+ 
+    NSLog(@"currentAritcleId: %@", self.blogEntry.articleId);
     
 #warning THIS IS PROBABLY A BAD IDEA, YOU SHOULD HIDE THE TOOLBAR EARLIER
 
@@ -322,7 +330,28 @@
     }
     else if(!_didLoadContentForRemoteArticle)
     {
-        [self startLoadingSingleArticle];
+        //check if article is already existent and only then trigger the loading
+        BlogEntry* entry = nil;
+        entry = [_importer blogEntryWithId:self.currentArticleId];
+        
+        //blog entry with currentId was found, configure the view
+        if(entry)
+        {
+            self.isShowingArticleFromLocalDatabase = YES;
+            _isLoadingCurrentArticle = NO;
+            
+            self.blogEntry = entry;
+            
+            self.previousBlogEntryIndex = kInvalidBlogEntryIndex;
+            self.nextBlogEntryIndex = kInvalidBlogEntryIndex;
+            
+            [self configureView];
+        }
+        
+        //load the blog entry
+        else {
+            [self startLoadingSingleArticle];
+        }
     }
 }
 
@@ -618,6 +647,7 @@
     
     NSString *category = _blogEntry.categoryName;
     NSString *categoryName = @"∙ "; //special characters: ∙ , ●
+    if(category)
     categoryName = [categoryName stringByAppendingString:category];
     
     _categoryLabel.text = categoryName;
@@ -1032,7 +1062,74 @@
 #pragma mark - UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"clickedButtonAtIndex");
+    //TODO: maybe put this constants somewhere else
+    int facebookButtonIndex = 1;
+    int twitterButtonIndex = 2;
+    int pinterestButtonIndex = 0;
+    
+    if (buttonIndex==facebookButtonIndex) {
+        [self postToFacebook];
+    }
+    
+    else if (buttonIndex==twitterButtonIndex) {
+        [self postToTwitter];
+    }
+    
+    else if(buttonIndex==pinterestButtonIndex) {    
+        [self postToPinterest];
+    }
+}
+
+#pragma mark - social media
+-(void)postToFacebook
+{
+
+    //initialize facebook in case not yet done
+    [appDelegate initializeFacebook];
+    
+    
+    //get details for current selected blogentry
+    BlogEntry* currentBlogEntry = self.blogEntry;
+    
+    
+    
+#warning add the relevant live information
+    
+    NSString* infoLinkToArticleMainPage = currentBlogEntry.webLink;
+    NSString* infoNameOfArticle = currentBlogEntry.title;
+    NSString* infoDescriptionForArticle = currentBlogEntry.descriptionText;
+    NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
+    substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
+    
+    
+    //IDEA: as an improvement, add server-side script to create small thumbs specific for the facebook app
+    //REBUTAL: no, you shouldn't, because the article may be posted on the facebook wall where it is important to have some quality in the picture
+    NSString* infoLinkToThumbForArticle = @"http://www.ignant.de/wp-content/uploads/2012/06/housec_pre2.jpg";
+    NSString* infoCaptionForArticle = @"";
+    
+    
+    //show the facebok dialogue for posting to wall
+    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   kFacebookAppId, @"app_id",
+                                   infoLinkToArticleMainPage, @"link",
+                                   infoLinkToThumbForArticle, @"picture",
+                                   infoNameOfArticle, @"name", 
+                                   infoCaptionForArticle, @"caption",
+                                   substringInfoDescriptionForArticle, @"description",
+                                   nil];
+    
+    [appDelegate.facebook dialog:@"feed" andParams:params andDelegate:appDelegate];
+}
+
+
+-(void)postToPinterest
+{
+   NSLog(@"should post to pinterest");
+}
+
+-(void)postToTwitter
+{
+    NSLog(@"should post to twitter"); 
 }
 
 #pragma mark - show mosaik / more
@@ -1042,23 +1139,18 @@
     
     [shareActionSheet showInView:self.view];
     [shareActionSheet release];
-   
-    NSLog(@"showShare!");
 }
 
 
 - (IBAction)showMore:(id)sender {
-    
     IGNMoreOptionsViewController *moreOptionsVC = appDelegate.moreOptionsViewController;
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
-
 }
 
 
 #pragma mark - related articles
 -(void)showRelatedArticle:(id)sender
 {
- 
     NSString *articleId = nil;
     
     if ([sender tag] == kFirstRelatedArticleTag) 
@@ -1084,6 +1176,26 @@
     }
     
     
+    BlogEntry* entry = nil;
+    entry = [_importer blogEntryWithId:articleId];
+    BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
+    
+    //check for the internet connection 
+    if(shouldLoadBlogEntryFromRemoteServer && ![appDelegate isAppOnline])
+    {
+    
+#warning TODO: show this in a better way
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
+                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                    delegate:self 
+                                           cancelButtonTitle:@"Dismiss" 
+                                           otherButtonTitles:nil];
+        [av show];
+        [av release];
+        
+        return;
+    }
+    
     //blog entry to be shown is set, show the view controller loading the article data
     if (!self.nextDetailViewController) {
         self.nextDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
@@ -1091,24 +1203,27 @@
     
     NSLog(@"articleIdChosen: %@", articleId);
     
-    self.nextDetailViewController.currentArticleId = articleId;
-    self.nextDetailViewController.didLoadContentForRemoteArticle = NO;
-    self.nextDetailViewController.isShowingArticleFromLocalDatabase = NO;
+    
+    
+    if(entry)
+    {
+        NSLog(@"entry exists, do not load");
+        self.nextDetailViewController.blogEntry = entry;
+        self.nextDetailViewController.isShowingArticleFromLocalDatabase = YES;        
+    }
+    
+    else 
+    {
+        NSLog(@"entry DOES NOT exist, DO! load");
+        self.nextDetailViewController.currentArticleId = articleId;
+        self.nextDetailViewController.didLoadContentForRemoteArticle = NO;
+        self.nextDetailViewController.isShowingArticleFromLocalDatabase = NO;
+    }
     
     //reset the indexes
     self.nextDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
     self.nextDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
     
-//    
-//    //set up the selected object and previous/next objects
-//    NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-//    self.detailViewController.blogEntry = (BlogEntry*)selectedObject;
-//    
-//    NSArray *fetchedResultsArray = self.fetchedResultsController.fetchedObjects;
-//    self.detailViewController.fetchedResults = fetchedResultsArray;
-//    self.detailViewController.currentBlogEntryIndex = indexPath.row;
-//    
-//    
     //set the managedObjectContext and push the view controller
     self.nextDetailViewController.managedObjectContext = self.managedObjectContext;
     self.nextDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
@@ -1117,11 +1232,10 @@
 
 #pragma mark - getting content from the server
 -(void)startLoadingSingleArticle
-{
+{    
     _isLoadingCurrentArticle = YES;
-
-    [self configureView];
     
+    [self configureView];
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSingleArticle,kParameterAction,self.currentArticleId,kArticleId, nil];
     NSString *requestString = kAdressForContentServer;
@@ -1129,11 +1243,9 @@
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
 	[request startAsynchronous];
-    
 }
 
 - (void)requestStarted:(ASIHTTPRequest *)request
@@ -1152,8 +1264,7 @@
     [self configureView];
     
 #warning todo: handle errors
-    [self.importer importJSONStringForSingleArticle:[request responseString]];
-    
+    [self.importer importJSONStringForSingleArticle:[request responseString]];    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -1175,10 +1286,9 @@
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {
 
-    NSLog(@"didFinishParsingSingleArticleWithDictionary:");    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
     _didLoadContentForRemoteArticle = YES;
-    
     
     //set up the remote articles ids
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];

@@ -18,4 +18,7 @@
 -(void)setDateForLeastRecentArticle:(NSDate*)date withCategoryId:(NSString*)categoryId;
 -(NSMutableArray*)currentDatesForLeastRecentArticles;
 
+-(NSDate*)lastUpdateForFirstRun;
+-(void)setLastUpdateDateForFirstRun:(NSDate*)date;
+
 @end

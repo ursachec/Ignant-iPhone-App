@@ -7,8 +7,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key>
-			<string>fb270065646390191</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb270065646390191</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleDisplayName</key>

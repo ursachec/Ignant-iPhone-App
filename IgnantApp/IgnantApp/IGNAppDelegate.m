@@ -20,6 +20,7 @@
 //import other needed classes
 #import "IgnantImporter.h"
 #import "IgnantLoadingView.h"
+#import "IgnantNoInternetConnectionView.h"
 #import "UserDefaultsManager.h"
 #import "Constants.h"
 
@@ -27,20 +28,12 @@
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
 
+#import "Reachability.h"
 
 #define kForceReloadCoreData NO
 
-#warning remove MWFeedParser from the project
-#warning TODO: IMPROVE SHOW OF IMAGE ARTICLES AND TUMBLR POSTS BY MANAGING HJIMAGES BETTER
-#warning TODO: add code completion snippets
-#warning TODO: add real logging instead of NSLog preprocessor commands!!!
-#warning TODO: before loading content from ignant, check if the internet connection is available!!!
-#warning TODO: ??? implement OpenUDID to know what mosaic images have already been loaded, or are there enough so that they won't be repeated ?
 
 @interface IGNAppDelegate()
-{
-    Facebook *facebook;
-}
 
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readwrite, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
@@ -49,8 +42,10 @@
 
 @property (readwrite, strong, nonatomic) IGNMasterViewController *masterViewController;
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
+@property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
 
-@property (nonatomic, retain) Facebook *facebook;
+@property(nonatomic, assign, readwrite) BOOL shouldLoadDataForFirstRun;
+@property(nonatomic, assign, readwrite) BOOL isLoadingDataForFirstRun;
 
 -(void)startGettingDataForFirstRun;
 
@@ -62,8 +57,6 @@
 
 @implementation IGNAppDelegate
 @synthesize userDefaultsManager = _userDefaultsManager;
-
-@synthesize isLoadingDataForFirstRun;
 
 @synthesize window = _window;
 @synthesize managedObjectContext = __managedObjectContext;
@@ -80,13 +73,15 @@
 @synthesize mosaikViewController = _mosaikViewController;
 
 @synthesize customLoadingView = _customLoadingView;
+@synthesize noInternetConnectionView = _noInternetConnectionView;
 
 @synthesize facebook = _facebook;
 
+@synthesize shouldLoadDataForFirstRun;
+@synthesize isLoadingDataForFirstRun;
 
-// String used to identify the update object in the user defaults storage.
-static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 
+#pragma mark - 
 
 - (void)dealloc
 {
@@ -121,29 +116,18 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
     //initialize utility objects
     _userDefaultsManager = [[UserDefaultsManager alloc] init];
     
-    
-    //set up loading view
-    [self setUpLoadingView];
-    
+    //firstRunData, last update date
+    NSDate *lastUpdate = [_userDefaultsManager lastUpdateForFirstRun];
+    self.shouldLoadDataForFirstRun = (kForceReloadCoreData || lastUpdate == nil);
+        
     //create cache folders for the thumbs
     [self createCacheFolders];
-        
     
-//    //initialize the facebook object
-//    _facebook = [[Facebook alloc] initWithAppId:@"270065646390191" andDelegate:self];
-//    
-//    //check for previously saved facebook information
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    if ([defaults objectForKey:@"FBAccessTokenKey"] 
-//        && [defaults objectForKey:@"FBExpirationDateKey"]) {
-//        _facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-//        _facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-//    }
-//    
-//    if (![_facebook isSessionValid]) {
-//        [_facebook authorize:nil];
-//    }
-
+    //initialize the importer
+    self.importer = [[IgnantImporter alloc] init];
+    _importer.persistentStoreCoordinator = self.persistentStoreCoordinator;
+    _importer.delegate = self;
+    
     UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
     IGNMasterViewController *mVC = [[[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil] autorelease];
     mVC.managedObjectContext = self.managedObjectContext;
@@ -153,16 +137,10 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
     self.navigationController = nav;
     self.window.rootViewController = self.navigationController;
     
-    //initialize the importer
-    self.importer = [[IgnantImporter alloc] init];
-    _importer.persistentStoreCoordinator = self.persistentStoreCoordinator;
-    _importer.delegate = self;
     
-    
-    // check the last update, stored in NSUserDefaults
-    NSDate *lastUpdate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
-    
-    if (kForceReloadCoreData || lastUpdate == nil) {
+    // check the last update, stored in NSUserDefaults    
+    if (self.shouldLoadDataForFirstRun) {
+        
         NSLog(@"new store");
         // remove the old store; easier than deleting every object
         // first, test for an existing store
@@ -172,9 +150,14 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
             NSAssert3(oldStoreRemovalSuccess, @"Unhandled error adding persistent store in %s at line %d: %@", __FUNCTION__, __LINE__, [error localizedDescription]);
         }
         
-        [self startGettingDataForFirstRun];
-    }    
-    
+#warning CHECK IF internet connection exists and show screen if not ("Ignant needs an internet connection for this", <load again button>)
+        if([self isAppOnline]){
+            [self startGettingDataForFirstRun];
+        }
+        else {
+            //show relvant window
+        }
+    }
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -269,6 +252,15 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
     }
 }
 
+#pragma mark - internet connectivity
+-(BOOL)isAppOnline
+{
+#warning USE IP ADRESS OF THE CONTENT SERVER, NOT OF IGNANT
+    Reachability* r = [Reachability reachabilityWithHostName:kReachabilityHostnameToCheck];
+    return [r isReachable];
+}
+
+
 #pragma mark - reusable view controllers
 
 -(IGNMoreOptionsViewController*)moreOptionsViewController
@@ -305,6 +297,32 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 }
 
 #pragma mark - facebook integration
+
+-(void)initializeFacebook
+{
+    //initialize the facebook object
+    if (self.facebook==nil)
+    _facebook = [[Facebook alloc] initWithAppId:kFacebookAppId andDelegate:self];
+    
+    //check for previously saved facebook information
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] 
+        && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        _facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        _facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+    }
+    
+    if (![_facebook isSessionValid]) {
+        
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"user_likes", 
+                                @"read_stream",
+                                nil];
+        [_facebook authorize:permissions];
+        [permissions release];
+    }
+}
+
 // Pre 4.2 support
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     return [_facebook handleOpenURL:url]; 
@@ -449,66 +467,22 @@ static NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    
     self.isLoadingDataForFirstRun = NO;
     
-    
-    
     NSDate *dateToBeSaved = [NSDate date];
-    NSLog(@"appdelegate: didFinishImportingData, dateToBeSaved:%@ kLastStoreUpdateKey: %@",dateToBeSaved, kLastStoreUpdateKey);
-    
-    [[NSUserDefaults standardUserDefaults] setObject:dateToBeSaved forKey:kLastStoreUpdateKey];        
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [self.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForHome]];
+    [self.userDefaultsManager setLastUpdateDateForFirstRun:dateToBeSaved];
+    [self.userDefaultsManager setLastUpdateDate:dateToBeSaved forCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForHome]];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
         [self.masterViewController fetch];
-        
-        [self hideLoadingViewAnimated:YES];
-        
+        [self.masterViewController setIsFullscreenLoadingViewHidden:YES];
     });
 }
-
-#pragma mark - loading view methods
--(void)setUpLoadingView
-{
-    //loading the custom loading view from a nib file
-    NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:@"IgnantLoadingView"
-                                                    owner:self 
-                                                  options:nil];
-    IgnantLoadingView *view;
-    for (id object in bundle) {
-        if ([object isKindOfClass:[IgnantLoadingView class]])
-            view = (IgnantLoadingView *)object;
-    }
-    self.customLoadingView = view;
-}
-
--(void)showLoadingViewAnimated:(BOOL)animated
-{    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.navigationController.view addSubview:_customLoadingView];
-        [self.navigationController.view bringSubviewToFront:_customLoadingView];
-    });
-}
-
--(void)hideLoadingViewAnimated:(BOOL)animated
-{    
-    dispatch_async(dispatch_get_main_queue(), ^{
-            [_customLoadingView removeFromSuperview];
-    });
-}
-
 
 #pragma mark - getting content from the server
 -(void)startGettingDataForFirstRun
 {
     self.isLoadingDataForFirstRun = YES;
-    
-    //show the loading view here
-    [self showLoadingViewAnimated:YES];
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetDataForFirstRun,kParameterAction, nil];
     NSString *requestString = kAdressForContentServer;

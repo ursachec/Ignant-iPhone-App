@@ -13,6 +13,18 @@
 @implementation UserDefaultsManager
 
 #pragma mark - User Defaults
+-(NSDate*)lastUpdateForFirstRun
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
+}
+
+-(void)setLastUpdateDateForFirstRun:(NSDate*)date
+{
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:kLastStoreUpdateKey];        
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
 -(NSDate*)lastUpdateDateForCategoryId:(NSString*)categoryId
 {
     

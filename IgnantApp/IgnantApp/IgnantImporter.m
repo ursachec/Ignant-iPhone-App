@@ -42,7 +42,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 {
     IGNAppDelegate* appDelegate;
     
-	MWFeedParser *feedParser;
 	NSDateFormatter *formatter;
     
     NSManagedObjectContext *insertionContext;
@@ -447,7 +446,8 @@ static const NSUInteger kImportBatchSize = 5;
     NSString *blogEntryDescriptionText = [oneArticle objectForKey:kFKArticleDescriptionText];
     NSString *blogEntryPublishDate = [oneArticle objectForKey:kFKArticlePublishingDate];
     NSString *blogEntryCategoryName = [oneArticle objectForKey:kFKArticleCategoryName];
-        
+    NSString *blogEntryWebLink = [oneArticle objectForKey:kFKArticleWebLink];
+    
     NSArray *blogEntryRelatedArticles = [oneArticle objectForKey:kFKArticleRelatedArticles];
 
     id unconvertedBlogEntryCategoryId = [oneArticle objectForKey:kFKArticleCategoryId];
@@ -518,6 +518,7 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.relatedArticles = blogEntryRelatedArticles;
     self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
     self.currentBlogEntry.showInHomeCategory = blogEntryShouldShowOnHomeCategory;
+    self.currentBlogEntry.webLink = blogEntryWebLink;
     
     
     /////////////////////////// handle the thumb image image
@@ -739,6 +740,27 @@ static const NSUInteger kImportBatchSize = 5;
     }
     
     return _checkingFetchRequestForCategories;
+}
+
+-(BlogEntry*)blogEntryWithId:(NSString*)blogEntryId
+{
+    BlogEntry* entry = nil;
+    NSFetchRequest *checkRequest = self.checkingFetchRequestForBlogEntries; 
+    [checkRequest setPredicate:[NSPredicate predicateWithFormat:@"articleId == %@", blogEntryId]];
+    
+    NSError *error = nil;
+    NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
+    if (error==nil) {
+        if ([result count]>0) {
+            entry = (BlogEntry*)[result objectAtIndex:0];
+        }
+    }
+    else {
+        #warning handle fetch error
+        NSLog(@"error is not nil this should be handled");
+    }
+
+    return entry;
 }
 
 @end

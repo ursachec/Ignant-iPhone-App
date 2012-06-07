@@ -10,9 +10,15 @@
 
 @interface IGNViewController : UIViewController
 
-
 -(void)setIsLoadingViewHidden:(BOOL)hidden;
+-(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
+
+-(void)setIsNoConnectionViewHidden:(BOOL)hidden;
+
 -(void)setUpForOfflineUse;
 -(void)setUpForOnlineUse;
+
+-(void)setIsFullscreenNoInternetConnectionViewHidden:(BOOL)hidden;
+-(void)setIsFullscreenLoadingViewHidden:(BOOL)hidden;
 
 @end

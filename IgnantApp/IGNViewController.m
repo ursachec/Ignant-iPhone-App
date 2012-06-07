@@ -7,24 +7,44 @@
 //
 
 #import "IGNViewController.h"
+#import "IgnantLoadingView.h"
+#import "IgnantNoInternetConnectionView.h"
 
+#import "Constants.h"
 
 @interface IGNViewController ()
 {
 
 }
 @property(nonatomic, retain) UIView* loadingView;
+@property(nonatomic, retain) UIView* noInternetConnectionView;
+
+
+@property(nonatomic, retain) IgnantLoadingView* fullscreenLoadingView;
+@property(nonatomic, retain) IgnantNoInternetConnectionView* fullscreenNoInternetConnectionView;
+
+
+-(void)setUpFullscreenNoInternetConnectionView;
+-(void)setUpFullscreenLoadingView;
+
+
 @end
 
 @implementation IGNViewController
 @synthesize loadingView = _loadingView;
-
+@synthesize noInternetConnectionView = _noInternetConnectionView;
+@synthesize fullscreenLoadingView = _fullscreenLoadingView;
+@synthesize fullscreenNoInternetConnectionView = _fullscreenNoInternetConnectionView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
+        [self setUpFullscreenLoadingView];
+        [self setUpFullscreenNoInternetConnectionView];
+        
     }
     return self;
 }
@@ -47,15 +67,6 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -78,7 +89,6 @@
     UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
     aView.backgroundColor = [UIColor whiteColor];
     
-    
     CGSize activityIndicatorSize = CGSizeMake(44.0f, 44.0f);
     CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, (loadingViewFrame.size.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -92,6 +102,13 @@
     [aView release];
     
     
+    //set up the no internet connection view
+    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
+    someView.backgroundColor = [UIColor redColor];
+    self.noInternetConnectionView = someView;
+    [someView release];
+    
 }
 
 
@@ -101,7 +118,13 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     self.loadingView = nil;
+    self.noInternetConnectionView = nil;
+
+    self.fullscreenNoInternetConnectionView = nil;
+    self.fullscreenLoadingView = nil;
 }
+
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -111,6 +134,11 @@
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden
 {
+    [self setIsLoadingViewHidden:hidden animated:NO];
+}
+
+-(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
+{
     if (hidden) {
         [_loadingView removeFromSuperview];
     }
@@ -119,15 +147,88 @@
     }
 }
 
+-(void)setIsNoConnectionViewHidden:(BOOL)hidden
+{        
+    if (hidden) {
+        [_noInternetConnectionView removeFromSuperview];
+    }
+    else {
+        [self.view addSubview:_noInternetConnectionView];        
+    }
+}
+
 -(void)setUpForOfflineUse
 {
-
+    [self setIsNoConnectionViewHidden:NO];
 }
 
 -(void)setUpForOnlineUse
 {
-    
+    [self setIsNoConnectionViewHidden:YES];    
 }
 
+#pragma mark - special views
+-(void)setUpFullscreenNoInternetConnectionView
+{
+    //loading the custom loading view from a nib file
+    NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:@"IgnantNoInternetConnectionView"
+                                                    owner:self 
+                                                  options:nil];
+    IgnantNoInternetConnectionView *view;
+    for (id object in bundle) {
+        if ([object isKindOfClass:[IgnantNoInternetConnectionView class]])
+            view = (IgnantNoInternetConnectionView *)object;
+    }
+    self.fullscreenNoInternetConnectionView = view;
+}
+
+-(void)setIsFullscreenNoInternetConnectionViewHidden:(BOOL)hidden
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (hidden) {
+            [_fullscreenNoInternetConnectionView removeFromSuperview];
+        }
+        
+        else {
+            [self.navigationController.view addSubview:_fullscreenNoInternetConnectionView];
+            [self.navigationController.view bringSubviewToFront:_fullscreenNoInternetConnectionView];
+            [self setIsFullscreenLoadingViewHidden:YES];
+        }
+    });
+}
+
+-(void)setUpFullscreenLoadingView
+{
+    //loading the custom loading view from a nib file
+    NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:@"IgnantLoadingView"
+                                                    owner:self 
+                                                  options:nil];
+    IgnantLoadingView *view;
+    for (id object in bundle) {
+        if ([object isKindOfClass:[IgnantLoadingView class]])
+            view = (IgnantLoadingView *)object;
+    }
+    self.fullscreenLoadingView = view;
+}
+
+-(void)setIsFullscreenLoadingViewHidden:(BOOL)hidden
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSLog(@"setIsFullscreenLoadingViewHidden: %@", hidden ? @"TRUE" : @"FALSE");
+        
+        if (hidden) {
+            [_fullscreenLoadingView removeFromSuperview];
+        }
+        
+        else {
+            [self.navigationController.view addSubview:_fullscreenLoadingView];
+            [self.navigationController.view bringSubviewToFront:_fullscreenLoadingView];
+        }
+        
+    });
+    
+}
 
 @end

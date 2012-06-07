@@ -12,7 +12,9 @@
         <attribute name="showInHomeCategory" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="thumbIdentifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbImageFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbImageLink" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webLink" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="category" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="entries" inverseEntity="Category" syncable="YES"/>
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Image" inverseName="entry" inverseEntity="Image" syncable="YES"/>
     </entity>
@@ -35,7 +37,7 @@
         <attribute name="publishingDate" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BlogEntry" positionX="160" positionY="192" width="128" height="255"/>
+        <element name="BlogEntry" positionX="160" positionY="192" width="128" height="285"/>
         <element name="Category" positionX="160" positionY="192" width="128" height="105"/>
         <element name="Image" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TumblrEntry" positionX="160" positionY="192" width="128" height="75"/>

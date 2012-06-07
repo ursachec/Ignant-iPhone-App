@@ -139,9 +139,38 @@
     [_refreshHeaderView release];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [self setIsNoConnectionViewHidden:YES];
+    
+    
+#warning THIS CAN BE MADE FASTER
+    //decide if to load posts for the first time or not
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
+    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
+    if (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad) {
+        
+        if ([appDelegate isAppOnline]) {
+            _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
+            [self loadLatestTumblrArticles];
+        }
+        else {
+            [self setIsNoConnectionViewHidden:NO];
+        }
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(NSString*)currentCategoryId
+{
+    NSString* categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForTumblr];
+    return categoryId;
 }
 
 #pragma mark - Table view data source
@@ -155,12 +184,6 @@
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     int numberOfLoadedPosts = [sectionInfo numberOfObjects];
-    
-    if (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad) {
-        _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
-        [self loadLatestTumblrArticles];
-    }
-    
     return numberOfLoadedPosts + _showLoadMoreTumblr;
 }
 
@@ -401,6 +424,10 @@
         
         isLoadingLatestTumblrArticles = NO;
         
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            [self setIsLoadingViewHidden:YES];
+        }
+        
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
     }
 }
@@ -499,8 +526,6 @@
     LOG_CURRENT_FUNCTION()
     NSLog(@"tumblrFeed didStartImportingData");
     
-    
-//        [self showLoadingViewAnimated:YES];
 
 }
 

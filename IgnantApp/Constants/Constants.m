@@ -19,14 +19,22 @@ int const kThirdRelatedArticleTag = 503;
 //categories
 int const kCategoryIndexForHome = -1;
 int const kCategoryIndexForMostRed = -500;
+int const kCategoryIndexForTumblr = -600;
+int const kCategoryIndexForMosaik = -700;
+
+
+//################################################################################
+//social media constants
+NSString *const kFacebookAppId = @"270065646390191";
+
 
 //################################################################################
 //user defaults keys
+NSString * const kLastStoreUpdateKey = @"LastStoreUpdate";
 
 NSString * const kUpdateDatesForCategoriesKey = @"updateDates";
 NSString * const kUpdateDatesForCategoriesKeyDateValue = @"updateDatesDate";
 NSString * const kUpdateDatesForCategoriesKeyCategoryIdValue = @"updateDatesCategoryId";
-
 
 NSString * const kDatesForLeastRecentArticleKey = @"leastRecentArticlesDates";
 NSString * const kDatesForLeastRecentArticleKeyDateValue = @"leastRecentArticleDate";
@@ -45,6 +53,8 @@ NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant
 #else
 NSString * const kAdressForContentServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/ignant.php";
 #endif
+
+NSString * const kReachabilityHostnameToCheck = @"www.ignant.de";
 
 NSString * const kParameterAction = @"action";
 

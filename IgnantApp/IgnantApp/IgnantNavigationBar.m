@@ -1,6 +1,6 @@
 //
 //  IgnantNavigationBar.m
-//  MWFeedParser
+//  IgnantApp
 //
 //  Created by Claudiu-Vlad Ursache on 29.12.11.
 //  Copyright (c) 2011 c.v.ursache. All rights reserved.
