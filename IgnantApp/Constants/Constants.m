@@ -43,7 +43,7 @@ NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue = @"leastRecentAr
 //################################################################################
 
 //server stuff
-#define shouldUseRemoteServer false
+#define shouldUseRemoteServer true
 
 
 #if TARGET_IPHONE_SIMULATOR==TRUE

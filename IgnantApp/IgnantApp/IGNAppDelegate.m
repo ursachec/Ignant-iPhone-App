@@ -502,6 +502,7 @@
     NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@", encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+    [request setTimeOutSeconds:10.0f];
 	[request setDelegate:self];
 	[request startAsynchronous];
 }

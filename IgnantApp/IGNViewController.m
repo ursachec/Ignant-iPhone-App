@@ -16,6 +16,7 @@
 }
 
 @property(nonatomic, retain, readwrite) UIView* loadingView;
+@property(nonatomic, retain, readwrite) UILabel* loadingViewLabel;
 @property(nonatomic, retain, readwrite) UIView* noInternetConnectionView;
 @property(nonatomic, retain, readwrite) UIView* couldNotLoadDataView;
 @property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
@@ -27,6 +28,7 @@
 
 @implementation IGNViewController
 @synthesize loadingView = _loadingView;
+@synthesize loadingViewLabel = _loadingViewLabel;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
 @synthesize couldNotLoadDataView = _couldNotLoadDataView;
 @synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
@@ -210,8 +212,28 @@
     aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     aView.backgroundColor = [UIColor whiteColor];
     
+    
+    //set up the label
+    CGSize labelSize = CGSizeMake(280.0f, 20.0f);
+    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+    someLabel.textAlignment = UITextAlignmentCenter;
+    someLabel.numberOfLines = 2;
+#warning find better text!
+#warning add fonts to constants    
+    someLabel.text = @"loading"; 
+    someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
+    someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    self.loadingViewLabel = someLabel;
+    
+    [aView addSubview:someLabel];
+    [someLabel release];
+    
+    
+    //set up the activity indicator
+    CGFloat paddingTop = .0f;
     CGSize activityIndicatorSize = CGSizeMake(44.0f, 44.0f);
-    CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, (loadingViewFrame.size.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
+    CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, someLabelFrame.origin.y+someLabelFrame.size.height+paddingTop, activityIndicatorSize.width, activityIndicatorSize.height);
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.frame = activityIndicatorFrame;
     activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;

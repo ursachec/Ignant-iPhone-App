@@ -21,6 +21,7 @@
 }
 
 @property(nonatomic, retain, readonly) UIView* loadingView;
+@property(nonatomic, retain, readonly) UILabel* loadingViewLabel;
 @property(nonatomic, retain, readonly) UIView* noInternetConnectionView;
 @property(nonatomic, retain, readonly) UIView* couldNotLoadDataView;
 @property(nonatomic, retain, readonly) UILabel* couldNotLoadDataLabel;
