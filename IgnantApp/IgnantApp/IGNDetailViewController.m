@@ -26,13 +26,11 @@
 #import "NSString+HTML.h"
 #import "NSData+Base64.h"
 
-
 #import "IGNAppDelegate.h"
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
-
 
 @interface IGNDetailViewController ()
 {
@@ -54,7 +52,6 @@
 -(void)postToFacebook;
 -(void)postToPinterest;
 -(void)postToTwitter;
-
 
 @property (nonatomic, retain) NSString *firstRelatedArticleId;
 @property (nonatomic, retain) NSString *secondRelatedArticleId;
@@ -90,14 +87,12 @@
 
 @property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
 
-
 -(void)configureView;
 -(void)setupNavigationButtons;
 
 - (IBAction)showPictureSlideshow:(id)sender;
 
 -(void)startLoadingSingleArticle;
-
 
 -(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
@@ -164,14 +159,12 @@
 @synthesize nextBlogEntryIndex = _nextBlogEntryIndex;
 @synthesize previousBlogEntryIndex = _previousBlogEntryIndex;
 
-
 @synthesize nextDetailViewController = _nextDetailViewController;
-
 
 @synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
 
-
 @synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -179,7 +172,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) 
     {
-        
         
         self.firstRelatedArticleId = @"";
         self.secondRelatedArticleId = @"";
@@ -308,16 +300,26 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    } else {
+        return YES;
+    }
+}
+
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
- 
+    
     NSLog(@"currentAritcleId: %@", self.blogEntry.articleId);
     
 #warning THIS IS PROBABLY A BAD IDEA, YOU SHOULD HIDE THE TOOLBAR EARLIER
-
+    
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
-
     
     //----------------------------------------------------------------------------
     
@@ -351,24 +353,21 @@
             [self startLoadingSingleArticle];
         }
     }
+    
+    [self setUpBackButton];
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    } else {
-        return YES;
-    }
-}
-
 
 #pragma mark - Navigation options
 
 -(void)handleBack:(id)sender
-{
-    [self.navigationController popViewControllerAnimated:YES];
+{    
+    if (self.viewControllerToReturnTo) {
+        [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
+    }
+    else {
+        NSLog(@"viewControllerToReturnTo not found");
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 -(void)navigateToNextArticle
@@ -380,6 +379,8 @@
     if (_navigationDetailViewController==nil) {
         self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
     }
+    
+    self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
     
     self.navigationDetailViewController.fetchedResults = _fetchedResults;
     self.navigationDetailViewController.currentBlogEntryIndex = _nextBlogEntryIndex;
@@ -417,6 +418,8 @@
     if (_navigationDetailViewController==nil) {
         self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
     }
+    
+    self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
     
     self.navigationDetailViewController.fetchedResults = _fetchedResults;
     self.navigationDetailViewController.currentBlogEntryIndex = _previousBlogEntryIndex;
@@ -1047,28 +1050,6 @@
     }
 }
 
-
-#pragma mark - UIActionSheet delegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    //TODO: maybe put this constants somewhere else
-    int facebookButtonIndex = 1;
-    int twitterButtonIndex = 2;
-    int pinterestButtonIndex = 0;
-    
-    if (buttonIndex==facebookButtonIndex) {
-        [self postToFacebook];
-    }
-    
-    else if (buttonIndex==twitterButtonIndex) {
-        [self postToTwitter];
-    }
-    
-    else if(buttonIndex==pinterestButtonIndex) {    
-        [self postToPinterest];
-    }
-}
-
 #pragma mark - social media
 -(void)postToFacebook
 {
@@ -1118,24 +1099,97 @@
 
 -(void)postToTwitter
 {
+    BOOL canTweet = [TWTweetComposeViewController canSendTweet];
+    
+    if (!canTweet) {
+        
+#warning TODO: show this in a better way
+
+    
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
+                                                     message:@"You need to be logged in your Twitter account!" 
+                                                    delegate:self 
+                                           cancelButtonTitle:@"Dismiss" 
+                                           otherButtonTitles:nil];
+        [av show];
+        [av release];
+        
+        return;
+        
+    }
+    else {
+        
+#warning TODO: if link not set, dismiss and show error (or something)
+        
+        NSString* title = self.blogEntry.title;
+        NSString* link = self.blogEntry.webLink;
+        
+        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog",title, link];
+        
+        TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
+        [tweetVC setInitialText:tweet];
+        [tweetVC addImage:self.entryImageView.image];
+        
+        [tweetVC setCompletionHandler:^(TWTweetComposeViewControllerResult result){
+            NSString* output;
+            
+            
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    output = @"tweet canceled";
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    output = @"tweet done";
+                    break;    
+                default:
+                    break;
+            }
+        
+            
+            NSLog(@"output: %@", output);
+            
+            //dismiss the tweet composition view controller modally
+            [self dismissModalViewControllerAnimated:YES];
+        
+        }];
+        
+        
+        [self presentModalViewController:tweetVC animated:YES];
+    }
+    
+    NSLog(@"canTweet: %@", canTweet ? @"TRUE" : @"FALSE");
+    
     NSLog(@"should post to twitter"); 
 }
 
 #pragma mark - show mosaik / more
 - (IBAction)showShare:(id)sender {
     
-    UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Pinterest",@"Facebook",@"Twitter", nil ];
+    UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Twitter",@"Facebook", nil ];
     
     [shareActionSheet showInView:self.view];
     [shareActionSheet release];
 }
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    //TODO: maybe put this constants somewhere else
+    int twitterButtonIndex = 0;
+    int facebookButtonIndex = 1;
+    
+    if (buttonIndex==facebookButtonIndex) {
+        [self postToFacebook];
+    }
+    
+    else if (buttonIndex==twitterButtonIndex) {
+        [self postToTwitter];
+    }
+}
 
 - (IBAction)showMore:(id)sender {
     IGNMoreOptionsViewController *moreOptionsVC = appDelegate.moreOptionsViewController;
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
 }
-
 
 #pragma mark - related articles
 -(void)showRelatedArticle:(id)sender
@@ -1191,7 +1245,7 @@
     }
     
     NSLog(@"articleIdChosen: %@", articleId);
-    
+    self.nextDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
     
     
     if(entry)
@@ -1371,5 +1425,10 @@
 #warning BETTER TEXT!
     self.couldNotLoadDataLabel.text = @"Could not load data for this article";
 }
+
+
+
+
+
 
 @end

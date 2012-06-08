@@ -55,8 +55,6 @@ typedef enum _moreOptionsIndeces  {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
-        
         appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
     }
@@ -76,6 +74,8 @@ typedef enum _moreOptionsIndeces  {
 {
     _listOfOptions = [[NSMutableArray alloc] initWithCapacity:12];
     
+#warning TAKE THE CATEGORIES FROM DATABASE ????
+#warning localize strings
     [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
     [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
     [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
@@ -164,6 +164,25 @@ typedef enum _moreOptionsIndeces  {
     return cell;
 }
 
+-(void)showViewController:(UIViewController*)viewController
+{
+    
+    NSArray* vcs = self.navigationController.viewControllers;
+    BOOL isCategoriesVCOnStack = NO;
+    for (id object in vcs) {
+        if ([object isKindOfClass:[viewController class]]) {
+            isCategoriesVCOnStack = YES;
+            break;
+        }
+    }
+    
+    if (isCategoriesVCOnStack) {
+        [self.navigationController popToViewController:viewController animated:YES];
+    }
+    else {
+        [self.navigationController pushViewController:viewController animated:YES];                
+    }    
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -178,13 +197,12 @@ typedef enum _moreOptionsIndeces  {
         case indexForTumblrFeed:;
             IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
             tumblrVC.managedObjectContext = appDelegate.managedObjectContext;
-            [self.navigationController pushViewController:tumblrVC animated:YES];
-            
+            [self showViewController:tumblrVC];
             break;
         case indexForCategories:;
             CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
             categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
-            [self.navigationController pushViewController:categoriesVC animated:YES];
+            [self showViewController:categoriesVC];
             
             break;
         case indexForMostRed:;

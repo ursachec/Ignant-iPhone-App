@@ -31,6 +31,8 @@
 @synthesize couldNotLoadDataView = _couldNotLoadDataView;
 @synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
+@synthesize viewControllerToReturnTo;
+
 -(void)dealloc
 {
     [super dealloc];
@@ -149,14 +151,52 @@
 
 -(void)setUpBackButton
 {
-    //add the back-to-start button
-    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonBack"];
+    BOOL DEBUG_SHOW_COLORS = false;
+    NSString* titleOfReturningToViewController = self.viewControllerToReturnTo.title;
+    
+#warning TODO: localize! better text
+    if (titleOfReturningToViewController==nil) {
+        titleOfReturningToViewController = @"back";
+    }
+    
+#define PADDING_TOP 1.0f
+    
+    //back button
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat ratio = .5;
-    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
-    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
+    CGRect backButtonFrame = CGRectMake(0, 0, 100.0f, 57.0f);
+    backButton.frame = backButtonFrame;
+    backButton.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor blueColor] : [UIColor clearColor];
     [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
+    
+    //arrow
+    CGFloat arrowRatio = .5f;
+    CGSize backArrowSize = CGSizeMake(28.0f*arrowRatio, 28.0f*arrowRatio);
+    CGRect backArrowFrame = CGRectMake(backButtonFrame.origin.x, (backButtonFrame.size.height-backArrowSize.height)/2+PADDING_TOP, backArrowSize.width, backArrowSize.height);
+    UIImageView* backArrowView = [[UIImageView alloc] initWithFrame:backArrowFrame];
+    backArrowView.image = [UIImage imageNamed:@"arrow_back"];
+    backArrowView.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor redColor] : [UIColor clearColor];
+    [backButton addSubview:backArrowView];
+    [backArrowView release];
+    
+    //back button title
+    NSString* categoryName = [titleOfReturningToViewController uppercaseString];
+    UIFont* font = [UIFont fontWithName:@"Georgia" size:10.0f];
+    CGSize textSize = [categoryName sizeWithFont:font];
+    CGFloat paddingLeft = 5.0f;
+    CGSize someLabelSize = CGSizeMake(textSize.width, textSize.height);
+    CGRect someLabelFrame = CGRectMake(backArrowFrame.origin.x+backArrowFrame.size.width+paddingLeft, (backButtonFrame.size.height-someLabelSize.height)/2+PADDING_TOP, someLabelSize.width, someLabelSize.height);
+    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+    someLabel.text = categoryName;
+    someLabel.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor greenColor] : [UIColor clearColor];
+    someLabel.font = font;
+    [backButton addSubview:someLabel];
+    [someLabel release];
+    
+    //resize the frame
+    backButtonFrame = CGRectMake(backButtonFrame.origin.x, backButtonFrame.origin.y, backArrowSize.width+paddingLeft+someLabelSize.width, backButtonFrame.size.height);
+    backButton.frame = backButtonFrame;
+    
+    //setup the buttonItem
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
     [backBarButtonItem release];

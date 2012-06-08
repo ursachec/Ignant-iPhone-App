@@ -7,6 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Twitter/Twitter.h>
+#import <Accounts/Accounts.h>
+
+
 
 #import "IGNViewController.h"
 
@@ -50,6 +54,7 @@
 
 @property (strong, nonatomic) IGNDetailViewController *nextDetailViewController;
 
+
 //properties related to the navigation
 @property(assign) NSInteger currentBlogEntryIndex;
 @property(assign) NSInteger nextBlogEntryIndex;
@@ -62,6 +67,5 @@
 -(IBAction)showRelatedArticle:(id)sender;
 
 - (IBAction)handleLeftSwipe:(id)sender;
-
 
 @end

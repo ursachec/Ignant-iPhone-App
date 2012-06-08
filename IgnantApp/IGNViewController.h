@@ -25,6 +25,8 @@
 @property(nonatomic, retain, readonly) UIView* couldNotLoadDataView;
 @property(nonatomic, retain, readonly) UILabel* couldNotLoadDataLabel;
 
+@property (nonatomic, assign) UIViewController* viewControllerToReturnTo;
+
 -(void)setUpBackButton;
 
 -(void)setUpLoadingView;

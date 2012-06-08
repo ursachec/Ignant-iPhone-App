@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4146FE391582221C001BAC75 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3615822209001BAC75 /* Twitter.framework */; };
+		4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3A158222BB001BAC75 /* Accounts.framework */; };
+		4146FE3E15824346001BAC75 /* arrow_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 4146FE3D15824346001BAC75 /* arrow_back.png */; };
 		414A052C15760B3600DDB8EA /* EasySocialMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 414A052B15760B3600DDB8EA /* EasySocialMedia.m */; };
 		416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 416AB6EC1577A68100625B03 /* UserDefaultsManager.m */; };
 		41B30984157FD87500C65CBA /* IgnantNoInternetConnectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B30983157FD87500C65CBA /* IgnantNoInternetConnectionView.m */; };
@@ -228,6 +231,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4146FE3615822209001BAC75 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		4146FE3A158222BB001BAC75 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		4146FE3D15824346001BAC75 /* arrow_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_back.png; sourceTree = "<group>"; };
 		414A052A15760B3600DDB8EA /* EasySocialMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EasySocialMedia.h; path = EasySocialMedia/EasySocialMedia.h; sourceTree = "<group>"; };
 		414A052B15760B3600DDB8EA /* EasySocialMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EasySocialMedia.m; path = EasySocialMedia/EasySocialMedia.m; sourceTree = "<group>"; };
 		416AB6EB1577A68100625B03 /* UserDefaultsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserDefaultsManager.h; path = Managers/UserDefaultsManager.h; sourceTree = "<group>"; };
@@ -555,6 +561,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */,
 				FEC36AE41528F9F0004F19C8 /* libxml2.dylib in Frameworks */,
 				FEC36AE21528F974004F19C8 /* Security.framework in Frameworks */,
 				FEBA71D1150CE0E40016AD6E /* libz.dylib in Frameworks */,
@@ -567,6 +574,7 @@
 				FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */,
 				FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */,
 				FE0DDCE514AE34D0003B8778 /* CoreGraphics.framework in Frameworks */,
+				4146FE391582221C001BAC75 /* Twitter.framework in Frameworks */,
 				FE0DDCE714AE34D0003B8778 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,6 +582,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4146FE3C1582430D001BAC75 /* navigation */ = {
+			isa = PBXGroup;
+			children = (
+				4146FE3D15824346001BAC75 /* arrow_back.png */,
+			);
+			name = navigation;
+			sourceTree = "<group>";
+		};
 		414A052715760B0000DDB8EA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -648,6 +664,8 @@
 		FE0DDCDF14AE34D0003B8778 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4146FE3A158222BB001BAC75 /* Accounts.framework */,
+				4146FE3615822209001BAC75 /* Twitter.framework */,
 				FEC36AE31528F9F0004F19C8 /* libxml2.dylib */,
 				FEC36AE11528F973004F19C8 /* Security.framework */,
 				FEBA71D0150CE0E40016AD6E /* libz.dylib */,
@@ -934,6 +952,7 @@
 		FE42566315599F61008E0911 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4146FE3C1582430D001BAC75 /* navigation */,
 				FE1B2C001559A03300F7FFF8 /* application_images */,
 				FE1B2C051559A03300F7FFF8 /* buttons */,
 				FE1B2C0D1559A03300F7FFF8 /* ego_refresh_images */,
@@ -1463,6 +1482,7 @@
 				FE1B2C681559A03300F7FFF8 /* toolbarTopWithHexagon@2x.png in Resources */,
 				41B30987157FD89600C65CBA /* IgnantNoInternetConnectionView.xib in Resources */,
 				41B3098C1580D7EE00C65CBA /* IntroductionViewController.xib in Resources */,
+				4146FE3E15824346001BAC75 /* arrow_back.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

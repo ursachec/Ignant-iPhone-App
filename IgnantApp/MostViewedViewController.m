@@ -32,6 +32,7 @@
         
         self.isHomeCategory = NO;        
         
+        self.title = @"Am meisten gelesen";
         
     }
     return self;
@@ -67,9 +68,10 @@
     [super viewWillAppear:animated];
     
     UILabel *someLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150.0f, 40.0f)];
-    someLabel.text = @"Am meisten gelesen";
+#warning TODO: localize text
+    someLabel.text = [@"Am meisten gelesen" uppercaseString];
     someLabel.textAlignment = UITextAlignmentCenter;
-    someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+    someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
     self.navigationItem.titleView = someLabel;
     [someLabel release];
 }

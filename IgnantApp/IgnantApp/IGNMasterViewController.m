@@ -93,6 +93,14 @@
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
+        if (self.isHomeCategory) {
+#warning TODO: set this title in a better way
+                    self.title = @"Home";
+        }
+        else if(category!=nil) {
+            self.title = category.name;
+        }
+
         
         appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
@@ -207,9 +215,9 @@
     else 
     {
         UILabel *someLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100.0f, 40.0f)];
-        someLabel.text = [self.currentCategory name];
+        someLabel.text = [[self.currentCategory name] uppercaseString];
         someLabel.textAlignment = UITextAlignmentCenter;
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
         self.navigationItem.titleView = someLabel;
         [someLabel release];
     }
@@ -393,6 +401,7 @@
         }
         
         self.detailViewController.isShowingArticleFromLocalDatabase = YES;
+        self.detailViewController.viewControllerToReturnTo = self;
         
         //set up the selected object and previous/next objects
         NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
@@ -659,15 +668,13 @@
     }
     
     else if (_isLoadingLatestContent) {
-        
-        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:self.currentCategory.categoryId]==nil) {
+        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]]==nil) {
             [self setIsCouldNotLoadDataViewHidden:NO];
         }
         
         _isLoadingLatestContent = NO;
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
     }
-    
 }
 
 #pragma mark - IgnantImporterDelegate

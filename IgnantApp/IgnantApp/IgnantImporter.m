@@ -221,6 +221,8 @@ static const NSUInteger kImportBatchSize = 5;
 
 -(void)importJSONWithLatestPosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
 {
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     if([delegate respondsToSelector:@selector(didStartImportingData)]){
         [delegate didStartImportingData];
     }
@@ -282,6 +284,8 @@ static const NSUInteger kImportBatchSize = 5;
 
 -(void)importJSONWithMorePosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId
 {
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
     if([delegate respondsToSelector:@selector(didStartImportingData)]){
         [delegate didStartImportingData];
     }
@@ -342,6 +346,8 @@ static const NSUInteger kImportBatchSize = 5;
 }
 
 -(void)importJSONStringForFirstRun:(NSString*)jsonString{
+    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if([delegate respondsToSelector:@selector(didStartImportingData)]){
         [delegate didStartImportingData];
