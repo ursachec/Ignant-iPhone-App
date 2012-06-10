@@ -7,8 +7,6 @@
 //
 
 #import "IgnantTumblrFeedViewController.h"
-#import "HJObjManager.h"
-#import "HJManagedImageV.h"
 
 #import "IgnantImporter.h"
 #import "IGNAppDelegate.h"
@@ -21,9 +19,12 @@
 
 #import "TumblrEntry.h"
 
-
 #import "IgnantLoadMoreCell.h"
 #import "IgnantLoadingMoreCell.h"
+
+#import "UIImageView+WebCache.h"
+
+#import "TumblrCell.h"
 
 #define kTumblrAPIKey I5QACSezTzCjvkHXaiEaXrD3t9cb8Ahmpyv7MqGIRPhdEfg2Yw
 // http://api.tumblr.com/v2/blog/ignant.tumblr.com/posts?api_key=
@@ -51,13 +52,11 @@
 
 @property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
 
-@property(nonatomic, retain) HJObjManager *imageManager;
 @property(nonatomic, retain) IgnantImporter* importer;
 @end
 
 @implementation IgnantTumblrFeedViewController
 @synthesize tumblrTableView = _tumblrTableView;
-@synthesize imageManager = _imageManager;
 @synthesize importer = _importer;
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -85,23 +84,7 @@
         _showLoadMoreTumblr = YES;
         _isLoadingMoreTumblr = NO;
         isLoadingLatestTumblrArticles = NO;
-        
-        // Set up the image cache manager
-        self.imageManager = [[HJObjManager alloc] init];
-        
-        // Tell the manager where to store the images on the device
-        NSString *cacheDirectory = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/Images/"];
-        HJMOFileCache *fileCache = [[[HJMOFileCache alloc] initWithRootPath:
-                                     cacheDirectory] autorelease];
-        
-        // Have the file cache trim itself down to a size & age limit, so it doesn't grow forever
-        fileCache.fileCountLimit = 100;
-        fileCache.fileAgeLimit = 60*60*24*7; //1 week
-        [fileCache trimCacheUsingBackgroundThread];
-        
-        
-        self.imageManager.fileCache = fileCache;
-        
+                
     }
     return self;
 }
@@ -143,6 +126,11 @@
     [_refreshHeaderView release];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
 #pragma mark - helpful methods
 -(BOOL)isTumblrEntriesArrayNotEmpty
 {
@@ -172,11 +160,6 @@
     }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 -(NSString*)currentCategoryId
 {
     NSString* categoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForTumblr];
@@ -199,29 +182,23 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
-    static NSString *CellIdentifier = @"IgnantCell";
+    static NSString *CellIdentifier = @"TumblrCell";
     static NSString *CellIdentifierLoadMore = @"LoadMoreCell";
     static NSString *CellIdentifierLoading = @"LoadingCell";
     
-    
     if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMoreTumblr  ) 
     {
-        
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
         if (cell == nil) {
             cell = [[[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore] autorelease];
             
         }
         
-        
         return cell;
-        
     }
+    
     else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreTumblr)
     {
-        
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
         if (cell == nil) {
             cell = [[[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading] autorelease];
@@ -231,35 +208,19 @@
     }
     else
     {
-        
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        
+        TumblrCell *cell = (TumblrCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-        HJManagedImageV* currentImage;
         
         NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
         
         if (cell == nil)
         {
-            cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];
-            
-            currentImage = [[[HJManagedImageV alloc] initWithFrame:CGRectMake(5,5,310,310)] autorelease];
-            [currentImage setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.3]];
-            currentImage.tag = 999;
-            currentImage.url = urlAtCurrentIndex;
-            [self.imageManager manage:currentImage];
-            
-            
-            [cell addSubview:currentImage];
-            
-        } else{
-            currentImage = (HJManagedImageV*)[cell viewWithTag:999];
-            [currentImage clear];
+            cell = [[[TumblrCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];                        
         }
         
-        currentImage.url = urlAtCurrentIndex;
-        [currentImage.loadingWheel setColor:[UIColor whiteColor]];
-        [self.imageManager manage:currentImage];
+#warning TODO: add placeholder image
+        [cell.tumblrImageView setImageWithURL:urlAtCurrentIndex
+                             placeholderImage:nil];
         
         return cell;
     }
@@ -270,6 +231,11 @@
 }
 
 #pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -288,7 +254,6 @@
     }
 }
 
-#pragma mark -
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
@@ -403,9 +368,7 @@
         
     }
     else if (isLoadingLatestTumblrArticles) {
-        
-        NSLog(@"request: %@", [request responseString]);
-        
+                
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
             [self.importer importJSONStringForTumblrPosts:[request responseString]];
@@ -548,7 +511,7 @@
         [self fetch];
         [self.tumblrTableView reloadData];
         
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {            
             [self setIsLoadingViewHidden:YES];
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
