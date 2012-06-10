@@ -508,6 +508,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"yyyy-MM-dd"];
     NSDate *myDate = [df dateFromString: blogEntryPublishDate];
+    [df release];
     
     //save to current date for least recent article
     if(_currentDateForLeastRecentArticle==nil || [_currentDateForLeastRecentArticle compare:myDate]==NSOrderedDescending)
@@ -700,8 +701,13 @@ static const NSUInteger kImportBatchSize = 5;
 }
 
 -(void)updateLastDateForImportedArticleForMainPage {
-	[[NSUserDefaults standardUserDefaults] setObject:self.lastImportDateForMainPageArticle forKey:kUserDefaultsLastImportDateForMainPageArticle];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if (self.lastImportDateForMainPageArticle==nil)
+    return;    
+    
+
+        [[NSUserDefaults standardUserDefaults] setObject:self.lastImportDateForMainPageArticle forKey:kUserDefaultsLastImportDateForMainPageArticle];
+        [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - fetch requests for checking existence

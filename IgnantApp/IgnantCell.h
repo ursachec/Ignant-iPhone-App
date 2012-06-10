@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HJManagedImageV.h"
 
 @interface IgnantCell : UITableViewCell
 {
@@ -17,8 +16,6 @@
     NSString *categoryName;
     NSString *dateString;
     
-    HJManagedImageV* managedImage;
-    
     NSString* imageIdentifier;
 }
 @property(nonatomic,strong) UIView *cellContentView;
@@ -27,8 +24,6 @@
 @property(nonatomic,strong) NSString *title;
 @property(nonatomic,strong) NSString *categoryName;
 @property(nonatomic,strong) NSString *dateString;
-
-@property (nonatomic,strong) HJManagedImageV* managedImage;
 
 @property(nonatomic,strong) NSString* imageIdentifier;
 

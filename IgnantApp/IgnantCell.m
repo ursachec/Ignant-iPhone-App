@@ -140,7 +140,6 @@
 @implementation IgnantCell
 @synthesize cellContentView;
 @synthesize thumbImage, title, categoryName, dateString;
-@synthesize managedImage;
 
 @synthesize imageIdentifier;
 
