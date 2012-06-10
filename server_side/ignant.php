@@ -60,7 +60,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 {
 	$categoriesList = array();
 	$articlesForFirstRun = array();
-
+	
 	//1. get categories list
 	$categoriesList = $contentProxy->getJSONReadyCategories();
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
@@ -202,7 +202,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
 	// $finalJSONArrayForExport[TL_ERROR] = true;
 	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
-	
 	
 	//make sure articleId properly escapes characters, and so on
 	

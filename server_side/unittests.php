@@ -28,7 +28,13 @@ function encode_img($img)
 function createBase64Image($id = '', $imageDescription = 'default', $imageFilename = '')
 {
 	if($id=='' || $imageFilename=='') return null;
-	return new Base64Image($id, encode_img($imageFilename) , $imageDescription); //encode_img($imageFilename)
+	return new Base64Image($id, encode_img($imageFilename) , $imageDescription);
+}
+
+function createRemoteImage($pImageId= '', $pImageUrl='', $pImageDescription = '' )
+{
+	if($pImageId=='' || $pImageUrl=='') return null;
+	return new RemoteImage($pImageId, $pImageUrl , $pImageDescription);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,15 +133,16 @@ class LightArticlesTest
 		if( strcmp($articleID,'cecilia_paredes')==0) 
 		{
 						
-			$remoteImagesArray[] = new RemoteImage('cecilia_01','http://www.ignant.de/wp-content/uploads/2012/02/cecilia01.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_02','http://www.ignant.de/wp-content/uploads/2012/02/cecilia02.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_03','http://www.ignant.de/wp-content/uploads/2012/02/cecilia03.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_04','http://www.ignant.de/wp-content/uploads/2012/02/cecilia04.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_05','http://www.ignant.de/wp-content/uploads/2012/02/cecilia05.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_06','http://www.ignant.de/wp-content/uploads/2012/02/cecilia06.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_07','http://www.ignant.de/wp-content/uploads/2012/02/cecilia07.jpg','descriptiondescription');
-			$remoteImagesArray[] = new RemoteImage('cecilia_08','http://www.ignant.de/wp-content/uploads/2012/02/cecilia08.jpg','descriptiondescription');
-				
+			$remoteImagesArray[] = new RemoteImage('cecilia_01','http://www.ignant.de/wp-content/uploads/2012/02/cecilia01.jpg','descriptiondescription', 720, 725);
+			$remoteImagesArray[] = new RemoteImage('cecilia_02','http://www.ignant.de/wp-content/uploads/2012/02/cecilia02.jpg','descriptiondescription', 720, 653);
+			$remoteImagesArray[] = new RemoteImage('cecilia_03','http://www.ignant.de/wp-content/uploads/2012/02/cecilia03.jpg','descriptiondescription', 720, 720);
+			$remoteImagesArray[] = new RemoteImage('cecilia_04','http://www.ignant.de/wp-content/uploads/2012/02/cecilia04.jpg','descriptiondescription', 720, 679);
+			$remoteImagesArray[] = new RemoteImage('cecilia_05','http://www.ignant.de/wp-content/uploads/2012/02/cecilia05.jpg','descriptiondescription', 720, 720);
+			$remoteImagesArray[] = new RemoteImage('cecilia_06','http://www.ignant.de/wp-content/uploads/2012/02/cecilia06.jpg','descriptiondescription', 720, 720);
+			$remoteImagesArray[] = new RemoteImage('cecilia_07','http://www.ignant.de/wp-content/uploads/2012/02/cecilia07.jpg','descriptiondescription', 720, 727);
+			$remoteImagesArray[] = new RemoteImage('cecilia_08','http://www.ignant.de/wp-content/uploads/2012/02/cecilia08.jpg','descriptiondescription', 720, 806);
+		
+					
 		}
 		else if( strcmp($articleID,'hui_yi')==0) 
 		{	
@@ -453,23 +460,23 @@ class LightArticlesTest
 		
 		$tempArticleId = 'test_2';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 2', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(4),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 2', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), createRemoteImage('test_2_img_id', 'http://www.ignant.de/wp-content/uploads/2012/06/herdern01.jpg', 'test_2_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_3';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 3', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 3', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), createRemoteImage('test_3_img', 'http://www.ignant.de/wp-content/uploads/2012/06/socialnetwork03.jpg', 'test_3_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_4';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 4', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 4', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), createRemoteImage('test_4_img', 'http://www.ignant.de/wp-content/uploads/2012/06/urbangreen02a.jpg', 'test_4_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_5';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 5', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 5', date('Y-m-d', mktime(0, 0, 0, 3, 2, 2012)), createRemoteImage('test_5_img_id', 'http://www.ignant.de/wp-content/uploads/2012/06/herdern01.jpg', 'test_5_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_6';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 6', date('Y-m-d', mktime(0, 0, 0, 2, 1, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(4),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 6', date('Y-m-d', mktime(0, 0, 0, 2, 1, 2012)), createRemoteImage('test_6_img_id', 'http://www.ignant.de/wp-content/uploads/2012/06/herdern01.jpg', 'test_6_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_7';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
@@ -477,7 +484,7 @@ class LightArticlesTest
 		
 		$tempArticleId = 'test_8';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
-		$lightArticles[] = new LightArticle($tempArticleId, 'Test 8', date('Y-m-d', mktime(0, 0, 0, 2, 1, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some test image description',$testImagesDirectory.'test_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(4),$tempArticleUrl);
+		$lightArticles[] = new LightArticle($tempArticleId, 'Test 8', date('Y-m-d', mktime(0, 0, 0, 2, 1, 2012)), createRemoteImage('test_8_img_id', 'http://www.ignant.de/wp-content/uploads/2012/06/herdern01.jpg', 'test_8_desc' ), null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(8),$tempArticleUrl);
 		
 		$tempArticleId = 'test_9';
 		$tempArticleUrl = 'www.ignant.de/2012/02/03/cecilia-paredes/';
