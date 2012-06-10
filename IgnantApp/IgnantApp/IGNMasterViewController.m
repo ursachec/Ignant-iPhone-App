@@ -24,10 +24,6 @@
 #import "IgnantLoadMoreCell.h"
 #import "IgnantLoadingMoreCell.h"
 
-//import HJ headers
-#import "HJMOFileCache.h"
-#import "HJObjManager.h"
-
 
 #import "IgnantLoadingView.h"
 
@@ -53,7 +49,6 @@
 -(void)loadMoreContent;
 -(NSString*)currentCategoryId;
 
-@property (nonatomic, retain) HJObjManager *hjObjectManager;
 @property (nonatomic, retain, readwrite) IgnantImporter *importer;
 
 @property (retain, nonatomic, readwrite) Category* currentCategory;
@@ -68,7 +63,6 @@
 
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize hjObjectManager = _hjObjectManager;
 
 @synthesize blogEntriesTableView = _blogEntriesTableView;
 @synthesize detailViewController = _detailViewController;
@@ -263,13 +257,6 @@
     {
             self.navigationItem.leftBarButtonItem = nil;
     }
-    
-    //load the object manager and file cache
-    self.hjObjectManager = [[[HJObjManager alloc] init] autorelease];
-	NSString* cacheDirectory = [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/imgcache/imgtable/"] ;
-	HJMOFileCache* fileCache = [[[HJMOFileCache alloc] initWithRootPath:cacheDirectory] autorelease];
-	self.hjObjectManager.fileCache = fileCache;
-    
 }
 
 - (void)viewDidUnload
@@ -520,6 +507,8 @@
     [formatter release];
     
     
+    NSLog(@"configureCell blogEntry.thumbIdentifier: %@", blogEntry.thumbIdentifier);
+    
     //set up image    
     cell.imageIdentifier = blogEntry.thumbIdentifier;
     
@@ -608,8 +597,8 @@
         
         
         
-        
     }
+    
     else if (_isLoadingLatestContent) {
         
         if (lastUpdateDateForCurrentCategoryId==nil) {

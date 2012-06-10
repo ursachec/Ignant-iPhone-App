@@ -10,9 +10,6 @@
 
 #import "Constants.h"
 
-#import "HJObjManager.h"
-#import "HJManagedImageV.h"
-
 #import "BlogEntry.h"
 #import "Image.h"
 

@@ -8,15 +8,15 @@
 
 #import "ImageSlideshowViewController.h"
 
-#import "HJObjManager.h"
-#import "HJManagedImageV.h"
+#import "UIImageView+WebCache.h"
+#import "Constants.h"
 
 @interface ImageSlideshowViewController()
 {
     NSUInteger _activePage;
 }
 
-@property (strong, nonatomic) HJObjManager *hjObjectManager;
+
 -(void)setUpScrollViewWithImages:(NSArray*)images;
 @end
 
@@ -27,7 +27,6 @@
 @synthesize remoteImagesArray = _remoteImagesArray;
 
 @synthesize imageScrollView = _imageScrollView;
-@synthesize hjObjectManager = _hjObjectManager;
 
 @synthesize slideshowPageControl = _slideshowPageControl;
 
@@ -61,43 +60,6 @@
     
     
     NSLog(@"number of remote images: %d", _remoteImagesArray.count);
-    //setting up the image cache
-    self.hjObjectManager = [[HJObjManager alloc] init];
-	NSString* cacheDirectory = [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/imgcache/imgtable/"] ;
-    
-    
-    //empty the cache when necessary    
-    BOOL shouldReset = [[NSUserDefaults standardUserDefaults] boolForKey:@"reset_on_next_start"];
-    
-    if (shouldReset) {
-        NSLog(@"Resetting user data...");
-        
-        NSFileManager *fm = [NSFileManager defaultManager];
-        NSError *error = nil;
-        
-        NSString *readyCacheDirectory = [cacheDirectory stringByAppendingString:@"ready/"];
-        for (NSString *file in [fm contentsOfDirectoryAtPath:readyCacheDirectory error:&error]) {
-            BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", readyCacheDirectory, file] error:&error];
-            if (!success || error) {
-                // it failed.
-                //                NSLog(@"WARNING: could not delete: %@", file);
-            }
-        }
-        
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"reset_on_next_start"];
-        
-        NSLog(@"NSUserDefaults successfully reseted.");
-    }
-    
-    
-    //check if the application should cache images
-    BOOL shouldCacheImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"enable_image_caching"];
-    
-    if (!shouldCacheImages) {
-        HJMOFileCache* fileCache = [[[HJMOFileCache alloc] initWithRootPath:cacheDirectory] autorelease];
-        self.hjObjectManager.fileCache = fileCache;
-    }
-    
     
     _imageScrollView.delegate = self;
     _imageScrollView.pagingEnabled = YES;
@@ -134,14 +96,50 @@
     
     //add the managed images to the scrollview
     int i = 0;
+    
     for (NSDictionary* oneImageDictionary in images) {
-        HJManagedImageV *newImage = [[HJManagedImageV alloc] initWithFrame:CGRectMake(i*_imageScrollView.frame.size.width, 0, _imageScrollView.frame.size.width, _imageScrollView.frame.size.height)];
         
-        NSString *imageURLString = [oneImageDictionary objectForKey:@"url"];
+#warning TODO: check if these params are set right
+        NSString *imageURLString = [oneImageDictionary objectForKey:kFKImageURL];
+        NSNumber *imageWidth = [oneImageDictionary objectForKey:kFKImageWidth];
+        NSNumber *imageHeight = [oneImageDictionary objectForKey:kFKImageHeight];
         
-        newImage.url = [NSURL URLWithString:imageURLString];
-        [_hjObjectManager manage:newImage];
-        [self.imageScrollView addSubview:newImage];
+        CGFloat maxWidth = 320.0f;
+        CGFloat cImageWidth = 0.0f, cImageHeight = 0.0f, scale = 1.0;
+        
+        if (imageWidth)
+            cImageWidth = (CGFloat)[imageWidth intValue];
+        if (imageHeight)
+            cImageHeight = (CGFloat)[imageHeight intValue];
+        
+        
+        if (cImageWidth==0) 
+            cImageWidth = 320.0f;
+        
+        if (cImageHeight==0) 
+            cImageHeight = _imageScrollView.frame.size.height;  
+        
+        
+        //rescale the width if necessary
+        if (cImageWidth>maxWidth) {
+            scale = maxWidth/cImageWidth;
+            cImageWidth = maxWidth;
+            cImageHeight *= scale;
+        }
+        
+        UIImageView *newImageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*_imageScrollView.frame.size.width, (_imageScrollView.frame.size.height-cImageHeight)/2, cImageWidth , cImageHeight)];
+        
+        NSLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
+        
+        [newImageView setImageWithURL:[NSURL URLWithString:imageURLString] 
+                     placeholderImage:nil 
+                              success:^(UIImage* image){ NSLog(@"image.height: %f", image.size.width);} 
+                              failure:^(NSError* error){ NSLog(@"error"); 
+                              }];
+        
+        
+        [self.imageScrollView addSubview:newImageView];
+
         i++;
     }
     
@@ -166,5 +164,7 @@
     CGPoint cO = scrollView.contentOffset;
     _activePage = (NSUInteger)(cO.x/320.0f);    
     _slideshowPageControl.currentPage = _activePage;
+    
+    [scrollView layoutSubviews];
 }
 @end
