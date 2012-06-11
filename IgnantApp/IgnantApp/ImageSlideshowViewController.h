@@ -11,12 +11,12 @@
 
 @interface ImageSlideshowViewController : IGNViewController <UIScrollViewDelegate>
 
-@property(nonatomic,retain) NSArray *remoteImagesArray;
+@property(nonatomic,strong) NSArray *remoteImagesArray;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *imageScrollView;
 - (IBAction)closeSlideshow:(id)sender;
-@property (retain, nonatomic) IBOutlet UIButton *closeSlideshowButton;
+@property (strong, nonatomic) IBOutlet UIButton *closeSlideshowButton;
 
-@property (retain, nonatomic) IBOutlet UIPageControl *slideshowPageControl;
+@property (strong, nonatomic) IBOutlet UIPageControl *slideshowPageControl;
 
 @end

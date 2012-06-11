@@ -53,29 +53,27 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
 
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticleDictionary;
 
+@property (nonatomic, strong) NSDate* lastImportDateForMainPageArticle;
 
-@property (nonatomic, retain) NSDate* lastImportDateForMainPageArticle;
+@property (nonatomic, strong) Image* currentImage;
+@property (nonatomic, strong) BlogEntry* currentBlogEntry;
+@property (nonatomic, strong) Category* currentCategory;
+@property (nonatomic, strong) TumblrEntry* currentTumblrEntry;
 
-
-@property (nonatomic, retain) Image* currentImage;
-@property (nonatomic, retain) BlogEntry* currentBlogEntry;
-@property (nonatomic, retain) Category* currentCategory;
-@property (nonatomic, retain) TumblrEntry* currentTumblrEntry;
-
-@property (nonatomic, retain, readonly) NSEntityDescription *currentImageDescription;
-@property (nonatomic, retain, readonly) NSEntityDescription *currentBlogEntryDescription;
-@property (nonatomic, retain, readonly) NSEntityDescription *currentTumblrEntryDescription;
-@property (nonatomic, retain, readonly) NSEntityDescription *currentCategoryDescription;
+@property (nonatomic, strong, readonly) NSEntityDescription *currentImageDescription;
+@property (nonatomic, strong, readonly) NSEntityDescription *currentBlogEntryDescription;
+@property (nonatomic, strong, readonly) NSEntityDescription *currentTumblrEntryDescription;
+@property (nonatomic, strong, readonly) NSEntityDescription *currentCategoryDescription;
 
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
 @property NSUInteger countForNumberOfImagesToBeSaved;
 @property NSUInteger countForNumberOfCommentsToBeSaved;
 
-@property (nonatomic, retain) NSDate *currentDateForLeastRecentArticle;
+@property (nonatomic, strong) NSDate *currentDateForLeastRecentArticle;
 
-@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForBlogEntries;
-@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForTumblrEntries;
-@property (nonatomic, retain) NSFetchRequest *checkingFetchRequestForCategories;
+@property (nonatomic, strong) NSFetchRequest *checkingFetchRequestForBlogEntries;
+@property (nonatomic, strong) NSFetchRequest *checkingFetchRequestForTumblrEntries;
+@property (nonatomic, strong) NSFetchRequest *checkingFetchRequestForCategories;
 
 @end
 
@@ -116,17 +114,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
     return self;
 }
 
--(void)dealloc
-{
-    
-    [_checkingFetchRequestForBlogEntries release];
-    [_checkingFetchRequestForTumblrEntries release];
-    [_checkingFetchRequestForCategories release];
-    
-#warning IMPLEMENT DEALLOC
-    
-    [super dealloc];
-}
 
 #pragma mark - parsing support methods
 
@@ -166,7 +153,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 - (NSEntityDescription *)currentBlogEntryDescription {
     if (currentBlogEntryDescription == nil) {
-        currentBlogEntryDescription = [[NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.insertionContext] retain];
+        currentBlogEntryDescription = [NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.insertionContext];
     }
     return currentBlogEntryDescription;
 }
@@ -179,7 +166,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 - (NSEntityDescription *)currentTumblrEntryDescription {
     if (currentTumblrEntryDescription == nil) {
-        currentTumblrEntryDescription = [[NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.insertionContext] retain];
+        currentTumblrEntryDescription = [NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.insertionContext];
     }
     return currentTumblrEntryDescription;
 }
@@ -192,7 +179,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 - (NSEntityDescription *)currentImageDescription {
     if (currentImageDescription == nil) {
-        currentImageDescription = [[NSEntityDescription entityForName:@"Image" inManagedObjectContext:self.insertionContext] retain];
+        currentImageDescription = [NSEntityDescription entityForName:@"Image" inManagedObjectContext:self.insertionContext];
     }
     return currentImageDescription;
 }
@@ -205,7 +192,7 @@ static const NSUInteger kImportBatchSize = 5;
 
 - (NSEntityDescription *)currentCategoryDescription {
     if (currentCategoryDescription == nil) {
-        currentCategoryDescription = [[NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.insertionContext] retain];
+        currentCategoryDescription = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.insertionContext];
     }
     return currentCategoryDescription;
 }
@@ -236,7 +223,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
     
     //prepare importing
-    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
     [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
@@ -299,7 +286,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
     
     //prepare importing
-    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
     [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
@@ -365,7 +352,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSArray *articlesArray = [dictionaryFromJSON objectForKey:kTLArticles];
     
     //prepare importing
-    NSManagedObjectContext *newManagedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
     [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
@@ -474,7 +461,6 @@ static const NSUInteger kImportBatchSize = 5;
         NSNumberFormatter * numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
         blogEntryNumberOfViews = [numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
-        [numberFormatter release];
     }
     else
     {
@@ -508,7 +494,6 @@ static const NSUInteger kImportBatchSize = 5;
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"yyyy-MM-dd"];
     NSDate *myDate = [df dateFromString: blogEntryPublishDate];
-    [df release];
     
     //save to current date for least recent article
     if(_currentDateForLeastRecentArticle==nil || [_currentDateForLeastRecentArticle compare:myDate]==NSOrderedDescending)
@@ -570,7 +555,6 @@ static const NSUInteger kImportBatchSize = 5;
                 NSLog(@"didNotSave: %@, error: %@", imageIdentifier, error);
             }
             
-            [image release];
         }
         
         //handle remote images urls
@@ -616,7 +600,6 @@ static const NSUInteger kImportBatchSize = 5;
         [delegate importer:self didFinishParsingSingleArticleWithDictionary:articleDictionary];
     }
     
-    [parser release];
 }
 
 #pragma mark - import TUMBLR data
@@ -649,7 +632,6 @@ static const NSUInteger kImportBatchSize = 5;
         NSLog(@"ERROR: exporting tumblr posts");
     }
     
-    [parser release];
     
     
     if (savedOk) {
@@ -715,7 +697,7 @@ static const NSUInteger kImportBatchSize = 5;
 -(NSFetchRequest*)checkingFetchRequestForTumblrEntries
 {
     if (_checkingFetchRequestForTumblrEntries==nil) {
-        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.insertionContext];
         [fetchRequest setEntity:entity];
         [fetchRequest setFetchLimit:1];
@@ -729,7 +711,7 @@ static const NSUInteger kImportBatchSize = 5;
 -(NSFetchRequest*)checkingFetchRequestForBlogEntries
 {
     if (_checkingFetchRequestForBlogEntries==nil) {
-        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.insertionContext];
         [fetchRequest setEntity:entity];
         [fetchRequest setFetchLimit:1];
@@ -743,7 +725,7 @@ static const NSUInteger kImportBatchSize = 5;
 -(NSFetchRequest*)checkingFetchRequestForCategories
 {
     if (_checkingFetchRequestForCategories==nil) {
-        NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.insertionContext];
         [fetchRequest setEntity:entity];
         [fetchRequest setFetchLimit:1];

@@ -153,10 +153,6 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)dealloc {
-    [_closeSlideshowButton release];
-    [super dealloc];
-}
 
 #pragma mark - UIScrollView delegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{

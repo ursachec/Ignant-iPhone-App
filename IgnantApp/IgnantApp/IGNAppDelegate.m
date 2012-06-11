@@ -16,6 +16,9 @@
 #import "IgnantTumblrFeedViewController.h"
 #import "CategoriesViewController.h"
 #import "IGNMosaikViewController.h"
+#import "AboutViewController.h"
+#import "MostViewedViewController.h"
+#import "ContactViewController.h"
 
 //import other needed classes
 #import "IgnantImporter.h"
@@ -35,12 +38,16 @@
 
 @interface IGNAppDelegate()
 
+@property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readwrite, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
 @property(nonatomic, readwrite, strong) CategoriesViewController *categoriesViewController;
 @property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
+@property(nonatomic, readwrite, strong) AboutViewController *aboutViewController;
+@property(nonatomic, readwrite, strong) MostViewedViewController *mostViewedViewController;
+@property(nonatomic, readwrite, strong) ContactViewController *contactViewController;
 
-@property (readwrite, strong, nonatomic) IGNMasterViewController *masterViewController;
+
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 @property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
 
@@ -69,6 +76,10 @@
 @synthesize tumblrFeedViewController = _tumblrFeedViewController;
 @synthesize categoriesViewController = _categoriesViewController;
 @synthesize mosaikViewController = _mosaikViewController;
+@synthesize aboutViewController = _aboutViewController;
+@synthesize mostViewedViewController = _mostViewedViewController;
+@synthesize contactViewController = _contactViewController;
+
 
 @synthesize customLoadingView = _customLoadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
@@ -81,25 +92,6 @@
 
 #pragma mark - 
 
-- (void)dealloc
-{
-    [_userDefaultsManager release];
-    
-    [_window release];
-    [__managedObjectContext release];
-    [__managedObjectModel release];
-    [__persistentStoreCoordinator release];
-    [_navigationController release];
-    [_splitViewController release];
-    
-    //release view controllers
-    [_tumblrFeedViewController release];
-    [_moreOptionsViewController release];
-    [_categoriesViewController release];
-    [_mosaikViewController release];
-    
-    [super dealloc];
-}
 
 
 
@@ -107,7 +99,7 @@
 {
     NSLog(@"didFinishLaunchingWithOptions");
     
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     
@@ -129,7 +121,7 @@
     _importer.delegate = self;
     
     UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
-    IGNMasterViewController *mVC = [[[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil] autorelease];
+    IGNMasterViewController *mVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil];
     mVC.managedObjectContext = self.managedObjectContext;
     self.masterViewController = mVC;
         
@@ -195,7 +187,7 @@
     if (persistentStorePath == nil) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths lastObject];
-        persistentStorePath = [[documentsDirectory stringByAppendingPathComponent:@"Ignant.sqlite"] retain];
+        persistentStorePath = [documentsDirectory stringByAppendingPathComponent:@"Ignant.sqlite"];
     }
     return persistentStorePath;
 }
@@ -267,6 +259,33 @@
 
 #pragma mark - reusable view controllers
 
+-(ContactViewController*)contactViewController
+{
+    if (_contactViewController==nil) {
+        _contactViewController = [[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil ];
+    }
+    
+    return _contactViewController;
+}
+
+-(MostViewedViewController*)mostViewedViewController
+{
+    if (_mostViewedViewController==nil) {
+        _mostViewedViewController = [[MostViewedViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
+    }
+    
+    return _mostViewedViewController;
+}
+
+-(AboutViewController*)aboutViewController
+{
+    if (_aboutViewController==nil) {
+        _aboutViewController = [[AboutViewController alloc] initWithNibName:@"AboutViewController" bundle:nil ];
+    }
+    
+    return _aboutViewController;
+}
+
 -(IGNMoreOptionsViewController*)moreOptionsViewController
 {
     if (_moreOptionsViewController==nil) {
@@ -323,7 +342,6 @@
                                 @"read_stream",
                                 nil];
         [_facebook authorize:permissions];
-        [permissions release];
     }
 }
 

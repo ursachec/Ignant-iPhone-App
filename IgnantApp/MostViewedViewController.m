@@ -14,7 +14,7 @@
 
 @interface MostViewedViewController()
 
-@property (nonatomic, retain, readwrite) IgnantImporter *importer;
+@property (nonatomic, strong, readwrite) IgnantImporter *importer;
 @property (assign, readwrite) BOOL isHomeCategory;
 
 @end
@@ -73,7 +73,6 @@
     someLabel.textAlignment = UITextAlignmentCenter;
     someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
     self.navigationItem.titleView = someLabel;
-    [someLabel release];
 }
 
 
@@ -107,7 +106,7 @@
     
     // Set up the fetched results controller.
     // Create the fetch request for the entity.
-    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -116,7 +115,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptorForNumberOfViews = [[[NSSortDescriptor alloc] initWithKey:@"numberOfViews" ascending:NO] autorelease];
+    NSSortDescriptor *sortDescriptorForNumberOfViews = [[NSSortDescriptor alloc] initWithKey:@"numberOfViews" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForNumberOfViews, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -124,7 +123,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil] autorelease];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     

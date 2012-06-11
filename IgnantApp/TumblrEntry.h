@@ -12,7 +12,7 @@
 
 @interface TumblrEntry : NSManagedObject
 
-@property (nonatomic, retain) NSDate * publishingDate;
-@property (nonatomic, retain) NSString * imageUrl;
+@property (nonatomic, strong) NSDate * publishingDate;
+@property (nonatomic, strong) NSString * imageUrl;
 
 @end

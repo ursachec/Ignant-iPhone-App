@@ -13,11 +13,11 @@
 
 @interface Image : NSManagedObject
 
-@property (nonatomic, retain) NSString * filename;
-@property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) id data;
-@property (nonatomic, retain) NSString * identifier;
-@property (nonatomic, retain) NSString * caption;
-@property (nonatomic, retain) BlogEntry *entry;
+@property (nonatomic, strong) NSString * filename;
+@property (nonatomic, strong) NSString * url;
+@property (nonatomic, strong) id data;
+@property (nonatomic, strong) NSString * identifier;
+@property (nonatomic, strong) NSString * caption;
+@property (nonatomic, strong) BlogEntry *entry;
 
 @end

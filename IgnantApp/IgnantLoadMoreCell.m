@@ -55,17 +55,13 @@
         
         
         
-        [customTextLabel release];
         
         [self.contentView addSubview:loadMoreView];
-        [loadMoreView release];
-        [plusSign release];
         
         
         UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
         selectedBackgroundView.backgroundColor = [UIColor clearColor];
         self.selectedBackgroundView = selectedBackgroundView;
-        [selectedBackgroundView release];
         
         
     }

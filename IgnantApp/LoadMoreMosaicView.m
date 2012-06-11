@@ -14,7 +14,7 @@
 #import "LoadMoreMosaicView.h"
 
 @interface LoadMoreMosaicView ()
-@property(nonatomic,retain) UIActivityIndicatorView* activityIndicator;
+@property(nonatomic) UIActivityIndicatorView* activityIndicator;
 @end
 
 @implementation LoadMoreMosaicView
@@ -36,12 +36,6 @@
     return self;
 }
 
--(void)dealloc
-{
-    [_activityIndicator release];
-    
-    [super dealloc];
-}
 
 -(void)setIsLoading:(BOOL)isLoading
 {    

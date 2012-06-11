@@ -50,12 +50,12 @@
 -(void)postToPinterest;
 -(void)postToTwitter;
 
-@property (nonatomic, retain) NSString *firstRelatedArticleId;
-@property (nonatomic, retain) NSString *secondRelatedArticleId;
-@property (nonatomic, retain) NSString *thirdRelatedArticleId;
+@property (nonatomic, strong) NSString *firstRelatedArticleId;
+@property (nonatomic, strong) NSString *secondRelatedArticleId;
+@property (nonatomic, strong) NSString *thirdRelatedArticleId;
 
 
-@property (nonatomic, retain) IgnantImporter *importer;
+@property (nonatomic, strong) IgnantImporter *importer;
 
 //properties for navigating through remote articles
 @property (strong, nonatomic) NSArray *relatedArticlesIds;
@@ -66,23 +66,23 @@
 @property (strong, nonatomic) IBOutlet UIButton *showPictureSlideshowButton;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionTextView;
-@property (retain, nonatomic) IBOutlet UIImageView *entryImageView;
+@property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
 
 //properties related to the navigation
 @property (strong, nonatomic) BlogEntry* nextBlogEntry;
 @property (strong, nonatomic) BlogEntry* previousBlogEntry;
 
-@property(retain, nonatomic) IGNDetailViewController* navigationDetailViewController;
-@property(retain, nonatomic) UIButton *previousArticleButton;
-@property(retain, nonatomic) UIButton *nextArticleButton;
+@property(strong, nonatomic) IGNDetailViewController* navigationDetailViewController;
+@property(strong, nonatomic) UIButton *previousArticleButton;
+@property(strong, nonatomic) UIButton *nextArticleButton;
 
-@property(retain, nonatomic)NSArray *remoteImagesArray;
+@property(strong, nonatomic)NSArray *remoteImagesArray;
 
 //cluster views
-@property (retain, nonatomic) IBOutlet UIView *articleContentView;
-@property (retain, nonatomic) IBOutlet UIView *relatedArticlesView;
+@property (strong, nonatomic) IBOutlet UIView *articleContentView;
+@property (strong, nonatomic) IBOutlet UIView *relatedArticlesView;
 
-@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
+@property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
 
 -(void)configureView;
 -(void)setupNavigationButtons;
@@ -186,32 +186,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-#warning IMPLEMENT dealloc
-    [_titleLabel release];
-    [_categoryLabel release];
-    [_dateLabel release];
-    [_entryImageView release];
-    [_articleContentView release];
-    [_contentScrollView release];
-    [_relatedArticlesView release];
-    [_shareAndMoreToolbar release];
-    [_descriptionWebView release];
-    [_firstRelatedArticleImageView release];
-    [_secondRelatedArticleImageView release];
-    [_thirdRelatedArticleImageView release];
-    [_firstRelatedArticleTitleLabel release];
-    [_secondRelatedArticleTitleLabel release];
-    [_thirdRelatedArticleTitleLabel release];
-    [_firstRelatedArticleCategoryLabel release];
-    [_secondRelatedArticleCategoryLabel release];
-    [_thirdRelatedArticleCategoryLabel release];
-    [_firstRelatedArticleShowDetailsButton release];
-    [_secondRelatedArticleShowDetailsButton release];
-    [_thirdRelatedArticleShowDetailsButton release];
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -374,7 +348,7 @@
         return;
     
     if (_navigationDetailViewController==nil) {
-        self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
+        self.navigationDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
     self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
@@ -413,7 +387,7 @@
     
     //navigate to previous article
     if (_navigationDetailViewController==nil) {
-        self.navigationDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
+        self.navigationDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
     self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
@@ -639,7 +613,6 @@
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     _dateLabel.text = [formatter stringFromDate:_blogEntry.publishingDate];
-    [formatter release];
     
 #warning LOAD category by using live data!
     
@@ -853,7 +826,6 @@
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     _dateLabel.text = [formatter stringFromDate:remoteContentFormatedDate];
-    [formatter release];
     
     
     if (remoteContentCategoryName!=nil) 
@@ -971,7 +943,6 @@
     //show the slideshowVC
     slideshowVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self.navigationController presentModalViewController:slideshowVC animated:YES];
-    [slideshowVC release];
 
 }
 - (IBAction)tapAction:(id)sender 
@@ -1013,8 +984,8 @@
     self.isNavigationBarAndToolbarHidden = hidden;
     
     
-    __block UIView* blockReadyShareAndMoreToolBar = _shareAndMoreToolbar;
-    __block UIScrollView* blockReadyContentScrollView = _contentScrollView;
+    __unsafe_unretained UIView* blockReadyShareAndMoreToolBar = _shareAndMoreToolbar;
+    __unsafe_unretained UIScrollView* blockReadyContentScrollView = _contentScrollView;
     
     int hiddenMultiplicator = hidden ? 1 : -1;
     void (^toolbarblock)(void);
@@ -1109,7 +1080,6 @@
                                            cancelButtonTitle:@"Dismiss" 
                                            otherButtonTitles:nil];
         [av show];
-        [av release];
         
         return;
         
@@ -1165,7 +1135,6 @@
     UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Twitter",@"Facebook", nil ];
     
     [shareActionSheet showInView:self.view];
-    [shareActionSheet release];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -1231,14 +1200,13 @@
                                            cancelButtonTitle:@"Dismiss" 
                                            otherButtonTitles:nil];
         [av show];
-        [av release];
         
         return;
     }
     
     //blog entry to be shown is set, show the view controller loading the article data
     if (!self.nextDetailViewController) {
-        self.nextDetailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
+        self.nextDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
     NSLog(@"articleIdChosen: %@", articleId);

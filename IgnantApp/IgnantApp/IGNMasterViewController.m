@@ -49,9 +49,9 @@
 -(void)loadMoreContent;
 -(NSString*)currentCategoryId;
 
-@property (nonatomic, retain, readwrite) IgnantImporter *importer;
+@property (nonatomic, strong, readwrite) IgnantImporter *importer;
 
-@property (retain, nonatomic, readwrite) Category* currentCategory;
+@property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (assign, readwrite) BOOL isHomeCategory;
 @end
 
@@ -107,14 +107,6 @@
     return self;
 }
 							
-- (void)dealloc
-{
-    [_detailViewController release];
-    [__fetchedResultsController release];
-    [__managedObjectContext release];
-    [_blogEntriesTableView release];
-    [super dealloc];
-}
 
 -(void)createImporter
 {
@@ -154,7 +146,6 @@
                                            cancelButtonTitle:@"Dismiss" 
                                            otherButtonTitles:nil];
         [av show];
-        [av release];
         
         return;
         
@@ -169,7 +160,6 @@
 {
     IGNMoreOptionsViewController *moreOptionsVC = [[IGNMoreOptionsViewController alloc] initWithNibName:@"IGNMoreOptionsViewController" bundle:nil];
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
-    [moreOptionsVC release];
 }
 
 - (IBAction)showTumblr:(id)sender {
@@ -204,7 +194,6 @@
         UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ignantLogoForTopBarSmall.png"]];
         aImageView.frame = CGRectMake(0, 0, 35.0f, 35.0f);
         self.navigationItem.titleView = aImageView;
-        [aImageView release];   
     }
     else 
     {
@@ -213,7 +202,6 @@
         someLabel.textAlignment = UITextAlignmentCenter;
         someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
         self.navigationItem.titleView = someLabel;
-        [someLabel release];
     }
     
     if (appDelegate.shouldLoadDataForFirstRun && [appDelegate isAppOnline]) {
@@ -246,7 +234,6 @@
 		view.delegate = self;
 		[self.blogEntriesTableView addSubview:view];
 		_refreshHeaderView = view;
-		[view release];
 		
 	}
 	
@@ -320,7 +307,7 @@
         
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
         if (cell == nil) {
-            cell = [[[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore] autorelease];
+            cell = [[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore];
             
         }
         
@@ -332,7 +319,7 @@
     
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
         if (cell == nil) {
-            cell = [[[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading] autorelease];
+            cell = [[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading];
         }
         
         return cell;
@@ -343,7 +330,7 @@
         
         IgnantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
-            cell = [[[IgnantCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+            cell = [[IgnantCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             
             //#define MAX_IMAGE_WIDTH 148.0f
             //        CGFloat ratio = 296.0f/194.0f;
@@ -384,7 +371,7 @@
     else
     {
         if (!self.detailViewController) {
-            self.detailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
+            self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
         }
         
         self.detailViewController.isShowingArticleFromLocalDatabase = YES;
@@ -430,7 +417,7 @@
     
     // Set up the fetched results controller.
     // Create the fetch request for the entity.
-    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"BlogEntry" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -439,7 +426,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptorForDate = [[[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO] autorelease];
+    NSSortDescriptor *sortDescriptorForDate = [[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO];
 //    NSSortDescriptor *sortDescriptorForTitle = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO] autorelease];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
     
@@ -458,7 +445,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil] autorelease];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -504,7 +491,6 @@
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
-    [formatter release];
     
     
     NSLog(@"configureCell blogEntry.thumbIdentifier: %@", blogEntry.thumbIdentifier);
@@ -791,7 +777,6 @@
                                            cancelButtonTitle:@"Dismiss" 
                                            otherButtonTitles:nil];
         [av show];
-        [av release];
         
         return;
     }

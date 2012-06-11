@@ -31,9 +31,5 @@
     NSLog(@"changeNavigationBar");
 }
 
--(void)dealloc
-{
-    [super dealloc];
-}
 
 @end

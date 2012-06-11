@@ -49,12 +49,12 @@ NSString * const kImageFilename = @"filename";
     
     IGNAppDelegate* appDelegate;    
 }
-@property(nonatomic,retain) NSArray* savedMosaicImages;
-@property (nonatomic,retain) UIView* overlayView;
+@property(nonatomic,strong) NSArray* savedMosaicImages;
+@property (nonatomic,strong) UIView* overlayView;
 
-@property(nonatomic,retain) IGNDetailViewController* detailViewController;
+@property(nonatomic,strong) IGNDetailViewController* detailViewController;
 
-@property(nonatomic,retain) LoadMoreMosaicView* loadingMoreMosaicView;
+@property(nonatomic,strong) LoadMoreMosaicView* loadingMoreMosaicView;
 
 -(void)drawSavedMosaicImages;
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages;
@@ -164,7 +164,6 @@ NSString * const kImageFilename = @"filename";
     UIView* overlayView = [[UIView alloc] initWithFrame:self.view.frame];
     overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView = overlayView;
-    [overlayView release];
 }
 
 - (void)viewDidUnload
@@ -187,13 +186,6 @@ NSString * const kImageFilename = @"filename";
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)dealloc {
-    [_overlayView release];
-    [bigMosaikView release];
-    [mosaikScrollView release];
-    [closeMosaikButton release];
-    [super dealloc];
-}
 
 #pragma mark - server communication actions
 -(void)loadMoreMosaicImages
@@ -269,7 +261,7 @@ NSString * const kImageFilename = @"filename";
     else
     images = [[NSArray alloc] init];
     
-    return [[images copy] autorelease];
+    return [images copy];
 }
 
 #pragma mark - adding images to the mosaic view
@@ -293,7 +285,6 @@ NSString * const kImageFilename = @"filename";
     [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:100.0f] forKey:kImageWidth];
     [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:50.0f] forKey:kImageHeight];
     [images addObject:loadMoreMosaicDictionary];
-    [loadMoreMosaicDictionary release];
     
     
     //get active column
@@ -317,7 +308,6 @@ NSString * const kImageFilename = @"filename";
         NSString* imageFilename = [oneImageDictionary objectForKey:kImageFilename];;
         UIImage* currentImageFromBundle = [UIImage imageNamed:imageFilename];
         UIImage *scaledImage = [UIImage imageWithCGImage:[currentImageFromBundle CGImage] scale:0.5 orientation:UIImageOrientationUp];
-        [scaledImage retain];
         
         //calculate the column with the smallest height
         int smallestHeight = 0, i = 0;        
@@ -352,7 +342,6 @@ NSString * const kImageFilename = @"filename";
             oneView.alpha = 1.0f;
             
             self.loadingMoreMosaicView = oneView;
-            [oneView release];
             
             [self.bigMosaikView addSubview:_loadingMoreMosaicView];
         }
@@ -376,10 +365,7 @@ NSString * const kImageFilename = @"filename";
             UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, imageWidth, imageHeight)];
             tempImageView.image = scaledImage;
             [oneView addSubview:tempImageView];
-            [tempImageView release];
-            [currentImageFromBundle release];
             
-            [scaledImage release];
             
             [self.bigMosaikView addSubview:oneView];
         }
@@ -453,7 +439,7 @@ NSString * const kImageFilename = @"filename";
     
     
     //add the mosaic images
-    [self addMoreMosaicImages:[[images copy] autorelease]];
+    [self addMoreMosaicImages:[images copy]];
     
     //redraw the images
     [self drawSavedMosaicImages];
@@ -518,7 +504,6 @@ NSString * const kImageFilename = @"filename";
     nameLabel.text = mosaicView.articleTitle;
     nameLabel.textAlignment = UITextAlignmentCenter;
     [_overlayView addSubview:nameLabel];
-    [nameLabel release];
     
     //customize the overlayview a bit
     _overlayView.layer.borderWidth = 2.0f;
@@ -541,7 +526,7 @@ NSString * const kImageFilename = @"filename";
     
     //blog entry to be shown is set, show the view controller loading the article data
     if (!self.detailViewController) {
-        self.detailViewController = [[[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil] autorelease];
+        self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
     self.detailViewController.currentArticleId = articleId;

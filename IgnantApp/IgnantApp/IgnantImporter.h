@@ -29,10 +29,10 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 @interface IgnantImporter : NSObject
 
-@property(nonatomic,assign) id<IgnantImporterDelegate> delegate;
+@property(nonatomic, unsafe_unretained) id<IgnantImporterDelegate> delegate;
 
-@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *insertionContext;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong, readonly) NSManagedObjectContext *insertionContext;
 
 
 -(void)importJSONStringForFirstRun:(NSString*)jsonString;

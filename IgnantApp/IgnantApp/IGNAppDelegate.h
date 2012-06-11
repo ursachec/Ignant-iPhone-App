@@ -14,19 +14,22 @@
 #import "FBConnect.h"
 
 
-@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController;
+@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, MostViewedViewController, ContactViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
     NSString *persistentStorePath;
 }
 
-@property (nonatomic, retain) Facebook *facebook;
+@property (nonatomic, strong) Facebook *facebook;
 
 @property(nonatomic, readonly, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readonly, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
 @property(nonatomic, readonly, strong) CategoriesViewController *categoriesViewController;
 @property(nonatomic, readonly, strong) IGNMosaikViewController *mosaikViewController;
+@property(nonatomic, readonly, strong) AboutViewController *aboutViewController;
+@property(nonatomic, readonly, strong) MostViewedViewController *mostViewedViewController;
+@property(nonatomic, readonly, strong) ContactViewController *contactViewController;
 
 
 @property (strong, nonatomic) UIWindow *window;

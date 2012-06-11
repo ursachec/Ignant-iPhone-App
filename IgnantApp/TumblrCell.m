@@ -64,7 +64,7 @@
         cellContentView.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:cellContentView];
 
-        tumblrImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(5,5,310,310)] autorelease];
+        tumblrImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,5,310,310)];
         [tumblrImageView setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.2]];
         [self.contentView addSubview:tumblrImageView];
 
@@ -83,11 +83,5 @@
 {
     [super setBackgroundColor:backgroundColor];
     cellContentView.backgroundColor = backgroundColor;
-}
--(void)dealloc{
-    
-    [super dealloc];
-    
-    [cellContentView release];
 }
 @end

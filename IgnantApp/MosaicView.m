@@ -28,7 +28,6 @@
         
         UITapGestureRecognizer *longPressGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
         [self addGestureRecognizer:longPressGestureRecognizer];
-        [longPressGestureRecognizer release];
         
         
     }

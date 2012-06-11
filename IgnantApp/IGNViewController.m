@@ -15,11 +15,11 @@
 
 }
 
-@property(nonatomic, retain, readwrite) UIView* loadingView;
-@property(nonatomic, retain, readwrite) UILabel* loadingViewLabel;
-@property(nonatomic, retain, readwrite) UIView* noInternetConnectionView;
-@property(nonatomic, retain, readwrite) UIView* couldNotLoadDataView;
-@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
+@property(nonatomic, strong, readwrite) UIView* loadingView;
+@property(nonatomic, strong, readwrite) UILabel* loadingViewLabel;
+@property(nonatomic, strong, readwrite) UIView* noInternetConnectionView;
+@property(nonatomic, strong, readwrite) UIView* couldNotLoadDataView;
+@property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
 
 -(void)setUpFullscreenNoInternetConnectionView;
 -(void)setUpFullscreenLoadingView;
@@ -35,13 +35,6 @@
 
 @synthesize viewControllerToReturnTo;
 
--(void)dealloc
-{
-    [super dealloc];
-    
-#warning IMPLEMENT THIS!!!
-    
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -125,13 +118,11 @@
     self.couldNotLoadDataLabel = someLabel;
     
     [someView addSubview:someLabel];
-    [someLabel release];
     
     
     //set up the image view
     
     self.couldNotLoadDataView = someView;
-    [someView release];
 }
 
 -(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
@@ -178,7 +169,6 @@
     backArrowView.image = [UIImage imageNamed:@"arrow_back"];
     backArrowView.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor redColor] : [UIColor clearColor];
     [backButton addSubview:backArrowView];
-    [backArrowView release];
     
     //back button title
     NSString* categoryName = [titleOfReturningToViewController uppercaseString];
@@ -192,7 +182,6 @@
     someLabel.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor greenColor] : [UIColor clearColor];
     someLabel.font = font;
     [backButton addSubview:someLabel];
-    [someLabel release];
     
     //resize the frame
     backButtonFrame = CGRectMake(backButtonFrame.origin.x, backButtonFrame.origin.y, backArrowSize.width+paddingLeft+someLabelSize.width, backButtonFrame.size.height);
@@ -201,7 +190,6 @@
     //setup the buttonItem
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
-    [backBarButtonItem release];
 }
 
 -(void)setUpLoadingView
@@ -227,7 +215,6 @@
     self.loadingViewLabel = someLabel;
     
     [aView addSubview:someLabel];
-    [someLabel release];
     
     
     //set up the activity indicator
@@ -239,10 +226,8 @@
     activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [aView addSubview:activityIndicator];
     [activityIndicator startAnimating];
-    [activityIndicator release];
     
     self.loadingView = aView;
-    [aView release];
 }
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden
@@ -287,13 +272,11 @@
     someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
     
     [someView addSubview:someLabel];
-    [someLabel release];
     
     
     //set up the image view
     
     self.noInternetConnectionView = someView;
-    [someView release];
 
 }
 

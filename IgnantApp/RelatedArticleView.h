@@ -10,9 +10,9 @@
 
 @interface RelatedArticleView : UIView
 
-@property(nonatomic,retain) UIImage *thumbImage;
-@property(nonatomic,retain) NSString *categoryName;
-@property(nonatomic,retain) NSString *articleName;
+@property(nonatomic,strong) UIImage *thumbImage;
+@property(nonatomic,strong) NSString *categoryName;
+@property(nonatomic,strong) NSString *articleName;
 
 
 @end

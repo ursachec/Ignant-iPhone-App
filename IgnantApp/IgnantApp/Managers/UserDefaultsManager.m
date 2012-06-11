@@ -80,10 +80,10 @@
 {
     NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kUpdateDatesForCategoriesKey];
     if (updateDates==nil) {
-        return [[[NSMutableArray alloc] initWithCapacity:1] autorelease];
+        return [[NSMutableArray alloc] initWithCapacity:1];
     }
     
-    return [[updateDates mutableCopy] autorelease];
+    return [updateDates mutableCopy];
 }
 
 -(NSDate*)dateForLeastRecentArticleWithCategoryId:(NSString*)categoryId
@@ -146,10 +146,10 @@
     
     NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kDatesForLeastRecentArticleKey];    
     if (updateDates==nil) {
-        return [[[NSMutableArray alloc] initWithCapacity:1] autorelease];
+        return [[NSMutableArray alloc] initWithCapacity:1];
     }
     
-    return [[updateDates mutableCopy] autorelease];
+    return [updateDates mutableCopy];
 }
 
 @end

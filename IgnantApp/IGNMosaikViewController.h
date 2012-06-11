@@ -24,13 +24,13 @@ extern NSString * const kImageFilename;
 
 -(IBAction)handleBack:(id)sender;
 
-@property (retain, nonatomic) IBOutlet UIView *bigMosaikView;
-@property (retain, nonatomic) IBOutlet UIScrollView *mosaikScrollView;
-@property (retain, nonatomic) IBOutlet UIButton *closeMosaikButton;
+@property (strong, nonatomic) IBOutlet UIView *bigMosaikView;
+@property (strong, nonatomic) IBOutlet UIScrollView *mosaikScrollView;
+@property (strong, nonatomic) IBOutlet UIButton *closeMosaikButton;
 
-@property (nonatomic, assign) UINavigationController* parentNavigationController;
+@property (nonatomic, unsafe_unretained) UINavigationController* parentNavigationController;
 
-@property(nonatomic,assign) BOOL isMosaicImagesArrayNotEmpty;
+@property(nonatomic, assign) BOOL isMosaicImagesArrayNotEmpty;
 
 @end
 

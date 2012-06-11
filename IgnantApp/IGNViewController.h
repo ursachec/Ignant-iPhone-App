@@ -20,13 +20,13 @@
     UIView* _noInternetConnectionView;
 }
 
-@property(nonatomic, retain, readonly) UIView* loadingView;
-@property(nonatomic, retain, readonly) UILabel* loadingViewLabel;
-@property(nonatomic, retain, readonly) UIView* noInternetConnectionView;
-@property(nonatomic, retain, readonly) UIView* couldNotLoadDataView;
-@property(nonatomic, retain, readonly) UILabel* couldNotLoadDataLabel;
+@property(nonatomic, strong, readonly) UIView* loadingView;
+@property(nonatomic, strong, readonly) UILabel* loadingViewLabel;
+@property(nonatomic, strong, readonly) UIView* noInternetConnectionView;
+@property(nonatomic, strong, readonly) UIView* couldNotLoadDataView;
+@property(nonatomic, strong, readonly) UILabel* couldNotLoadDataLabel;
 
-@property (nonatomic, assign) UIViewController* viewControllerToReturnTo;
+@property (nonatomic, unsafe_unretained) UIViewController* viewControllerToReturnTo;
 
 -(void)setUpBackButton;
 

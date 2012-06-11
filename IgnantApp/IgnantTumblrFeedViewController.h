@@ -14,11 +14,11 @@
 #import "EGORefreshTableHeaderView.h"
 
 @interface IgnantTumblrFeedViewController : IGNViewController <EGORefreshTableHeaderDelegate, IgnantImporterDelegate, NSFetchedResultsControllerDelegate>
-@property (retain, nonatomic) IBOutlet UITableView *tumblrTableView;
+@property (nonatomic, strong) IBOutlet UITableView *tumblrTableView;
 
-@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 -(BOOL)isTumblrEntriesArrayNotEmpty;
 

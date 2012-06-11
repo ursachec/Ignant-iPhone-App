@@ -31,7 +31,6 @@
         activityIndicator.color = [UIColor blackColor];
         [activityIndicator startAnimating];
         [self addSubview:activityIndicator];
-        [activityIndicator release];
         
     }
     return self;

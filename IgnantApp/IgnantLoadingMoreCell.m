@@ -28,13 +28,11 @@
         UIView *backgroundView = [[UIView alloc] initWithFrame:rectWithRightHeight];
         backgroundView.backgroundColor = [UIColor clearColor];
         self.backgroundView = backgroundView;
-        [backgroundView release];
         
         //set the selected background view properties
         UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:rectWithRightHeight];
         selectedBackgroundView.backgroundColor = [UIColor clearColor];
         self.selectedBackgroundView = selectedBackgroundView;
-        [selectedBackgroundView release];
         
         
         
@@ -44,7 +42,6 @@
         activityIndicator.frame = CGRectMake(105.0f, (rectWithRightHeight.size.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
         [self.contentView addSubview:activityIndicator];
         [activityIndicator startAnimating];
-        [activityIndicator release];
         
         
         //add the message label
@@ -57,7 +54,6 @@
         messageLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
         messageLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:messageLabel];
-        [messageLabel release];
         
           
     }

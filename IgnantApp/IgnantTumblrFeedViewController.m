@@ -50,9 +50,10 @@
     BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
 }
 
-@property(nonatomic, retain, readwrite) UILabel* couldNotLoadDataLabel;
+@property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
 
-@property(nonatomic, retain) IgnantImporter* importer;
+@property(nonatomic, strong) IgnantImporter* importer;
+
 @end
 
 @implementation IgnantTumblrFeedViewController
@@ -89,10 +90,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [_tumblrTableView release];
-    [super dealloc];
-}
 
 
 - (void)viewDidLoad
@@ -112,7 +109,6 @@
 		view.delegate = self;
 		[self.tumblrTableView addSubview:view];
 		_refreshHeaderView = view;
-		[view release];
 	}
 }
 
@@ -123,7 +119,6 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     
-    [_refreshHeaderView release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -190,7 +185,7 @@
     {
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
         if (cell == nil) {
-            cell = [[[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore] autorelease];
+            cell = [[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore];
             
         }
         
@@ -201,7 +196,7 @@
     {
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
         if (cell == nil) {
-            cell = [[[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading] autorelease];
+            cell = [[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading];
         }
         
         return cell;
@@ -215,7 +210,7 @@
         
         if (cell == nil)
         {
-            cell = [[[TumblrCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier] autorelease];                        
+            cell = [[TumblrCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];                        
         }
         
 #warning TODO: add placeholder image
@@ -442,7 +437,7 @@
     
     // Set up the fetched results controller.
     // Create the fetch request for the entity.
-    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"TumblrEntry" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -451,7 +446,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptorForDate = [[[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO] autorelease];
+    NSSortDescriptor *sortDescriptorForDate = [[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -459,7 +454,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil] autorelease];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     

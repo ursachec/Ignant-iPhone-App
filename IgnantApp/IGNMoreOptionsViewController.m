@@ -153,13 +153,12 @@ typedef enum _moreOptionsIndeces  {
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     } 
     
     UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
     customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     cell.selectedBackgroundView = customBackgroundView;
-    [customBackgroundView release];
     
     return cell;
 }
@@ -186,38 +185,35 @@ typedef enum _moreOptionsIndeces  {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
+    AboutViewController *aboutVC = appDelegate.aboutViewController;
+    IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
+    CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
+    MostViewedViewController *mostViewedVC = appDelegate.mostViewedViewController;
+    ContactViewController *contactVC = appDelegate.contactViewController;
+    
     switch (indexPath.row) {
-        case indexForAboutIgnant:;
-            AboutViewController *aboutVC = [[AboutViewController alloc] initWithNibName:@"AboutViewController" bundle:nil];
+        case indexForAboutIgnant:
             [self.navigationController pushViewController:aboutVC animated:YES];
-            [aboutVC release];
-            
             break;
-        case indexForTumblrFeed:;
-            IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
+            
+        case indexForTumblrFeed:
             tumblrVC.managedObjectContext = appDelegate.managedObjectContext;
             [self showViewController:tumblrVC];
             break;
-        case indexForCategories:;
-            CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
+            
+        case indexForCategories:
             categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
             [self showViewController:categoriesVC];
-            
             break;
-        case indexForMostRed:;
-            MostViewedViewController *mostViewedVC = [[MostViewedViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil];
+            
+        case indexForMostRed:            
             mostViewedVC.managedObjectContext = appDelegate.managedObjectContext;
             [self.navigationController pushViewController:mostViewedVC animated:YES];
-            [mostViewedVC release];
-            
             break;
             
-        case indexForContact:;
-            ContactViewController *contactVC = [[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil];
+        case indexForContact:
             [self.navigationController pushViewController:contactVC animated:YES];
-            [contactVC release];
-            
             break;
             
         default:
@@ -247,7 +243,6 @@ typedef enum _moreOptionsIndeces  {
 #endif    
     
     [cell.contentView addSubview:imageView];
-    [imageView release];
     
     
     //add the title label to the category cell
@@ -263,7 +258,6 @@ typedef enum _moreOptionsIndeces  {
     
     titleLabel.text = [_listOfOptions objectAtIndex:indexPath.row];
     [cell.contentView addSubview:titleLabel];
-    [titleLabel release];
     
 }
 

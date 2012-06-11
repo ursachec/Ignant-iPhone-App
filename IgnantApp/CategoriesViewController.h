@@ -12,11 +12,11 @@
 @interface CategoriesViewController : IGNViewController <NSFetchedResultsControllerDelegate>
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-@property (retain, nonatomic) IBOutlet UITableView *categoriesTableView;
 
-@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) IBOutlet UITableView *categoriesTableView;
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 @end

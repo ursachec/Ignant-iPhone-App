@@ -15,6 +15,6 @@
 
 @interface IgnantNoInternetConnectionView : UIView
 
-@property(nonatomic, assign) id<IgnantNoInternetConnectionViewDelegate> delegate;
+@property(nonatomic, unsafe_unretained) id<IgnantNoInternetConnectionViewDelegate> delegate;
 - (IBAction)retryToLoadData:(id)sender;
 @end

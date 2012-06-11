@@ -18,7 +18,7 @@
 {
     IGNAppDelegate* appDelegate;
 }
-@property(nonatomic,retain) NSMutableArray *ignantCategories;
+@property(nonatomic, strong) NSMutableArray *ignantCategories;
 @end
 
 @implementation CategoriesViewController
@@ -43,10 +43,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [_categoriesTableView release];
-    [super dealloc];
-}
 
 
 - (void)didReceiveMemoryWarning
@@ -119,7 +115,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     } 
     
     //configure the cell
@@ -135,7 +131,6 @@
     IGNMasterViewController *masterVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:category];
     masterVC.managedObjectContext = appDelegate.managedObjectContext;
     [self.navigationController pushViewController:masterVC animated:YES];
-    [masterVC release];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -146,7 +141,6 @@
     UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
     customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     cell.selectedBackgroundView = customBackgroundView;
-    [customBackgroundView release];
     
     Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = category.name;
@@ -163,7 +157,7 @@
     
     // Set up the fetched results controller.
     // Create the fetch request for the entity.
-    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -172,7 +166,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptorForDate = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES] autorelease];
+    NSSortDescriptor *sortDescriptorForDate = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     //    NSSortDescriptor *sortDescriptorForTitle = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO] autorelease];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
     
@@ -180,7 +174,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"] autorelease];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     

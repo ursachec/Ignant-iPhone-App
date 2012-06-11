@@ -33,20 +33,20 @@
     int _numberOfActiveRequests;
     
 }
-@property (nonatomic, retain, readonly) IgnantImporter *importer;
+@property (nonatomic, strong, readonly) IgnantImporter *importer;
 
-@property (retain, nonatomic) IBOutlet UITableView *blogEntriesTableView;
+@property (strong, nonatomic) IBOutlet UITableView *blogEntriesTableView;
 
-@property (retain, nonatomic) IGNDetailViewController *detailViewController;
+@property (strong, nonatomic) IGNDetailViewController *detailViewController;
 
-@property (retain, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (retain, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (assign, readonly) BOOL isHomeCategory;
 @property (assign, readonly) BOOL fetchingDataForFirstRun;
 
 
-@property (retain, nonatomic, readonly) Category* currentCategory;
+@property (strong, nonatomic, readonly) Category* currentCategory;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category;
