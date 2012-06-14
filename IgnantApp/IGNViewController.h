@@ -10,8 +10,11 @@
 
 #import "IgnantNoInternetConnectionView.h"
 
-@class IgnantLoadingView, IgnantNoInternetConnectionView;
+#import "IgnantImporter.h"
+#import "IGNAppDelegate.h"
 
+@class IgnantLoadingView, IgnantNoInternetConnectionView, IGNAppDelegate;
+@class IgnantImporter;
 
 @interface IGNViewController : UIViewController <IgnantNoInternetConnectionViewDelegate>
 {
@@ -19,6 +22,9 @@
     UIView* _loadingView;
     UIView* _noInternetConnectionView;
 }
+
+@property (nonatomic, readonly, assign) IGNAppDelegate *appDelegate;
+@property (nonatomic, readwrite, strong) IgnantImporter *importer;
 
 @property(nonatomic, strong, readonly) UIView* loadingView;
 @property(nonatomic, strong, readonly) UILabel* loadingViewLabel;
@@ -42,5 +48,7 @@
 
 -(void)setUpCouldNotLoadDataView;
 -(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden;
+
+-(void)createImporter;
 
 @end

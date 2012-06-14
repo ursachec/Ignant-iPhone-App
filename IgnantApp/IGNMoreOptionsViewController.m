@@ -18,8 +18,6 @@
 #import "IGNMasterViewController.h"
 
 
-#import "IGNAppDelegate.h"
-
 //temp icon for categories tempMoreCategoryIcon.png (in mainBundle)
 
 
@@ -37,7 +35,6 @@ typedef enum _moreOptionsIndeces  {
 {
     NSMutableArray *_listOfOptions;
     
-    IGNAppDelegate* appDelegate;
 }
 -(void)setUpMoreOptions;
 -(void)handleBack:(id)sender;
@@ -55,7 +52,6 @@ typedef enum _moreOptionsIndeces  {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
     }
     return self;
@@ -186,11 +182,11 @@ typedef enum _moreOptionsIndeces  {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    AboutViewController *aboutVC = appDelegate.aboutViewController;
-    IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
-    CategoriesViewController *categoriesVC = appDelegate.categoriesViewController;
-    MostViewedViewController *mostViewedVC = appDelegate.mostViewedViewController;
-    ContactViewController *contactVC = appDelegate.contactViewController;
+    AboutViewController *aboutVC = self.appDelegate.aboutViewController;
+    IgnantTumblrFeedViewController *tumblrVC = self.appDelegate.tumblrFeedViewController;
+    CategoriesViewController *categoriesVC = self.appDelegate.categoriesViewController;
+    MostViewedViewController *mostViewedVC = self.appDelegate.mostViewedViewController;
+    ContactViewController *contactVC = self.appDelegate.contactViewController;
     
     switch (indexPath.row) {
         case indexForAboutIgnant:
@@ -198,17 +194,17 @@ typedef enum _moreOptionsIndeces  {
             break;
             
         case indexForTumblrFeed:
-            tumblrVC.managedObjectContext = appDelegate.managedObjectContext;
+            tumblrVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self showViewController:tumblrVC];
             break;
             
         case indexForCategories:
-            categoriesVC.managedObjectContext = appDelegate.managedObjectContext;
+            categoriesVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self showViewController:categoriesVC];
             break;
             
         case indexForMostRed:            
-            mostViewedVC.managedObjectContext = appDelegate.managedObjectContext;
+            mostViewedVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self.navigationController pushViewController:mostViewedVC animated:YES];
             break;
             

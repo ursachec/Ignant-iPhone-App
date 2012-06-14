@@ -8,13 +8,12 @@
 
 #import "MostViewedViewController.h"
 #import "IgnantImporter.h"
-#import "IGNAppDelegate.h"
+
 
 #import "Constants.h"
 
 @interface MostViewedViewController()
 
-@property (nonatomic, strong, readwrite) IgnantImporter *importer;
 @property (assign, readwrite) BOOL isHomeCategory;
 
 @end
@@ -22,7 +21,6 @@
 @implementation MostViewedViewController
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize isHomeCategory = _isHomeCategory;
-@synthesize importer = _importer;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,6 +31,8 @@
         self.isHomeCategory = NO;        
         
         self.title = @"Am meisten gelesen";
+        
+        self.importer = nil;
         
     }
     return self;
@@ -46,14 +46,6 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
--(void)createImporter
-{
-    //use the importer from the appDelegate
-    IGNAppDelegate *appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
-    _importer = [[IgnantImporter alloc] init];
-    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
-    _importer.delegate = self;
-}
 
 -(NSString*)currentCategoryId
 {

@@ -14,7 +14,7 @@
 #import "LoadMoreMosaicView.h"
 
 @interface LoadMoreMosaicView ()
-@property(nonatomic) UIActivityIndicatorView* activityIndicator;
+@property(nonatomic, strong) UIActivityIndicatorView* activityIndicator;
 @end
 
 @implementation LoadMoreMosaicView

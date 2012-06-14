@@ -23,19 +23,12 @@
 
 // String used to identify the update object in the user defaults storage.
 NSString* const kLastImportedBlogEntryDateKey = @"LastImportedBlogEntryDate";
-
 NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_date_for_main_article";
-
-
-NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
-//NSString *const feedAdress = @"feed://www.google.com/reader/atom/feed/feed://feeds.feedburner.com/ignant?n=4&r=o&et=1325451846";
-
 
 #import "Image.h"
 #import "BlogEntry.h"
 #import "TumblrEntry.h"
 
-#warning DO APPROPRIATE memory management before releasing app
 #warning DELETE RSS Parser entries before releasing app
 
 @interface IgnantImporter() 
@@ -46,7 +39,6 @@ NSString *const feedAdress = @"http://feeds2.feedburner.com/ignant";
     
     NSManagedObjectContext *insertionContext;
     NSPersistentStoreCoordinator *_persistentStoreCoordinator;
-    
 }
 
 -(void)updateLastDateForImportedArticleForMainPage;

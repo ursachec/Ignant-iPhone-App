@@ -8,6 +8,7 @@
 
 #import "IGNAppDelegate.h"
 
+#import "Reachability.h"
 
 //import relevant view controller
 #import "IGNMasterViewController.h"
@@ -39,6 +40,7 @@
 @interface IGNAppDelegate()
 
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
+@property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readwrite, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
 @property(nonatomic, readwrite, strong) CategoriesViewController *categoriesViewController;
@@ -72,6 +74,7 @@
 @synthesize importer = _importer;
 
 @synthesize masterViewController = _masterViewController;
+@synthesize categoryViewController = _categoryViewController;
 @synthesize moreOptionsViewController = _moreOptionsViewController;
 @synthesize tumblrFeedViewController = _tumblrFeedViewController;
 @synthesize categoriesViewController = _categoriesViewController;
@@ -144,7 +147,7 @@
         }
         
 #warning CHECK IF internet connection exists and show screen if not ("Ignant needs an internet connection for this", <load again button>)
-        if([self isAppOnline]){
+        if([self checkIfAppOnline]){
             [self fetchAndLoadDataForFirstRun];
         }
         else {
@@ -248,16 +251,30 @@
 }
 
 #pragma mark - internet connectivity
--(BOOL)isAppOnline
+-(BOOL)checkIfAppOnline
 {
+    
+    LOG_CURRENT_FUNCTION()
+    
+    
 #warning USE IP ADRESS OF THE CONTENT SERVER, NOT OF IGNANT
-    Reachability* r = [Reachability reachabilityWithHostName:kReachabilityHostnameToCheck];
-    BOOL reachable = [r isReachable];    
-    return reachable;
+    Reachability* r = [Reachability reachabilityWithHostname:kReachabilityHostnameToCheck]; 
+    BOOL returnBool = [r isReachable];
+    NSLog(@" returnBool: %@", returnBool ? @"TRUE" : @"FALSE");
+    return returnBool;
 }
 
 
 #pragma mark - reusable view controllers
+
+-(IGNMasterViewController*)categoryViewController
+{
+if (_categoryViewController==nil) {
+    _categoryViewController = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
+}
+
+return _categoryViewController;
+}
 
 -(ContactViewController*)contactViewController
 {

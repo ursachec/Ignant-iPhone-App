@@ -8,7 +8,7 @@
 
 #import "ImageSlideshowViewController.h"
 
-#import "UIImageView+WebCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 #import "Constants.h"
 
 @interface ImageSlideshowViewController()

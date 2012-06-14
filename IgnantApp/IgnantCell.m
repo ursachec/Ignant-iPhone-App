@@ -61,7 +61,6 @@
 #define DATE_WIDTH 100.0f  
 #define DATE_FONT_SIZE 10.0f
     
-    
 #define PADDING_FOR_TEXTS 170.0f
 #define PADDING_FOR_DATE_AND_CATEGORY_LABELS 3.0f
     
@@ -75,17 +74,13 @@
     CGFloat actualFontSize = 0.0f;
     CGSize size = CGSizeMake(0, 0);
     CGSize titleSize = CGSizeMake(0, 0);
-    
-    
-//    NSLog(@"contentRect: %@", NSStringFromCGRect(contentRect));
-    
+        
     //draw the arrow
     [IGNANT_GRAY_COLOR set];
     UIImage *arrowImage = [UIImage imageNamed:@"ignantCellArrow.png"];
     CGSize arrowImageSize = CGSizeMake(20.0f, 30.0f);
     CGRect arrowImageRect = CGRectMake(contentRect.size.width-arrowImageSize.width-PADDING_RIGHT, (contentRect.size.height-arrowImageSize.height-CELL_PADDING_TOP)/2, arrowImageSize.width, arrowImageSize.height);
     [arrowImage drawInRect:arrowImageRect];
-    
     
     //draw article name
     [[UIColor blackColor] set];
@@ -119,32 +114,18 @@
     CGContextMoveToPoint(ctx, 0.0f, contentRect.size.height-1.0f);
     CGContextAddLineToPoint(ctx, 320.0f, contentRect.size.height-1.0f);
     CGContextStrokePath(ctx);
-    
-//    //draw middle line
-//    CGContextSetRGBStrokeColor(ctx, 0.85, 0.85, 0.85, 1.0);
-//    CGContextSetLineWidth(ctx, 4.0f);
-//    CGContextMoveToPoint(ctx, 160, CELL_PADDING_TOP+0.0f);
-//    CGContextAddLineToPoint(ctx, 160, 102.0f);
-//    CGContextStrokePath(ctx);
-    
-    //draw thumb image
-    CGFloat ratio = 296.0f/194.0f;
-    CGRect imageRect = CGRectMake(5.0f, CELL_PADDING_TOP+0.0f, 149.0f,97.0f);
-    [_cell.thumbImage drawInRect:imageRect];
-    
 }
-
 
 @end
 
 @implementation IgnantCell
 @synthesize cellContentView;
-@synthesize thumbImage, title, categoryName, dateString;
-
-@synthesize imageIdentifier;
+@synthesize cellImageView;
+@synthesize title, categoryName, dateString;
 
 #define COLOR_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
 #define COLOR_SELECTED_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
+#define COLOR_IMAGEVIEW_BACKGROUND [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:0.2f]
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -158,6 +139,10 @@
         cellContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cellContentView.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:cellContentView];
+        
+        cellImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5.0f, 5.0f, 149.0f,97.0f)];
+        cellImageView.backgroundColor = COLOR_IMAGEVIEW_BACKGROUND;
+        [self.contentView addSubview:cellImageView];
                 
         self.backgroundView =[[UIView alloc] initWithFrame:self.bounds]; 
         self.backgroundView.backgroundColor = COLOR_BACKGROUND_VIEW;
@@ -174,6 +159,5 @@
     [super setBackgroundColor:backgroundColor];
     cellContentView.backgroundColor = backgroundColor;
 }
-
 
 @end

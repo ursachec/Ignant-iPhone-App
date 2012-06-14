@@ -10,6 +10,8 @@
 
 #import "Constants.h"
 
+#import "IGNAppDelegate.h"
+
 @interface IGNViewController ()
 {
 
@@ -35,12 +37,18 @@
 
 @synthesize viewControllerToReturnTo;
 
+@synthesize appDelegate = _appDelegate;
+
+@synthesize importer = _importer;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
+        self.importer = nil;
                 
     }
     return self;
@@ -54,6 +62,27 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(IgnantImporter*)importer
+{
+    NSLog(@"init importer");
+    
+    if (_importer==nil) {        
+        _importer = [[IgnantImporter alloc] init];
+        _importer.persistentStoreCoordinator = self.appDelegate.persistentStoreCoordinator;
+        _importer.delegate = self;
+    }
+    
+    return _importer;
+}
+
+-(IGNAppDelegate*)appDelegate
+{
+    if (_appDelegate==nil) {
+        _appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
+    }
+
+    return _appDelegate;
+}
 
 #pragma mark - handle back navigation
 
@@ -304,6 +333,37 @@
 -(void)setUpForOnlineUse
 {
     [self setIsNoConnectionViewHidden:YES];    
+}
+
+
+#pragma mark - IgnantImporter delegate
+
+-(void)didStartImportingData
+{
+
+}
+
+-(void)didFailImportingData
+{
+    
+}
+
+-(void)didFinishImportingData
+{
+    
+}
+
+-(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer
+{
+    
+}
+-(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
+{
+    
+}
+-(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
+{
+    
 }
 
 

@@ -8,23 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+
+
 @interface IgnantCell : UITableViewCell
 {
-    
     UIImage *thumbImage;
     NSString *title;
     NSString *categoryName;
     NSString *dateString;
-    
-    NSString* imageIdentifier;
 }
-@property(nonatomic,strong) UIView *cellContentView;
 
-@property(nonatomic,strong) UIImage *thumbImage;
+@property(nonatomic,strong) UIView *cellContentView;
+@property(nonatomic,strong) UIImageView *cellImageView;
+
 @property(nonatomic,strong) NSString *title;
 @property(nonatomic,strong) NSString *categoryName;
 @property(nonatomic,strong) NSString *dateString;
-
-@property(nonatomic,strong) NSString* imageIdentifier;
 
 @end

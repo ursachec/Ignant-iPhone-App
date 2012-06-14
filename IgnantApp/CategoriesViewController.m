@@ -15,9 +15,6 @@
 #import "Category.h"
 
 @interface CategoriesViewController()
-{
-    IGNAppDelegate* appDelegate;
-}
 @property(nonatomic, strong) NSMutableArray *ignantCategories;
 @end
 
@@ -36,8 +33,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
     }
     return self;
@@ -128,9 +123,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
     Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    IGNMasterViewController *masterVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:category];
-    masterVC.managedObjectContext = appDelegate.managedObjectContext;
-    [self.navigationController pushViewController:masterVC animated:YES];
+    IGNMasterViewController *categoryVC = self.appDelegate.categoryViewController;
+    categoryVC.managedObjectContext = self.appDelegate.managedObjectContext;
+    [categoryVC forceSetCurrentCategory:category];
+    [self.navigationController pushViewController:categoryVC animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

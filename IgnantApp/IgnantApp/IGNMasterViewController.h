@@ -33,7 +33,6 @@
     int _numberOfActiveRequests;
     
 }
-@property (nonatomic, strong, readonly) IgnantImporter *importer;
 
 @property (strong, nonatomic) IBOutlet UITableView *blogEntriesTableView;
 
@@ -55,6 +54,6 @@
 
 -(void)fetch;
 
--(void)createImporter;
+-(void)forceSetCurrentCategory:(Category *)currentCategory;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 
+#import "Reachability.h"
+
 //import necessary ViewController files
 #import "IGNMasterViewController.h"
 #import "IGNDetailViewController.h"
@@ -27,8 +29,6 @@
 
 #import "IgnantLoadingView.h"
 
-#import "IGNAppDelegate.h"
-
 
 #import "IgnantImporter.h"
 
@@ -39,20 +39,19 @@
 #import "Constants.h"
 
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
+
 @interface IGNMasterViewController ()
-{
-    IGNAppDelegate *appDelegate;
-}
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 -(void)loadMoreContent;
 -(NSString*)currentCategoryId;
 
-@property (nonatomic, strong, readwrite) IgnantImporter *importer;
-
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (assign, readwrite) BOOL isHomeCategory;
+
 @end
 
 #pragma mark -
@@ -66,8 +65,6 @@
 
 @synthesize blogEntriesTableView = _blogEntriesTableView;
 @synthesize detailViewController = _detailViewController;
-
-@synthesize importer = _importer;
 
 @synthesize currentCategory = _currentCategory;
 
@@ -94,28 +91,33 @@
         else if(category!=nil) {
             self.title = category.name;
         }
-
         
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
-        
-        //create the importer - done in a separate method in case the subclasses have to use it - 
-        //!!! there have to be different persistentStoreCoordinators
-        [self createImporter];
-        
+        self.importer = nil;
     }
     
     return self;
 }
-							
 
--(void)createImporter
+-(void)forceSetCurrentCategory:(Category *)currentCategory
 {
-    //use the importer from the appDelegate
-            
-    _importer = [[IgnantImporter alloc] init];
-    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
-    _importer.delegate = self;
+    _showLoadMoreContent = YES;
+    _isLoadingMoreContent = NO;
+    _isLoadingLatestContent = NO;
+    
+    self.currentCategory = currentCategory;
+    self.isHomeCategory = (currentCategory==nil) ? TRUE : FALSE;
+    
+    if (self.isHomeCategory) {
+        self.title = @"Home";
+    }
+    else if(currentCategory!=nil) {
+        self.title = currentCategory.name;
+    }
+    
+    self.fetchedResultsController = nil;
+    [self fetch];
 }
+
 
 -(NSString*)currentCategoryId
 {
@@ -132,23 +134,20 @@
 #pragma mark - show mosaik / more
 - (IBAction)showMosaik:(id)sender 
 {
-    IGNMosaikViewController *mosaikVC = appDelegate.mosaikViewController;
+    IGNMosaikViewController *mosaikVC = self.appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
     
-    
-    if (!mosaikVC.isMosaicImagesArrayNotEmpty && ![appDelegate isAppOnline]) 
+    if (!mosaikVC.isMosaicImagesArrayNotEmpty && ![self.appDelegate checkIfAppOnline]) 
     {
-#warning TODO: show this in a better way
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
-                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
                                                     delegate:self 
-                                           cancelButtonTitle:@"Dismiss" 
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
                                            otherButtonTitles:nil];
         [av show];
         
         return;
-        
     }
     else 
     {
@@ -163,7 +162,7 @@
 }
 
 - (IBAction)showTumblr:(id)sender {
-    IgnantTumblrFeedViewController *tumblrVC = appDelegate.tumblrFeedViewController;
+    IgnantTumblrFeedViewController *tumblrVC = self.appDelegate.tumblrFeedViewController;
     [self.navigationController pushViewController:tumblrVC animated:YES];
 }
 
@@ -174,18 +173,31 @@
     [super viewWillAppear:animated];
     
     
+    
+    NSLog(@"importer is nil: %@", (self.importer==nil) ? @"TRUE" : @"FALSE");
+        
     //check when was the last time updating the currently set category and trigger load latest/load more
-    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
+    NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
+    NSLog(@"dateForLastUpdate: %@", dateForLastUpdate);
+    
     
     //only check if data is here if not on first run
-    if (![appDelegate isLoadingDataForFirstRun] && [appDelegate isAppOnline])
+    if (![self.appDelegate isLoadingDataForFirstRun] && [self.appDelegate checkIfAppOnline])
     if (dateForLastUpdate==nil) 
     {
         [self loadLatestContent];        
     }
-    else if( [dateForLastUpdate timeIntervalSinceNow]) 
+    
+    if (!self.isHomeCategory && [self.appDelegate checkIfAppOnline])
     {
-        NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
+        if (dateForLastUpdate==nil) 
+        {
+            [self loadLatestContent];        
+        }
+        else if( [dateForLastUpdate timeIntervalSinceNow]) 
+        {
+            NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
+        }
     }
     
     //set up some ui elements
@@ -204,12 +216,12 @@
         self.navigationItem.titleView = someLabel;
     }
     
-    if (appDelegate.shouldLoadDataForFirstRun && [appDelegate isAppOnline]) {
+    if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
         [self setIsLoadingViewHidden:NO];
         self.navigationController.navigationBarHidden = YES;
     }
     
-    else if (appDelegate.shouldLoadDataForFirstRun && ![appDelegate isAppOnline]) {
+    else if (self.appDelegate.shouldLoadDataForFirstRun && ![self.appDelegate checkIfAppOnline]) {
         [self setIsCouldNotLoadDataViewHidden:NO];
         self.navigationController.navigationBarHidden = YES;
     }
@@ -342,6 +354,15 @@
             
         }
         
+        BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];            
+        NSString* currentArticleId = blogEntry.articleId;
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:currentArticleId,kArticleId, nil];
+        NSString *requestString = kAdressForImageServer;
+        NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+        NSURL* urlAtCurrentIndex = [NSURL URLWithString:encodedString];
+        [cell.cellImageView setImageWithURL:urlAtCurrentIndex
+                           placeholderImage:nil];
+        
         
         [self configureCell:cell atIndexPath:indexPath];
         
@@ -358,9 +379,7 @@
     {
         if (!_isLoadingMoreContent) 
         {
-            [self loadMoreContent];       
-            
-#warning TODO: check performance, maybe us something better to let the tableview know that the cell has changed
+            [self loadMoreContent];
             [_blogEntriesTableView reloadData];
         }
         else
@@ -485,25 +504,17 @@
     
     cell.categoryName = blogEntry.categoryName;
     
+    NSString* currentArticleId = blogEntry.articleId;
+    
+   
 //    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
         
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterShortStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
-    
-    
-    NSLog(@"configureCell blogEntry.thumbIdentifier: %@", blogEntry.thumbIdentifier);
-    
-    //set up image    
-    cell.imageIdentifier = blogEntry.thumbIdentifier;
-    
-    NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    applicationDocumentsDir = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
-    NSString *storePath = [applicationDocumentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpeg",cell.imageIdentifier]];
-    UIImage* athumbImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:storePath]];
-    
-    cell.thumbImage = athumbImage;
+    if (blogEntry.publishingDate) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
+        cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
+    }
 }
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath
@@ -548,16 +559,9 @@
         
     });
     
-    
-#warning NEW IMPLEMENTATION
-    
-    NSDate* newImplementationDateForMost = [appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
-    NSLog(@"newImplementationDateForMost: %@, currentCategory: %@", newImplementationDateForMost, [self currentCategoryId]);
-
-#warning END OF NEW IMPLEMENTATION
+    NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
     
     NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
-    
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreArticlesForCategory,kParameterAction,[self currentCategoryId],kCurrentCategoryId, secondsSince1970, kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
@@ -576,7 +580,7 @@
     
     NSLog(@"requestStarted");
     
-    NSDate *lastUpdateDateForCurrentCategoryId = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     
     
     if (_isLoadingMoreContent) {
@@ -599,12 +603,12 @@
     
     LOG_CURRENT_FUNCTION()
     
-    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     if (_isLoadingMoreContent) {
+                
         
-        #warning IMPORTANT!!! TODO implement importing the string to CoreData
+        
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
@@ -617,9 +621,7 @@
         
     }
     else if (_isLoadingLatestContent) {
-        
-        #warning IMPORTANT!!! TODO implement importing the string to CoreData
-        
+                
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
             [self.importer importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
@@ -643,7 +645,7 @@
     }
     
     else if (_isLoadingLatestContent) {
-        if ([appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]]==nil) {
+        if ([self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]]==nil) {
             [self setIsCouldNotLoadDataViewHidden:NO];
         }
         
@@ -682,13 +684,13 @@
         [self.blogEntriesTableView reloadData];
         [self setIsLoadingViewHidden:YES];
         
-        [appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+        [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     });
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {  
     
-    [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
+    [self.appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
 
 
@@ -728,7 +730,7 @@
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-    NSDate* dateForLastUpdate = [appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
 	return dateForLastUpdate==nil ? [NSDate dateWithTimeIntervalSince1970:0] : dateForLastUpdate;
 }
 
@@ -764,24 +766,22 @@
 #pragma mark - IgnantNoInternetConnectionViewDelegate
 -(void)retryToLoadData
 {
-    if ([appDelegate isAppOnline]) {
-        
-        [appDelegate fetchAndLoadDataForFirstRun];
-        
+    NSLog(@"retryToLoadData");
+    
+    if ([self.appDelegate checkIfAppOnline]) {
+        [self.appDelegate fetchAndLoadDataForFirstRun];
     }
+    
     else {
-#warning TODO: show this in a better way
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
-                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
                                                     delegate:self 
-                                           cancelButtonTitle:@"Dismiss" 
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
                                            otherButtonTitles:nil];
         [av show];
         
         return;
     }
-    
-    NSLog(@"retryToLoadData");
 }
 
 #pragma mark - custom special views
@@ -790,16 +790,16 @@
     [super setUpCouldNotLoadDataView];
     
     
-    NSLog(@"MASTER shouldLoadData: %@", appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    NSLog(@"MASTER shouldLoadData: %@", self.appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
 #warning BETTER TEXT!
     
     
-    if (appDelegate.shouldLoadDataForFirstRun && [appDelegate isAppOnline]) {
+    if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
         self.couldNotLoadDataLabel.text = @"Could not load data from SERVER for first RUN, sorry!";
     }
     
-    else if (appDelegate.shouldLoadDataForFirstRun && ![appDelegate isAppOnline]) {
+    else if (self.appDelegate.shouldLoadDataForFirstRun && ![self.appDelegate checkIfAppOnline]) {
         self.couldNotLoadDataLabel.text = @"You need an internet connection to load data for the first time.";
     }
     

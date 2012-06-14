@@ -9,7 +9,7 @@
 #import "IgnantTumblrFeedViewController.h"
 
 #import "IgnantImporter.h"
-#import "IGNAppDelegate.h"
+
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
@@ -22,15 +22,9 @@
 #import "IgnantLoadMoreCell.h"
 #import "IgnantLoadingMoreCell.h"
 
-#import "UIImageView+WebCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #import "TumblrCell.h"
-
-#define kTumblrAPIKey I5QACSezTzCjvkHXaiEaXrD3t9cb8Ahmpyv7MqGIRPhdEfg2Yw
-// http://api.tumblr.com/v2/blog/ignant.tumblr.com/posts?api_key=
-
-#warning TODO: implement real data from tumblr
-
 
 #define kMinimumNumberOfPostsOnLoad 5
 
@@ -43,9 +37,6 @@
     int _numberOfActiveRequests;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
-    
-    IGNAppDelegate *appDelegate;
-    
     
     BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
 }
@@ -74,13 +65,8 @@
         
         _numberOfActiveRequests = 0;
         _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
-        
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
-        
-        
-        // Custom initialization
-        [self createImporter];
-        
+                        
+        self.importer = nil;
         
         _showLoadMoreTumblr = YES;
         _isLoadingMoreTumblr = NO;
@@ -99,7 +85,7 @@
     
     if (_managedObjectContext == nil) 
     {
-        _managedObjectContext = appDelegate.managedObjectContext; 
+        _managedObjectContext = self.appDelegate.managedObjectContext; 
     }
     
     //set up the refresh header view
@@ -128,9 +114,7 @@
 
 #pragma mark - helpful methods
 -(BOOL)isTumblrEntriesArrayNotEmpty
-{
-    #warning THIS CAN BE MADE FASTER
-    
+{    
     //decide if to load posts for the first time or not
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
     int numberOfLoadedPosts = [sectionInfo numberOfObjects];
@@ -145,7 +129,7 @@
     
     if ([self isTumblrEntriesArrayNotEmpty]) {
         
-        if ([appDelegate isAppOnline]) {
+        if ([self.appDelegate checkIfAppOnline]) {
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
             [self loadLatestTumblrArticles];
         }
@@ -418,14 +402,6 @@
 	return [NSDate date]; // should return date data source was last changed
 }
 
-#pragma mark - core data stuff
--(void)createImporter
-{
-    //use the persistent store from the appDelegate       
-    _importer = [[IgnantImporter alloc] init];
-    _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
-    _importer.delegate = self;
-}
 
 #pragma mark - Fetched results controller
 
@@ -521,7 +497,7 @@
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {  
-    [appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
+    [self.appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
 
 #pragma mark - custom special views
@@ -532,5 +508,7 @@
 #warning BETTER TEXT!
     self.couldNotLoadDataLabel.text = @"Could not load tumblr feed";
 }
+
+
 
 @end

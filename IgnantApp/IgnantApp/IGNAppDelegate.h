@@ -23,6 +23,7 @@
 
 @property (nonatomic, strong) Facebook *facebook;
 
+@property(nonatomic, readonly, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readonly, strong) IGNMoreOptionsViewController *moreOptionsViewController;
 @property(nonatomic, readonly, strong) IgnantTumblrFeedViewController *tumblrFeedViewController;
 @property(nonatomic, readonly, strong) CategoriesViewController *categoriesViewController;
@@ -59,6 +60,6 @@
 -(void)fetchAndLoadDataForFirstRun;
 -(void)initializeFacebook;
 
--(BOOL)isAppOnline;
+-(BOOL)checkIfAppOnline;
 
 @end

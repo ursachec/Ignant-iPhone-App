@@ -10,15 +10,13 @@
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
 
-
-
 #import "IGNViewController.h"
-
 #import "IgnantImporter.h"
+#import "Facebook.h"
 
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
 
 
 @property (strong, nonatomic) NSString *currentArticleId;

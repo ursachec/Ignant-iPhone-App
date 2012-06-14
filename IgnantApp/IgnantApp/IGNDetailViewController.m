@@ -23,7 +23,6 @@
 #import "NSString+HTML.h"
 #import "NSData+Base64.h"
 
-#import "IGNAppDelegate.h"
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
@@ -37,8 +36,6 @@
     NSString *_firstRelatedArticleId;
     NSString *_secondRelatedArticleId;
     NSString *_thirdRelatedArticleId;
-    
-    IGNAppDelegate *appDelegate;
 }
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary;
@@ -176,10 +173,9 @@
         
         
         _didLoadContentForRemoteArticle = NO;
-        
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];        
+           
         _importer = [[IgnantImporter alloc] init];
-        _importer.persistentStoreCoordinator = appDelegate.persistentStoreCoordinator;
+        _importer.persistentStoreCoordinator = self.appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;
         
     }
@@ -283,12 +279,8 @@
 
 
 - (void)viewWillAppear:(BOOL)animated
-{
+{    
     [super viewWillAppear:animated];
-    
-    NSLog(@"currentAritcleId: %@", self.blogEntry.articleId);
-    
-#warning THIS IS PROBABLY A BAD IDEA, YOU SHOULD HIDE THE TOOLBAR EARLIER
     
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
     
@@ -814,8 +806,6 @@
     //set up the title, date and category labels
     _titleLabel.text = [remoteContentArticleTitle uppercaseString];
     
-    
-#warning fix date to take GMT into consideration
     //2012-03-02T00:00:00+00:00
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"yyyy-MM-dd"];
@@ -1023,13 +1013,10 @@
 {
 
     //initialize facebook in case not yet done
-    [appDelegate initializeFacebook];
-    
+    [self.appDelegate initializeFacebook];
     
     //get details for current selected blogentry
     BlogEntry* currentBlogEntry = self.blogEntry;
-    
-    
     
 #warning add the relevant live information
     
@@ -1038,7 +1025,6 @@
     NSString* infoDescriptionForArticle = currentBlogEntry.descriptionText;
     NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
     substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
-    
     
     //IDEA: as an improvement, add server-side script to create small thumbs specific for the facebook app
     //REBUTAL: no, you shouldn't, because the article may be posted on the facebook wall where it is important to have some quality in the picture
@@ -1056,7 +1042,7 @@
                                    substringInfoDescriptionForArticle, @"description",
                                    nil];
     
-    [appDelegate.facebook dialog:@"feed" andParams:params andDelegate:appDelegate];
+    [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
 }
 
 
@@ -1073,11 +1059,11 @@
         
 #warning TODO: show this in a better way
 
-    
+        
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
-                                                     message:@"You need to be logged in your Twitter account!" 
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_to_be_logged_in_with_twitter", nil)
                                                     delegate:self 
-                                           cancelButtonTitle:@"Dismiss" 
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss", nil)
                                            otherButtonTitles:nil];
         [av show];
         
@@ -1153,7 +1139,7 @@
 }
 
 - (IBAction)showMore:(id)sender {
-    IGNMoreOptionsViewController *moreOptionsVC = appDelegate.moreOptionsViewController;
+    IGNMoreOptionsViewController *moreOptionsVC = self.appDelegate.moreOptionsViewController;
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
 }
 
@@ -1190,16 +1176,18 @@
     BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
     
     //check for the internet connection 
-    if(shouldLoadBlogEntryFromRemoteServer && ![appDelegate isAppOnline])
+    if(shouldLoadBlogEntryFromRemoteServer && ![self.appDelegate checkIfAppOnline])
     {
     
 #warning TODO: show this in a better way
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
-                                                     message:@"Sorry, but you need an internet connection to do that :)." 
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
                                                     delegate:self 
-                                           cancelButtonTitle:@"Dismiss" 
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
                                            otherButtonTitles:nil];
         [av show];
+        
+        
         
         return;
     }
@@ -1329,9 +1317,7 @@
 {
     NSLog(@"didFailParsingSingleArticleWithDictionary");
     
-#warning TODO: stop showing loading view and return to the master view controller
-    
-    
+#warning TODO: stop showing loading view and return to the master view controlle
 }
 
 #pragma mark - UIGestureRecognizer delegate methods
@@ -1390,10 +1376,5 @@
 #warning BETTER TEXT!
     self.couldNotLoadDataLabel.text = @"Could not load data for this article";
 }
-
-
-
-
-
 
 @end

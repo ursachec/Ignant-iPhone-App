@@ -10,8 +10,6 @@
 
 #import "IGNDetailViewController.h"
 
-#import "IGNAppDelegate.h"
-
 //import custom views
 #import "LoadMoreMosaicView.h"
 #import "MosaicView.h"
@@ -46,8 +44,7 @@ NSString * const kImageFilename = @"filename";
 {
     BOOL _isLoadingMoreMosaicImages;
     int _numberOfActiveRequests;
-    
-    IGNAppDelegate* appDelegate;    
+      
 }
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
@@ -87,8 +84,6 @@ NSString * const kImageFilename = @"filename";
         _numberOfActiveRequests = 0;
         
         _isLoadingMoreMosaicImages = NO;
-        
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
     }
     return self;
@@ -538,7 +533,7 @@ NSString * const kImageFilename = @"filename";
     self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
     
     //set the managedObjectContext and push the view controller
-    self.detailViewController.managedObjectContext = appDelegate.managedObjectContext;
+    self.detailViewController.managedObjectContext = self.appDelegate.managedObjectContext;
     self.detailViewController.isNavigationBarAndToolbarHidden = NO;
     
     if (![self.parentNavigationController.topViewController isKindOfClass:[IGNDetailViewController class]]) 
