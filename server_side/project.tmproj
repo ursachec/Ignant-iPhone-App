@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>classes/LightArticle.php</string>
+	<string>classes/Template.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -286,9 +286,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>22</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -403,6 +403,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{241, 61}, {919, 717}}</string>
+	<string>{{457, 61}, {919, 717}}</string>
 </dict>
 </plist>
