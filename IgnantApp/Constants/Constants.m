@@ -48,10 +48,13 @@ NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue = @"leastRecentAr
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
 NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForImageServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
 #elif shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
+NSString * const kAdressForImageServer = @"http://107.21.216.249/ignant/imgsrv.php";
 #else
 NSString * const kAdressForContentServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForImageServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
 #endif
 
 NSString * const kReachabilityHostnameToCheck = @"www.ignant.de";
