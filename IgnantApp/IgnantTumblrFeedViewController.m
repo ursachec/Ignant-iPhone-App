@@ -188,6 +188,7 @@
         TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
         
         NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
+        NSLog(@"urlAtCurrentIndex: %@, currentTumblrEntry: %@", urlAtCurrentIndex, currentTumblrEntry.publishingDate);
         
         if (cell == nil)
         {
@@ -279,7 +280,12 @@
     
     _numberOfActiveRequests++;
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, nil];
+    NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];    
+    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
+    NSLog(@"secondsSince1970: %@", secondsSince1970);
+    
+#warning TODO: take into account date of last article when triggering loading
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, secondsSince1970,kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
@@ -341,14 +347,17 @@
     
     if (_isLoadingMoreTumblr) {
         
-        _numberOfActiveRequests--;
-        _showLoadMoreTumblr = YES;
-        _isLoadingMoreTumblr = NO;
+        
+        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueMoreTumblr", NULL);
+        dispatch_async(importerDispatchQueue, ^{
+            [self.importer importJSONStringForTumblrPosts:[request responseString]];
+        });
+        dispatch_release(importerDispatchQueue);
         
     }
     else if (isLoadingLatestTumblrArticles) {
                 
-        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueLatestTumblr", NULL);
         dispatch_async(importerDispatchQueue, ^{
             [self.importer importJSONStringForTumblrPosts:[request responseString]];
         });
@@ -468,12 +477,25 @@
     NSLog(@"tumblrFeed didStartImportingData");
     
 
+    
+    
 }
 
 -(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION() 
     NSLog(@"tumblrFeed didStartImportingData");
+    
+    if (_isLoadingMoreTumblr) {
+        
+        _numberOfActiveRequests--;
+        _showLoadMoreTumblr = YES;
+        _isLoadingMoreTumblr = NO;
+        
+    }
+    else {
+        
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self fetch];
@@ -483,13 +505,35 @@
             [self setIsLoadingViewHidden:YES];
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
-        
     });
 }
 
 -(void)didFailImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+#warning TODO: DO SOMETHING IN THIS CASE!!!
+    
+    if (_isLoadingMoreTumblr) {
+        
+        _numberOfActiveRequests--;
+        _showLoadMoreTumblr = YES;
+        _isLoadingMoreTumblr = NO;
+        
+    }
+    else {
+        
+    }
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {            
+#warning TODO: show appropriate window here: could not import data for first run, or similar
+            _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
+        }
+    });
+    
     
 }
 

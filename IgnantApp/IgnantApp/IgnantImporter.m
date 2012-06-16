@@ -55,6 +55,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @property (nonatomic, assign) NSUInteger blogEntriesToBeSaved;
 
 @property (nonatomic, strong) NSDate *currentDateForLeastRecentArticle;
+@property (nonatomic, strong) NSDate *currentDateForLeastRecentTumblrEntry;
 
 @property (nonatomic, strong) NSFetchRequest *checkingFetchRequestForBlogEntries;
 @property (nonatomic, strong) NSFetchRequest *checkingFetchRequestForTumblrEntries;
@@ -75,6 +76,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @synthesize blogEntriesToBeSaved;
 
 @synthesize currentDateForLeastRecentArticle = _currentDateForLeastRecentArticle;
+@synthesize currentDateForLeastRecentTumblrEntry = _currentDateForLeastRecentTumblrEntry;
 
 @synthesize lastImportDateForMainPageArticle = _lastImportDateForMainPageArticle;
 
@@ -84,6 +86,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @synthesize checkingFetchRequestForCategories = _checkingFetchRequestForCategories;
 
 @synthesize appDelegate = _appDelegate;
+
 
 
 -(id)init
@@ -553,26 +556,35 @@ static const NSUInteger kImportBatchSize = 5;
     NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonString error:nil];
     NSArray *tumblrPostsArray = [dictionaryFromJSON objectForKey:kTLPosts];
     
+    NSLog(@"starting importing tumblr posts...");
     for (NSDictionary* oneTumblrPost in tumblrPostsArray) {
         [self importOneTumblrPostFromDictionary:oneTumblrPost];
     }
+    NSLog(@"finished importing tumblr posts.");
     
     BOOL savedOk = NO;
     NSError *saveError = nil;
     
+    
+    NSLog(@"trying to save changes to the context...");
     //try to save the context with the imported articles
     savedOk = [self.insertionContext save:&saveError];
     
     if (savedOk) {
-        NSLog(@"could save tumblr posts");
+        NSLog(@"SUCCESS: finished saving changes to the context.");
     }
     else {
-        NSLog(@"ERROR: exporting tumblr posts");
+        NSLog(@"ERROR: could not save changes to the context");
     }
     
     
     
     if (savedOk) {
+        
+#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentTumblrEntry is not set right, not sure
+            //save date for least recent article
+            [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentTumblrEntry withCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForTumblr]];
+            
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
             [delegate didFinishImportingData];
         }
@@ -614,10 +626,15 @@ static const NSUInteger kImportBatchSize = 5;
         NSLog(@"error is not nil this should be handled");
     }
     
+    //save to current date for least recent tumblr entry
+    if(_currentDateForLeastRecentTumblrEntry==nil || [_currentDateForLeastRecentTumblrEntry compare:tumblrEntryPublishingDate]==NSOrderedDescending)
+        self.currentDateForLeastRecentTumblrEntry = tumblrEntryPublishingDate;
+    
+    
+    NSLog(@"importing tumblrEntryUrl: %@, oneTumblrPost: %@", tumblrEntryUrl, oneTumblrPost);
     self.currentTumblrEntry = nil;
     self.currentTumblrEntry.imageUrl = tumblrEntryUrl;
     self.currentTumblrEntry.publishingDate = tumblrEntryPublishingDate;
-    
 }
 
 -(void)updateLastDateForImportedArticleForMainPage {

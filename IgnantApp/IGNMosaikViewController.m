@@ -181,7 +181,6 @@ NSString * const kImageFilename = @"filename";
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
 #pragma mark - server communication actions
 -(void)loadMoreMosaicImages
 {    
@@ -346,7 +345,6 @@ NSString * const kImageFilename = @"filename";
             imageWidth/=2;
             imageHeight/=2;
             
-            
             //add a mosaic view to the scrollview
             CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, heightOfActiveColumn+PADDING_BOTTOM);
             CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, imageWidth, imageHeight);
@@ -360,7 +358,6 @@ NSString * const kImageFilename = @"filename";
             UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, imageWidth, imageHeight)];
             tempImageView.image = scaledImage;
             [oneView addSubview:tempImageView];
-            
             
             [self.bigMosaikView addSubview:oneView];
         }

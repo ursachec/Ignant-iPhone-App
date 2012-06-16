@@ -39,8 +39,8 @@ NSString * const kIgnantObjectTypeCategory = @"category";
 
 
 //TUMBLR
-NSString * const kTumblrPostPublishingDate = @"publishingDate";
-NSString * const kTumblrPostImageUrl = @"url";
+NSString * const kTumblrPostPublishingDate = @"tPublishingDate";
+NSString * const kTumblrPostImageUrl = @"tUrl";
 
 
 //ARTICLE
