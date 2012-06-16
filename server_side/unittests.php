@@ -87,6 +87,45 @@ $testImagesExtension = 'jpg';
 
 class LightArticlesTest
 {
+	public function getThumbLinkForArticleId($articleID='')
+	{
+			$thumbLinks = array();
+		
+			$thumbLinks['henrique_oliveira']='http://www.ignant.de/wp-content/uploads/2012/02/henrique-oliveira_pre.jpg';
+			$thumbLinks['mark_powell']='http://www.ignant.de/wp-content/uploads/2012/06/evanspre.jpg';
+			$thumbLinks['hui_yi']='http://www.ignant.de/wp-content/uploads/2012/03/huipre.jpg';
+			$thumbLinks['imagine']='http://www.ignant.de/wp-content/uploads/2012/03/lego_pre.jpg';
+			$thumbLinks['elodie_antoine']='http://www.ignant.de/wp-content/uploads/2012/03/elodie_pre.jpg';
+			$thumbLinks['cecilia_paredes']='http://www.ignant.de/wp-content/uploads/2012/02/ceciliapre.jpg';
+			$thumbLinks['swellendamm_haus']='http://www.ignant.de/wp-content/uploads/2012/02/swellendam-pre.jpg';
+			$thumbLinks['ashkan_honarvar']='http://www.ignant.de/wp-content/uploads/2012/02/ashkan-honarvar_pre.jpg';
+			$thumbLinks['alicia']='http://www.ignant.de/wp-content/uploads/2012/01/aliciapre.jpg';
+			$thumbLinks['brian']='http://www.ignant.de/wp-content/uploads/2012/02/Brian_pre1.jpg';
+			$thumbLinks['wood']='http://www.ignant.de/wp-content/uploads/2012/02/wood_pre.jpg';
+			$thumbLinks['martins_edgar']='http://www.ignant.de/wp-content/uploads/2012/02/Martins.Edgarpre.jpeg';
+			$thumbLinks['test_2']='http://www.ignant.de/wp-content/uploads/2012/06/osma_pre.jpg';
+			$thumbLinks['test_3']='http://www.ignant.de/wp-content/uploads/2012/06/flickr_friday_07.06.pre_.jpg';
+			$thumbLinks['test_4']='http://www.ignant.de/wp-content/uploads/2012/06/hoeckelpre.jpg';
+			$thumbLinks['test_5']='http://www.ignant.de/wp-content/uploads/2012/06/face.jpg';
+			$thumbLinks['test_6']='http://www.ignant.de/wp-content/uploads/2012/06/urbangreenpre.jpg';
+			$thumbLinks['test_7']='http://www.ignant.de/wp-content/uploads/2012/06/herdernpre.jpg';
+			$thumbLinks['test_8']='http://www.ignant.de/wp-content/uploads/2012/06/ignant_finding_pre.jpg';
+			$thumbLinks['test_9']='http://www.ignant.de/wp-content/uploads/2012/06/streetfurniturepre.jpg';
+			$thumbLinks['test_10']='http://www.ignant.de/wp-content/uploads/2012/06/Verities_pre.jpg';
+			$thumbLinks['test_11']='http://www.ignant.de/wp-content/uploads/2012/06/drawingmachine_pre.jpg';
+			$thumbLinks['test_12']='http://www.ignant.de/wp-content/uploads/2012/06/housec_pre2.jpg';
+			$thumbLinks['test_13']='http://www.ignant.de/wp-content/uploads/2012/06/mirrorhouse_pre.jpg';
+			$thumbLinks['test_14']='http://www.ignant.de/wp-content/uploads/2012/06/lasagne-aicuisine-pre.jpg';
+						
+			foreach ($thumbLinks as $article_id => $article_link) {
+
+				if(strcmp($articleID, $article_id)==0)
+				return $article_link;
+			}		
+						
+			return;
+	}
+	
 	public function getAllCategories()
 	{
 		global $categories;		
@@ -124,6 +163,7 @@ class LightArticlesTest
 		
 		return $relatedArticlesArray;
 	}
+	
 	
 	
 	public function getRemoteImagesForArticleId($articleID='')
@@ -404,7 +444,7 @@ class LightArticlesTest
 		global $testImagesDirectory;
 		global $testImagesSuffix;
 		global $testImagesExtension;
-		$shouldIncludeImageBase64 = true;
+		$shouldIncludeImageBase64 = false;
 		
 		$tempArticleId = null;
 		
@@ -541,12 +581,16 @@ class LightArticlesTest
 		
 		$myFile = "tumblrDataDump.txt";
 		$fh = fopen($myFile, 'r');
+		
+		if($fh==FALSE)
+		print("could not open tumblr data dump...\n");
+		
 		$tumblrContentString = fread($fh, filesize($myFile));
 		fclose($fh);
 		
 		//read all the posts from the saved file
 		$jsonObject = json_decode($tumblrContentString);
-		$postsFromSavedFile = $jsonObject->{TL_POSTS};
+		$postsFromSavedFile = $jsonObject->{TL_POSTS};		
 		
 		//retrieve $limit posts after the given timestamp
 		$validCounter = 1;
@@ -579,15 +623,8 @@ class LightArticlesTest
 		{
 			$latestArticlesArray[] = $this->getLightArticleForArticleId('test_12');
 			$latestArticlesArray[] = $this->getLightArticleForArticleId('test_13');
-			$latestArticlesArray[] = $this->getLightArticleForArticleId('test_14');
-			
-			
+			$latestArticlesArray[] = $this->getLightArticleForArticleId('test_14');	
 		}
-		
-		
-		
-		
-		
 			
 		return $latestArticlesArray;
 	}

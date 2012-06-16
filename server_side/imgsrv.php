@@ -6,11 +6,23 @@ this script will server as a content deliverer for the ignant iphone app
 
 //get device information maybe
 
+require_once('feedKeys.php');
+require_once('JSONContentProxy.php');
 
-header("Location: http://www.ignant.de/wp-content/uploads/2012/06/osma_pre.jpg"); /* Browser umleiten */
+$contentProxy = new JSONContentProxy();
 
-/* Stellen Sie sicher, dass der nachfolgende Code nicht ausgefuehrt wird, wenn
-   eine Umleitung stattfindet. */
+if(!isset($_GET[FK_ARTICLE_ID]) || $_GET[FK_ARTICLE_ID]=='')
+exit;
+
+$articleId = $_GET[FK_ARTICLE_ID];
+
+$thumbLink = $contentProxy->getThumbUrlForArticleId($articleId);
+
+if(strlen($thumbLink)<=0)
+exit;
+
+header("Location: $thumbLink");
+
 exit;
 
 

@@ -131,7 +131,19 @@ class JSONContentProxy{
 		$returnArray = $postProcessedResponseFromTumblrAPI;
 		return $returnArray;
 	}
+	
+	function getThumbUrlForArticleId($articleId = '')
+	{
+		global $testingUnit;
+		$returnLink='';
 		
+		if(strlen($articleId)==0)
+		return;
+		
+		$returnLink = $testingUnit->getThumbLinkForArticleId($articleId);
+			
+		return $returnLink;
+	}
 };
 
 ?>

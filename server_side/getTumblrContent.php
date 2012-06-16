@@ -1,4 +1,6 @@
 <?php
+require_once('feedKeys.php');
+
 
 //debug variables
 $lastNumberOfTotalPosts = 0;
@@ -60,16 +62,9 @@ do
 		//filter the relevant information from the posts
 		foreach($postsFromTumblrAPI as $post){
 			$newPost = array();
-			$newPost['publishingDate'] = $post['timestamp'];
-			$newPost['imageUrl'] = $post['photos'][0]["alt_sizes"][2]["url"];
+			$newPost[TUMBLR_POST_PUBLISHING_DATE] = $post['timestamp'];
+			$newPost[TUMBLR_POST_IMAGE_URL] = $post['photos'][0]["alt_sizes"][2]["url"];
 			$filteredInformationPosts[] = $newPost;	
-		}
-		
-		//append the filtered posts to the file
-		if($saveToFile){
-			$fp = fopen($fileName, 'w');
-			fwrite($fp, utf8_encode(json_encode($filteredInformationPosts)));
-			fclose($fp);
 		}
 		
 		//set necessary variables @ end of the loop
@@ -80,17 +75,25 @@ do
 }
 while($loadedPosts<$lastNumberOfTotalPosts && $totalNumberOfPosts-$offset>limit);
 
+
+//write the filtered posts to the file
+$newString = utf8_encode(json_encode($filteredInformationPosts));
+
+$fp = fopen($fileName, 'a');
+fwrite($fp, $newString);
+fclose($fp);
+
+
 //add appropriate end of file for corect JSON encoding
-$fp = fopen($fileName, 'w');
+$fp = fopen($fileName, 'a');
 $beginString = '}';
 fwrite($fp, utf8_encode($beginString));
 fclose($fp);
 
-
 $time_end = microtime(true);
 $time = $time_end - $time_start;
 
-printf("Finished downloading tumblr data in %d seconds.\n",$time);
-printf("Number of posts downloaded (%d) .\n", $loadedPosts);
+printf("\nFinished downloading tumblr data in %d seconds.\n",$time);
+printf("\nNumber of posts downloaded (%d) .\n", $loadedPosts);
 
 ?>
