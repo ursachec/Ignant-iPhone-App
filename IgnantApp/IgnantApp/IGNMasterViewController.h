@@ -21,13 +21,11 @@
 @interface IGNMasterViewController : IGNViewController <NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, IgnantImporterDelegate, EGORefreshTableHeaderDelegate>
 {
     @protected
-    
     EGORefreshTableHeaderView *_refreshHeaderView;
-	BOOL _reloading;
     
+    BOOL _reloading;
     BOOL _showLoadMoreContent;
     BOOL _isLoadingMoreContent;
-    
     BOOL _isLoadingLatestContent;
     
     int _numberOfActiveRequests;

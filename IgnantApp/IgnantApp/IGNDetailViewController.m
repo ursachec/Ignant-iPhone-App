@@ -11,22 +11,20 @@
 #import "Constants.h"
 
 #import "BlogEntry.h"
-#import "Image.h"
 
 #import "ImageSlideshowViewController.h"
-
 #import "IGNMoreOptionsViewController.h"
 
 #import "IgnantLoadingView.h"
 
-#import "IgnantImporter.h"
 #import "NSString+HTML.h"
 #import "NSData+Base64.h"
-
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
+
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface IGNDetailViewController ()
 {
@@ -47,12 +45,9 @@
 -(void)postToPinterest;
 -(void)postToTwitter;
 
-@property (nonatomic, strong) NSString *firstRelatedArticleId;
-@property (nonatomic, strong) NSString *secondRelatedArticleId;
-@property (nonatomic, strong) NSString *thirdRelatedArticleId;
-
-
-@property (nonatomic, strong) IgnantImporter *importer;
+@property (strong, nonatomic) NSString *firstRelatedArticleId;
+@property (strong, nonatomic) NSString *secondRelatedArticleId;
+@property (strong, nonatomic) NSString *thirdRelatedArticleId;
 
 //properties for navigating through remote articles
 @property (strong, nonatomic) NSArray *relatedArticlesIds;
@@ -79,7 +74,7 @@
 @property (strong, nonatomic) IBOutlet UIView *articleContentView;
 @property (strong, nonatomic) IBOutlet UIView *relatedArticlesView;
 
-@property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
+@property(strong, nonatomic, readwrite) UILabel* couldNotLoadDataLabel;
 
 -(void)configureView;
 -(void)setupNavigationButtons;
@@ -95,7 +90,6 @@
 #pragma mark - 
 
 @implementation IGNDetailViewController
-@synthesize importer = _importer;
 
 @synthesize firstRelatedArticleId = _firstRelatedArticleId;
 @synthesize secondRelatedArticleId = _secondRelatedArticleId;
@@ -160,28 +154,21 @@
 @synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
 
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) 
     {
-        
         self.firstRelatedArticleId = @"";
         self.secondRelatedArticleId = @"";
         self.thirdRelatedArticleId = @"";
         
-        
         _didLoadContentForRemoteArticle = NO;
            
-        _importer = [[IgnantImporter alloc] init];
-        _importer.persistentStoreCoordinator = self.appDelegate.persistentStoreCoordinator;
-        _importer.delegate = self;
-        
+        self.importer = nil;
     }
     return self;
 }
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -196,23 +183,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    //add the back-to-start button
-//    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
-//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    CGFloat ratio = .5;
-//    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
-//    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-//    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
-//    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
-//    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-//    self.navigationItem.leftBarButtonItem = backBarButtonItem;
-    
 }
 
 -(void)loadNavigationButtons
 {
     CGSize sizeOfButtons = CGSizeMake(35.0f, 35.0f);
-    
     
     //add the navigate back-forth buttons
     UIView *backAndForwardNavigationItemView = [[UIView alloc] initWithFrame:CGRectMake(320.0f-70.0f-10.0f-10.0f, 5.0f, 90.0f, 35.0f)];
@@ -224,7 +199,6 @@
     [_nextArticleButton addTarget:self action:@selector(navigateToNextArticle) forControlEvents:UIControlEventTouchDown];
     [_nextArticleButton setImage:[UIImage imageNamed:@"navigationButtonNextArticle"] forState:UIControlStateNormal];
     [backAndForwardNavigationItemView addSubview:_nextArticleButton];
-    
     
     //add navigate back button
     self.previousArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -295,7 +269,7 @@
     {
         //check if article is already existent and only then trigger the loading
         BlogEntry* entry = nil;
-        entry = [_importer blogEntryWithId:self.currentArticleId];
+        entry = [self.importer blogEntryWithId:self.currentArticleId];
         
         //blog entry with currentId was found, configure the view
         if(entry)
@@ -328,7 +302,7 @@
         [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
     }
     else {
-        NSLog(@"viewControllerToReturnTo not found");
+        NSLog(@"WARNING! viewControllerToReturnTo not found");
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
@@ -580,12 +554,22 @@
     CGRect tempRect = CGRectMake(0, 0, 0, 0);
     CGSize tempSize = CGSizeMake(0, 0);
     
-    //set up the blog entry imageview
-    NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    applicationDocumentsDir = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
-    NSString *storePath = [applicationDocumentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpeg",self.blogEntry.thumbIdentifier]];
-    UIImage *someImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:storePath]];
-    _entryImageView.image = someImage;
+            
+    NSString* anArticleId = self.blogEntry.articleId;
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:anArticleId,kArticleId, nil];
+    NSString *requestString = kAdressForImageServer;
+    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+    NSURL* thumbURL = [NSURL URLWithString:encodedString];
+    
+#warning TODO: do something if the image was not loaded
+    [_entryImageView setImageWithURL:thumbURL 
+                    placeholderImage:nil 
+                             success:^(UIImage* image){
+                                 NSLog(@"loaded _entryImageView");
+                             } 
+                             failure:^(NSError* aError){
+                                 NSLog(@"could NOT load _entryImageView");
+                             }];
     
     
     //add the imageViewSize to the finalSizeForArticleContentView
@@ -795,7 +779,6 @@
     
     //add the imageViewSize to the finalSizeForArticleContentView
     finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
-    
     
     //set up the button for showing pictures
     if ([remoteContentRemoteImages isKindOfClass:[NSArray class]]) {
@@ -1172,7 +1155,7 @@
     
     
     BlogEntry* entry = nil;
-    entry = [_importer blogEntryWithId:articleId];
+    entry = [self.importer blogEntryWithId:articleId];
     BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
     
     //check for the internet connection 
@@ -1354,7 +1337,6 @@
 
 - (IBAction)handleRightSwipe:(id)sender 
 {
-    
     LOG_CURRENT_FUNCTION()
     
     [self navigateToNextArticle];

@@ -83,7 +83,6 @@
 @synthesize mostViewedViewController = _mostViewedViewController;
 @synthesize contactViewController = _contactViewController;
 
-
 @synthesize customLoadingView = _customLoadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
 
@@ -92,11 +91,7 @@
 @synthesize shouldLoadDataForFirstRun;
 @synthesize isLoadingDataForFirstRun;
 
-
 #pragma mark - 
-
-
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -252,18 +247,11 @@
 
 #pragma mark - internet connectivity
 -(BOOL)checkIfAppOnline
-{
-    
-    LOG_CURRENT_FUNCTION()
-    
-    
-#warning USE IP ADRESS OF THE CONTENT SERVER, NOT OF IGNANT
+{    
     Reachability* r = [Reachability reachabilityWithHostname:kReachabilityHostnameToCheck]; 
     BOOL returnBool = [r isReachable];
-    NSLog(@" returnBool: %@", returnBool ? @"TRUE" : @"FALSE");
     return returnBool;
 }
-
 
 #pragma mark - reusable view controllers
 
@@ -468,6 +456,8 @@ return _categoryViewController;
 #pragma mark - IgnantImporter delegate methods
 // This method will be called on a secondary thread. Forward to the main thread for safe handling of UIKit objects.
 - (void)importerDidSave:(NSNotification *)saveNotification {
+    
+    NSLog(@"APP delegate importerDidSave");
     
     if ([NSThread isMainThread]) {
         [self.managedObjectContext mergeChangesFromContextDidSaveNotification:saveNotification];

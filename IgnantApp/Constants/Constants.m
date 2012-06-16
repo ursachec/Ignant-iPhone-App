@@ -57,7 +57,7 @@ NSString * const kAdressForContentServer = @"http://192.168.2.102/ignant/Ignant-
 NSString * const kAdressForImageServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
 #endif
 
-NSString * const kReachabilityHostnameToCheck = @"www.ignant.de";
+NSString * const kReachabilityHostnameToCheck = @"www.google.de";
 
 NSString * const kParameterAction = @"action";
 

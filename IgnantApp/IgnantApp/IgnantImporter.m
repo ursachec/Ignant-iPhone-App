@@ -25,41 +25,34 @@
 NSString* const kLastImportedBlogEntryDateKey = @"LastImportedBlogEntryDate";
 NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_date_for_main_article";
 
-#import "Image.h"
 #import "BlogEntry.h"
 #import "TumblrEntry.h"
 
 #warning DELETE RSS Parser entries before releasing app
 
 @interface IgnantImporter() 
-{
-    IGNAppDelegate* appDelegate;
-    
-	NSDateFormatter *formatter;
-    
-    NSManagedObjectContext *insertionContext;
-    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
-}
 
 -(void)updateLastDateForImportedArticleForMainPage;
 
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticleDictionary;
 
+@property (nonatomic, assign) IGNAppDelegate *appDelegate;
+
 @property (nonatomic, strong) NSDate* lastImportDateForMainPageArticle;
 
-@property (nonatomic, strong) Image* currentImage;
 @property (nonatomic, strong) BlogEntry* currentBlogEntry;
 @property (nonatomic, strong) Category* currentCategory;
 @property (nonatomic, strong) TumblrEntry* currentTumblrEntry;
 
-@property (nonatomic, strong, readonly) NSEntityDescription *currentImageDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentBlogEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentTumblrEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentCategoryDescription;
 
+#warning TODO: this must be deleted, probably
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
-@property NSUInteger countForNumberOfImagesToBeSaved;
-@property NSUInteger countForNumberOfCommentsToBeSaved;
+
+
+@property (nonatomic, assign) NSUInteger blogEntriesToBeSaved;
 
 @property (nonatomic, strong) NSDate *currentDateForLeastRecentArticle;
 
@@ -76,9 +69,10 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @synthesize insertionContext = _insertionContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-@synthesize currentImage, currentBlogEntry, currentTumblrEntry, currentImageDescription, currentBlogEntryDescription, currentTumblrEntryDescription, currentCategory, currentCategoryDescription;
+@synthesize currentBlogEntry, currentTumblrEntry, currentBlogEntryDescription, currentTumblrEntryDescription, currentCategory, currentCategoryDescription;
 
-@synthesize countForNumberOfBlogEntriesToBeSaved, countForNumberOfImagesToBeSaved, countForNumberOfCommentsToBeSaved;
+@synthesize countForNumberOfBlogEntriesToBeSaved;
+@synthesize blogEntriesToBeSaved;
 
 @synthesize currentDateForLeastRecentArticle = _currentDateForLeastRecentArticle;
 
@@ -89,18 +83,18 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @synthesize checkingFetchRequestForTumblrEntries = _checkingFetchRequestForTumblrEntries;
 @synthesize checkingFetchRequestForCategories = _checkingFetchRequestForCategories;
 
+@synthesize appDelegate = _appDelegate;
+
+
 -(id)init
 {
     self = [super init];
 
     if (self) {
         
-        appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
+        self.appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateStyle:NSDateFormatterShortStyle];
-        [formatter setTimeStyle:NSDateFormatterNoStyle];
     }
     
     return self;
@@ -118,29 +112,19 @@ static const NSUInteger kImportBatchSize = 5;
     if (countForNumberOfBlogEntriesToBeSaved == kImportBatchSize) {
         
         NSError *saveError = nil;
-        NSAssert1([insertionContext save:&saveError], @"Unhandled error saving managed object context in import thread: %@", [saveError localizedDescription]);
+        NSAssert1([self.insertionContext save:&saveError], @"Unhandled error saving managed object context in import thread: %@", [saveError localizedDescription]);
         countForNumberOfBlogEntriesToBeSaved = 0;
     }
-}
-
--(void)finishProcessingCurrentImage
-{
-    countForNumberOfImagesToBeSaved++;
-}
-
--(void)finishProcessingCurrentComment
-{
-    countForNumberOfCommentsToBeSaved++;
 }
 
 #pragma mark - appropriate getters
 
 - (NSManagedObjectContext *)insertionContext {
-    if (insertionContext == nil) {
-        insertionContext = [[NSManagedObjectContext alloc] init];
-        [insertionContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    if (_insertionContext == nil) {
+        _insertionContext = [[NSManagedObjectContext alloc] init];
+        [_insertionContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     }
-    return insertionContext;
+    return _insertionContext;
 }
 
 - (NSEntityDescription *)currentBlogEntryDescription {
@@ -167,19 +151,6 @@ static const NSUInteger kImportBatchSize = 5;
         currentTumblrEntry = [[TumblrEntry alloc] initWithEntity:self.currentTumblrEntryDescription insertIntoManagedObjectContext:self.insertionContext];
     }
     return currentTumblrEntry;
-}
-
-- (NSEntityDescription *)currentImageDescription {
-    if (currentImageDescription == nil) {
-        currentImageDescription = [NSEntityDescription entityForName:@"Image" inManagedObjectContext:self.insertionContext];
-    }
-    return currentImageDescription;
-}
-- (Image *)currentImage {
-    if (currentImage == nil) {
-        currentImage = [[Image alloc] initWithEntity:self.currentImageDescription insertIntoManagedObjectContext:self.insertionContext];
-    }
-    return currentImage;
 }
 
 - (NSEntityDescription *)currentCategoryDescription {
@@ -216,7 +187,7 @@ static const NSUInteger kImportBatchSize = 5;
     
     //prepare importing
     NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
-    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
+    [newManagedObjectContext setPersistentStoreCoordinator:[self.insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     NSError *saveError = nil;
@@ -232,7 +203,7 @@ static const NSUInteger kImportBatchSize = 5;
     {
         [self importOneArticleFromDictionary:oneArticle];
     }
-    savedOk = [insertionContext save:&saveError];
+    savedOk = [self.insertionContext save:&saveError];
     
     
     
@@ -247,7 +218,7 @@ static const NSUInteger kImportBatchSize = 5;
         
 #warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
         //save date for least recent article
-        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
         
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
@@ -279,29 +250,38 @@ static const NSUInteger kImportBatchSize = 5;
     
     //prepare importing
     NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
-    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
+    [newManagedObjectContext setPersistentStoreCoordinator:[self.insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     NSError *saveError = nil;
     
     BOOL savedOk = NO;
-
+    blogEntriesToBeSaved = 0;
+    
     
     //----------------------------------------------------
     //IMPORT ARTICLES
+    NSLog(@"importing articles...");
     
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
     {
         [self importOneArticleFromDictionary:oneArticle];
     }
-    savedOk = [insertionContext save:&saveError];
     
+    NSLog(@"saving articles to the insertion context...");
+    savedOk = [self.insertionContext save:&saveError];
+    if (saveError==nil) {
+        NSLog(@"saved articles to the insertion context...");
+    }
+    else {
+        NSLog(@"failed to save articles to insertion context. error: %@", saveError);
+    }
     
+    NSLog(@"finished importing articles");
     
     NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
     NSLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
-    
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
@@ -310,7 +290,7 @@ static const NSUInteger kImportBatchSize = 5;
         
 #warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
         //save date for least recent article
-        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
         
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
@@ -345,7 +325,7 @@ static const NSUInteger kImportBatchSize = 5;
     
     //prepare importing
     NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
-    [newManagedObjectContext setPersistentStoreCoordinator:[insertionContext persistentStoreCoordinator]];
+    [newManagedObjectContext setPersistentStoreCoordinator:[self.insertionContext persistentStoreCoordinator]];
     
     [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
     NSError *saveError = nil;
@@ -378,7 +358,7 @@ static const NSUInteger kImportBatchSize = 5;
     {
         [self importOneArticleFromDictionary:oneArticle];
     }
-    savedOk = [insertionContext save:&saveError];
+    savedOk = [self.insertionContext save:&saveError];
     
    
     //update the date of the last imported article for the main page
@@ -389,7 +369,7 @@ static const NSUInteger kImportBatchSize = 5;
 #warning make sure this method (importJSONString) is only called when importing
         //save date for least recent article
         NSString* homeCategoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
-        [appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];
+        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];
         
         self.lastImportDateForMainPageArticle = self.currentBlogEntry.publishingDate;
         [self updateLastDateForImportedArticleForMainPage];
@@ -425,6 +405,8 @@ static const NSUInteger kImportBatchSize = 5;
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle
 {
     LOG_CURRENT_FUNCTION()
+    
+    blogEntriesToBeSaved++;
     
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
@@ -463,6 +445,9 @@ static const NSUInteger kImportBatchSize = 5;
     NSFetchRequest *checkRequest = self.checkingFetchRequestForBlogEntries; 
     [checkRequest setPredicate:[NSPredicate predicateWithFormat:@"articleId == %@", blogEntryArticleId]];
     
+    
+    NSLog(@"executing fetch request...");
+    
     NSError *error = nil;
     NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
     if (error==nil) {
@@ -470,7 +455,9 @@ static const NSUInteger kImportBatchSize = 5;
         //rewrite logic can be implemented here
         if ([result count]>0) {
             BlogEntry* entry = (BlogEntry*)[result objectAtIndex:0];
-            NSLog(@"skipping found entry: %@",entry.title);
+            NSLog(@"found entry, skipping it: %@",entry.title);
+            
+            blogEntriesToBeSaved--;
             
             return;
         }
@@ -506,59 +493,18 @@ static const NSUInteger kImportBatchSize = 5;
     
     
     /////////////////////////// handle the thumb image image
-    NSDictionary *aImageDictionary = [oneArticle objectForKey:kFKArticleThumbImage];
+#warning TODO: delete these, no more use!
     
-    if (aImageDictionary!=nil) {
-        
-        NSString* imageIdentifier = [aImageDictionary objectForKey:kFKImageId];
-        NSString* imageCaption = [aImageDictionary objectForKey:kFKImageDescription];
-        NSString* imageBase64String =  [aImageDictionary objectForKey:kFKImageBase64Representation];
-        
-        self.currentBlogEntry.thumbIdentifier = imageIdentifier;
-        
-        //create new image
-        self.currentImage = nil;
-        self.currentImage.entry = self.currentBlogEntry;
-        self.currentImage.identifier = imageIdentifier; 
-        self.currentImage.caption = imageCaption; 
-        
-        //save the image file
-        NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        applicationDocumentsDir = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
-        NSString *storePath = [applicationDocumentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpeg",imageIdentifier]];
-        
-        //imagefile already exists, don't save it
-        if ([[NSFileManager defaultManager] fileExistsAtPath:storePath]){
-            NSLog(@"image file already exists"); 
-        }
-        else
-        {
-            UIImage *image = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-            NSData *data2 = [[NSData alloc] initWithData:UIImageJPEGRepresentation(image, 1.0f)];
-            
-            NSError *error = nil;
-            BOOL didSaveImageFile = [data2 writeToFile:storePath options:NSDataWritingAtomic error:&error];
-            
-            
-            if (didSaveImageFile) {
-                NSLog(@"didSave: %@", imageIdentifier);
-            }
-            else{
-                NSLog(@"didNotSave: %@, error: %@", imageIdentifier, error);
-            }
-            
-        }
-        
-        //handle remote images urls
-        NSArray *remoteImages = [oneArticle objectForKey:kFKArticleRemoteImages];
-        
-        if (remoteImages!=nil) 
-        {    
-            self.currentBlogEntry.remoteImages = remoteImages;
-        }
-    }
-    else {
-        NSLog(@"image dictionary is nil");
+    NSDictionary *aImageDictionary = [oneArticle objectForKey:kFKArticleThumbImage];
+    NSString* imageIdentifier = [aImageDictionary objectForKey:kFKImageId];
+    NSString* imageCaption = [aImageDictionary objectForKey:kFKImageDescription];
+    NSString* imageBase64String =  [aImageDictionary objectForKey:kFKImageBase64Representation];
+    
+    //handle remote images urls
+    NSArray *remoteImages = [oneArticle objectForKey:kFKArticleRemoteImages];
+    if (remoteImages!=nil) 
+    {    
+        self.currentBlogEntry.remoteImages = remoteImages;
     }
 }
 
@@ -615,7 +561,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSError *saveError = nil;
     
     //try to save the context with the imported articles
-    savedOk = [insertionContext save:&saveError];
+    savedOk = [self.insertionContext save:&saveError];
     
     if (savedOk) {
         NSLog(@"could save tumblr posts");

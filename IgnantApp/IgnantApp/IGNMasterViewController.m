@@ -18,7 +18,6 @@
 
 //import CoreData headers
 #import "BlogEntry.h"
-#import "Image.h"
 #import "Category.h"
 
 //import cell headers
@@ -52,6 +51,7 @@
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (assign, readwrite) BOOL isHomeCategory;
 
+
 @end
 
 #pragma mark -
@@ -69,6 +69,8 @@
 @synthesize currentCategory = _currentCategory;
 
 @synthesize fetchingDataForFirstRun;
+
+@synthesize importer = _importer;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category
@@ -113,7 +115,7 @@
     else if(currentCategory!=nil) {
         self.title = currentCategory.name;
     }
-    
+    self.importer = nil;
     self.fetchedResultsController = nil;
     [self fetch];
 }
@@ -172,10 +174,6 @@
 {
     [super viewWillAppear:animated];
     
-    
-    
-    NSLog(@"importer is nil: %@", (self.importer==nil) ? @"TRUE" : @"FALSE");
-        
     //check when was the last time updating the currently set category and trigger load latest/load more
     NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
     NSLog(@"dateForLastUpdate: %@", dateForLastUpdate);
@@ -308,15 +306,12 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    static NSString *CellIdentifier = @"IgnantCell";
-    static NSString *CellIdentifierLoadMore = @"LoadMoreCell";
-    static NSString *CellIdentifierLoading = @"LoadingCell";
-    
+    static NSString *CellIdentifier = @"IgnantCell2";
+    static NSString *CellIdentifierLoadMore = @"LoadMoreCell2";
+    static NSString *CellIdentifierLoading = @"LoadingCell2";
     
     if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMoreContent  ) 
     {
-        
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
         if (cell == nil) {
             cell = [[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore];
@@ -328,7 +323,6 @@
     
     else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreContent)
     {
-    
         IgnantLoadingMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoading];
         if (cell == nil) {
             cell = [[IgnantLoadingMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoading];
@@ -339,38 +333,58 @@
     
     else
     {
-        
         IgnantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             cell = [[IgnantCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            
-            //#define MAX_IMAGE_WIDTH 148.0f
-            //        CGFloat ratio = 296.0f/194.0f;
-            //        UIImageView *thumbImageView = [[UIImageView alloc] initWithImage:athumbImage];
-            //        thumbImageView.tag = 999;
-            //        thumbImageView.frame = CGRectMake(5.0f, 0.0f, MAX_IMAGE_WIDTH, MAX_IMAGE_WIDTH/ratio);
-            //        [cell addSubview:thumbImageView];
-            //        [thumbImageView release];
-            
         }
-        
-        BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];            
-        NSString* currentArticleId = blogEntry.articleId;
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:currentArticleId,kArticleId, nil];
-        NSString *requestString = kAdressForImageServer;
-        NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-        NSURL* urlAtCurrentIndex = [NSURL URLWithString:encodedString];
-        [cell.cellImageView setImageWithURL:urlAtCurrentIndex
-                           placeholderImage:nil];
-        
-        
-        [self configureCell:cell atIndexPath:indexPath];
         
         return cell;
     }
     
-    
     return nil;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    if ( [self isIndexPathLastRow:indexPath] && !_isLoadingMoreContent  ) 
+    {
+        
+    }
+    
+    else if([self isIndexPathLastRow:indexPath] && _isLoadingMoreContent)
+    {
+       
+    }
+    
+    else
+    {
+        
+        BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+        
+        if (blogEntry==nil)
+            return;
+        
+        IgnantCell *aCell = (IgnantCell *)cell;
+
+        aCell.title = [blogEntry.title uppercaseString];
+        aCell.categoryName = blogEntry.categoryName;
+        
+        if (blogEntry.publishingDate) {
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateStyle:NSDateFormatterShortStyle];
+            [formatter setTimeStyle:NSDateFormatterNoStyle];
+            aCell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
+        }
+        
+        NSString* currentArticleId = blogEntry.articleId;
+        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,currentArticleId];
+        NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
+        [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
+                           placeholderImage:nil];
+    
+    }
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -380,7 +394,7 @@
         if (!_isLoadingMoreContent) 
         {
             [self loadMoreContent];
-            [_blogEntriesTableView reloadData];
+            [self.blogEntriesTableView reloadData];
         }
         else
         {
@@ -487,7 +501,7 @@
 {
     NSError *error = nil;
     BOOL success = [self.fetchedResultsController performFetch:&error];
-    NSAssert2(success, @"Unhandled error performing fetch at SongsViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
+    NSAssert2(success, @"Unhandled error performing fetch at IGNMasterViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
     [self.blogEntriesTableView reloadData];
 }
  
@@ -499,22 +513,16 @@
  
 - (void)configureCell:(IgnantCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.title = [blogEntry.title uppercaseString];
-    
-    cell.categoryName = blogEntry.categoryName;
-    
-    NSString* currentArticleId = blogEntry.articleId;
-    
-   
-//    NSLog(@"categoryViews: %@", blogEntry.numberOfViews);
-        
-    if (blogEntry.publishingDate) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateStyle:NSDateFormatterShortStyle];
-        [formatter setTimeStyle:NSDateFormatterNoStyle];
-        cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
-    }
+//    BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+//    cell.title = [blogEntry.title uppercaseString];
+//    cell.categoryName = blogEntry.categoryName;
+//    
+//    if (blogEntry.publishingDate) {
+//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//        [formatter setDateStyle:NSDateFormatterShortStyle];
+//        [formatter setTimeStyle:NSDateFormatterNoStyle];
+//        cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
+//    }
 }
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath
@@ -523,9 +531,7 @@
     NSUInteger numberOfObjects = [sectionInfo numberOfObjects];    
     
     if(indexPath.row >= numberOfObjects && _showLoadMoreContent)
-    {
         return YES;
-    }
     
     return NO;
 }
@@ -553,10 +559,14 @@
     if (_isLoadingMoreContent) return;        
     _isLoadingMoreContent = YES;
     
-#warning IS THIS REALLY NECESSARY AT THIS POINT ? 
+    _numberOfActiveRequests++;
+    
+    NSLog(@"loading more content");
+    
+    //this is done to update the "loading more cell"
+#warning TODO: reload only load more cell
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.blogEntriesTableView reloadData];
-        
     });
     
     NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
@@ -569,8 +579,15 @@
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+    NSLog(@"init ASI request");
+    
+    NSURL* reqUrl = [[NSURL alloc] initWithString:encodedString];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:reqUrl];
+    
+    NSLog(@"setting delegate...");
     [request setDelegate:self];
+    
+    NSLog(@"starting asynchronous");
     [request startAsynchronous];
 }
 
@@ -600,20 +617,31 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    
-    LOG_CURRENT_FUNCTION()
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     if (_isLoadingMoreContent) {
-                
+    
+        NSLog(@"is loading more content...");
         
-        
+        __block __typeof__(self) blockSelf = self;
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONWithMorePosts:[request responseString] forCategoryId:[self currentCategoryId]];
+            
+            NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
+            backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+            
+            IgnantImporter* newImporter = [[IgnantImporter alloc] init];
+            newImporter.delegate = blockSelf;
+            newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+            
+            NSLog(@"starting importingJSONWithMorePosts..., currentCategoryId: %@", [blockSelf currentCategoryId]);
+            NSString* aCategoryId = [blockSelf currentCategoryId];
+            [newImporter importJSONWithMorePosts:[request responseString] forCategoryId:aCategoryId];
         });
+        dispatch_release(importerDispatchQueue);
         
         _numberOfActiveRequests--;
         _showLoadMoreContent = YES;
@@ -622,14 +650,41 @@
     }
     else if (_isLoadingLatestContent) {
                 
+        NSLog(@"is loading latest content...");
+        
+        __block __typeof__(self) blockSelf = self;
+        
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
+            
+            NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
+            backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+            
+            IgnantImporter* newImporter = [[IgnantImporter alloc] init];
+            newImporter.delegate = blockSelf;
+            newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+            
+            NSLog(@"starting importJSONWithLatestPosts...");
+            [newImporter importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
         });
+        dispatch_release(importerDispatchQueue);
         
         _isLoadingLatestContent = NO;
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
     }
+}
+
+-(IgnantImporter*)importer
+{
+    if (_importer==nil) { 
+        NSLog(@"init importer");
+        
+        _importer = [[IgnantImporter alloc] init];
+        _importer.persistentStoreCoordinator = self.appDelegate.persistentStoreCoordinator;
+        _importer.delegate = self;
+    }
+    
+    return _importer;
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -642,6 +697,11 @@
     if (_isLoadingMoreContent) {    
         _numberOfActiveRequests--;
         _isLoadingMoreContent = NO;
+        
+        //this is done to update the "loading more cell"
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.blogEntriesTableView reloadData];
+        });
     }
     
     else if (_isLoadingLatestContent) {
@@ -678,13 +738,14 @@
     
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
+    __block __typeof__(self) blockSelf = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [self fetch];
-        [self.blogEntriesTableView reloadData];
-        [self setIsLoadingViewHidden:YES];
-        
-        [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+        [blockSelf.blogEntriesTableView reloadData];
+        [blockSelf setIsLoadingViewHidden:YES];
+#warning TODO: implement this in the RIGHT way
+        [blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     });
 }
 
@@ -692,7 +753,6 @@
     
     [self.appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];
 }
-
 
 #pragma mark - Data Source Loading / Reloading Methods
 
@@ -714,10 +774,7 @@
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	
-//	[self reloadTableViewDataSource];
-//	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
-    
+	    
     [self loadLatestContent];
 	
 }
@@ -748,10 +805,10 @@
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = 10;
+    float reload_distance = -20;
     if(y > h + reload_distance) 
     {
-        if (!_isLoadingMoreContent) 
+        if (!_isLoadingMoreContent && _numberOfActiveRequests==0) 
         {
             [self loadMoreContent];
         }
@@ -806,7 +863,6 @@
     else {
         self.couldNotLoadDataLabel.text = @"Could not load data, sorry double!";
     }
-
 }
 
 @end

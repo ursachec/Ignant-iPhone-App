@@ -43,13 +43,10 @@
 
 @property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
 
-@property(nonatomic, strong) IgnantImporter* importer;
-
 @end
 
 @implementation IgnantTumblrFeedViewController
 @synthesize tumblrTableView = _tumblrTableView;
-@synthesize importer = _importer;
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
@@ -260,7 +257,7 @@
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = 10;
+    float reload_distance = -20;
     if(y > h + reload_distance) 
     {
         if (!_isLoadingMoreTumblr && _numberOfActiveRequests==0) {
@@ -339,6 +336,9 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     
+    NSLog(@" is.importer.nil: %@", (self.importer == nil) ? @"TRUE" : @"FALSE");
+    
+    
     if (_isLoadingMoreTumblr) {
         
         _numberOfActiveRequests--;
@@ -352,6 +352,7 @@
         dispatch_async(importerDispatchQueue, ^{
             [self.importer importJSONStringForTumblrPosts:[request responseString]];
         });
+        dispatch_release(importerDispatchQueue);
         
         isLoadingLatestTumblrArticles = NO;
         [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
@@ -363,9 +364,7 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
     LOG_CURRENT_FUNCTION()
-    
-#warning TODO: do something if the request has failed
-    
+        
     if (_isLoadingMoreTumblr) {
         
         _numberOfActiveRequests--;
@@ -392,9 +391,7 @@
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
 	return isLoadingLatestTumblrArticles; // should return if data source model is reloading
-	
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
