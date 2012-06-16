@@ -31,7 +31,6 @@ class RelatedArticle extends IgnantObject implements JSONexportableObject
 		if($this->base64Thumbnail!=null)
 		$returnArray[FK_ARTICLE_BASE64_THUMBNAIL]=$this->base64Thumbnail->base64Representation;
 		
-		
 		//category
 		if($this->rCategory!=null)
 		{

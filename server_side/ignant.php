@@ -143,7 +143,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 	$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
 	//---------------------------------------------------------------------	
-	// sleep(1);
+	sleep(1);
 	
 	//get the array with articles
 	$arrayWithMorePosts = $contentProxy->getJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);

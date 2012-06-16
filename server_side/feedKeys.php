@@ -28,8 +28,8 @@ define('IGNANT_OBJECT_TYPE_TEMPLATE','template');
 define('IGNANT_OBJECT_TYPE_CATEGORY','category');
 
 //TUMBLR
-define('TUMBLR_POST_PUBLISHING_DATE','publishingDate');
-define('TUMBLR_POST_IMAGE_URL','url');
+define('TUMBLR_POST_PUBLISHING_DATE','tPublishingDate');
+define('TUMBLR_POST_IMAGE_URL','tUrl');
 
 
 
