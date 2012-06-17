@@ -23,7 +23,7 @@
     UIView* _noInternetConnectionView;
 }
 
-@property (nonatomic, readonly, assign) IGNAppDelegate *appDelegate;
+@property (nonatomic, readonly, unsafe_unretained) IGNAppDelegate *appDelegate;
 @property (nonatomic, readwrite, strong) IgnantImporter *importer;
 
 @property(nonatomic, strong, readonly) UIView* loadingView;

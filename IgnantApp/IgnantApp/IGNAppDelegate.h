@@ -44,8 +44,8 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
-@property(nonatomic, assign, readonly) BOOL shouldLoadDataForFirstRun;
-@property(nonatomic, assign, readonly) BOOL isLoadingDataForFirstRun;
+@property(nonatomic, unsafe_unretained, readonly) BOOL shouldLoadDataForFirstRun;
+@property(nonatomic, unsafe_unretained, readonly) BOOL isLoadingDataForFirstRun;
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 

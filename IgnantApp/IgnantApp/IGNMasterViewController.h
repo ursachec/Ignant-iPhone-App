@@ -39,8 +39,8 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-@property (assign, readonly) BOOL isHomeCategory;
-@property (assign, readonly) BOOL fetchingDataForFirstRun;
+@property (unsafe_unretained, readonly) BOOL isHomeCategory;
+@property (unsafe_unretained, readonly) BOOL fetchingDataForFirstRun;
 
 
 @property (strong, nonatomic, readonly) Category* currentCategory;

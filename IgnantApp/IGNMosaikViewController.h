@@ -30,7 +30,7 @@ extern NSString * const kImageFilename;
 
 @property (nonatomic, unsafe_unretained) UINavigationController* parentNavigationController;
 
-@property(nonatomic, assign) BOOL isMosaicImagesArrayNotEmpty;
+@property(nonatomic, unsafe_unretained) BOOL isMosaicImagesArrayNotEmpty;
 
 @end
 

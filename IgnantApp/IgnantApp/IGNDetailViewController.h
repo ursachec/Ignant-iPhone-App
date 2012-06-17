@@ -21,9 +21,9 @@
 
 @property (strong, nonatomic) NSString *currentArticleId;
 
-@property(nonatomic) BOOL didLoadContentForRemoteArticle;
-@property(nonatomic) BOOL isShowingArticleFromLocalDatabase; 
-@property(nonatomic, assign) BOOL isNavigationBarAndToolbarHidden;
+@property(nonatomic, unsafe_unretained) BOOL didLoadContentForRemoteArticle;
+@property(nonatomic, unsafe_unretained) BOOL isShowingArticleFromLocalDatabase; 
+@property(nonatomic, unsafe_unretained) BOOL isNavigationBarAndToolbarHidden;
 
 @property(strong, nonatomic) NSArray* fetchedResults;
 
@@ -54,9 +54,9 @@
 
 
 //properties related to the navigation
-@property(assign) NSInteger currentBlogEntryIndex;
-@property(assign) NSInteger nextBlogEntryIndex;
-@property(assign) NSInteger previousBlogEntryIndex;
+@property(unsafe_unretained) NSInteger currentBlogEntryIndex;
+@property(unsafe_unretained) NSInteger nextBlogEntryIndex;
+@property(unsafe_unretained) NSInteger previousBlogEntryIndex;
 - (IBAction)tapAction:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *shareAndMoreToolbar;

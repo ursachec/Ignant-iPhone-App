@@ -36,7 +36,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 
 -(void)importOneArticleFromDictionary:(NSDictionary*)oneArticleDictionary;
 
-@property (nonatomic, assign) IGNAppDelegate *appDelegate;
+@property (nonatomic, unsafe_unretained) IGNAppDelegate *appDelegate;
 
 @property (nonatomic, strong) NSDate* lastImportDateForMainPageArticle;
 
@@ -52,7 +52,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
 
 
-@property (nonatomic, assign) NSUInteger blogEntriesToBeSaved;
+@property (nonatomic, unsafe_unretained) NSUInteger blogEntriesToBeSaved;
 
 @property (nonatomic, strong) NSDate *currentDateForLeastRecentArticle;
 @property (nonatomic, strong) NSDate *currentDateForLeastRecentTumblrEntry;

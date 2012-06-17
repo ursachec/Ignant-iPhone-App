@@ -53,8 +53,8 @@
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 @property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
 
-@property(nonatomic, assign, readwrite) BOOL shouldLoadDataForFirstRun;
-@property(nonatomic, assign, readwrite) BOOL isLoadingDataForFirstRun;
+@property(nonatomic, unsafe_unretained, readwrite) BOOL shouldLoadDataForFirstRun;
+@property(nonatomic, unsafe_unretained, readwrite) BOOL isLoadingDataForFirstRun;
 
 -(void)createCacheFolders;
 

@@ -49,7 +49,7 @@
 -(NSString*)currentCategoryId;
 
 @property (strong, nonatomic, readwrite) Category* currentCategory;
-@property (assign, readwrite) BOOL isHomeCategory;
+@property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
 
 @end

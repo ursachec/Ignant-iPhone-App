@@ -14,7 +14,7 @@
 
 @interface MostViewedViewController()
 
-@property (assign, readwrite) BOOL isHomeCategory;
+@property (readwrite, unsafe_unretained) BOOL isHomeCategory;
 
 @end
 
