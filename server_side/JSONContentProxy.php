@@ -50,6 +50,23 @@ class JSONContentProxy{
 		
 		return $articlesArray;
 	}
+	
+	//----------
+	function getJSONReadyArrayForRandomMosaicEntries()
+	{
+		global $testingUnit;
+				
+		$mosaicArray = array();
+		
+		$testRandomMosaicEntries = $testingUnit->getBatchOfRandomMosaicEntries();
+		
+		if(is_array($testRandomMosaicEntries) && count($testRandomMosaicEntries)>0)
+		foreach($testRandomMosaicEntries as $oneMosaicEntry){
+			$mosaicArray[] = $oneMosaicEntry->getArrayForJSONEncoding();
+		};
+	
+		return $mosaicArray;
+	}
 		
 	//----------
 	function getJSONReadyArrayForMorePosts($pCategoryId='', $pDateOfOldestArticle='0000-00-00' )
@@ -144,6 +161,21 @@ class JSONContentProxy{
 			
 		return $returnLink;
 	}
+	
+	function getMosaicImageUrlForArticleId($articleId = '')
+	{
+		global $testingUnit;
+		$returnLink='';
+		
+		if(strlen($articleId)==0)
+		return;
+		
+		$returnLink = $testingUnit->getThumbLinkForArticleId($articleId);
+			
+		return $returnLink;
+		
+	}
+	
 };
 
 ?>
