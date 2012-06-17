@@ -13,6 +13,7 @@ require_once('classes/RemoteImage.php');
 require_once('classes/MixedImage.php');
 require_once('classes/Template.php');
 require_once('classes/Category.php');
+require_once('classes/MosaicEntry.php');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function encode_img($img)
@@ -687,9 +688,123 @@ class LightArticlesTest
 			fclose($fp);
 		}	
 	}	
-}
 
-// $lightArticlesTest = new LightArticlesTest();
-// $lightArticlesTest->printJSONForRandomLightArticles(true);
+	public function getBatchOfRandomMosaicEntries()
+	{
+		$returnArray = array();
+		$validCounter = 0;
+		
+		$allMosaicEntries = $this->getMosaicEntriesArray();
+		$numberOfEntriesToReturn = 15;
+		$maxIndex = count($allMosaicEntries)-1;
+		
+		if(is_array($allMosaicEntries) && count($allMosaicEntries)>0)
+		foreach($allMosaicEntries as $oneMosaic)
+		{
+			if($validCounter>$numberOfEntriesToReturn) break;
+			
+			$returnArray[] = $oneMosaic;
+			$validCounter++;
+		}
+		
+		
+		return $returnArray;
+	}
+	
+	public function getMosaicEntriesArray(){
+		
+		
+		$mosaicEntries = array();
+		
+		$tempArticleId = 'cecilia_paredes';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'henrique_oliveira';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'mark_powell';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'imagine';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'elodie_antoine';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'swellendamm_haus';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'ashkan_honarvar';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'alicia';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'brian';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'wood';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'martins_edgar';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_3';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_4';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_5';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_6';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_7';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_8';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_9';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_10';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_11';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_12';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_13';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		$tempArticleId = 'test_14';
+		$mosaicEntries[] = $this->getMosaicEntryForArticleId($tempArticleId);
+		
+		
+		return $mosaicEntries;
+	}
+	
+	public function getMosaicEntryForArticleId($articleId = '')
+	{
+		$mosaicEntry = NULL;
+		
+		if(strlen($articleId)==0)
+		return NULL;
+		
+		$tempArticleUrl = $this->getThumbLinkForArticleId($articleId);
+		$tempArticleId = $articleId;
+		$tempArticleWidth = 200;
+		$tempArticleHeight = 200;
+		$mosaicEntry = new MosaicEntry($tempArticleUrl, $tempArticleId, $tempArticleWidth, $tempArticleHeight);
+		
+		return $mosaicEntry;
+		
+	}
+}
 
 ?>

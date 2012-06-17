@@ -192,36 +192,24 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
 	}
 }
-else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
-{
-	//input parameters
-	$pArticleID = $_GET[ARTICLE_ID];
-	
-	//---------------------------------------------------------------------
 
-	// $finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
-	// $finalJSONArrayForExport[TL_ERROR] = true;
-	// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'invalid_article_id';
-	
-	//make sure articleId properly escapes characters, and so on
+else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
+{		
+	//---------------------------------------------------------------------
+	$moreMosaicPosts = array();	
+	$moreMosaicPosts =	$contentProxy->getJSONReadyArrayForRandomMosaicEntries();
 	
 	sleep(1);
 	
-	//article found
-	$oneArticle = null;
-	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_SET_OF_MOSAIC_IMAGES';
-
-	if($oneArticle==null)
+	if(!is_array($moreMosaicPosts) || count($moreMosaicPosts)<=0)
 	{
-		
 		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
 	}
 	else
 	{
-		$finalJSONArrayForExport[TL_SINGLE_ARTICLE] = $oneArticle;
+		$finalJSONArrayForExport[TL_MOSAIC_ENTRIES] = $moreMosaicPosts;
 	}
+	
 }
 
 else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
