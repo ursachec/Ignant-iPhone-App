@@ -640,12 +640,13 @@ static const NSUInteger kImportBatchSize = 5;
 -(void)updateLastDateForImportedArticleForMainPage {
     
     if (self.lastImportDateForMainPageArticle==nil)
-    return;    
+        return;    
     
-
-        [[NSUserDefaults standardUserDefaults] setObject:self.lastImportDateForMainPageArticle forKey:kUserDefaultsLastImportDateForMainPageArticle];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] setObject:self.lastImportDateForMainPageArticle forKey:kUserDefaultsLastImportDateForMainPageArticle];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
+#pragma mark - import mosaic
 
 #pragma mark - fetch requests for checking existence
 

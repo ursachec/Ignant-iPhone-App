@@ -9,15 +9,11 @@
 #import "MosaicView.h"
 
 @interface MosaicView ()
-{
-    BOOL _shouldTriggerFinalizingAnimation;
-}
 @end
 
 @implementation MosaicView
 @synthesize delegate = _delegate;
 @synthesize articleId;
-@synthesize articleTitle;
 
 - (id)initWithFrame:(CGRect)frame
 {

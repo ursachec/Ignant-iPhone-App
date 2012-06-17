@@ -20,7 +20,5 @@
 
 @property(nonatomic, unsafe_unretained) id<MosaicViewDelegate> delegate;
 @property(nonatomic, copy) NSString* articleId;
-@property(nonatomic, copy) NSString* articleTitle;
-
 
 @end

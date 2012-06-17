@@ -188,7 +188,6 @@
         TumblrEntry* currentTumblrEntry = (TumblrEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
         
         NSURL *urlAtCurrentIndex = [NSURL URLWithString:currentTumblrEntry.imageUrl];
-        NSLog(@"urlAtCurrentIndex: %@, currentTumblrEntry: %@", urlAtCurrentIndex, currentTumblrEntry.publishingDate);
         
         if (cell == nil)
         {

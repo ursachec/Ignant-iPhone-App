@@ -20,6 +20,10 @@
 
 #import "Constants.h"
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
+#import "SBJSON.h"
+
 #warning TODO: see what image size to use / maybe do some server directory selection to differentiate between Retina and NON-Retina display versions
 
 static int kMinimumMosaicImagesLoaded = 1;
@@ -120,11 +124,6 @@ NSString * const kImageFilename = @"filename";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    //if mosaic empty, try to load
-    if (!self.isMosaicImagesArrayNotEmpty) {
-        [self loadMoreMosaicImages];
-    }
     
 }
 
@@ -289,19 +288,15 @@ NSString * const kImageFilename = @"filename";
     
     for (NSDictionary* oneImageDictionary in images) 
     {
-        //getting image properties
-        NSNumber* imageWidthNumber = [oneImageDictionary objectForKey:kImageWidth];
-        NSNumber* imageHeightNumber = [oneImageDictionary objectForKey:kImageHeight];
-        NSString* imageArticleId = [oneImageDictionary objectForKey:kImageArticleId];
-        NSString* imageArticleTitle = [oneImageDictionary objectForKey:kImageArticleTitle];
+        //getting mosaic entry properties       
+        NSNumber* mosaicEntryWidth = [oneImageDictionary objectForKey:kMosaicEntryWidth];
+        NSNumber* mosaicEntryHeight = [oneImageDictionary objectForKey:kMosaicEntryHeight];
+        NSString* mosaicEntryArticleId = [oneImageDictionary objectForKey:kMosaicEntryArticleId];
+        NSString* mosaicEntryUrl = [oneImageDictionary objectForKey:kMosaicEntryUrl];
         
-        CGFloat imageWidth = [imageWidthNumber floatValue];
-        CGFloat imageHeight = [imageHeightNumber floatValue];
+        CGFloat fMosaicEntryWidth = [mosaicEntryWidth floatValue];
+        CGFloat fMosaicEntryHeight = [mosaicEntryHeight floatValue];
         
-#warning THIS IS just temporary
-        NSString* imageFilename = [oneImageDictionary objectForKey:kImageFilename];;
-        UIImage* currentImageFromBundle = [UIImage imageNamed:imageFilename];
-        UIImage *scaledImage = [UIImage imageWithCGImage:[currentImageFromBundle CGImage] scale:0.5 orientation:UIImageOrientationUp];
         
         //calculate the column with the smallest height
         int smallestHeight = 0, i = 0;        
@@ -329,7 +324,7 @@ NSString * const kImageFilename = @"filename";
         {
             //add a load more view to the scrollview
             CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, heightOfActiveColumn+PADDING_BOTTOM);
-            CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, imageWidth, imageHeight);
+            CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, fMosaicEntryWidth, fMosaicEntryHeight);
             LoadMoreMosaicView* oneView = [[LoadMoreMosaicView alloc] initWithFrame:mosaicViewFrame];
             oneView.userInteractionEnabled = YES;
             oneView.backgroundColor = [UIColor clearColor];
@@ -342,28 +337,35 @@ NSString * const kImageFilename = @"filename";
         else 
         {
 #warning TODO: find better way to handle higher resolution of images
-            imageWidth/=2;
-            imageHeight/=2;
+            fMosaicEntryWidth/=2;
+            fMosaicEntryHeight/=2;
             
             //add a mosaic view to the scrollview
             CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, heightOfActiveColumn+PADDING_BOTTOM);
-            CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, imageWidth, imageHeight);
+            CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, fMosaicEntryWidth, fMosaicEntryHeight);
             MosaicView* oneView = [[MosaicView alloc] initWithFrame:mosaicViewFrame];
             oneView.delegate = self;
-            oneView.articleId = imageArticleId;
-            oneView.articleTitle = imageArticleTitle;
+            oneView.articleId = mosaicEntryArticleId;
             oneView.alpha = 1.0f;
             
 #warning THIS is just temporary
-            UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, imageWidth, imageHeight)];
-            tempImageView.image = scaledImage;
+            UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, fMosaicEntryWidth, fMosaicEntryHeight)];
+//            tempImageView.image = scaledImage;
             [oneView addSubview:tempImageView];
             
+            
             [self.bigMosaikView addSubview:oneView];
+            
+            //trigger loading the image
+#warning IDEA: placeholder image ignant logo, looks interesting
+            NSURL* mURL = [NSURL URLWithString:mosaicEntryUrl];
+            [tempImageView setImageWithURL:mURL
+                          placeholderImage:nil];
+            
         }
         
         //add one of the columnHeights value to the relevant columnHeight
-        columnHeights[activeColumn] += (imageHeight+PADDING_BOTTOM);
+        columnHeights[activeColumn] += (fMosaicEntryHeight+PADDING_BOTTOM);
         
         imageCounter--;
     }
@@ -384,7 +386,6 @@ NSString * const kImageFilename = @"filename";
     
     //resize the scrollview to fit the content properly
     [self.mosaikScrollView setContentSize:self.bigMosaikView.frame.size];
-    
     
     //add the closeButton to the view
     [self.view addSubview:self.closeMosaikButton];
@@ -420,14 +421,12 @@ NSString * const kImageFilename = @"filename";
     _isLoadingMoreMosaicImages = NO;
     
     //currently using dummy mosaik images
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"mosaic_images" ofType:@"plist"];
-    NSData* data = [NSData dataWithContentsOfFile:path];
-    NSMutableDictionary* plist = [NSPropertyListSerialization propertyListFromData:data
-                                                                  mutabilityOption:NSPropertyListImmutable
-                                                                            format:NULL 
-                                                                  errorDescription:NULL];
-        
-    NSArray* images = [plist objectForKey:kImagesKey];
+    NSString* jsonString = [request responseString];
+    SBJSON *parser = [[SBJSON alloc] init];
+    
+    NSString *json_string = [jsonString copy];
+    NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
+    NSArray* images = [dictionaryFromJSON objectForKey:kTLMosaicEntries];
     
     
     //add the mosaic images
@@ -493,7 +492,6 @@ NSString * const kImageFilename = @"filename";
     UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, view.frame.origin.y+view.frame.size.height+paddingTop, labelSize.width, labelSize.height)];
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
-    nameLabel.text = mosaicView.articleTitle;
     nameLabel.textAlignment = UITextAlignmentCenter;
     [_overlayView addSubview:nameLabel];
     

@@ -22,8 +22,7 @@ NSString * const kTLMetaInformation = @"meta_information";
 NSString * const kTLResponseStatus = @"response_status";
 NSString * const kTLCategoriesList = @"categories";
 NSString * const kTLMosaicImages = @"mosaicImages";
-
-
+NSString * const kTLMosaicEntries = @"entries";
 
 //METAINFORMATION
 NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";
@@ -37,10 +36,15 @@ NSString * const kIgnantObjectTypeRemoteImage = @"remote_image";
 NSString * const kIgnantObjectTypeTemplate = @"template";
 NSString * const kIgnantObjectTypeCategory = @"category";
 
-
 //TUMBLR
 NSString * const kTumblrPostPublishingDate = @"tPublishingDate";
 NSString * const kTumblrPostImageUrl = @"tUrl";
+
+//MOSAIC
+NSString * const kMosaicEntryUrl = @"meUrl";
+NSString * const kMosaicEntryArticleId = @"meArticleId";
+NSString * const kMosaicEntryHeight = @"meHeight";
+NSString * const kMosaicEntryWidth = @"meWidth";
 
 
 //ARTICLE

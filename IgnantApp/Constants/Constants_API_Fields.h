@@ -17,6 +17,7 @@ extern NSString * const kTLMetaInformation;
 extern NSString * const kTLResponseStatus;
 extern NSString * const kTLCategoriesList;
 extern NSString * const kTLMosaicImages;
+extern NSString * const kTLMosaicEntries;
 
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
@@ -32,6 +33,12 @@ extern NSString * const kIgnantObjectTypeCategory;
 //TUMBLR
 extern NSString * const kTumblrPostPublishingDate;
 extern NSString * const kTumblrPostImageUrl;
+
+//MOSAIC
+extern NSString * const kMosaicEntryUrl;
+extern NSString * const kMosaicEntryArticleId;
+extern NSString * const kMosaicEntryHeight;
+extern NSString * const kMosaicEntryWidth;
 
 //ARTICLE
 extern NSString * const kFKArticleType;
