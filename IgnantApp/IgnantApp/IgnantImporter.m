@@ -417,6 +417,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSString *blogEntryPublishDate = [oneArticle objectForKey:kFKArticlePublishingDate];
     NSString *blogEntryCategoryName = [oneArticle objectForKey:kFKArticleCategoryName];
     NSString *blogEntryWebLink = [oneArticle objectForKey:kFKArticleWebLink];
+    NSString *blogEntryTemplate = [oneArticle objectForKey:kFKArticleTemplate];
     
     NSArray *blogEntryRelatedArticles = [oneArticle objectForKey:kFKArticleRelatedArticles];
 
@@ -493,6 +494,7 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.numberOfViews = blogEntryNumberOfViews;
     self.currentBlogEntry.showInHomeCategory = blogEntryShouldShowOnHomeCategory;
     self.currentBlogEntry.webLink = blogEntryWebLink;
+    self.currentBlogEntry.tempate = blogEntryTemplate;
     
     
     /////////////////////////// handle the thumb image image

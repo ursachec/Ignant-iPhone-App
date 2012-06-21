@@ -36,6 +36,7 @@
 
 #define kForceReloadCoreData NO
 
+#warning TODO: app description, small artwork with special chars ●●●●●●●●●∙∙∙∙∙∙●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
 
 @interface IGNAppDelegate()
 
@@ -96,6 +97,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"didFinishLaunchingWithOptions");
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |UIRemoteNotificationTypeSound)];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -554,5 +557,15 @@ return _categoryViewController;
     self.isLoadingDataForFirstRun = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
+
+#pragma mark - push notifications
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSLog(@"devToken=%@",deviceToken);
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in registration. Error: %@", err);
+}
+
 
 @end

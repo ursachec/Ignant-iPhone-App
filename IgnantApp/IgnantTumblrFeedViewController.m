@@ -134,6 +134,13 @@
             [self setIsNoConnectionViewHidden:NO];
         }
     }
+    
+    
+    UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tumblr_logo_small"]];
+    aImageView.frame = CGRectMake(0, 0, 20.0f, 23.0f);
+    aImageView.backgroundColor = [UIColor clearColor];
+    self.navigationItem.titleView = aImageView;
+    
 }
 
 -(NSString*)currentCategoryId
@@ -226,7 +233,7 @@
     }
     else
     {
-        return 315.0f;
+        return 350.0f;
     }
 }
 
@@ -524,7 +531,6 @@
         
     }
     
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         
         if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {            
@@ -532,8 +538,6 @@
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
     });
-    
-    
 }
 
 - (void)importerDidSave:(NSNotification *)saveNotification {  

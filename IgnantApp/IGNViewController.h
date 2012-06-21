@@ -36,11 +36,9 @@
 
 -(void)setUpBackButton;
 
--(void)setUpLoadingView;
 -(void)setIsLoadingViewHidden:(BOOL)hidden;
 -(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
--(void)setUpNoConnectionView;
 -(void)setIsNoConnectionViewHidden:(BOOL)hidden;
 
 -(void)setUpForOfflineUse;

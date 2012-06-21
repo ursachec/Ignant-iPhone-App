@@ -98,11 +98,7 @@
     [super viewDidLoad];
 
     [self setUpBackButton];
-    
-    [self setUpLoadingView];
-    
-    [self setUpNoConnectionView];
-    
+        
     [self setUpCouldNotLoadDataView];
 }
 
@@ -124,34 +120,39 @@
 
 #pragma mark - special views
 
--(void)setUpCouldNotLoadDataView
+-(UIView*)couldNotLoadDataView
 {
-    //set up the no internet connection view
-    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
-    someView.backgroundColor = [UIColor whiteColor];
-    someView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    
-    //set up the label
-    CGSize labelSize = CGSizeMake(280.0f, 40.0f);
-    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
-    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
-    someLabel.textAlignment = UITextAlignmentCenter;
-    someLabel.numberOfLines = 2;
+    if (_couldNotLoadDataView) {
+        
+        //set up the no internet connection view
+        CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
+        someView.backgroundColor = [UIColor whiteColor];
+        someView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        
+        //set up the label
+        CGSize labelSize = CGSizeMake(280.0f, 40.0f);
+        CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+        UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+        someLabel.textAlignment = UITextAlignmentCenter;
+        someLabel.numberOfLines = 2;
 #warning find better text!
 #warning add fonts to constants    
-    someLabel.text = @"Sorry, but you need an internet connection to load this data"; 
-    someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
-    someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        someLabel.text = @"Sorry, but you need an internet connection to load this data"; 
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.couldNotLoadDataLabel = someLabel;
+        [someView addSubview:someLabel];
+        
+        _couldNotLoadDataView = someView;
+    }
     
-    self.couldNotLoadDataLabel = someLabel;
-    
-    [someView addSubview:someLabel];
-    
-    
-    //set up the image view
-    
-    self.couldNotLoadDataView = someView;
+    return _couldNotLoadDataView;
+}
+
+-(void)setUpCouldNotLoadDataView
+{
+
 }
 
 -(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
@@ -173,7 +174,8 @@
 
 -(void)setUpBackButton
 {
-    BOOL DEBUG_SHOW_COLORS = false;
+#define DEBUG_SHOW_COLORS false
+    
     NSString* titleOfReturningToViewController = self.viewControllerToReturnTo.title;
     
 #warning TODO: localize! better text
@@ -221,43 +223,49 @@
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
 }
 
--(void)setUpLoadingView
+-(UIView*)loadingView
 {
-    //set up the loading view
-    CGRect loadingViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
-    aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    aView.backgroundColor = [UIColor whiteColor];
-    
-    
-    //set up the label
-    CGSize labelSize = CGSizeMake(280.0f, 20.0f);
-    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
-    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
-    someLabel.textAlignment = UITextAlignmentCenter;
-    someLabel.numberOfLines = 2;
+    if (_loadingView==nil) {
+        
+        //set up the loading view
+        CGRect loadingViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
+        aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        aView.backgroundColor = [UIColor whiteColor];
+        
+        
+        //set up the label
+        CGSize labelSize = CGSizeMake(280.0f, 20.0f);
+        CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+        UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+        someLabel.textAlignment = UITextAlignmentCenter;
+        someLabel.numberOfLines = 2;
 #warning find better text!
 #warning add fonts to constants    
-    someLabel.text = @"loading"; 
-    someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
-    someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    self.loadingViewLabel = someLabel;
-    
-    [aView addSubview:someLabel];
-    
-    
-    //set up the activity indicator
-    CGFloat paddingTop = .0f;
-    CGSize activityIndicatorSize = CGSizeMake(44.0f, 44.0f);
-    CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, someLabelFrame.origin.y+someLabelFrame.size.height+paddingTop, activityIndicatorSize.width, activityIndicatorSize.height);
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    activityIndicator.frame = activityIndicatorFrame;
-    activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    [aView addSubview:activityIndicator];
-    [activityIndicator startAnimating];
-    
-    self.loadingView = aView;
+        someLabel.text = @"loading"; 
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
+        someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.loadingViewLabel = someLabel;
+        
+        [aView addSubview:someLabel];
+        
+        
+        //set up the activity indicator
+        CGFloat paddingTop = .0f;
+        CGSize activityIndicatorSize = CGSizeMake(44.0f, 44.0f);
+        CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width)/2, someLabelFrame.origin.y+someLabelFrame.size.height+paddingTop, activityIndicatorSize.width, activityIndicatorSize.height);
+        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        activityIndicator.frame = activityIndicatorFrame;
+        activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [aView addSubview:activityIndicator];
+        [activityIndicator startAnimating];
+        
+        self.loadingView = aView;
+    }
+
+    return _loadingView;
 }
+
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden
 {
@@ -270,44 +278,45 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (hidden) {
-        [_loadingView removeFromSuperview];
+        [self.loadingView removeFromSuperview];
     }
     else {
         CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.loadingView.frame = newFrame;
-        [self.view addSubview:_loadingView];   
+        [self.view addSubview:self.loadingView];   
         [self setIsCouldNotLoadDataViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];
     }
 }
 
-
--(void)setUpNoConnectionView
+-(UIView*)noInternetConnectionView
 {
-    //set up the no internet connection view
-    CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
-    someView.backgroundColor = [UIColor whiteColor];
-    
-    //set up the label
-    CGSize labelSize = CGSizeMake(280.0f, 40.0f);
-    CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
-    UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
-    someLabel.textAlignment = UITextAlignmentCenter;
-    someLabel.numberOfLines = 2;
-    someLabel.text = @"Sorry, but you need an internet connection to view this tumblr feed"; 
+    if (_noInternetConnectionView==nil) {
+        
+        //set up the no internet connection view
+        CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
+        someView.backgroundColor = [UIColor whiteColor];
+        
+        //set up the label
+        CGSize labelSize = CGSizeMake(280.0f, 40.0f);
+        CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
+        UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
+        someLabel.textAlignment = UITextAlignmentCenter;
+        someLabel.numberOfLines = 2;
+        someLabel.text = @"Sorry, but you need an internet connection to view this tumblr feed"; 
 #warning find better text!
 #warning add fonts to constants    
-    someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        
+        [someView addSubview:someLabel];
+        
+        _noInternetConnectionView = someView;
+    }
     
-    [someView addSubview:someLabel];
-    
-    
-    //set up the image view
-    
-    self.noInternetConnectionView = someView;
-
+    return _noInternetConnectionView;
 }
+
 
 -(void)setIsNoConnectionViewHidden:(BOOL)hidden
 {     
