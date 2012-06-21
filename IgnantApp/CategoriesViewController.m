@@ -15,11 +15,12 @@
 #import "Category.h"
 
 @interface CategoriesViewController()
-@property(nonatomic, strong) NSMutableArray *ignantCategories;
+
+@property (strong, nonatomic, readwrite) UIView* gradientView;
+
 @end
 
 @implementation CategoriesViewController
-@synthesize ignantCategories = _ignantCategories;
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize categoriesTableView = _categoriesTableView;
@@ -27,6 +28,7 @@
 
 @synthesize fetchedResultsController = __fetchedResultsController;
 
+@synthesize gradientView = _gradientView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,21 +50,6 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - set up categories
--(void)tempSetUpCategories
-{
-    _ignantCategories = [[NSMutableArray alloc] initWithCapacity:12];
-    
-    [_ignantCategories addObject:@"Kunst"];
-    [_ignantCategories addObject:@"Design"];
-    [_ignantCategories addObject:@"Fotografie"];
-    [_ignantCategories addObject:@"Architektur"];
-    [_ignantCategories addObject:@"Video"];
-    [_ignantCategories addObject:@"Sonstiges"];
-    [_ignantCategories addObject:@"Monifaktur"];
-    [_ignantCategories addObject:@"Ignan.TV"];
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -70,7 +57,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self tempSetUpCategories];
+    
+    UIView* backgroundView = [[UIView alloc] initWithFrame:self.categoriesTableView.frame]; 
+    UIColor* backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_background_part.jpg"]];
+    backgroundView.backgroundColor = backgroundColor;
+    [self.categoriesTableView setBackgroundView:backgroundView];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.categoriesTableView addSubview:self.gradientView];
 }
 
 - (void)viewDidUnload
@@ -135,12 +134,18 @@
 {
     //add a custom background view
     UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    cell.selectedBackgroundView = customBackgroundView;
+    customBackgroundView.backgroundColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+    cell.backgroundView = customBackgroundView;
+    
+    //add a custom selected background view
+    UIView *customSelectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+    customSelectedBackgroundView.backgroundColor = [UIColor colorWithRed:.0f green:.0f blue:.0f alpha:.5f];
+    cell.selectedBackgroundView = customSelectedBackgroundView;
+    
     
     Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = category.name;
-    cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:15];
+    cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:13.0f];
 }
 
 #pragma mark - Fetched results controller
@@ -203,6 +208,33 @@
 {
     // In the simplest, most efficient, case, reload the table view.
     [self.categoriesTableView reloadData];
+}
+
+#pragma mark - custom views
+-(UIView*)gradientView
+{
+    if (_gradientView==nil) {
+        CGSize gradientSize = CGSizeMake(320.0f, 4.f);
+        _gradientView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, gradientSize.width, gradientSize.height)];
+        _gradientView.backgroundColor = [UIColor clearColor];
+        
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = _gradientView.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
+        [_gradientView.layer insertSublayer:gradient atIndex:0];
+        
+    }
+    
+    return _gradientView;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
+	    
+    //move the gradient view
+    CGRect tableBounds = self.categoriesTableView.bounds; // gets content offset
+    CGRect frameForStillView = self.gradientView.frame; 
+    frameForStillView.origin.y = tableBounds.origin.y; // offsets the rects y origin by the content offset
+    self.gradientView.frame = frameForStillView; // set the frame to the new calculation
 }
 
 @end

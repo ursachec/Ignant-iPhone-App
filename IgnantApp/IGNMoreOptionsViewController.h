@@ -12,5 +12,6 @@
 @interface IGNMoreOptionsViewController : IGNViewController <UITableViewDelegate, UITableViewDataSource>
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+@property (retain, nonatomic) IBOutlet UITableView *moreOptionsTableView;
 
 @end

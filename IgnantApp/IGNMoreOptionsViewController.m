@@ -25,9 +25,9 @@ typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,
     indexForTumblrFeed = 1,
     indexForCategories = 2,
-    indexForMostRed = 3,
+//    indexForMostRed = 3,
 //    indexForSearch = 2,
-    indexForContact = 4,
+    indexForContact = 3,
 } moreOptionsIndeces;
 
 
@@ -46,6 +46,7 @@ typedef enum _moreOptionsIndeces  {
 #pragma mark - 
 
 @implementation IGNMoreOptionsViewController
+@synthesize moreOptionsTableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,7 +76,7 @@ typedef enum _moreOptionsIndeces  {
     [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
     [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
     [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
-    [_listOfOptions insertObject:@"Am meisten gelesen" atIndex:indexForMostRed];
+//    [_listOfOptions insertObject:@"Am meisten gelesen" atIndex:indexForMostRed];
 //    [_listOfOptions insertObject:@"Suche" atIndex:indexForSearch];
     [_listOfOptions insertObject:@"Kontakt" atIndex:indexForContact];
 }
@@ -108,10 +109,17 @@ typedef enum _moreOptionsIndeces  {
 //    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 //    self.navigationItem.leftBarButtonItem = backBarButtonItem;
     
+    
+    UIView* backgroundView = [[UIView alloc] initWithFrame:self.moreOptionsTableView.frame]; 
+    UIColor* backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_background_part.jpg"]];
+    backgroundView.backgroundColor = backgroundColor;
+    [self.moreOptionsTableView setBackgroundView:backgroundView];
+    
 }
 
 - (void)viewDidUnload
 {
+    [self setMoreOptionsTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -202,12 +210,7 @@ typedef enum _moreOptionsIndeces  {
             categoriesVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self showViewController:categoriesVC];
             break;
-            
-        case indexForMostRed:            
-            mostViewedVC.managedObjectContext = self.appDelegate.managedObjectContext;
-            [self.navigationController pushViewController:mostViewedVC animated:YES];
-            break;
-            
+        
         case indexForContact:
             [self.navigationController pushViewController:contactVC animated:YES];
             break;
@@ -225,7 +228,14 @@ typedef enum _moreOptionsIndeces  {
 {
 #define DEBUG_SHOW_HELP_COLORS FALSE
     
-    CGSize imageSize = CGSizeMake(22.0f, 25.0f);
+    UIView *newContentView = [[UIView alloc] initWithFrame:cell.contentView.frame];
+    newContentView.backgroundColor = [UIColor whiteColor];
+    
+    if(DEBUG_SHOW_HELP_COLORS)
+    newContentView.backgroundColor = [UIColor blueColor];
+    
+    
+    CGSize imageSize = CGSizeMake(18.0f, 20.0f);
     CGFloat verticalMiddle = (cell.contentView.frame.size.height-imageSize.height)/2;
     CGFloat paddingLeft = 10.0f;
     
@@ -238,7 +248,7 @@ typedef enum _moreOptionsIndeces  {
     imageView.backgroundColor = [UIColor redColor];
 #endif    
     
-    [cell.contentView addSubview:imageView];
+    [newContentView addSubview:imageView];
     
     
     //add the title label to the category cell
@@ -246,14 +256,30 @@ typedef enum _moreOptionsIndeces  {
     CGSize labelSize = CGSizeMake(cell.contentView.frame.size.width-imageFrame.origin.x-imageFrame.size.width-paddingLeftFromImageIcon, cell.contentView.frame.size.height);
     CGRect labelFrame = CGRectMake(imageFrame.origin.x+imageFrame.size.width+paddingLeftFromImageIcon, 0.0f , labelSize.width, labelSize.height);
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:labelFrame];
-    titleLabel.font = [UIFont fontWithName:@"Georgia" size:15.0f];
+    titleLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
     
 #if DEBUG_SHOW_HELP_COLORS
     titleLabel.backgroundColor = [UIColor greenColor];
 #endif
     
     titleLabel.text = [_listOfOptions objectAtIndex:indexPath.row];
-    [cell.contentView addSubview:titleLabel];
+    [newContentView addSubview:titleLabel];
+    
+    
+    
+    CGSize separatorSize = CGSizeMake(newContentView.bounds.size.width, 1.0f);
+    CGRect separatorFrame = CGRectMake(0.0f, newContentView.bounds.size.height-separatorSize.height, separatorSize.width, separatorSize.height);
+    UIView* separatorLine = [[UIView alloc] initWithFrame:separatorFrame];
+    separatorLine.backgroundColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
+    
+#if DEBUG_SHOW_HELP_COLORS
+    separatorLine.backgroundColor = [UIColor cyanColor];
+#endif
+    
+    [newContentView addSubview:separatorLine];    
+    
+    
+    [cell.contentView addSubview:newContentView];
     
 }
 
@@ -274,9 +300,6 @@ typedef enum _moreOptionsIndeces  {
         case indexForContact:
             returnImage = [UIImage imageNamed:@"4"];
             break;
-        case indexForMostRed:
-            returnImage = [UIImage imageNamed:@"5"];
-            break;    
             
         default:
             break;
@@ -284,6 +307,5 @@ typedef enum _moreOptionsIndeces  {
     
     return returnImage;
 }
-
 
 @end

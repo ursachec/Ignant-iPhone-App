@@ -10,5 +10,6 @@
 #import "IGNViewController.h"
 
 @interface AboutViewController : IGNViewController
+@property (retain, nonatomic) IBOutlet UIScrollView *aboutScrollView;
 
 @end

@@ -9,6 +9,7 @@
 #import "AboutViewController.h"
 
 @implementation AboutViewController
+@synthesize aboutScrollView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,6 +35,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+   
+    
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+     [self.aboutScrollView setContentSize:CGSizeMake(310.0f, 1000.0f)];
+    [self.aboutScrollView setUserInteractionEnabled:YES];
 }
 
 - (void)viewDidUnload
