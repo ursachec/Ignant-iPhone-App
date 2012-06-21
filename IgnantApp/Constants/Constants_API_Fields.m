@@ -69,10 +69,17 @@ NSString * const kFKArticleDescriptionRichText = @"descriptionRichText";
 NSString * const kFKArticleImages = @"images";
 NSString * const kFKArticleRelatedArticles = @"relatedArticles";
 
+//template types
+NSString * const kFKArticleTemplateDefault = @"default";
+NSString * const kFKArticleTemplateArticle = @"article";
+NSString * const kFKArticleTemplateMonifaktur = @"monifaktur";
+NSString * const kFKArticleTemplateVideo = @"video";
+NSString * const kFKArticleTemplateItravel = @"itravel";
+NSString * const kFKArticleTemplateAicuisine = @"aicuisine";
+
 //RELATED ARTICLE
 NSString * const kFKRelatedArticleCategoryText = @"categoryText";
 NSString * const kFKRelatedArticleBase64Thumbnail = @"base64Thumbnail";
-
 
 //CATEGORY
 NSString * const kFKCategoryType = @"type";

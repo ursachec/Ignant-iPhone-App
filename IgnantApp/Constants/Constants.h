@@ -55,6 +55,7 @@ extern int const kThirdRelatedArticleTag;
 //server adresses
 extern NSString * const kAdressForContentServer;
 extern NSString * const kAdressForImageServer;
+extern NSString * const kAdressForVideoServer;
 extern NSString * const kReachabilityHostnameToCheck;
 
 //top parameter names
