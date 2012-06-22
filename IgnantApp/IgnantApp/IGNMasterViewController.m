@@ -51,6 +51,7 @@
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
+@property (strong, nonatomic, readwrite) UIView* gradientView;
 
 @end
 
@@ -58,6 +59,7 @@
 
 @implementation IGNMasterViewController
 
+@synthesize gradientView = _gradientView;
 @synthesize isHomeCategory = _isHomeCategory;
 
 @synthesize fetchedResultsController = __fetchedResultsController;
@@ -133,6 +135,24 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - custom views
+-(UIView*)gradientView
+{
+    if (_gradientView==nil) {
+        CGSize gradientSize = CGSizeMake(320.0f, 4.f);
+        _gradientView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, gradientSize.width, gradientSize.height)];
+        _gradientView.backgroundColor = [UIColor clearColor];
+        
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = _gradientView.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
+        [_gradientView.layer insertSublayer:gradient atIndex:0];
+        
+    }
+
+    return _gradientView;
+}
+
 #pragma mark - show mosaik / more
 - (IBAction)showMosaik:(id)sender 
 {
@@ -201,17 +221,17 @@
     //set up some ui elements
     if (self.isHomeCategory) 
     {
-        UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ignantLogoForTopBarSmall.png"]];
+        UIImageView *aImageView = [[UIImageView alloc] initWithImage:nil];
         aImageView.frame = CGRectMake(0, 0, 35.0f, 35.0f);
+        aImageView.backgroundColor = [UIColor clearColor];
         self.navigationItem.titleView = aImageView;
     }
     else 
     {
-        UILabel *someLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100.0f, 40.0f)];
-        someLabel.text = [[self.currentCategory name] uppercaseString];
-        someLabel.textAlignment = UITextAlignmentCenter;
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
-        self.navigationItem.titleView = someLabel;
+        UIImageView *aImageView = [[UIImageView alloc] initWithImage:nil];
+        aImageView.frame = CGRectMake(0, 0, 35.0f, 35.0f);
+        aImageView.backgroundColor = [UIColor clearColor];
+        self.navigationItem.titleView = aImageView;
     }
     
     if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
@@ -229,6 +249,9 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    
+    [self.blogEntriesTableView addSubview:self.gradientView];
 
 }
 
@@ -380,8 +403,17 @@
         NSString* currentArticleId = blogEntry.articleId;
         NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,currentArticleId];
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
+        __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
         [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
-                           placeholderImage:nil];
+                           placeholderImage:nil 
+                                     success:^(UIImage* image){
+                                         
+                                         NSLog(@"imageDidLoad: %@", blockUrlAtCurrentIndex);
+                                     } 
+                                     failure:^(NSError* error){
+                                     
+                                         NSLog(@"imageDidNotLoad: %@", blockUrlAtCurrentIndex);
+                                     }];
     
     }
 
@@ -796,6 +828,13 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
 	
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+    //move the gradient view
+
+    CGRect tableBounds = self.blogEntriesTableView.bounds; // gets content offset
+    CGRect frameForStillView = self.gradientView.frame; 
+    frameForStillView.origin.y = tableBounds.origin.y; // offsets the rects y origin by the content offset
+    self.gradientView.frame = frameForStillView; // set the frame to the new calculation
     
     //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
     CGPoint offset = scrollView.contentOffset;
