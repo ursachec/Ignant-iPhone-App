@@ -25,20 +25,21 @@
 #import "NSURL+stringforurl.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface IGNDetailViewController ()
 {
-    NSArray *_remoteImagesArray;
     BOOL _isLoadingCurrentArticle;
-    
-    NSString *_firstRelatedArticleId;
-    NSString *_secondRelatedArticleId;
-    NSString *_thirdRelatedArticleId;
+ 
+    CGFloat lastHeightForWebView;
 }
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary;
 
 -(void)setupNavigationEntries;
+
+-(void)setupUIElementsForCurrentBlogEntryTemplate;
+
 
 //social media
 -(void)postToFacebook;
@@ -56,8 +57,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *dateLabel;
 @property (strong, nonatomic) IBOutlet UILabel *categoryLabel;
 @property (strong, nonatomic) IBOutlet UIButton *showPictureSlideshowButton;
+@property (strong, nonatomic) IBOutlet UIButton *playVideoButton;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
-@property (strong, nonatomic) IBOutlet UITextView *descriptionTextView;
+@property (strong, nonatomic) IBOutlet UIWebView *descriptionWebView;
+@property (strong, nonatomic) IBOutlet UIView *descriptionWebViewLoadingView;
+
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
 
 //properties related to the navigation
@@ -102,7 +106,6 @@
 @synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
 
 @synthesize shareAndMoreToolbar = _shareAndMoreToolbar;
-@synthesize descriptionWebView = _descriptionWebView;
 @synthesize articleContentView = _articleContentView;
 @synthesize relatedArticlesView = _relatedArticlesView;
 
@@ -113,9 +116,11 @@
 @synthesize categoryLabel = _categoryLabel;
 
 @synthesize showPictureSlideshowButton = _showPictureSlideshowButton;
+@synthesize playVideoButton = _playVideoButton;
 @synthesize titleLabel = _titleLabel;
 
-@synthesize descriptionTextView = _descriptionTextView;
+@synthesize descriptionWebView = _descriptionWebView;
+@synthesize descriptionWebViewLoadingView = _descriptionWebViewLoadingView;
 @synthesize entryImageView = _entryImageView;
 
 @synthesize blogEntry = _blogEntry;
@@ -163,7 +168,7 @@
         self.secondRelatedArticleId = @"";
         self.thirdRelatedArticleId = @"";
         
-        _didLoadContentForRemoteArticle = NO;
+        self.didLoadContentForRemoteArticle = NO;
            
         self.importer = nil;
     }
@@ -182,7 +187,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
 }
 
 -(void)loadNavigationButtons
@@ -207,35 +211,13 @@
     [_previousArticleButton setImage:[UIImage imageNamed:@"navigationButtonPreviousArticle"] forState:UIControlStateNormal];
     [backAndForwardNavigationItemView addSubview:_previousArticleButton];
     
-    
     UIBarButtonItem *backAndForwardNavigationItem = [[UIBarButtonItem alloc] initWithCustomView:backAndForwardNavigationItemView];
     self.navigationItem.rightBarButtonItem = backAndForwardNavigationItem;
 }
 
 - (void)viewDidUnload
 {
-    self.dateLabel = nil;
-    self.categoryLabel = nil;
-    self.titleLabel = nil;
-    
-    [self setEntryImageView:nil];
-    [self setArticleContentView:nil];
-    [self setContentScrollView:nil];
-    [self setRelatedArticlesView:nil];
-    [self setShareAndMoreToolbar:nil];
-    [self setDescriptionWebView:nil];
-    [self setFirstRelatedArticleImageView:nil];
-    [self setSecondRelatedArticleImageView:nil];
-    [self setThirdRelatedArticleImageView:nil];
-    [self setFirstRelatedArticleTitleLabel:nil];
-    [self setSecondRelatedArticleTitleLabel:nil];
-    [self setThirdRelatedArticleTitleLabel:nil];
-    [self setFirstRelatedArticleCategoryLabel:nil];
-    [self setSecondRelatedArticleCategoryLabel:nil];
-    [self setThirdRelatedArticleCategoryLabel:nil];
-    [self setFirstRelatedArticleShowDetailsButton:nil];
-    [self setSecondRelatedArticleShowDetailsButton:nil];
-    [self setThirdRelatedArticleShowDetailsButton:nil];
+   
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -369,7 +351,6 @@
         self.navigationDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
     }
     
-    
     if(_currentBlogEntryIndex<_fetchedResults.count)
     {
         self.navigationDetailViewController.nextBlogEntryIndex = _currentBlogEntryIndex;
@@ -377,7 +358,6 @@
     else{
         self.navigationDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
     }
-    
     
     self.navigationDetailViewController.blogEntry = self.previousBlogEntry;
     self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
@@ -391,7 +371,6 @@
 
 -(void)setupNavigationEntries
 {
-
     //set up view for when the article is not in the local database and has to be loaded
     if (_isLoadingCurrentArticle) 
     {
@@ -415,7 +394,6 @@
     //set up view for when article is stored in the local database
     else 
     {
-        
         //set up previousObject
         NSManagedObject *previousObject = nil;
         if (_previousBlogEntryIndex!=kInvalidBlogEntryIndex) {
@@ -428,10 +406,9 @@
         if (_nextBlogEntryIndex!=kInvalidBlogEntryIndex) {
             nextObject = [_fetchedResults objectAtIndex:_nextBlogEntryIndex];
         }
-        self.nextBlogEntry = (BlogEntry*)nextObject;
         
+        self.nextBlogEntry = (BlogEntry*)nextObject;
     }
-
 }
 
 -(void)setupNavigationButtons
@@ -459,7 +436,6 @@
     //set up view for when article is stored in the local database
     else 
     {
-        
         //set up previousObject
         NSManagedObject *previousObject = nil;
         if (_previousBlogEntryIndex!=kInvalidBlogEntryIndex) {
@@ -504,8 +480,30 @@
     }
 }
 
+#pragma mark - UIWebView delegate methods
+
+- (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
+	
+	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+		NSURL *url = [request URL];	
+		NSLog(@"url is: %@ ", url);
+        
+        
+#warning TODO: define here what to do with the link
+//        [[UIApplication sharedApplication] openURL:url];
+        
+        return NO;
+	}
+	
+	return YES;   
+}
+
+
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
+#define PADDING_BOTTOM 20.0f 
+    
+    //get the content size of the webview
     CGRect frame = aWebView.frame;
     frame.size.height = 1;
     aWebView.frame = frame;
@@ -513,137 +511,372 @@
     frame.size = fittingSize;
     aWebView.frame = frame;
     
+    NSString *output = [aWebView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"ContentDiv\").offsetHeight;"];
+    NSLog(@"HEREHERE aWebView.frame.size.height: %f height: %@", aWebView.frame.size.height, output);
     
-//    CGSize fittingSizeNumberTwo = [_descriptionWebView sizeThatFits:CGSizeZero];
+    //resize the webview to fit the newly loaded content
+    CGRect tempRect;
+    CGSize tempSize;
     
-    NSLog(@"fittingSize; %@", NSStringFromCGSize(fittingSize));
+    CGSize finalSizeForArticleContentView = _articleContentView.bounds.size;
+    tempSize = finalSizeForArticleContentView;
     
-//    CGRect tempRect;
-//    CGSize tempSize;
-//    
-//    CGFloat marginTopForDescriptionWebView = 5.0f;
-//    CGSize finalSizeForArticleContentView = _articleContentView.bounds.size;
-//    
-//    
-//    _descriptionWebView.frame = CGRectMake(aWebView.frame.origin.x, finalSizeForArticleContentView.height+marginTopForDescriptionWebView, _descriptionWebView.bounds.size.width, fittingSize.height+10);
-//    
-//    //add the description webview size to the finalSizeForArticleContentView
-//    tempSize = finalSizeForArticleContentView;
-//    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+fittingSize.height);
-//    
-//    
-//    NSLog(@"(final webview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-//    
-//    
-//    
-//    //set the frame of the article content view
-//    tempRect = _articleContentView.frame;
-//    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+10.0f);
-//    
-//    //add the articleContentView to the scrollView
-//    [self.contentScrollView addSubview:self.articleContentView];
-
+    _descriptionWebView.frame = CGRectMake(aWebView.frame.origin.x, aWebView.frame.origin.y, _descriptionWebView.bounds.size.width, fittingSize.height);
+    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+fittingSize.height-lastHeightForWebView);
+    
+    //set the frame of the article content view
+    tempRect = _articleContentView.frame;
+    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height);
+    
+    //set up the related articles view and add it to the contentScrollView
+    CGPoint pointToDrawRelatedArticles = CGPointMake(0, self.articleContentView.bounds.size.height);
+    CGSize nibSizeForRelatedArticles = self.relatedArticlesView.bounds.size;
+    self.relatedArticlesView.frame = CGRectMake(pointToDrawRelatedArticles.x, pointToDrawRelatedArticles.y, nibSizeForRelatedArticles.width, nibSizeForRelatedArticles.height);
+    [self.contentScrollView addSubview:self.relatedArticlesView];
+    
+    //set up the scrollView's final contentSize
+    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + PADDING_BOTTOM);
+    self.contentScrollView.contentSize = contentScrollViewFinalSize;
+    
+    //set up the scrollView's final contentSize
+    self.contentScrollView.contentSize = contentScrollViewFinalSize;
+    
+    [self setIsLoadingViewHidden:YES];
+    
+    
 }
 
 #pragma mark - setting up the view
+-(void)setIsDescriptionWebViewLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    if (animated) {
+        
+        if (hidden) {
+                        
+            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView; 
+            __block UIView* blocKDescriptionWebView = self.descriptionWebView; 
+            
+            
+            [UIView animateWithDuration:1.0f 
+                             animations:
+             ^{
+                 [blocKDescriptionWebViewLoadingView setAlpha:0.0f];
+            } 
+                            completion:
+             ^(BOOL finished){
+                 if (finished) {
+                        [blocKDescriptionWebViewLoadingView removeFromSuperview];
+                 }
+            }];
+            
+        }
+        else {
+            
+            [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
+            
+            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView; 
+            __block UIView* blocKDescriptionWebView = self.descriptionWebView; 
+            
+            
+            [UIView animateWithDuration:1.0f 
+                             animations:
+             ^{
+                 [blocKDescriptionWebViewLoadingView setAlpha:1.0f];
+             } 
+                             completion:
+             ^(BOOL finished){
+                 
+             }];
+            
+        }
+        
+        
+    }
+    else {
+        
+        if (hidden) {
+            [self.descriptionWebView removeFromSuperview];
+        }
+        else {
+            [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
+        }
+    }
+}
+
+-(UIView*)descriptionWebViewLoadingView
+{
+    if (_descriptionWebViewLoadingView==nil) {
+        
+        UIView* aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 500.0f)];     
+        aView.backgroundColor = [UIColor whiteColor];
+        
+        CGSize indicatorViewSize = CGSizeMake(44.0f, 44.0f);
+        UIActivityIndicatorView* indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        indicatorView.frame = CGRectMake((aView.frame.size.width-indicatorViewSize.width)/2, 0.0f, indicatorViewSize.width, indicatorViewSize.height);
+//        [indicatorView startAnimating];
+//        [aView addSubview:indicatorView];
+        
+        _descriptionWebViewLoadingView = aView;
+    }
+    
+    return _descriptionWebViewLoadingView;
+}
+
 
 -(void)setupArticleContentView
 {
+    LOG_CURRENT_FUNCTION()
+    
+    [self setupArticleContentViewWithArticleTitle:[self.blogEntry title] 
+                                        articleId:[self.blogEntry articleId] 
+                                     categoryName:[self.blogEntry categoryName] 
+                                  descriptionText:[self.blogEntry descriptionText]  
+                                  relatedArticles:[self.blogEntry relatedArticles]   
+                                     remoteImages:[self.blogEntry remoteImages] 
+                                      publishDate:[self.blogEntry publishingDate]];
+    
+    return;  
+}
+
+
+- (void)configureView
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+#define PADDING_BOTTOM 5.0f
+    [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
+    
+    //if article still needs to be loaded, show loading view
+    if (_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==YES) 
+    {        
+        [self setIsLoadingViewHidden:NO];
+        
+        return;
+    }
+    else if(_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==NO)
+    {
+        NSLog(@"_isShowingArticleFromLocalDatabase= NO, _isLoadingCurrentArticle==NO");
+    }
+    
+    //set up the view in case the article is already here
+    else 
+    {    
+        
+        //show loading view only for specific blog entry templates
+        if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
+            [self setIsLoadingViewHidden:NO];
+        }
+
+        
+        //article already loaded,
+        //set up the article content view
+        [self setupArticleContentView];
+    }
+}
+
+
+-(NSString*)wrapRichTextForArticle:(NSString*)richText
+{
+    NSString* style = @"body,input,textarea,a,pre { font-family: Georgia, \"Bitstream Charter\", serif; } a{ color: black; text-decoration: underline; }";
+    return [NSString stringWithFormat:@"<!DOCTYPE html><html><head><script type='text/javascript'>document.onload = function(){document.ontouchmove = function(e){e.preventDefault();}};</script><style type='text/css'>%@</style></head><body style='margin: 0; padding: 0; border:0px;'><div style='width: 310px;' id='ContentDiv'>%@</div></body></html>",style,richText];
+}
+
+-(void)setupUIElementsForCurrentBlogEntryTemplate
+{
+    
+    if ([self.blogEntry.tempate compare:kFKArticleTemplateDefault]==NSOrderedSame) {
+        [self.articleContentView addSubview:self.showPictureSlideshowButton];
+        [self.playVideoButton removeFromSuperview];
+    }
+    
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateArticle]==NSOrderedSame) {
+        [self.playVideoButton removeFromSuperview];
+    }
+    
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.playVideoButton removeFromSuperview];
+    }
+    
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.articleContentView addSubview:self.playVideoButton];
+    }
+    
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.playVideoButton removeFromSuperview];
+    }
+    
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateItravel]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.playVideoButton removeFromSuperview];
+    }
+    
+}
+
+-(void)setupArticleContentViewWithArticleTitle:(NSString*)title
+                                     articleId:(NSString*)articleID
+                                  categoryName:(NSString*)categoryName
+                               descriptionText:(NSString*)descriptionText
+                               relatedArticles:(NSArray*)relatedArticles
+                                  remoteImages:(NSArray*)remoteImages
+                                   publishDate:(NSDate*)publishDate
+{
+
+#define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
+    
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    LOG_CURRENT_FUNCTION()
+    
+    self.remoteImagesArray = [NSArray arrayWithArray:remoteImages];
+    
     CGSize finalSizeForArticleContentView = CGSizeMake(0, 0); 
     CGFloat contentViewWidth = 320.0f;
     CGRect tempRect = CGRectMake(0, 0, 0, 0);
     CGSize tempSize = CGSizeMake(0, 0);
     
-            
-    NSString* anArticleId = self.blogEntry.articleId;
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:anArticleId,kArticleId, nil];
-    NSString *requestString = kAdressForImageServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    NSURL* thumbURL = [NSURL URLWithString:encodedString];
-    
+    //set up the blog entry imageview
+//    /////////////////////////// handle the thumb image image
+#warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
-    [_entryImageView setImageWithURL:thumbURL 
-                    placeholderImage:nil 
-                             success:^(UIImage* image){
-                                 NSLog(@"loaded _entryImageView");
-                             } 
-                             failure:^(NSError* aError){
-                                 NSLog(@"could NOT load _entryImageView");
-                             }];
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,articleID];
+    NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
+    __block NSURL* blockThumbURL = thumbURL;
     
+    [self.entryImageView setImageWithURL:thumbURL 
+                        placeholderImage:nil 
+                                 success:^(UIImage* image){
+                                     NSLog(@"loaded _entryImageView: %@", blockThumbURL);
+                                 } 
+                                 failure:^(NSError* aError){
+                                     NSLog(@"could NOT load _entryImageView: %@", blockThumbURL);
+                                 }];
     
     //add the imageViewSize to the finalSizeForArticleContentView
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"adding the imageViewSize to the finalSizeForArticleContentView...");
+    
     finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
-//    NSLog(@"(imageView) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));    
     
     //set up the button for showing pictures
-    NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos »",_remoteImagesArray.count];
-    [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"setting up the button for showing pictures...");
     
+    if ([remoteImages isKindOfClass:[NSArray class]]) {
+        
+#warning TODO: localize
+        NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos",[remoteImages count]];
+        [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
+    }
     
-    //set up the title, date and category labels
-    _titleLabel.text = [_blogEntry.title uppercaseString];
+    //set up the title
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"setting up the title...");
     
-    tempRect = _dateLabel.frame;
+    self.titleLabel.text = [title uppercaseString];
+    
+    //set up the date label
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"setting up the date label...");
+    
+    tempRect = self.dateLabel.frame;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
-    _dateLabel.text = [formatter stringFromDate:_blogEntry.publishingDate];
+    self.dateLabel.text = [formatter stringFromDate:publishDate];
     
-#warning LOAD category by using live data!
     
-    NSString *category = _blogEntry.categoryName;
-    NSString *categoryName = @"∙ "; //special characters: ∙ , ●
-    if(category)
-    categoryName = [categoryName stringByAppendingString:category];
+    //set up the category name
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"setting up the category name...");
     
-    _categoryLabel.text = categoryName;
-    _categoryLabel.frame = CGRectMake(tempRect.origin.x+tempRect.size.width, tempRect.origin.y, 100, tempRect.size.height);
+    if (categoryName!=nil) 
+    {
+        NSString *category = categoryName;
+        NSString *categoryName = @"∙ "; //special characters: ∙ , ●
+        
+        categoryName = [categoryName stringByAppendingString:category];
+        
+        self.categoryLabel.text = categoryName;
+        self.categoryLabel.frame = CGRectMake(tempRect.origin.x+tempRect.size.width, tempRect.origin.y, 100, tempRect.size.height);
+    }
     
     //add the title, date and category labels size to the finalSizeForArticleContentView
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"adding the title, date and category labels size to the finalSizeForArticleContentView...");
+    
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-//    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+    //    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+    
     
     //set up the description textview
     //set up the user interface for the current objects    
     CGFloat marginTop = 5.0f;
-    _descriptionTextView.text = _blogEntry.descriptionText;
-    CGSize descriptionTextContentSize = _descriptionTextView.contentSize;
-    CGRect descriptionTextviewFrame = _descriptionTextView.bounds;
     
-    _descriptionTextView.frame = CGRectMake(descriptionTextviewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionTextviewFrame.size.width, descriptionTextContentSize.height+10);
+    NSString* finalRichText = [self wrapRichTextForArticle:descriptionText];
+    
+    [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];
+    self.descriptionWebView.delegate = self;
+    CGRect frame = _descriptionWebView.frame;
+    CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    _descriptionWebView.frame = frame;
+    
+    CGRect descriptionWebViewFrame = _descriptionWebView.frame;
+    CGSize descriptionTextContentSize = descriptionWebViewFrame.size;
+    
+    _descriptionWebView.frame = CGRectMake(descriptionWebViewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionWebViewFrame.size.width, descriptionTextContentSize.height);
+    
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"_descriptionWebView.frame: %@", NSStringFromCGRect(_descriptionWebView.frame));
+    
+    lastHeightForWebView = descriptionTextContentSize.height;
     
     //add the description textview size to the finalSizeForArticleContentView
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
     
-//    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+    NSLog(@"(after decriptiontextview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     //set the frame of the article content view
-    tempRect = _articleContentView.frame;
-    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+10.0f);
+    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
+        NSLog(@"setting the frame of the article content view...");
+    
+    tempRect = self.articleContentView.frame;
+    self.articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+10.0f);
+    
     
     //add the articleContentView to the scrollView
     [self.contentScrollView addSubview:self.articleContentView];
     
+    //setup related articles UI for presentation, don't add the view to the contentView yet
+    [self setupRelatedArticlesUI:relatedArticles];
     
-    //#############################################################################################
-    //------------------------------------------------
-    //---------------- RELATED ARTICLES --------------
-    //------------------------------------------------
+    //setup ui elements for current blogentry template
+    [self setupUIElementsForCurrentBlogEntryTemplate];
+}
+
+-(void)setupRelatedArticlesUI:(NSArray*)relatedArticles
+{
+    #define DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI true
     
-    NSArray *remoteContentRelatedArticles = _blogEntry.relatedArticles;
+    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
+    LOG_CURRENT_FUNCTION()
     
-    if (remoteContentRelatedArticles == nil || [remoteContentRelatedArticles count]!=3) {
+    if ([relatedArticles count]<3)
         return;
-    }
-    
-    NSDictionary* firstRelatedArticle = [remoteContentRelatedArticles objectAtIndex:0];
-    NSDictionary* secondRelatedArticle = [remoteContentRelatedArticles objectAtIndex:1];
-    NSDictionary* thirdRelatedArticle = [remoteContentRelatedArticles objectAtIndex:2];
+        
+    NSDictionary* firstRelatedArticle = [relatedArticles objectAtIndex:0];
+    NSDictionary* secondRelatedArticle = [relatedArticles objectAtIndex:1];
+    NSDictionary* thirdRelatedArticle = [relatedArticles objectAtIndex:2];
     
     //set up first related article
+    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
+    NSLog(@"setting up first related article...");
+    
     if (firstRelatedArticle!=nil) {
         self.firstRelatedArticleTitleLabel.text = [firstRelatedArticle objectForKey:kFKArticleTitle];
         self.firstRelatedArticleCategoryLabel.text = [firstRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -656,6 +889,9 @@
     }
     
     //set up second related article
+    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
+    NSLog(@"setting up second related article...");
+    
     if (secondRelatedArticle!=nil) {
         self.secondRelatedArticleTitleLabel.text = [secondRelatedArticle objectForKey:kFKArticleTitle];
         self.secondRelatedArticleCategoryLabel.text = [secondRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -664,10 +900,13 @@
         UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
         self.secondRelatedArticleImageView.image = someImage;
         
-        self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];   
+        self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];
     }
     
     //set up third related article
+    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
+    NSLog(@"setting up third related article...");
+    
     if (thirdRelatedArticle!=nil) {
         self.thirdRelatedArticleTitleLabel.text = [thirdRelatedArticle objectForKey:kFKArticleTitle];
         self.thirdRelatedArticleCategoryLabel.text = [thirdRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -679,227 +918,36 @@
         self.thirdRelatedArticleId = (NSString*)[thirdRelatedArticle objectForKey:kFKArticleId];
     }
     
-    
-    //    //set up current frame for the article content view
-    //    tempRect = _articleContentView.frame;
-    //    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height);
-    
-    
-    //    //set up web view with article description
-    //    NSString *content = @"<html><head></head><body style='background-color: red; width: 320px; height: 50px; margin: 0; padding: 0; border:4px solid red;'><div id='ContentDiv'>Content Here</div></body></html>";
-    //    [_descriptionWebView loadHTMLString:content baseURL:nil];
-    //    _descriptionWebView.delegate = self;
-    //    CGRect frame = _descriptionWebView.frame;
-    //    CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
-    //    frame.size = fittingSize;
-    //    _descriptionWebView.frame = frame;
-    
-    
+    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
+    NSLog(@"finished setting up related articles!");
 }
 
 
-- (void)configureView
-{
-    
-#define PADDING_BOTTOM 20.0f
-    [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
-    
-    
-    //if article still needs to be loaded, show loading view
-    if (_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==YES) 
-    {
-        [self setIsLoadingViewHidden:NO];
-        
-        return;
-    }
-    else if(_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==NO)
-    {
-    
-    }
-    
-    //set up the view in case the article is already here
-    else 
-    {
-        //set up the remote pictures array
-        self.remoteImagesArray = self.blogEntry.remoteImages;
-        
-        //article already loaded,
-        //set up the article content view
-        [self setupArticleContentView];
-    }
-    
-    //set up the related articles view and add it to the contentScrollView
-    CGPoint pointToDrawRelatedArticles = CGPointMake(0, self.articleContentView.bounds.size.height);
-    CGSize nibSizeForRelatedArticles = self.relatedArticlesView.bounds.size;
-    self.relatedArticlesView.frame = CGRectMake(pointToDrawRelatedArticles.x, pointToDrawRelatedArticles.y, nibSizeForRelatedArticles.width, nibSizeForRelatedArticles.height);
-    [self.contentScrollView addSubview:self.relatedArticlesView];
-    
-    //set up the scrollView's final contentSize
-    CGSize contentScrollViewFinalSize = CGSizeMake(320, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + PADDING_BOTTOM);
-    self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-}
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary
 {
+    LOG_CURRENT_FUNCTION()
     
     NSString *remoteContentArticleTitle = [articleDictionary objectForKey:kFKArticleTitle];
     NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
     NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
     NSString *remoteContentArticleDescriptionText = [articleDictionary objectForKey:kFKArticleDescriptionText];
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
-    
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
-    
-    
     NSString *remoteContentBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
-    
-    self.remoteImagesArray = [NSArray arrayWithArray:remoteContentRemoteImages];
-    
-    
-    CGSize finalSizeForArticleContentView = CGSizeMake(0, 0); 
-    CGFloat contentViewWidth = 320.0f;
-    CGRect tempRect = CGRectMake(0, 0, 0, 0);
-    CGSize tempSize = CGSizeMake(0, 0);
-    
-    
-    //set up the blog entry imageview
-    /////////////////////////// handle the thumb image image
-    NSDictionary *remoteContentAImageDictionary = [articleDictionary objectForKey:kFKArticleThumbImage];
-    if (remoteContentAImageDictionary!=nil) 
-    {
-        NSString* imageIdentifier = [remoteContentAImageDictionary objectForKey:kFKImageId];
-        NSString* imageCaption = [remoteContentAImageDictionary objectForKey:kFKImageDescription];
-        NSString* imageBase64String =  [remoteContentAImageDictionary objectForKey:kFKImageBase64Representation];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
         
-        _entryImageView.image = someImage;
-    }
+    NSDateFormatter *aDf = [[NSDateFormatter alloc] init];
+    [aDf setDateFormat:@"yyyy-MM-dd"];
+    NSDate *fDate = [aDf dateFromString:remoteContentBlogEntryPublishDate];
     
-    
-    //add the imageViewSize to the finalSizeForArticleContentView
-    finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
-    
-    //set up the button for showing pictures
-    if ([remoteContentRemoteImages isKindOfClass:[NSArray class]]) {
-        NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos",remoteContentRemoteImages.count];
-        [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
-    }
-    
-    //set up the title, date and category labels
-    _titleLabel.text = [remoteContentArticleTitle uppercaseString];
-    
-    //2012-03-02T00:00:00+00:00
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"yyyy-MM-dd"];
-    NSDate *remoteContentFormatedDate = [df dateFromString:remoteContentBlogEntryPublishDate];
-    
-    tempRect = _dateLabel.frame;
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterShortStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    _dateLabel.text = [formatter stringFromDate:remoteContentFormatedDate];
-    
-    
-    if (remoteContentCategoryName!=nil) 
-    {
-        NSString *category = remoteContentCategoryName;
-        NSString *categoryName = @"∙ "; //special characters: ∙ , ●
-        
-        categoryName = [categoryName stringByAppendingString:category];
-        
-        _categoryLabel.text = categoryName;
-        _categoryLabel.frame = CGRectMake(tempRect.origin.x+tempRect.size.width, tempRect.origin.y, 100, tempRect.size.height);
-    }
-    
-    //add the title, date and category labels size to the finalSizeForArticleContentView
-    tempSize = finalSizeForArticleContentView;
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-//    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-    
-    
-    //set up the description textview
-    //set up the user interface for the current objects    
-    CGFloat marginTop = 5.0f;
-    _descriptionTextView.text = remoteContentArticleDescriptionText;
-    CGSize descriptionTextContentSize = _descriptionTextView.contentSize;
-    CGRect descriptionTextviewFrame = _descriptionTextView.bounds;
-    
-    _descriptionTextView.frame = CGRectMake(descriptionTextviewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionTextviewFrame.size.width, descriptionTextContentSize.height+10);
-    
-    //add the description textview size to the finalSizeForArticleContentView
-    tempSize = finalSizeForArticleContentView;
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
-    
-//    NSLog(@"(final) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-    
-    
-    //set the frame of the article content view
-    tempRect = _articleContentView.frame;
-    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+10.0f);
-    
-    
-    
-    //add the articleContentView to the scrollView
-    [self.contentScrollView addSubview:self.articleContentView];
-    
-    
-    
-    
-    //#############################################################################################
-    //------------------------------------------------
-    //---------------- RELATED ARTICLES --------------
-    //------------------------------------------------
-    
-    NSDictionary* firstRelatedArticle = [remoteContentRelatedArticles objectAtIndex:0];
-    NSDictionary* secondRelatedArticle = [remoteContentRelatedArticles objectAtIndex:1];
-    NSDictionary* thirdRelatedArticle = [remoteContentRelatedArticles objectAtIndex:2];
-    
-    //set up first related article
-    if (firstRelatedArticle!=nil) {
-        self.firstRelatedArticleTitleLabel.text = [firstRelatedArticle objectForKey:kFKArticleTitle];
-        self.firstRelatedArticleCategoryLabel.text = [firstRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [firstRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.firstRelatedArticleImageView.image = someImage;   
-    }
-    
-    //set up second related article
-    if (secondRelatedArticle!=nil) {
-        self.secondRelatedArticleTitleLabel.text = [secondRelatedArticle objectForKey:kFKArticleTitle];
-        self.secondRelatedArticleCategoryLabel.text = [secondRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [secondRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.secondRelatedArticleImageView.image = someImage;
-    }
-    
-    //set up third related article
-    if (thirdRelatedArticle!=nil) {
-        self.thirdRelatedArticleTitleLabel.text = [thirdRelatedArticle objectForKey:kFKArticleTitle];
-        self.thirdRelatedArticleCategoryLabel.text = [thirdRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [thirdRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.thirdRelatedArticleImageView.image = someImage;
-    }
-    
-    
-    
-    //    //set up current frame for the article content view
-    //    tempRect = _articleContentView.frame;
-    //    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height);
-    
-    
-    //    //set up web view with article description
-    //    NSString *content = @"<html><head></head><body style='background-color: red; width: 320px; height: 50px; margin: 0; padding: 0; border:4px solid red;'><div id='ContentDiv'>Content Here</div></body></html>";
-    //    [_descriptionWebView loadHTMLString:content baseURL:nil];
-    //    _descriptionWebView.delegate = self;
-    //    CGRect frame = _descriptionWebView.frame;
-    //    CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
-    //    frame.size = fittingSize;
-    //    _descriptionWebView.frame = frame;
+    [self setupArticleContentViewWithArticleTitle:remoteContentArticleTitle
+                                        articleId:remoteContentArticleID
+                                     categoryName:remoteContentCategoryName
+                                  descriptionText:remoteContentArticleDescriptionText
+                                  relatedArticles:remoteContentRelatedArticles
+                                     remoteImages:remoteContentRemoteImages
+                                      publishDate:fDate];
+    return;    
 }
 
 
@@ -1133,17 +1181,17 @@
     
     if ([sender tag] == kFirstRelatedArticleTag) 
     {
-        articleId = [NSString stringWithString:_firstRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:_firstRelatedArticleId];
     }
     
     else if ([sender tag] == kSecondRelatedArticleTag) 
     {
-        articleId = [NSString stringWithString:_secondRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:_secondRelatedArticleId];
     } 
     
     else if ([sender tag] == kThirdRelatedArticleTag) 
     {
-        articleId = [NSString stringWithString:_thirdRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:_thirdRelatedArticleId];
     }
     
     //tag is falsly set
@@ -1152,6 +1200,8 @@
         NSLog(@"tag is falsly set, doing nothing");
         return;
     }
+    
+    NSLog(@"articleId: %@", articleId);
     
     
     BlogEntry* entry = nil;
@@ -1193,7 +1243,7 @@
     
     else 
     {
-        NSLog(@"entry DOES NOT exist, DO! load");
+        NSLog(@"entry DOES NOT exist, DO! load, :%@", articleId);
         self.nextDetailViewController.currentArticleId = articleId;
         self.nextDetailViewController.didLoadContentForRemoteArticle = NO;
         self.nextDetailViewController.isShowingArticleFromLocalDatabase = NO;
@@ -1240,7 +1290,8 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
     
-    [self configureView];
+    
+    NSLog(@"[request responseString]: %@", [request responseString]);
     
 #warning todo: handle errors
     [self.importer importJSONStringForSingleArticle:[request responseString]];    
@@ -1268,32 +1319,25 @@
 
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {
+    
+#warning TODO: show something if article with id is not found    
 
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     _didLoadContentForRemoteArticle = YES;
     
-    //set up the remote articles ids
-    NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
-    NSDictionary *firstRelatedArticle = [remoteContentRelatedArticles objectAtIndex:0];
-    NSDictionary *secondRelatedArticle = [remoteContentRelatedArticles objectAtIndex:1];
-    NSDictionary *thirdRelatedArticle = [remoteContentRelatedArticles objectAtIndex:2];
+    dispatch_async(dispatch_get_main_queue(), ^{
     
-    if (firstRelatedArticle!=nil) {
-        self.firstRelatedArticleId = (NSString*)[firstRelatedArticle objectForKey:kFKArticleId];
-    }
-    if (secondRelatedArticle!=nil) {
-        self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];
-    }
-    if (thirdRelatedArticle!=nil) {
-        self.thirdRelatedArticleId = (NSString*)[thirdRelatedArticle objectForKey:kFKArticleId];
-    }
-   
-    [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
+        [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
+        
+        [self configureView];
+        
+        NSLog(@"(1) before");
+        [self setIsLoadingViewHidden:YES];
+    });
     
-    [self configureView];
     
-    [self setIsLoadingViewHidden:YES];
+    
 }
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
@@ -1307,6 +1351,13 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer 
        shouldReceiveTouch:(UITouch *)touch
 {
+    
+    //check if touch on video button
+    if (self.playVideoButton.superview !=nil ) {
+        if ([touch.view isDescendantOfView:self.playVideoButton]) {
+            return NO;
+        }
+    }
     
     //check if touch on show fotos button
     if (self.showPictureSlideshowButton.superview !=nil ) {
@@ -1339,7 +1390,7 @@
 {
     LOG_CURRENT_FUNCTION()
     
-    [self navigateToNextArticle];
+    [self navigateToPreviousArticle];
 }
 
 
@@ -1347,7 +1398,7 @@
 {
     LOG_CURRENT_FUNCTION()
     
-    [self navigateToPreviousArticle];
+    [self navigateToNextArticle];
 }
 
 #pragma mark - custom special views
@@ -1357,6 +1408,19 @@
     
 #warning BETTER TEXT!
     self.couldNotLoadDataLabel.text = @"Could not load data for this article";
+}
+
+-(IBAction)playVideo:(id)sender
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForVideoServer,kArticleId,self.blogEntry.articleId];
+    NSURL* videoUrl = [[NSURL alloc] initWithString:encodedString];
+    
+    MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoUrl];        
+    [self presentMoviePlayerViewControllerAnimated:moviePlayerViewController];
+    
+    NSLog(@"start playing video: %@", videoUrl);
 }
 
 @end

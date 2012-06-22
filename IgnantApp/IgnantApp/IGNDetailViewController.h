@@ -18,7 +18,6 @@
 
 @interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
 
-
 @property (strong, nonatomic) NSString *currentArticleId;
 
 @property(nonatomic, unsafe_unretained) BOOL didLoadContentForRemoteArticle;
@@ -60,9 +59,9 @@
 - (IBAction)tapAction:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
-@property (strong, nonatomic) IBOutlet UIWebView *descriptionWebView;
 
 -(IBAction)showRelatedArticle:(id)sender;
+-(IBAction)playVideo:(id)sender;
 
 - (IBAction)handleLeftSwipe:(id)sender;
 
