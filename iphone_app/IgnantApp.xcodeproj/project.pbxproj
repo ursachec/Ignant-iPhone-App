@@ -12,6 +12,7 @@
 		4146FE3E15824346001BAC75 /* arrow_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 4146FE3D15824346001BAC75 /* arrow_back.png */; };
 		414A052C15760B3600DDB8EA /* EasySocialMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 414A052B15760B3600DDB8EA /* EasySocialMedia.m */; };
 		416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 416AB6EC1577A68100625B03 /* UserDefaultsManager.m */; };
+		416E28451594B1110060AA2D /* IgnantApp.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 416E28441594B1110060AA2D /* IgnantApp.entitlements */; };
 		419F88101586672F000A5BAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 419F88121586672F000A5BAF /* Localizable.strings */; };
 		41AB131015937FF800CB6D77 /* ign_footer.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 41AB130E15937FF800CB6D77 /* ign_footer.jpg */; };
 		41AB131115937FF800CB6D77 /* ign_header.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 41AB130F15937FF800CB6D77 /* ign_header.jpg */; };
@@ -273,9 +274,9 @@
 		4146FE3D15824346001BAC75 /* arrow_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_back.png; sourceTree = "<group>"; };
 		414A052A15760B3600DDB8EA /* EasySocialMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EasySocialMedia.h; path = EasySocialMedia/EasySocialMedia.h; sourceTree = "<group>"; };
 		414A052B15760B3600DDB8EA /* EasySocialMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EasySocialMedia.m; path = EasySocialMedia/EasySocialMedia.m; sourceTree = "<group>"; };
-		41676EBD1590B107004FB8C4 /* IgnantApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = IgnantApp.entitlements; path = IgnantApp/IgnantApp.entitlements; sourceTree = "<group>"; };
 		416AB6EB1577A68100625B03 /* UserDefaultsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserDefaultsManager.h; path = Managers/UserDefaultsManager.h; sourceTree = "<group>"; };
 		416AB6EC1577A68100625B03 /* UserDefaultsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserDefaultsManager.m; path = Managers/UserDefaultsManager.m; sourceTree = "<group>"; };
+		416E28441594B1110060AA2D /* IgnantApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = IgnantApp.entitlements; path = IgnantApp/IgnantApp.entitlements; sourceTree = "<group>"; };
 		419F88111586672F000A5BAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		419F881315866739000A5BAF /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		41AB130E15937FF800CB6D77 /* ign_footer.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ign_footer.jpg; sourceTree = "<group>"; };
@@ -812,7 +813,7 @@
 		FE0DDD1014AE350F003B8778 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				41676EBD1590B107004FB8C4 /* IgnantApp.entitlements */,
+				416E28441594B1110060AA2D /* IgnantApp.entitlements */,
 				FE42566315599F61008E0911 /* Images */,
 				FEBA71D7150D053B0016AD6E /* Constants */,
 				FEBA71D6150D05300016AD6E /* UIImages */,
@@ -1585,6 +1586,7 @@
 				41AB13191593911900CB6D77 /* tumblr_header.jpg in Resources */,
 				41AB131B1593942D00CB6D77 /* ignant_logo_small.jpg in Resources */,
 				41AB131D1593B9FB00CB6D77 /* play_button.png in Resources */,
+				416E28451594B1110060AA2D /* IgnantApp.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
