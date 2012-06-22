@@ -162,6 +162,19 @@ class JSONContentProxy{
 		return $returnLink;
 	}
 	
+	function getVideoUrlForArticleId($articleId = '')
+	{
+		global $testingUnit;
+		$returnLink='';
+		
+		if(strlen($articleId)==0)
+		return;
+		
+		$returnLink = $testingUnit->getVideoLinkForArticleId($articleId);
+			
+		return $returnLink;
+	}
+	
 	function getMosaicImageUrlForArticleId($articleId = '')
 	{
 		global $testingUnit;

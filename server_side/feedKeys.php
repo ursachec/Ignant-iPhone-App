@@ -19,6 +19,8 @@ define('TL_CATEGORIES_LIST','categories');
 
 define('TL_RETURN_MOSAIC_IMAGE','returnMosaicImage');
 
+
+
 //GENERAL
 define('IGNANT_OBJECT_TYPE_MOSAIC_ENTRY','mosaic_entry');
 define('IGNANT_OBJECT_TYPE_LIGHT_ARTICLE','light_article');
@@ -58,6 +60,14 @@ define('FK_ARTICLE_DESCRIPTION_TEXT','descriptionText');
 define('FK_ARTICLE_DESCRIPTION_RICH_TEXT','descriptionRichText');
 define('FK_ARTICLE_IMAGES','images');
 define('FK_ARTICLE_RELATED_ARTICLES','relatedArticles');
+
+//template types
+define('FK_ARTICLE_TEMPLATE_DEFAULT','default');
+define('FK_ARTICLE_TEMPLATE_ARTICLE','article');
+define('FK_ARTICLE_TEMPLATE_MONIFAKTUR','monifaktur');
+define('FK_ARTICLE_TEMPLATE_VIDEO','video');
+define('FK_ARTICLE_TEMPLATE_ITRAVEL','itravel');
+define('FK_ARTICLE_TEMPLATE_AICUISINE','aicuisine');
 
 //RELATED ARTICLE
 define('FK_ARTICLE_CATEGORY_TEXT','categoryText');

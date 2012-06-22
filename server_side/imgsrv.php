@@ -53,7 +53,6 @@ function _bool($var){
   }
 }
 
-
 //get device information maybe
 
 require_once('feedKeys.php');
