@@ -288,9 +288,7 @@
     
     NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];    
     NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
-    NSLog(@"secondsSince1970: %@", secondsSince1970);
     
-#warning TODO: take into account date of last article when triggering loading
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, secondsSince1970,kDateOfOldestArticle, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
@@ -549,6 +547,8 @@
 {
     UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text = @"Could not load tumblr feed";
+    
+    return defaultView;
 }
 
 @end

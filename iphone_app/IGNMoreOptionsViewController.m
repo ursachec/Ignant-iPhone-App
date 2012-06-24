@@ -12,8 +12,6 @@
 #import "AboutViewController.h"
 #import "IgnantTumblrFeedViewController.h"
 #import "CategoriesViewController.h"
-#import "MostViewedViewController.h"
-#import "SearchViewController.h"
 #import "ContactViewController.h"
 #import "IGNMasterViewController.h"
 

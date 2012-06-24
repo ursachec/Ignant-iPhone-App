@@ -18,7 +18,6 @@
 #import "CategoriesViewController.h"
 #import "IGNMosaikViewController.h"
 #import "AboutViewController.h"
-#import "MostViewedViewController.h"
 #import "ContactViewController.h"
 
 //import other needed classes
@@ -49,7 +48,6 @@
 @property(nonatomic, readwrite, strong) CategoriesViewController *categoriesViewController;
 @property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
 @property(nonatomic, readwrite, strong) AboutViewController *aboutViewController;
-@property(nonatomic, readwrite, strong) MostViewedViewController *mostViewedViewController;
 @property(nonatomic, readwrite, strong) ContactViewController *contactViewController;
 
 
@@ -59,6 +57,9 @@
 @property(nonatomic, unsafe_unretained, readwrite) BOOL shouldLoadDataForFirstRun;
 @property(nonatomic, unsafe_unretained, readwrite) BOOL isLoadingDataForFirstRun;
 
+@property(nonatomic, readwrite, strong) UIView* ignantToolbar;
+@property(nonatomic, readwrite, strong) UIButton* goHomeButton;
+
 -(void)createCacheFolders;
 
 @end
@@ -66,6 +67,7 @@
 #pragma mark -
 
 @implementation IGNAppDelegate
+@synthesize goHomeButton = _goHomeButton;
 @synthesize toolbarGradientView = _toolbarGradientView;
 
 @synthesize userDefaultsManager = _userDefaultsManager;
@@ -75,7 +77,6 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize navigationController = _navigationController;
-@synthesize splitViewController = _splitViewController;
 @synthesize importer = _importer;
 
 @synthesize masterViewController = _masterViewController;
@@ -85,7 +86,6 @@
 @synthesize categoriesViewController = _categoriesViewController;
 @synthesize mosaikViewController = _mosaikViewController;
 @synthesize aboutViewController = _aboutViewController;
-@synthesize mostViewedViewController = _mostViewedViewController;
 @synthesize contactViewController = _contactViewController;
 
 @synthesize customLoadingView = _customLoadingView;
@@ -161,25 +161,19 @@
         }
     }
     
-    
-    //setup ignant toolbar
-    [self setupIgnantToolbar];
+    //set up the toolbar
+    [self.navigationController.view addSubview:self.ignantToolbar];
     
     //set up gradient view
-    [self setIsToolbarGradientViewHidden:NO];
+    [self.navigationController.view addSubview:self.toolbarGradientView];
     
+    //set up the go home button
+    [self setupGoHomeButton];
     
     [self.window makeKeyAndVisible];
     return YES;
 }
 
--(void)setupIgnantToolbar
-{
-    LOG_CURRENT_FUNCTION()
-    
-    [self.navigationController.view addSubview:self.ignantToolbar];
-
-}
 
 -(void)createCacheFolders
 {
@@ -296,15 +290,6 @@ return _categoryViewController;
     }
     
     return _contactViewController;
-}
-
--(MostViewedViewController*)mostViewedViewController
-{
-    if (_mostViewedViewController==nil) {
-        _mostViewedViewController = [[MostViewedViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
-    }
-    
-    return _mostViewedViewController;
 }
 
 -(AboutViewController*)aboutViewController
@@ -509,7 +494,6 @@ return _categoryViewController;
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-  
 }
 
 -(void)didFailImportingData
@@ -590,42 +574,120 @@ return _categoryViewController;
 #pragma mark - ui stuff
 -(UIView*)ignantToolbar
 {
+#define DEBUG_SHOW_DEBUG_COLORS false
+    
     if (_ignantToolbar==nil) {
         
         CGRect navControllerFrame = self.navigationController.view.frame;
-        NSLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));
-        
+        NSLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));        
         
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
-        CGRect toolbarFrame = CGRectMake(0, 0, toolbarSize.width, toolbarSize.height);
+        CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
         UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
+        aView.backgroundColor = [UIColor clearColor];
+        if(DEBUG_SHOW_DEBUG_COLORS)
         aView.backgroundColor = [UIColor redColor];
 
+        //set up the background imageview
+        CGSize imageViewSize = toolbarSize;
+        UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, imageViewSize.width, imageViewSize.height)];
+        backgroundImageView.image = [UIImage imageNamed:@"ign_footer.jpg"];
         
-        UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:toolbarFrame];
-//        backgroundImageView.image = [UIImage imageNamed:@"ign_footer.jpg"];
-        backgroundImageView.backgroundColor = [UIColor greenColor];
+        if(DEBUG_SHOW_DEBUG_COLORS)
+            backgroundImageView.backgroundColor = [UIColor greenColor];
         
         [aView addSubview:backgroundImageView];
         
         
+        //add buttons
         CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
-        CGRect firstButtonFrame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+        CGFloat paddingAmmount = 20.0f;
+        CGFloat paddingTop = 9.0f;
+        UIFont *buttonFont = [UIFont fontWithName:@"Georgia" size:11.0f]; 
+        UIColor*buttonTextColor = [UIColor blackColor];
+        
+#warning TODO: localize text - mosaik        
+        CGRect firstButtonFrame = CGRectMake(paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
         UIButton* firstButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        firstButton.titleLabel.font = buttonFont;
+        [firstButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         firstButton.frame = firstButtonFrame;
-#warning TODO: localize text - mosaik
-        [firstButton setTitle:@"Mosaik" forState:UIControlStateNormal];
+        [firstButton setTitle:[@"Mosaik" uppercaseString] forState:UIControlStateNormal];
+        [firstButton addTarget:self action:@selector(showMosaik) forControlEvents:UIControlEventTouchDown];
+        [aView addSubview:firstButton];
         
-        CGRect secondButtonFrame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+#warning TODO: localize text - mosaik
+        CGRect secondButtonFrame = CGRectMake(aView.frame.size.width-buttonSize.width-paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
         UIButton* secondButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        secondButton.titleLabel.font = buttonFont;
+        [secondButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         secondButton.frame = secondButtonFrame;
-#warning TODO: localize text - mosaik
-        [secondButton setTitle:@"More" forState:UIControlStateNormal];
+        [secondButton setTitle:[@"More" uppercaseString] forState:UIControlStateNormal];
+        [secondButton addTarget:self action:@selector(showMore) forControlEvents:UIControlEventTouchDown];
+        [aView addSubview:secondButton];
         
+        _ignantToolbar = aView;
     }
 
     return _ignantToolbar;
 }
+
+-(void)showHome
+{
+    NSLog(@"showHome");
+    [self.navigationController popToViewController:self.masterViewController animated:YES];
+}
+
+
+-(void)showMosaik
+{    
+    IGNMosaikViewController *mosaikVC = self.mosaikViewController;
+    mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    mosaikVC.parentNavigationController = self.navigationController;
+    
+    if (!mosaikVC.isMosaicImagesArrayNotEmpty && ![self checkIfAppOnline]) 
+    {
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
+                                                    delegate:self 
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
+                                           otherButtonTitles:nil];
+        [av show];
+        
+        return;
+    }
+    else 
+    {
+        [self.navigationController presentModalViewController:mosaikVC animated:YES];
+    }
+}
+
+-(void)showMore
+{
+    IGNMoreOptionsViewController *moreOptionsVC = self.moreOptionsViewController;
+    [self showViewController:moreOptionsVC];
+}
+
+-(void)showViewController:(UIViewController*)viewController
+{
+    
+    NSArray* vcs = self.navigationController.viewControllers;
+    BOOL isCategoriesVCOnStack = NO;
+    for (id object in vcs) {
+        if ([object isKindOfClass:[viewController class]]) {
+            isCategoriesVCOnStack = YES;
+            break;
+        }
+    }
+    
+    if (isCategoriesVCOnStack) {
+        [self.navigationController popToViewController:viewController animated:YES];
+    }
+    else {
+        [self.navigationController pushViewController:viewController animated:YES];                
+    }    
+}
+
 
 -(UIView*)toolbarGradientView
 {
@@ -633,8 +695,6 @@ return _categoryViewController;
         
         CGRect navBarFrame = self.navigationController.navigationBar.frame;
         NSLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
-        
-        
         
         //set up the gradient view
         CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);
@@ -656,16 +716,77 @@ return _categoryViewController;
 }
 
 -(void)setIsToolbarGradientViewHidden:(BOOL)hidden
-{   
+{
     
     if (hidden) {
         [self.toolbarGradientView removeFromSuperview];
     } 
     else {
-                
+        
         [self.navigationController.view addSubview:self.toolbarGradientView];
     }
 }
 
+-(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+#define ANIMATION_DURATION .5f    
+    
+    //execute show/hide
+    if (!animated) 
+    {
+        if (hidden) {
+            [self.ignantToolbar removeFromSuperview];
+        } 
+        else {
+            self.ignantToolbar.alpha = 1.0f;
+            [self.navigationController.view addSubview:self.ignantToolbar];
+        }
+        
+    }
+    else 
+    {
+        if (!hidden) {
+            self.ignantToolbar.alpha = 1.0f;
+            [self.navigationController.view addSubview:self.ignantToolbar];
+        }
+        
+        __block __typeof__(self) blockSelf = self;
+        __block BOOL bHidden = hidden;
+        
+        void (^toolbarblock)(void);
+        toolbarblock = ^{
+            blockSelf.ignantToolbar.alpha = bHidden ? 0.0f : 1.0f;
+        };
+        
+        [UIView animateWithDuration:ANIMATION_DURATION 
+                         animations:toolbarblock
+                         completion:^(BOOL finished){
+                             
+                             if (bHidden) {
+                                 [blockSelf.ignantToolbar removeFromSuperview];
+                             }
+                         }];
+    }
+}
+
+-(void)setIsToolbarHidden:(BOOL)hidden
+{   
+   [self setIsToolbarHidden:hidden animated:NO];
+}
+
+-(void)setupGoHomeButton
+{
+    CGRect navBarFrame = self.navigationController.navigationBar.frame;
+    
+    CGSize buttonSize = CGSizeMake(40.0f, 40.0f);
+    UIButton* aButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    aButton.backgroundColor = [UIColor clearColor];
+    [aButton setTitle:@"" forState:UIControlStateNormal];
+    aButton.frame = CGRectMake((navBarFrame.size.width-buttonSize.width)/2, (navBarFrame.size.height-buttonSize.height)/2, buttonSize.width, buttonSize.height);
+    [aButton addTarget:self action:@selector(showHome) forControlEvents:UIControlEventTouchDown];
+    
+    [self.navigationController.navigationBar addSubview:aButton];
+
+}
 
 @end

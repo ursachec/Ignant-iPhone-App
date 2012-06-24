@@ -14,16 +14,18 @@
 #import "FBConnect.h"
 
 
-@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, MostViewedViewController, ContactViewController;
+@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, ContactViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
     NSString *persistentStorePath;
 }
 
-@property(nonatomic, readonly, strong) UIView* toolbarGradientView;
+@property (strong, nonatomic) UIWindow *window;
 
-@property (nonatomic, strong) Facebook *facebook;
+@property(nonatomic, readonly, strong) UIView* toolbarGradientView;
+@property(nonatomic, readonly, strong) UIView* ignantToolbar;
+@property(nonatomic, readonly, strong) UIButton* goHomeButton;
 
 @property(nonatomic, readonly, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readonly, strong) IGNMoreOptionsViewController *moreOptionsViewController;
@@ -31,20 +33,14 @@
 @property(nonatomic, readonly, strong) CategoriesViewController *categoriesViewController;
 @property(nonatomic, readonly, strong) IGNMosaikViewController *mosaikViewController;
 @property(nonatomic, readonly, strong) AboutViewController *aboutViewController;
-@property(nonatomic, readonly, strong) MostViewedViewController *mostViewedViewController;
 @property(nonatomic, readonly, strong) ContactViewController *contactViewController;
 
-@property(nonatomic, readonly, strong) UIView* ignantToolbar;
+@property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, readonly, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, readonly, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, readonly, strong) IGNMasterViewController *masterViewController;
 
-
-
-@property (strong, nonatomic) UIWindow *window;
-
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly, strong, nonatomic) IGNMasterViewController *masterViewController;
-
+@property (nonatomic, readwrite, strong) Facebook *facebook;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
@@ -54,7 +50,6 @@
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 
-@property (strong, nonatomic) UISplitViewController *splitViewController;
 
 @property (strong, nonatomic) IgnantImporter *importer;
 @property (strong, nonatomic) UserDefaultsManager *userDefaultsManager;
@@ -68,5 +63,8 @@
 -(BOOL)checkIfAppOnline;
 
 -(void)setIsToolbarGradientViewHidden:(BOOL)hidden;
+
+-(void)setIsToolbarHidden:(BOOL)hidden;
+-(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end

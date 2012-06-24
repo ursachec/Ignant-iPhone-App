@@ -51,7 +51,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 #warning TODO: this must be deleted, probably
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
 
-
 @property (nonatomic, unsafe_unretained) NSUInteger blogEntriesToBeSaved;
 
 @property (nonatomic, strong) NSDate *currentDateForLeastRecentArticle;

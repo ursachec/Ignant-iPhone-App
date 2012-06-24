@@ -208,10 +208,6 @@
 		FEE61BB914DD88C600A169BF /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BB714DD88C600A169BF /* AboutViewController.xib */; };
 		FEE61BC214DD88E700A169BF /* CategoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BC014DD88E600A169BF /* CategoriesViewController.m */; };
 		FEE61BC314DD88E700A169BF /* CategoriesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BC114DD88E700A169BF /* CategoriesViewController.xib */; };
-		FEE61BC714DD88F700A169BF /* MostViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BC514DD88F600A169BF /* MostViewedViewController.m */; };
-		FEE61BC814DD88F700A169BF /* MostViewedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BC614DD88F600A169BF /* MostViewedViewController.xib */; };
-		FEE61BCC14DD890600A169BF /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BCA14DD890600A169BF /* SearchViewController.m */; };
-		FEE61BCD14DD890600A169BF /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BCB14DD890600A169BF /* SearchViewController.xib */; };
 		FEE61BD114DD891500A169BF /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BCF14DD891500A169BF /* ContactViewController.m */; };
 		FEE61BD214DD891500A169BF /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE61BD014DD891500A169BF /* ContactViewController.xib */; };
 		FEE61BE114DD974A00A169BF /* IGNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE61BE014DD974A00A169BF /* IGNViewController.m */; };
@@ -514,12 +510,6 @@
 		FEE61BBF14DD88E600A169BF /* CategoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesViewController.h; sourceTree = "<group>"; };
 		FEE61BC014DD88E600A169BF /* CategoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoriesViewController.m; sourceTree = "<group>"; };
 		FEE61BC114DD88E700A169BF /* CategoriesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoriesViewController.xib; sourceTree = "<group>"; };
-		FEE61BC414DD88F600A169BF /* MostViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MostViewedViewController.h; sourceTree = "<group>"; };
-		FEE61BC514DD88F600A169BF /* MostViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MostViewedViewController.m; sourceTree = "<group>"; };
-		FEE61BC614DD88F600A169BF /* MostViewedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MostViewedViewController.xib; sourceTree = "<group>"; };
-		FEE61BC914DD890600A169BF /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
-		FEE61BCA14DD890600A169BF /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
-		FEE61BCB14DD890600A169BF /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
 		FEE61BCE14DD891400A169BF /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		FEE61BCF14DD891500A169BF /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
 		FEE61BD014DD891500A169BF /* ContactViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactViewController.xib; sourceTree = "<group>"; };
@@ -1053,12 +1043,6 @@
 				FEE61BBF14DD88E600A169BF /* CategoriesViewController.h */,
 				FEE61BC014DD88E600A169BF /* CategoriesViewController.m */,
 				FEE61BC114DD88E700A169BF /* CategoriesViewController.xib */,
-				FEE61BC414DD88F600A169BF /* MostViewedViewController.h */,
-				FEE61BC514DD88F600A169BF /* MostViewedViewController.m */,
-				FEE61BC614DD88F600A169BF /* MostViewedViewController.xib */,
-				FEE61BC914DD890600A169BF /* SearchViewController.h */,
-				FEE61BCA14DD890600A169BF /* SearchViewController.m */,
-				FEE61BCB14DD890600A169BF /* SearchViewController.xib */,
 				FEE61BCE14DD891400A169BF /* ContactViewController.h */,
 				FEE61BCF14DD891500A169BF /* ContactViewController.m */,
 				FEE61BD014DD891500A169BF /* ContactViewController.xib */,
@@ -1344,8 +1328,6 @@
 				FE8B35D214DC83CD008F0407 /* IGNMoreOptionsViewController.xib in Resources */,
 				FEE61BB914DD88C600A169BF /* AboutViewController.xib in Resources */,
 				FEE61BC314DD88E700A169BF /* CategoriesViewController.xib in Resources */,
-				FEE61BC814DD88F700A169BF /* MostViewedViewController.xib in Resources */,
-				FEE61BCD14DD890600A169BF /* SearchViewController.xib in Resources */,
 				FEE61BD214DD891500A169BF /* ContactViewController.xib in Resources */,
 				FE12C4D214E3F08B008053ED /* ImageSlideshowViewController.xib in Resources */,
 				FEB3E82814E5B76E00DDBAD6 /* ignant_about.JPG in Resources */,
@@ -1492,8 +1474,6 @@
 				FE8B35D114DC83CD008F0407 /* IGNMoreOptionsViewController.m in Sources */,
 				FEE61BB814DD88C600A169BF /* AboutViewController.m in Sources */,
 				FEE61BC214DD88E700A169BF /* CategoriesViewController.m in Sources */,
-				FEE61BC714DD88F700A169BF /* MostViewedViewController.m in Sources */,
-				FEE61BCC14DD890600A169BF /* SearchViewController.m in Sources */,
 				FEE61BD114DD891500A169BF /* ContactViewController.m in Sources */,
 				FEE61BE114DD974A00A169BF /* IGNViewController.m in Sources */,
 				FE3D9D2514DF10C700B5E252 /* NSData+Base64.m in Sources */,

@@ -91,6 +91,13 @@
 }
 
 #pragma mark - View lifecycle
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    
+    [self.appDelegate setIsToolbarHidden:NO animated:YES];
+}
 
 - (void)viewDidLoad
 {
@@ -265,9 +272,9 @@
         [self.firstRunLoadingView removeFromSuperview];
     }
     else {
-        CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        CGRect newFrame = CGRectMake(0, 20.0f, self.view.frame.size.width, self.view.frame.size.height);
         self.firstRunLoadingView.frame = newFrame;
-        [self.view addSubview:self.firstRunLoadingView];   
+        [self.navigationController.view addSubview:self.firstRunLoadingView];   
         [self setIsLoadingViewHidden:YES];
         [self setIsCouldNotLoadDataViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];

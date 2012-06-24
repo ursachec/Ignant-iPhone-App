@@ -16,7 +16,7 @@
 
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UISplitViewControllerDelegate, UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
+@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
 
@@ -34,31 +34,31 @@
 @property (strong, nonatomic) IBOutlet UILabel *secondRelatedArticleTitleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *thirdRelatedArticleTitleLabel;
 
-
-@property (strong, nonatomic) IBOutlet UILabel *thirdRelatedArticleCategoryLabel;
-
 @property (strong, nonatomic) IBOutlet UILabel *firstRelatedArticleCategoryLabel;
 @property (strong, nonatomic) IBOutlet UILabel *secondRelatedArticleCategoryLabel;
+@property (strong, nonatomic) IBOutlet UILabel *thirdRelatedArticleCategoryLabel;
 
 @property (strong, nonatomic) IBOutlet UIButton *firstRelatedArticleShowDetailsButton;
 @property (strong, nonatomic) IBOutlet UIButton *secondRelatedArticleShowDetailsButton;
 @property (strong, nonatomic) IBOutlet UIButton *thirdRelatedArticleShowDetailsButton;
+
 @property (strong, nonatomic) BlogEntry* blogEntry;
-- (IBAction)handleRightSwipe:(id)sender;
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) IBOutlet UIScrollView *contentScrollView;
 
 @property (strong, nonatomic) IGNDetailViewController *nextDetailViewController;
 
-
 //properties related to the navigation
 @property(unsafe_unretained) NSInteger currentBlogEntryIndex;
 @property(unsafe_unretained) NSInteger nextBlogEntryIndex;
 @property(unsafe_unretained) NSInteger previousBlogEntryIndex;
-- (IBAction)tapAction:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
+
+- (IBAction)handleRightSwipe:(id)sender;
+
+- (IBAction)tapAction:(id)sender;
 
 -(IBAction)showRelatedArticle:(id)sender;
 -(IBAction)playVideo:(id)sender;

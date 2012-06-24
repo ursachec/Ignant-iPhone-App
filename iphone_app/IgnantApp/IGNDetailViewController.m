@@ -234,12 +234,25 @@
 }
 
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+        
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+        
+     
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {    
-    [super viewWillAppear:animated];
-    
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
-    
+   
+    [self.appDelegate setIsToolbarHidden:YES animated:YES];
     //----------------------------------------------------------------------------
     
     if (_isShowingArticleFromLocalDatabase) 
@@ -501,7 +514,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
-#define PADDING_BOTTOM 20.0f 
+#define PADDING_BOTTOM 0.0f 
     
     //get the content size of the webview
     CGRect frame = aWebView.frame;
@@ -955,7 +968,6 @@
 
 - (IBAction)showPictureSlideshow:(id)sender 
 {
-    
     ImageSlideshowViewController *slideshowVC = [[ImageSlideshowViewController alloc] initWithNibName:@"ImageSlideshowViewController" bundle:nil];
     
     //set up the slideshowVC
@@ -1020,9 +1032,18 @@
         CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
         blockReadyShareAndMoreToolBar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y+IGNANT_TOOLBAR_HEIGHT*2*hiddenMultiplicator, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
         
-        //move the gradient out of the screen
+        //move the gradient on/off the screen
+        CGFloat statusBarHeight = 20.0f;
+        CGFloat navigationBarHeight = 44.0f;
         CGRect gradientFrame = blockReadyGradientView.frame;
-        CGRect newGradientFrame = CGRectMake(gradientFrame.origin.x, gradientFrame.origin.y+(IGNANT_GRADIENT_HEIGHT+44.0f)*2*(-hiddenMultiplicator), gradientFrame.size.width, gradientFrame.size.height);
+        CGRect newGradientFrame = CGRectMake(0, 0, 0, 0);
+        if (hidden) {
+            newGradientFrame = CGRectMake(0.0f, -(statusBarHeight+navigationBarHeight), gradientFrame.size.width, gradientFrame.size.height);
+        }
+        else {
+            newGradientFrame = CGRectMake(0.0f, statusBarHeight+navigationBarHeight, gradientFrame.size.width, gradientFrame.size.height);
+        }
+        
         [blockReadyGradientView setFrame:newGradientFrame];
         
         //resize the scroll view
@@ -1414,6 +1435,7 @@
 {
     UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text = @"Could not load data for this article";
+    return defaultView;
 }
 
 
