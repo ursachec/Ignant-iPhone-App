@@ -77,13 +77,10 @@ typedef enum _moreOptionsIndeces  {
 {
     _listOfOptions = [[NSMutableArray alloc] initWithCapacity:12];
     
-#warning TAKE THE CATEGORIES FROM DATABASE ????
 #warning localize strings
     [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
     [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
     [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
-//    [_listOfOptions insertObject:@"Am meisten gelesen" atIndex:indexForMostRed];
-//    [_listOfOptions insertObject:@"Suche" atIndex:indexForSearch];
     [_listOfOptions insertObject:@"Kontakt" atIndex:indexForContact];
 }
 
@@ -199,7 +196,6 @@ typedef enum _moreOptionsIndeces  {
     AboutViewController *aboutVC = self.appDelegate.aboutViewController;
     IgnantTumblrFeedViewController *tumblrVC = self.appDelegate.tumblrFeedViewController;
     CategoriesViewController *categoriesVC = self.appDelegate.categoriesViewController;
-    MostViewedViewController *mostViewedVC = self.appDelegate.mostViewedViewController;
     ContactViewController *contactVC = self.appDelegate.contactViewController;
     
     switch (indexPath.row) {

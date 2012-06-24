@@ -634,6 +634,8 @@ return _categoryViewController;
         CGRect navBarFrame = self.navigationController.navigationBar.frame;
         NSLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
         
+        
+        
         //set up the gradient view
         CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);
         CGRect gradientViewFrame = CGRectMake(navBarFrame.origin.x, navBarFrame.origin.y+navBarFrame.size.height, gradientViewSize.width, gradientViewSize.height);

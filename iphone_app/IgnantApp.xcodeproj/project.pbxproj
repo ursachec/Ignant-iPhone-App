@@ -201,27 +201,6 @@
 		FEBA71CF150CDF4C0016AD6E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBA71CE150CDF4C0016AD6E /* SystemConfiguration.framework */; };
 		FEBA71D1150CE0E40016AD6E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBA71D0150CE0E40016AD6E /* libz.dylib */; };
 		FEBA71D5150CE1730016AD6E /* NSURL+stringforurl.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBA71D4150CE1730016AD6E /* NSURL+stringforurl.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACA1528F735004F19C8 /* NSString+URLEscapingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36A9E1528F735004F19C8 /* NSString+URLEscapingAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACB1528F735004F19C8 /* NSURL+MPURLParameterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AA01528F735004F19C8 /* NSURL+MPURLParameterAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACC1528F735004F19C8 /* NSURLResponse+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AA21528F735004F19C8 /* NSURLResponse+Encoding.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACD1528F735004F19C8 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AA41528F735004F19C8 /* Base64Transcoder.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACE1528F735004F19C8 /* MPOAuthAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AA81528F735004F19C8 /* MPOAuthAPI.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ACF1528F735004F19C8 /* MPOAuthAPIRequestLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AAA1528F735004F19C8 /* MPOAuthAPIRequestLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD01528F735004F19C8 /* MPOAuthAuthenticationMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AAC1528F735004F19C8 /* MPOAuthAuthenticationMethod.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD11528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AAE1528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD21528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AB01528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD31528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AB21528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD41528F735004F19C8 /* MPOAuthConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AB41528F735004F19C8 /* MPOAuthConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD51528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AB61528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD61528F735004F19C8 /* MPOAuthCredentialConcreteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AB81528F735004F19C8 /* MPOAuthCredentialConcreteStore.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD71528F735004F19C8 /* MPOAuthSignatureParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36ABC1528F735004F19C8 /* MPOAuthSignatureParameter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD81528F735004F19C8 /* MPOAuthURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36ABE1528F735004F19C8 /* MPOAuthURLRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36AD91528F735004F19C8 /* MPOAuthURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AC01528F735004F19C8 /* MPOAuthURLResponse.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ADA1528F735004F19C8 /* MPURLRequestParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AC21528F735004F19C8 /* MPURLRequestParameter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ADB1528F735004F19C8 /* MPWSLRDDiscoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AC41528F735004F19C8 /* MPWSLRDDiscoverer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ADC1528F735004F19C8 /* MPWSXRDDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC36AC61528F735004F19C8 /* MPWSXRDDocument.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		FEC36ADD1528F735004F19C8 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FEC36AC71528F735004F19C8 /* README.txt */; };
-		FEC36ADE1528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEC36AC91528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist */; };
 		FEC36AE21528F974004F19C8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC36AE11528F973004F19C8 /* Security.framework */; };
 		FEC36AE41528F9F0004F19C8 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC36AE31528F9F0004F19C8 /* libxml2.dylib */; };
 		FED8536315472FB200D10FCE /* mosaic_images.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED8536215472FB200D10FCE /* mosaic_images.plist */; };
@@ -526,49 +505,6 @@
 		FEBA71D0150CE0E40016AD6E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		FEBA71D3150CE1730016AD6E /* NSURL+stringforurl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+stringforurl.h"; sourceTree = "<group>"; };
 		FEBA71D4150CE1730016AD6E /* NSURL+stringforurl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+stringforurl.m"; sourceTree = "<group>"; };
-		FEC36A9D1528F735004F19C8 /* NSString+URLEscapingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEscapingAdditions.h"; sourceTree = "<group>"; };
-		FEC36A9E1528F735004F19C8 /* NSString+URLEscapingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEscapingAdditions.m"; sourceTree = "<group>"; };
-		FEC36A9F1528F735004F19C8 /* NSURL+MPURLParameterAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+MPURLParameterAdditions.h"; sourceTree = "<group>"; };
-		FEC36AA01528F735004F19C8 /* NSURL+MPURLParameterAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+MPURLParameterAdditions.m"; sourceTree = "<group>"; };
-		FEC36AA11528F735004F19C8 /* NSURLResponse+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLResponse+Encoding.h"; sourceTree = "<group>"; };
-		FEC36AA21528F735004F19C8 /* NSURLResponse+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLResponse+Encoding.m"; sourceTree = "<group>"; };
-		FEC36AA41528F735004F19C8 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		FEC36AA51528F735004F19C8 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		FEC36AA61528F735004F19C8 /* MPOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuth.h; sourceTree = "<group>"; };
-		FEC36AA71528F735004F19C8 /* MPOAuthAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAPI.h; sourceTree = "<group>"; };
-		FEC36AA81528F735004F19C8 /* MPOAuthAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAPI.m; sourceTree = "<group>"; };
-		FEC36AA91528F735004F19C8 /* MPOAuthAPIRequestLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAPIRequestLoader.h; sourceTree = "<group>"; };
-		FEC36AAA1528F735004F19C8 /* MPOAuthAPIRequestLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAPIRequestLoader.m; sourceTree = "<group>"; };
-		FEC36AAB1528F735004F19C8 /* MPOAuthAuthenticationMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAuthenticationMethod.h; sourceTree = "<group>"; };
-		FEC36AAC1528F735004F19C8 /* MPOAuthAuthenticationMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAuthenticationMethod.m; sourceTree = "<group>"; };
-		FEC36AAD1528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAuthenticationMethodAuthExchange.h; sourceTree = "<group>"; };
-		FEC36AAE1528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAuthenticationMethodAuthExchange.m; sourceTree = "<group>"; };
-		FEC36AAF1528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAuthenticationMethodOAuth.h; sourceTree = "<group>"; };
-		FEC36AB01528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAuthenticationMethodOAuth.m; sourceTree = "<group>"; };
-		FEC36AB11528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthAuthenticationMethodXAuth.h; sourceTree = "<group>"; };
-		FEC36AB21528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthAuthenticationMethodXAuth.m; sourceTree = "<group>"; };
-		FEC36AB31528F735004F19C8 /* MPOAuthConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthConnection.h; sourceTree = "<group>"; };
-		FEC36AB41528F735004F19C8 /* MPOAuthConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthConnection.m; sourceTree = "<group>"; };
-		FEC36AB51528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPOAuthCredentialConcreteStore+iPhone.h"; sourceTree = "<group>"; };
-		FEC36AB61528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPOAuthCredentialConcreteStore+iPhone.m"; sourceTree = "<group>"; };
-		FEC36AB71528F735004F19C8 /* MPOAuthCredentialConcreteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthCredentialConcreteStore.h; sourceTree = "<group>"; };
-		FEC36AB81528F735004F19C8 /* MPOAuthCredentialConcreteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthCredentialConcreteStore.m; sourceTree = "<group>"; };
-		FEC36AB91528F735004F19C8 /* MPOAuthCredentialStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthCredentialStore.h; sourceTree = "<group>"; };
-		FEC36ABA1528F735004F19C8 /* MPOAuthParameterFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthParameterFactory.h; sourceTree = "<group>"; };
-		FEC36ABB1528F735004F19C8 /* MPOAuthSignatureParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthSignatureParameter.h; sourceTree = "<group>"; };
-		FEC36ABC1528F735004F19C8 /* MPOAuthSignatureParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthSignatureParameter.m; sourceTree = "<group>"; };
-		FEC36ABD1528F735004F19C8 /* MPOAuthURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthURLRequest.h; sourceTree = "<group>"; };
-		FEC36ABE1528F735004F19C8 /* MPOAuthURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthURLRequest.m; sourceTree = "<group>"; };
-		FEC36ABF1528F735004F19C8 /* MPOAuthURLResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPOAuthURLResponse.h; sourceTree = "<group>"; };
-		FEC36AC01528F735004F19C8 /* MPOAuthURLResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPOAuthURLResponse.m; sourceTree = "<group>"; };
-		FEC36AC11528F735004F19C8 /* MPURLRequestParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPURLRequestParameter.h; sourceTree = "<group>"; };
-		FEC36AC21528F735004F19C8 /* MPURLRequestParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPURLRequestParameter.m; sourceTree = "<group>"; };
-		FEC36AC31528F735004F19C8 /* MPWSLRDDiscoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSLRDDiscoverer.h; sourceTree = "<group>"; };
-		FEC36AC41528F735004F19C8 /* MPWSLRDDiscoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSLRDDiscoverer.m; sourceTree = "<group>"; };
-		FEC36AC51528F735004F19C8 /* MPWSXRDDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSXRDDocument.h; sourceTree = "<group>"; };
-		FEC36AC61528F735004F19C8 /* MPWSXRDDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSXRDDocument.m; sourceTree = "<group>"; };
-		FEC36AC71528F735004F19C8 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		FEC36AC91528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MPOAuthServiceProviderConfiguration.plist; sourceTree = "<group>"; };
 		FEC36AE11528F973004F19C8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FEC36AE31528F9F0004F19C8 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		FED8536215472FB200D10FCE /* mosaic_images.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mosaic_images.plist; sourceTree = "<group>"; };
@@ -1008,7 +944,6 @@
 				FEBA71A5150CDE800016AD6E /* ASIHTTPRequest */,
 				FEBA71C2150CDEDE0016AD6E /* Reachability */,
 				FE62059215386A5B00339F12 /* EGORefreshTableViewHeader */,
-				FEC36A9B1528F729004F19C8 /* MPOAuth */,
 				FE3D9D2214DF10B700B5E252 /* Base64 encoding/decoding */,
 				FE37487314C1E2F600CF6374 /* FBConnect.bundle */,
 				FE37487614C1E30000CF6374 /* FBConnect */,
@@ -1235,80 +1170,6 @@
 			name = Constants;
 			sourceTree = "<group>";
 		};
-		FEC36A9B1528F729004F19C8 /* MPOAuth */ = {
-			isa = PBXGroup;
-			children = (
-				FEC36A9C1528F735004F19C8 /* Categories */,
-				FEC36AA31528F735004F19C8 /* MPOAuth */,
-				FEC36AC71528F735004F19C8 /* README.txt */,
-				FEC36AC81528F735004F19C8 /* Resources */,
-			);
-			name = MPOAuth;
-			sourceTree = "<group>";
-		};
-		FEC36A9C1528F735004F19C8 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				FEC36A9D1528F735004F19C8 /* NSString+URLEscapingAdditions.h */,
-				FEC36A9E1528F735004F19C8 /* NSString+URLEscapingAdditions.m */,
-				FEC36A9F1528F735004F19C8 /* NSURL+MPURLParameterAdditions.h */,
-				FEC36AA01528F735004F19C8 /* NSURL+MPURLParameterAdditions.m */,
-				FEC36AA11528F735004F19C8 /* NSURLResponse+Encoding.h */,
-				FEC36AA21528F735004F19C8 /* NSURLResponse+Encoding.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		FEC36AA31528F735004F19C8 /* MPOAuth */ = {
-			isa = PBXGroup;
-			children = (
-				FEC36AA41528F735004F19C8 /* Base64Transcoder.c */,
-				FEC36AA51528F735004F19C8 /* Base64Transcoder.h */,
-				FEC36AA61528F735004F19C8 /* MPOAuth.h */,
-				FEC36AA71528F735004F19C8 /* MPOAuthAPI.h */,
-				FEC36AA81528F735004F19C8 /* MPOAuthAPI.m */,
-				FEC36AA91528F735004F19C8 /* MPOAuthAPIRequestLoader.h */,
-				FEC36AAA1528F735004F19C8 /* MPOAuthAPIRequestLoader.m */,
-				FEC36AAB1528F735004F19C8 /* MPOAuthAuthenticationMethod.h */,
-				FEC36AAC1528F735004F19C8 /* MPOAuthAuthenticationMethod.m */,
-				FEC36AAD1528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.h */,
-				FEC36AAE1528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.m */,
-				FEC36AAF1528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.h */,
-				FEC36AB01528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.m */,
-				FEC36AB11528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.h */,
-				FEC36AB21528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.m */,
-				FEC36AB31528F735004F19C8 /* MPOAuthConnection.h */,
-				FEC36AB41528F735004F19C8 /* MPOAuthConnection.m */,
-				FEC36AB51528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.h */,
-				FEC36AB61528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.m */,
-				FEC36AB71528F735004F19C8 /* MPOAuthCredentialConcreteStore.h */,
-				FEC36AB81528F735004F19C8 /* MPOAuthCredentialConcreteStore.m */,
-				FEC36AB91528F735004F19C8 /* MPOAuthCredentialStore.h */,
-				FEC36ABA1528F735004F19C8 /* MPOAuthParameterFactory.h */,
-				FEC36ABB1528F735004F19C8 /* MPOAuthSignatureParameter.h */,
-				FEC36ABC1528F735004F19C8 /* MPOAuthSignatureParameter.m */,
-				FEC36ABD1528F735004F19C8 /* MPOAuthURLRequest.h */,
-				FEC36ABE1528F735004F19C8 /* MPOAuthURLRequest.m */,
-				FEC36ABF1528F735004F19C8 /* MPOAuthURLResponse.h */,
-				FEC36AC01528F735004F19C8 /* MPOAuthURLResponse.m */,
-				FEC36AC11528F735004F19C8 /* MPURLRequestParameter.h */,
-				FEC36AC21528F735004F19C8 /* MPURLRequestParameter.m */,
-				FEC36AC31528F735004F19C8 /* MPWSLRDDiscoverer.h */,
-				FEC36AC41528F735004F19C8 /* MPWSLRDDiscoverer.m */,
-				FEC36AC51528F735004F19C8 /* MPWSXRDDocument.h */,
-				FEC36AC61528F735004F19C8 /* MPWSXRDDocument.m */,
-			);
-			path = MPOAuth;
-			sourceTree = "<group>";
-		};
-		FEC36AC81528F735004F19C8 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				FEC36AC91528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		FEC82EDA154B2E2D004F4E95 /* Custom UI Elements */ = {
 			isa = PBXGroup;
 			children = (
@@ -1489,8 +1350,6 @@
 				FE12C4D214E3F08B008053ED /* ImageSlideshowViewController.xib in Resources */,
 				FEB3E82814E5B76E00DDBAD6 /* ignant_about.JPG in Resources */,
 				FE68746314EDB1FA00861188 /* MOSAIK.jpg in Resources */,
-				FEC36ADD1528F735004F19C8 /* README.txt in Resources */,
-				FEC36ADE1528F735004F19C8 /* MPOAuthServiceProviderConfiguration.plist in Resources */,
 				FED8536315472FB200D10FCE /* mosaic_images.plist in Resources */,
 				FE50DA64154B42AB00257B9E /* mosaic_images_more.plist in Resources */,
 				FE6F9D11154D8160005E12C3 /* 3_200x_156.jpg in Resources */,
@@ -1653,25 +1512,6 @@
 				FEBA71C5150CDEF40016AD6E /* Reachability.m in Sources */,
 				FEBA71D5150CE1730016AD6E /* NSURL+stringforurl.m in Sources */,
 				FEB3A747150FB36900AECCC4 /* RelatedArticleView.m in Sources */,
-				FEC36ACA1528F735004F19C8 /* NSString+URLEscapingAdditions.m in Sources */,
-				FEC36ACB1528F735004F19C8 /* NSURL+MPURLParameterAdditions.m in Sources */,
-				FEC36ACC1528F735004F19C8 /* NSURLResponse+Encoding.m in Sources */,
-				FEC36ACD1528F735004F19C8 /* Base64Transcoder.c in Sources */,
-				FEC36ACE1528F735004F19C8 /* MPOAuthAPI.m in Sources */,
-				FEC36ACF1528F735004F19C8 /* MPOAuthAPIRequestLoader.m in Sources */,
-				FEC36AD01528F735004F19C8 /* MPOAuthAuthenticationMethod.m in Sources */,
-				FEC36AD11528F735004F19C8 /* MPOAuthAuthenticationMethodAuthExchange.m in Sources */,
-				FEC36AD21528F735004F19C8 /* MPOAuthAuthenticationMethodOAuth.m in Sources */,
-				FEC36AD31528F735004F19C8 /* MPOAuthAuthenticationMethodXAuth.m in Sources */,
-				FEC36AD41528F735004F19C8 /* MPOAuthConnection.m in Sources */,
-				FEC36AD51528F735004F19C8 /* MPOAuthCredentialConcreteStore+iPhone.m in Sources */,
-				FEC36AD61528F735004F19C8 /* MPOAuthCredentialConcreteStore.m in Sources */,
-				FEC36AD71528F735004F19C8 /* MPOAuthSignatureParameter.m in Sources */,
-				FEC36AD81528F735004F19C8 /* MPOAuthURLRequest.m in Sources */,
-				FEC36AD91528F735004F19C8 /* MPOAuthURLResponse.m in Sources */,
-				FEC36ADA1528F735004F19C8 /* MPURLRequestParameter.m in Sources */,
-				FEC36ADB1528F735004F19C8 /* MPWSLRDDiscoverer.m in Sources */,
-				FEC36ADC1528F735004F19C8 /* MPWSXRDDocument.m in Sources */,
 				FE18C34A154611550075F59D /* MosaicView.m in Sources */,
 				FE95AA7C154B1FD500ADC015 /* LoadMoreMosaicView.m in Sources */,
 				FE775DCF15585961006D1486 /* Constants_Fonts.m in Sources */,
