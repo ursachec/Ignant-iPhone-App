@@ -564,12 +564,12 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - custom special views
--(void)setUpCouldNotLoadDataView
-{    
-    [super setUpCouldNotLoadDataView];
-    
-#warning BETTER TEXT!
+-(UIView *)couldNotLoadDataView
+{
+    UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text = @"Could not load data for the mosaic";
+    
+    return defaultView;
 }
 
 -(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden

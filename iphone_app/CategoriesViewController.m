@@ -16,7 +16,6 @@
 
 @interface CategoriesViewController()
 
-@property (strong, nonatomic, readwrite) UIView* gradientView;
 
 @end
 
@@ -27,8 +26,6 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 @synthesize fetchedResultsController = __fetchedResultsController;
-
-@synthesize gradientView = _gradientView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,7 +66,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self.categoriesTableView addSubview:self.gradientView];
+
 }
 
 - (void)viewDidUnload
@@ -194,8 +191,6 @@
     return __fetchedResultsController;
 }    
 
-
-
 - (void)fetch 
 {
     NSError *error = nil;
@@ -209,32 +204,4 @@
     // In the simplest, most efficient, case, reload the table view.
     [self.categoriesTableView reloadData];
 }
-
-#pragma mark - custom views
--(UIView*)gradientView
-{
-    if (_gradientView==nil) {
-        CGSize gradientSize = CGSizeMake(320.0f, 4.f);
-        _gradientView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, gradientSize.width, gradientSize.height)];
-        _gradientView.backgroundColor = [UIColor clearColor];
-        
-        CAGradientLayer *gradient = [CAGradientLayer layer];
-        gradient.frame = _gradientView.bounds;
-        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
-        [_gradientView.layer insertSublayer:gradient atIndex:0];
-        
-    }
-    
-    return _gradientView;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
-	    
-    //move the gradient view
-    CGRect tableBounds = self.categoriesTableView.bounds; // gets content offset
-    CGRect frameForStillView = self.gradientView.frame; 
-    frameForStillView.origin.y = tableBounds.origin.y; // offsets the rects y origin by the content offset
-    self.gradientView.frame = frameForStillView; // set the frame to the new calculation
-}
-
 @end

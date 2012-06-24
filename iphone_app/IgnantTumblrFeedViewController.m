@@ -545,14 +545,10 @@
 }
 
 #pragma mark - custom special views
--(void)setUpCouldNotLoadDataView
+-(UIView *)couldNotLoadDataView
 {
-    [super setUpCouldNotLoadDataView];
- 
-#warning BETTER TEXT!
+    UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text = @"Could not load tumblr feed";
 }
-
-
 
 @end

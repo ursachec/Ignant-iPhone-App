@@ -17,18 +17,17 @@
 
 }
 
+@property(nonatomic, strong, readwrite) UIView* firstRunLoadingView;
 @property(nonatomic, strong, readwrite) UIView* loadingView;
 @property(nonatomic, strong, readwrite) UILabel* loadingViewLabel;
 @property(nonatomic, strong, readwrite) UIView* noInternetConnectionView;
 @property(nonatomic, strong, readwrite) UIView* couldNotLoadDataView;
 @property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
 
--(void)setUpFullscreenNoInternetConnectionView;
--(void)setUpFullscreenLoadingView;
-
 @end
 
 @implementation IGNViewController
+@synthesize firstRunLoadingView =_firstRunLoadingView;
 @synthesize loadingView = _loadingView;
 @synthesize loadingViewLabel = _loadingViewLabel;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
@@ -98,8 +97,7 @@
     [super viewDidLoad];
 
     [self setUpBackButton];
-        
-    [self setUpCouldNotLoadDataView];
+    
 }
 
 - (void)viewDidUnload
@@ -122,7 +120,10 @@
 
 -(UIView*)couldNotLoadDataView
 {
-    if (_couldNotLoadDataView) {
+    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (_couldNotLoadDataView==nil) {
         
         //set up the no internet connection view
         CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -150,11 +151,6 @@
     return _couldNotLoadDataView;
 }
 
--(void)setUpCouldNotLoadDataView
-{
-
-}
-
 -(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
@@ -165,7 +161,11 @@
     else {
         CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.couldNotLoadDataView.frame = newFrame;
-        [self.view addSubview:_couldNotLoadDataView];        
+        [self.view addSubview:self.couldNotLoadDataView];        
+        
+        
+        NSLog(@" is couldnotloaddataview nil: %@", (_couldNotLoadDataView == nil) ? @"TRUE" : @"FALSE");
+        
         [self setIsLoadingViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];
         
@@ -223,6 +223,58 @@
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
 }
 
+
+-(UIView*)firstRunLoadingView
+{
+    if (_firstRunLoadingView==nil) {
+        
+        //set up the loading view
+        CGRect loadingViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
+        aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        aView.backgroundColor = [UIColor redColor];
+        
+        CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, 480.0f-20.0f);
+        UIImageView* aImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
+        aImageView.image = [UIImage imageNamed:@"loading_mercedes_k.png"];
+        [aView addSubview:aImageView];
+        
+        CGSize aiSize = CGSizeMake(21.0f, 21.0f);
+        CGFloat scalingFactor = 0.8;
+        UIActivityIndicatorView *aiV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        aiV.frame = CGRectMake((self.view.frame.size.width-aiSize.width)/2, 265.0f, aiSize.width*scalingFactor, aiSize.height*scalingFactor);
+        [aView addSubview:aiV];
+        [aiV startAnimating];
+        
+         [aiV.layer setValue:[NSNumber numberWithFloat:scalingFactor] forKeyPath:@"transform.scale"];
+        
+        _firstRunLoadingView = aView;
+        
+    }
+
+    return _firstRunLoadingView;
+}
+
+
+-(void)setIsFirstRunLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (hidden) {
+        [self.firstRunLoadingView removeFromSuperview];
+    }
+    else {
+        CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.firstRunLoadingView.frame = newFrame;
+        [self.view addSubview:self.firstRunLoadingView];   
+        [self setIsLoadingViewHidden:YES];
+        [self setIsCouldNotLoadDataViewHidden:YES];
+        [self setIsNoConnectionViewHidden:YES];
+    }
+}
+
+
 -(UIView*)loadingView
 {
     if (_loadingView==nil) {
@@ -260,7 +312,7 @@
         [aView addSubview:activityIndicator];
         [activityIndicator startAnimating];
         
-        self.loadingView = aView;
+        _loadingView = aView;
     }
 
     return _loadingView;
@@ -286,6 +338,7 @@
         [self.view addSubview:self.loadingView];   
         [self setIsCouldNotLoadDataViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];
+        [self setIsFirstRunLoadingViewHidden:YES animated:NO];
     }
 }
 
@@ -331,6 +384,7 @@
         [self.view addSubview:_noInternetConnectionView];     
         [self setIsCouldNotLoadDataViewHidden:YES];
         [self setIsLoadingViewHidden:YES];
+        [self setIsFirstRunLoadingViewHidden:YES animated:NO];
     }
 }
 

@@ -982,6 +982,7 @@
 {
     
 #define IGNANT_TOOLBAR_HEIGHT 50.0f
+#define IGNANT_GRADIENT_HEIGHT 4.0f
 #define ANIMATION_DURATION 0.2f
     
     LOG_CURRENT_FUNCTION()
@@ -1006,7 +1007,10 @@
     
     
     __unsafe_unretained UIView* blockReadyShareAndMoreToolBar = _shareAndMoreToolbar;
+    __unsafe_unretained UIView* blockReadyGradientView = self.appDelegate.toolbarGradientView;
     __unsafe_unretained UIScrollView* blockReadyContentScrollView = _contentScrollView;
+    __block __typeof__(self) blockSelf = self;
+    
     
     int hiddenMultiplicator = hidden ? 1 : -1;
     void (^toolbarblock)(void);
@@ -1016,11 +1020,15 @@
         CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
         blockReadyShareAndMoreToolBar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y+IGNANT_TOOLBAR_HEIGHT*2*hiddenMultiplicator, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
         
+        //move the gradient out of the screen
+        CGRect gradientFrame = blockReadyGradientView.frame;
+        CGRect newGradientFrame = CGRectMake(gradientFrame.origin.x, gradientFrame.origin.y+(IGNANT_GRADIENT_HEIGHT+44.0f)*2*(-hiddenMultiplicator), gradientFrame.size.width, gradientFrame.size.height);
+        [blockReadyGradientView setFrame:newGradientFrame];
+        
         //resize the scroll view
         CGRect currentScrollViewFrame = blockReadyContentScrollView.frame;
         blockReadyContentScrollView.frame = CGRectMake(0, 0, currentScrollViewFrame.size.width, currentScrollViewFrame.size.height+IGNANT_TOOLBAR_HEIGHT*hiddenMultiplicator);
     };
-    
     
     NSLog(@"blockReadyShareAndMoreToolBar.frame: %@   // self.shareAndMoreToolbar.frame: %@", NSStringFromCGRect(blockReadyShareAndMoreToolBar.frame), NSStringFromCGRect(_shareAndMoreToolbar.frame));
     
@@ -1402,13 +1410,12 @@
 }
 
 #pragma mark - custom special views
--(void)setUpCouldNotLoadDataView
+-(UIView *)couldNotLoadDataView
 {
-    [super setUpCouldNotLoadDataView];
-    
-#warning BETTER TEXT!
+    UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text = @"Could not load data for this article";
 }
+
 
 -(IBAction)playVideo:(id)sender
 {

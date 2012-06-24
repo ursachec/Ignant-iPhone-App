@@ -40,6 +40,8 @@
 
 @interface IGNAppDelegate()
 
+@property(nonatomic, readwrite, strong) UIView* toolbarGradientView;
+
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
@@ -64,6 +66,8 @@
 #pragma mark -
 
 @implementation IGNAppDelegate
+@synthesize toolbarGradientView = _toolbarGradientView;
+
 @synthesize userDefaultsManager = _userDefaultsManager;
 
 @synthesize window = _window;
@@ -92,6 +96,8 @@
 @synthesize shouldLoadDataForFirstRun;
 @synthesize isLoadingDataForFirstRun;
 
+@synthesize ignantToolbar = _ignantToolbar;
+
 #pragma mark - 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -114,7 +120,7 @@
     NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
     //create cache folders for the thumbs
-    [self createCacheFolders];
+//    [self createCacheFolders];
     
     //initialize the importer
     self.importer = [[IgnantImporter alloc] init];
@@ -155,8 +161,24 @@
         }
     }
     
+    
+    //setup ignant toolbar
+    [self setupIgnantToolbar];
+    
+    //set up gradient view
+    [self setIsToolbarGradientViewHidden:NO];
+    
+    
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void)setupIgnantToolbar
+{
+    LOG_CURRENT_FUNCTION()
+    
+    [self.navigationController.view addSubview:self.ignantToolbar];
+
 }
 
 -(void)createCacheFolders
@@ -494,9 +516,8 @@ return _categoryViewController;
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.masterViewController setIsLoadingViewHidden:YES];
+        [self.masterViewController setIsFirstRunLoadingViewHidden:NO animated:NO];
     });
 }
 
@@ -514,7 +535,7 @@ return _categoryViewController;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.masterViewController fetch];
         self.navigationController.navigationBarHidden = NO;
-        [self.masterViewController setIsLoadingViewHidden:YES];
+        [self.masterViewController setIsFirstRunLoadingViewHidden:YES animated:NO];
     });
 }
 
@@ -548,11 +569,10 @@ return _categoryViewController;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    
     NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
     NSLog(@"requestFailed");
-    [self.masterViewController setIsCouldNotLoadDataViewHidden:NO];
+    [self.masterViewController setIsFirstRunLoadingViewHidden:YES animated:NO];
     
     self.isLoadingDataForFirstRun = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -565,6 +585,84 @@ return _categoryViewController;
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     NSLog(@"Error in registration. Error: %@", err);
+}
+
+#pragma mark - ui stuff
+-(UIView*)ignantToolbar
+{
+    if (_ignantToolbar==nil) {
+        
+        CGRect navControllerFrame = self.navigationController.view.frame;
+        NSLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));
+        
+        
+        CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
+        CGRect toolbarFrame = CGRectMake(0, 0, toolbarSize.width, toolbarSize.height);
+        UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
+        aView.backgroundColor = [UIColor redColor];
+
+        
+        UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:toolbarFrame];
+//        backgroundImageView.image = [UIImage imageNamed:@"ign_footer.jpg"];
+        backgroundImageView.backgroundColor = [UIColor greenColor];
+        
+        [aView addSubview:backgroundImageView];
+        
+        
+        CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
+        CGRect firstButtonFrame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+        UIButton* firstButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        firstButton.frame = firstButtonFrame;
+#warning TODO: localize text - mosaik
+        [firstButton setTitle:@"Mosaik" forState:UIControlStateNormal];
+        
+        CGRect secondButtonFrame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+        UIButton* secondButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        secondButton.frame = secondButtonFrame;
+#warning TODO: localize text - mosaik
+        [secondButton setTitle:@"More" forState:UIControlStateNormal];
+        
+    }
+
+    return _ignantToolbar;
+}
+
+-(UIView*)toolbarGradientView
+{
+    if (_toolbarGradientView==nil) {
+        
+        CGRect navBarFrame = self.navigationController.navigationBar.frame;
+        NSLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
+        
+        //set up the gradient view
+        CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);
+        CGRect gradientViewFrame = CGRectMake(navBarFrame.origin.x, navBarFrame.origin.y+navBarFrame.size.height, gradientViewSize.width, gradientViewSize.height);
+        UIView* aView = [[UIView alloc] initWithFrame:gradientViewFrame];
+        aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        
+        aView.backgroundColor = [UIColor clearColor];
+        
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = aView.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
+        [aView.layer insertSublayer:gradient atIndex:0];
+        
+        _toolbarGradientView = aView;  
+    }
+    
+    return _toolbarGradientView;
+}
+
+-(void)setIsToolbarGradientViewHidden:(BOOL)hidden
+{   
+    
+    if (hidden) {
+        [self.toolbarGradientView removeFromSuperview];
+    } 
+    else {
+                
+        [self.navigationController.view addSubview:self.toolbarGradientView];
+    }
 }
 
 

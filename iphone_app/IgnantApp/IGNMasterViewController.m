@@ -51,15 +51,12 @@
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
-@property (strong, nonatomic, readwrite) UIView* gradientView;
-
 @end
 
 #pragma mark -
 
 @implementation IGNMasterViewController
 
-@synthesize gradientView = _gradientView;
 @synthesize isHomeCategory = _isHomeCategory;
 
 @synthesize fetchedResultsController = __fetchedResultsController;
@@ -135,27 +132,10 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - custom views
--(UIView*)gradientView
-{
-    if (_gradientView==nil) {
-        CGSize gradientSize = CGSizeMake(320.0f, 4.f);
-        _gradientView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, gradientSize.width, gradientSize.height)];
-        _gradientView.backgroundColor = [UIColor clearColor];
-        
-        CAGradientLayer *gradient = [CAGradientLayer layer];
-        gradient.frame = _gradientView.bounds;
-        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
-        [_gradientView.layer insertSublayer:gradient atIndex:0];
-        
-    }
-
-    return _gradientView;
-}
-
 #pragma mark - show mosaik / more
 - (IBAction)showMosaik:(id)sender 
 {
+    
     IGNMosaikViewController *mosaikVC = self.appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
@@ -235,7 +215,7 @@
     }
     
     if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
-        [self setIsLoadingViewHidden:NO];
+        [self setIsFirstRunLoadingViewHidden:NO animated:NO];
         self.navigationController.navigationBarHidden = YES;
     }
     
@@ -249,9 +229,6 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    
-    [self.blogEntriesTableView addSubview:self.gradientView];
 
 }
 
@@ -767,9 +744,7 @@
 }
 -(void)didFinishImportingData
 {
-    
     LOG_CURRENT_FUNCTION_AND_CLASS()
-    
     __block __typeof__(self) blockSelf = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -826,15 +801,10 @@
 #pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
-	
+    
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     
-    //move the gradient view
-
-    CGRect tableBounds = self.blogEntriesTableView.bounds; // gets content offset
-    CGRect frameForStillView = self.gradientView.frame; 
-    frameForStillView.origin.y = tableBounds.origin.y; // offsets the rects y origin by the content offset
-    self.gradientView.frame = frameForStillView; // set the frame to the new calculation
+    
     
     //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
     CGPoint offset = scrollView.contentOffset;
@@ -881,10 +851,12 @@
 }
 
 #pragma mark - custom special views
--(void)setUpCouldNotLoadDataView
+
+
+-(UIView*)couldNotLoadDataView
 {
-    [super setUpCouldNotLoadDataView];
     
+    UIView* defaultView = [super couldNotLoadDataView];
     
     NSLog(@"MASTER shouldLoadData: %@", self.appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
@@ -902,6 +874,9 @@
     else {
         self.couldNotLoadDataLabel.text = @"Could not load data, sorry double!";
     }
+    
+    
+    return defaultView;
 }
 
 @end

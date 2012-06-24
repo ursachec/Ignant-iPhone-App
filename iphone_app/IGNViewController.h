@@ -26,6 +26,7 @@
 @property (nonatomic, readonly, unsafe_unretained) IGNAppDelegate *appDelegate;
 @property (nonatomic, readwrite, strong) IgnantImporter *importer;
 
+@property(nonatomic, strong, readonly) UIView* firstRunLoadingView;
 @property(nonatomic, strong, readonly) UIView* loadingView;
 @property(nonatomic, strong, readonly) UILabel* loadingViewLabel;
 @property(nonatomic, strong, readonly) UIView* noInternetConnectionView;
@@ -40,12 +41,12 @@
 -(void)setIsLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
 -(void)setIsNoConnectionViewHidden:(BOOL)hidden;
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden;
+
+-(void)setIsFirstRunLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
 -(void)setUpForOfflineUse;
 -(void)setUpForOnlineUse;
-
--(void)setUpCouldNotLoadDataView;
--(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden;
 
 -(void)createImporter;
 

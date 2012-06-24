@@ -21,6 +21,8 @@
     NSString *persistentStorePath;
 }
 
+@property(nonatomic, readonly, strong) UIView* toolbarGradientView;
+
 @property (nonatomic, strong) Facebook *facebook;
 
 @property(nonatomic, readonly, strong) IGNMasterViewController *categoryViewController;
@@ -31,6 +33,9 @@
 @property(nonatomic, readonly, strong) AboutViewController *aboutViewController;
 @property(nonatomic, readonly, strong) MostViewedViewController *mostViewedViewController;
 @property(nonatomic, readonly, strong) ContactViewController *contactViewController;
+
+@property(nonatomic, readonly, strong) UIView* ignantToolbar;
+
 
 
 @property (strong, nonatomic) UIWindow *window;
@@ -61,5 +66,7 @@
 -(void)initializeFacebook;
 
 -(BOOL)checkIfAppOnline;
+
+-(void)setIsToolbarGradientViewHidden:(BOOL)hidden;
 
 @end

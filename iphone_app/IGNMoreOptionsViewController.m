@@ -17,7 +17,6 @@
 #import "ContactViewController.h"
 #import "IGNMasterViewController.h"
 
-
 //temp icon for categories tempMoreCategoryIcon.png (in mainBundle)
 
 
@@ -56,6 +55,13 @@ typedef enum _moreOptionsIndeces  {
         
     }
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    
 }
 
 - (void)didReceiveMemoryWarning
