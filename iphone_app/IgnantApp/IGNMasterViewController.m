@@ -42,6 +42,9 @@
 
 
 @interface IGNMasterViewController ()
+{
+    CGPoint lastContentOffset;
+}
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -276,7 +279,7 @@
 {
     if ( [self isIndexPathLastRow:indexPath]  ) 
     {
-        return 60.0f;
+        return 40.0f;
     }
     else
     {
@@ -800,7 +803,6 @@
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     
     
-    
     //copied code from http://stackoverflow.com/questions/5137943/how-to-know-when-uitableview-did-scroll-to-bottom
     CGPoint offset = scrollView.contentOffset;
     CGRect bounds = scrollView.bounds;
@@ -808,15 +810,21 @@
     UIEdgeInsets inset = scrollView.contentInset;
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
+    float reload_distance = -40.0f;
     
-    float reload_distance = -20;
+//    NSLog(@"y: %f  h: %f h + reload_distance: %f  \n lastContentOffset.y: %f  offset.y: %f", y, h, (h + reload_distance), lastContentOffset.y, offset.y);
+    
     if(y > h + reload_distance) 
     {
+        if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreContent && _numberOfActiveRequests==0) 
         {
             [self loadMoreContent];
         }
     }
+    
+    
+    lastContentOffset = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{

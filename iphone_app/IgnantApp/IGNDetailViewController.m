@@ -40,6 +40,7 @@
 
 -(void)setupUIElementsForCurrentBlogEntryTemplate;
 
+- (IBAction)showMercedes:(id)sender;
 
 //social media
 -(void)postToFacebook;
@@ -690,7 +691,7 @@
 
 -(NSString*)wrapRichTextForArticle:(NSString*)richText
 {
-    NSString* style = @"body,input,textarea,a,pre { font-family: Georgia, \"Bitstream Charter\", serif; } a{ color: black; text-decoration: underline; }";
+    NSString* style = @"body,input,textarea,a,pre { font-family: Georgia, \"Bitstream Charter\", serif; font-size:12px; } a{ color: black; text-decoration: underline; }";
     return [NSString stringWithFormat:@"<!DOCTYPE html><html><head><script type='text/javascript'>document.onload = function(){document.ontouchmove = function(e){e.preventDefault();}};</script><style type='text/css'>%@</style></head><body style='margin: 0; padding: 0; border:0px;'><div style='width: 310px;' id='ContentDiv'>%@</div></body></html>",style,richText];
 }
 
@@ -725,7 +726,10 @@
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
     }
-    
+}
+
+- (IBAction)showMercedes:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
 -(void)setupArticleContentViewWithArticleTitle:(NSString*)title
@@ -1364,9 +1368,6 @@
         NSLog(@"(1) before");
         [self setIsLoadingViewHidden:YES];
     });
-    
-    
-    
 }
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary

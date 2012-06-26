@@ -23,11 +23,8 @@
 #pragma mark - 
 
 @implementation ImageSlideshowViewController
-@synthesize closeSlideshowButton = _closeSlideshowButton;
 @synthesize remoteImagesArray = _remoteImagesArray;
-
 @synthesize imageScrollView = _imageScrollView;
-
 @synthesize slideshowPageControl = _slideshowPageControl;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -52,25 +49,49 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
-    
-    //bring the button to front
-    [self.view bringSubviewToFront:_closeSlideshowButton];
-    
-    
+        
     NSLog(@"number of remote images: %d", _remoteImagesArray.count);
     
     _imageScrollView.delegate = self;
     _imageScrollView.pagingEnabled = YES;
     
-//    //set up the scroll view
+    //set up the scroll view
     [self setUpScrollViewWithImages:_remoteImagesArray];
+    
+    
+    //set up gesture recognizer
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
+    recognizer.numberOfTapsRequired = 2;
+    [self.imageScrollView addGestureRecognizer:recognizer];
+    
+    
+    //add the specific navigation bar
+    [self setIsSpecificNavigationBarHidden:YES animated:NO];
+    [self.view addSubview:self.specificNavigationBar];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [self setIsSpecificNavigationBarHidden:YES animated:NO];
+}
+
+-(void)handleDoubleTap
+{
+    LOG_CURRENT_FUNCTION()
+    
+    [self toggleShowSpecificNavigationBarAnimated:YES];
+}
+
+-(void)handleTapOnSpecificNavBarBackButton:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload
 {
-    [self setCloseSlideshowButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -147,12 +168,6 @@
     _slideshowPageControl.numberOfPages = images.count;
     [self.view bringSubviewToFront:_slideshowPageControl];
 }
-
-
-- (IBAction)closeSlideshow:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-}
-
 
 #pragma mark - UIScrollView delegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{

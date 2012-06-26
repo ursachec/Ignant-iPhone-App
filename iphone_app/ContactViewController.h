@@ -10,5 +10,8 @@
 #import "IGNViewController.h"
 
 @interface ContactViewController : IGNViewController
+- (IBAction)handleTapOnDeutscheJapaner:(id)sender;
+- (IBAction)handleTapOnClaudiu:(id)sender;
+- (IBAction)handleTapOnClemens:(id)sender;
 
 @end

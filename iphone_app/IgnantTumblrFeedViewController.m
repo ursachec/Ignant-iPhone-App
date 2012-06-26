@@ -39,6 +39,8 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
     
     BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
+    
+    CGPoint lastContentOffset;
 }
 
 @property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
@@ -229,7 +231,7 @@
 {
     if ( [self isIndexPathLastRow:indexPath]  ) 
     {
-        return 60.0f;
+        return 40.0f;
     }
     else
     {
@@ -267,10 +269,13 @@
     float reload_distance = -20;
     if(y > h + reload_distance) 
     {
+        if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreTumblr && _numberOfActiveRequests==0) {
             [self loadMoreTumblrArticles];
         }
     }
+    
+    lastContentOffset = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -280,9 +285,11 @@
 
 #pragma mark - server communication actions
 -(void)loadMoreTumblrArticles
-{    
+{        
     if (_isLoadingMoreTumblr) return;
     _isLoadingMoreTumblr = YES;
+    
+    NSLog(@"loadMoreTumblrArticles");
     
     _numberOfActiveRequests++;
     

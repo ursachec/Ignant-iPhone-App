@@ -20,8 +20,7 @@
         
         //setting up the load more content view
         CGRect rectWithRightHeight = self.frame;
-        rectWithRightHeight.size.height = 60.0f;
-        
+        rectWithRightHeight.size.height = 40.0f;
         
         
         //set the background view properties
@@ -35,27 +34,17 @@
         self.selectedBackgroundView = selectedBackgroundView;
         
         
-        
         //add the activity indicator and start animating
         UIActivityIndicatorView* activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        CGSize activityIndicatorSize = CGSizeMake(25.0f, 25.0f);
-        activityIndicator.frame = CGRectMake(105.0f, (rectWithRightHeight.size.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
+        CGSize activityIndicatorSize = CGSizeMake(21.0f, 21.0f);
+        CGFloat scalingFactor = 0.8;
+        
+        activityIndicator.frame = CGRectMake((rectWithRightHeight.size.width-activityIndicatorSize.width*scalingFactor)/2, (rectWithRightHeight.size.height-activityIndicatorSize.height*scalingFactor)/2, activityIndicatorSize.width*scalingFactor, activityIndicatorSize.height*scalingFactor);
+        [activityIndicator.layer setValue:[NSNumber numberWithFloat:scalingFactor] forKeyPath:@"transform.scale"];
+        
         [self.contentView addSubview:activityIndicator];
         [activityIndicator startAnimating];
         
-        
-        //add the message label
-//        CGSize messageLabelSize = CGSizeMake(self.frame.size.width - activityIndicator.frame.size.width,  rectWithRightHeight.size.height);
-        CGSize messageLabelSize = CGSizeMake(70.0f,  rectWithRightHeight.size.height);
-        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(activityIndicator.frame.origin.x+activityIndicator.frame.size.width, 0, messageLabelSize.width , messageLabelSize.height)];
-        messageLabel.text = @"loading...";
-        messageLabel.textColor = [UIColor blackColor];
-        messageLabel.textAlignment = UITextAlignmentCenter;
-        messageLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
-        messageLabel.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:messageLabel];
-        
-          
     }
     return self;
 }

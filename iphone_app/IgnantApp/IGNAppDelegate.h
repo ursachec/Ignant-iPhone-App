@@ -67,4 +67,7 @@
 -(void)setIsToolbarHidden:(BOOL)hidden;
 -(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
+
+-(void)showMore;
+
 @end

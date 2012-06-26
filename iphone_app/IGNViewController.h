@@ -33,6 +33,9 @@
 @property(nonatomic, strong, readonly) UIView* couldNotLoadDataView;
 @property(nonatomic, strong, readonly) UILabel* couldNotLoadDataLabel;
 
+@property(nonatomic, strong, readonly) UIView* specificNavigationBar;
+@property(nonatomic, strong, readonly) UIView* specificToolbar;
+
 @property (nonatomic, unsafe_unretained) UIViewController* viewControllerToReturnTo;
 
 -(void)setUpBackButton;
@@ -49,5 +52,20 @@
 -(void)setUpForOnlineUse;
 
 -(void)createImporter;
+
+
+-(UIView*)newBackButtonView;
+
+//specific navigation bar
+-(void)toggleShowSpecificNavigationBarAnimated:(BOOL)animated;
+-(void)setIsSpecificNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
+-(void)handleTapOnSpecificNavBarBackButton:(id)sender;
+
+//sepcific toolbar
+-(void)toggleShowSpecificToolbar;
+-(void)setIsSpecificToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
+-(void)handleTapOnSpecificToolbarLeft:(id)sender;
+-(void)handleTapOnSpecificToolbarMercedes:(id)sender;
+-(void)handleTapOnSpecificToolbarRight:(id)sender;
 
 @end

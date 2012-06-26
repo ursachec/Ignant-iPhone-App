@@ -48,12 +48,15 @@ NSString * const kImageFilename = @"filename";
 {
     BOOL _isLoadingMoreMosaicImages;
     int _numberOfActiveRequests;
+    CGPoint lastContentOffset;
       
 }
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
+@property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
 
 @property(nonatomic,strong) IGNDetailViewController* detailViewController;
+
 
 @property(nonatomic,strong) LoadMoreMosaicView* loadingMoreMosaicView;
 
@@ -65,6 +68,12 @@ NSString * const kImageFilename = @"filename";
 
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId;
 
+-(void)showToolbarAndNavigationBar;
+
+- (IBAction)didTapOnMore:(id)sender;
+- (IBAction)didTapOnMosaik:(id)sender;
+- (IBAction)didTapOnMercedes:(id)sender;
+
 @end
 
 #pragma mark -
@@ -75,9 +84,11 @@ NSString * const kImageFilename = @"filename";
 @synthesize closeMosaikButton;
 @synthesize savedMosaicImages;
 @synthesize overlayView = _overlayView;
+@synthesize mockNavigationBar;
 @synthesize detailViewController;
 @synthesize parentNavigationController;
 @synthesize isMosaicImagesArrayNotEmpty = _isMosaicImagesArrayNotEmpty;
+@synthesize shareAndMoreToolbar;
 @synthesize loadingMoreMosaicView = _loadingMoreMosaicView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -125,21 +136,14 @@ NSString * const kImageFilename = @"filename";
 {
     [super viewWillAppear:animated];
     
+    [self setIsSpecificNavigationBarHidden:YES animated:NO];
+    [self setIsSpecificToolbarHidden:YES animated:NO];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    //add the back-to-start button
-    UIImage *backButtonImage = [UIImage imageNamed:@"backButton.png"];
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat ratio = .65;
-    backButton.frame = CGRectMake(0, 0, 46*ratio, 30*ratio);
-    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
-    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = backBarButtonItem;
     
     //trigger the drawing for the images
     [self drawSavedMosaicImages];
@@ -158,6 +162,10 @@ NSString * const kImageFilename = @"filename";
     UIView* overlayView = [[UIView alloc] initWithFrame:self.view.frame];
     overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView = overlayView;
+    
+    
+    //set up the mock navigation bar + toolbar
+    [self setUpToolbarAndMockNavigationBar];
 }
 
 - (void)viewDidUnload
@@ -169,6 +177,8 @@ NSString * const kImageFilename = @"filename";
     [self setBigMosaikView:nil];
     [self setMosaikScrollView:nil];
     [self setCloseMosaikButton:nil];
+    [self setShareAndMoreToolbar:nil];
+    [self setMockNavigationBar:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -267,6 +277,7 @@ NSString * const kImageFilename = @"filename";
     }
     
 #define PADDING_BOTTOM 5.0f
+#define PADDING_TOP .0f
     
     //load the plist with the saved mosaic images in memory
     NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
@@ -323,7 +334,7 @@ NSString * const kImageFilename = @"filename";
         if (isColumnLoadMoreView) 
         {
             //add a load more view to the scrollview
-            CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, heightOfActiveColumn+PADDING_BOTTOM);
+            CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, PADDING_TOP+heightOfActiveColumn+PADDING_BOTTOM);
             CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, fMosaicEntryWidth, fMosaicEntryHeight);
             LoadMoreMosaicView* oneView = [[LoadMoreMosaicView alloc] initWithFrame:mosaicViewFrame];
             oneView.userInteractionEnabled = YES;
@@ -505,9 +516,36 @@ NSString * const kImageFilename = @"filename";
 
 #pragma mark - MosaicView delegate
 
+-(void)triggerActionForDoubleTapInView:(MosaicView*)view
+{
+    NSLog(@"double tap in view");
+    
+    [self toggleShowSpecificNavigationBarAnimated:YES];
+    [self toggleShowSpecificToolbar];
+    
+}
+
 -(void)triggerActionForTapInView:(MosaicView*)view
 {
+    NSLog(@"tap in view");
+    
     [self transitionToDetailViewControllerForArticleId:view.articleId];
+}
+
+-(void)setUpToolbarAndMockNavigationBar
+{    
+    //add the specific navigation bar
+    [self setIsSpecificNavigationBarHidden:YES animated:NO];
+    [self.view addSubview:self.specificNavigationBar];
+    
+    //add the specific navigation bar
+    [self setIsSpecificToolbarHidden:YES animated:NO];
+    [self.view addSubview:self.specificToolbar];
+}
+
+-(void)handleTapOnSpecificNavBarBackButton:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId
@@ -553,9 +591,10 @@ NSString * const kImageFilename = @"filename";
     
     int secondsForNextAllowedUpdate = 2;
     
-    float reload_distance = 10;
+    float reload_distance = -20;
     if(y > h + reload_distance) 
     {
+        if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreMosaicImages && _numberOfActiveRequests==0) 
         {
             [self loadMoreMosaicImages];
@@ -579,6 +618,27 @@ NSString * const kImageFilename = @"filename";
     //add the closeButton to the view
     [self.couldNotLoadDataView addSubview:self.closeMosaikButton];
     [self.couldNotLoadDataView bringSubviewToFront:self.closeMosaikButton];
+}
+#pragma mark - actions
+-(void)handleTapOnSpecificToolbarLeft:(id)sender
+{
+    LOG_CURRENT_FUNCTION()
+    [self.mosaikScrollView scrollRectToVisible:CGRectMake(0.f, 0.0f, 320.0f, 20.0f) animated:YES];
+}
+
+-(void)handleTapOnSpecificToolbarMercedes:(id)sender
+{
+    LOG_CURRENT_FUNCTION()
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
+}
+
+-(void)handleTapOnSpecificToolbarRight:(id)sender
+{
+    LOG_CURRENT_FUNCTION()
+    
+    [self.appDelegate showMore];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

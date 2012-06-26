@@ -22,8 +22,6 @@ extern NSString * const kImageFilename;
 
 @interface IGNMosaikViewController : IGNViewController <MosaicViewDelegate>
 
--(IBAction)handleBack:(id)sender;
-
 @property (strong, nonatomic) IBOutlet UIView *bigMosaikView;
 @property (strong, nonatomic) IBOutlet UIScrollView *mosaikScrollView;
 @property (strong, nonatomic) IBOutlet UIButton *closeMosaikButton;
@@ -31,6 +29,7 @@ extern NSString * const kImageFilename;
 @property (nonatomic, unsafe_unretained) UINavigationController* parentNavigationController;
 
 @property(nonatomic, unsafe_unretained) BOOL isMosaicImagesArrayNotEmpty;
+@property (retain, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
 
 @end
 

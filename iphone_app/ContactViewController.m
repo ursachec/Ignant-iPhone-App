@@ -7,6 +7,7 @@
 //
 
 #import "ContactViewController.h"
+#import "Constants.h"
 
 @implementation ContactViewController
 
@@ -46,6 +47,18 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (IBAction)handleTapOnDeutscheJapaner:(id)sender {
+    LOG_CURRENT_FUNCTION()
+}
+
+- (IBAction)handleTapOnClaudiu:(id)sender {
+    LOG_CURRENT_FUNCTION()
+}
+
+- (IBAction)handleTapOnClemens:(id)sender {
+    LOG_CURRENT_FUNCTION()
 }
 
 @end

@@ -14,6 +14,8 @@
 
 #import "Category.h"
 
+#define ROW_HEIGHT 48.0f
+
 @interface CategoriesViewController()
 
 
@@ -107,6 +109,15 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+        //add the arrow
+        CGFloat paddingRight = 10.0f;
+        CGFloat ratio = .5f;
+        CGSize arrowSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
+        CGRect arrowViewFrame = CGRectMake(cell.contentView.frame.size.width-arrowSize.width-paddingRight, (cell.contentView.frame.size.height-arrowSize.height)/2, arrowSize.width, arrowSize.height);
+        UIImageView* arrowView = [[UIImageView alloc] initWithFrame:arrowViewFrame];
+        arrowView.image = [UIImage imageNamed:@"arrow_right.png"];
+        [cell.contentView addSubview:arrowView];
     } 
     
     //configure the cell
@@ -115,6 +126,10 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    return ROW_HEIGHT;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    

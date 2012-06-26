@@ -99,18 +99,6 @@ typedef enum _moreOptionsIndeces  {
     
     [self setUpMoreOptions];
     
-    //add the back-to-start button
-//    UIImage *backButtonImage = [UIImage imageNamed:@"navigationButtonStart"];
-//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    CGFloat ratio = .5;
-//    backButton.frame = CGRectMake(0, 0, 122*ratio, 57*ratio);
-//    [backButton setImage:backButtonImage forState:UIControlStateNormal];
-//    [backButton setImage:backButtonImage forState:UIControlStateHighlighted];
-//    [backButton addTarget:self action:@selector(handleBack:) forControlEvents:UIControlEventTouchDown];
-//    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-//    self.navigationItem.leftBarButtonItem = backBarButtonItem;
-    
-    
     UIView* backgroundView = [[UIView alloc] initWithFrame:self.moreOptionsTableView.frame]; 
     UIColor* backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_background_part.jpg"]];
     backgroundView.backgroundColor = backgroundColor;
@@ -154,11 +142,16 @@ typedef enum _moreOptionsIndeces  {
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"MoreOptionsCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+        NSLog(@"newCell");
+        
+        
+        
     } 
     
     UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
@@ -226,7 +219,7 @@ typedef enum _moreOptionsIndeces  {
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-#define DEBUG_SHOW_HELP_COLORS FALSE
+#define DEBUG_SHOW_HELP_COLORS false
     
     UIView *newContentView = [[UIView alloc] initWithFrame:cell.contentView.frame];
     newContentView.backgroundColor = [UIColor whiteColor];
@@ -279,8 +272,23 @@ typedef enum _moreOptionsIndeces  {
     [newContentView addSubview:separatorLine];    
     
     
-    [cell.contentView addSubview:newContentView];
     
+    //add the arrow
+    CGFloat paddingRight = 10.0f;
+    CGFloat ratio = .5f;
+    CGSize arrowSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
+    CGRect arrowViewFrame = CGRectMake(cell.contentView.frame.size.width-arrowSize.width-paddingRight, (cell.contentView.frame.size.height-arrowSize.height)/2, arrowSize.width, arrowSize.height);
+    
+    UIImageView* arrowView = [[UIImageView alloc] initWithFrame:arrowViewFrame];
+    arrowView.image = [UIImage imageNamed:@"arrow_right.png"];
+    
+#if DEBUG_SHOW_HELP_COLORS
+    arrowView.backgroundColor = [UIColor redColor];
+#endif
+    
+    [newContentView addSubview:arrowView];
+    
+    [cell.contentView addSubview:newContentView];
 }
 
 -(UIImage*)iconImageForRow:(int)row

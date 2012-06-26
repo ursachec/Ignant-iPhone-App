@@ -600,13 +600,14 @@ return _categoryViewController;
         
         
         //add buttons
-        CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
+        
         CGFloat paddingAmmount = 20.0f;
         CGFloat paddingTop = 9.0f;
         UIFont *buttonFont = [UIFont fontWithName:@"Georgia" size:11.0f]; 
         UIColor*buttonTextColor = [UIColor blackColor];
         
-#warning TODO: localize text - mosaik        
+#warning TODO: localize text - mosaik     
+        CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
         CGRect firstButtonFrame = CGRectMake(paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
         UIButton* firstButton = [UIButton buttonWithType:UIButtonTypeCustom];
         firstButton.titleLabel.font = buttonFont;
@@ -617,7 +618,8 @@ return _categoryViewController;
         [aView addSubview:firstButton];
         
 #warning TODO: localize text - mosaik
-        CGRect secondButtonFrame = CGRectMake(aView.frame.size.width-buttonSize.width-paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
+        CGSize buttonSize2 = CGSizeMake(72.0f, 37.0f);
+        CGRect secondButtonFrame = CGRectMake(aView.frame.size.width-buttonSize2.width-paddingAmmount, paddingTop, buttonSize2.width, buttonSize2.height);
         UIButton* secondButton = [UIButton buttonWithType:UIButtonTypeCustom];
         secondButton.titleLabel.font = buttonFont;
         [secondButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
@@ -626,10 +628,26 @@ return _categoryViewController;
         [secondButton addTarget:self action:@selector(showMore) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:secondButton];
         
+        
+        CGSize mercedesButtonSize = CGSizeMake(40.0f, 40.0f);
+        CGRect mercedesButtonFrame = CGRectMake((aView.frame.size.width-mercedesButtonSize.width)/2, (aView.frame.size.height-mercedesButtonSize.height)/2, mercedesButtonSize.width, mercedesButtonSize.height);
+        UIButton* mercedesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        mercedesButton.frame = mercedesButtonFrame;
+        mercedesButton.backgroundColor = [UIColor clearColor];
+        [mercedesButton setTitle:@"" forState:UIControlStateNormal];
+        [mercedesButton addTarget:self action:@selector(showMercedes) forControlEvents:UIControlEventTouchDown];
+        [aView addSubview:mercedesButton];
+        
+        
         _ignantToolbar = aView;
     }
 
     return _ignantToolbar;
+}
+-(void)showMercedes
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
 -(void)showHome

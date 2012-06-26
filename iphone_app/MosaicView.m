@@ -19,12 +19,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) 
-    {
-        // Initialization code
+    {        
+        UITapGestureRecognizer *recognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        recognizer2.numberOfTapsRequired = 2;
+        [self addGestureRecognizer:recognizer2];
         
-        UITapGestureRecognizer *longPressGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        [self addGestureRecognizer:longPressGestureRecognizer];
         
+        UITapGestureRecognizer *recognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        [recognizer1 requireGestureRecognizerToFail:recognizer2];
+        recognizer1.numberOfTapsRequired = 1;
+        [self addGestureRecognizer:recognizer1];
         
     }
     return self;
@@ -32,9 +36,16 @@
 
 #pragma mark -
 
+-(void)handleDoubleTap:(UITapGestureRecognizer*)recognizer
+{
+    if(self.delegate!=nil)
+    {
+        [_delegate triggerActionForDoubleTapInView:self];
+    }
+}
+
 -(void)handleTap:(UITapGestureRecognizer*)recognizer
 {
-
     if(self.delegate!=nil)
     {
         [_delegate triggerActionForTapInView:self];
