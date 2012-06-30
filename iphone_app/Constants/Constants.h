@@ -53,6 +53,7 @@ extern int const kThirdRelatedArticleTag;
 //################################################################################
 
 extern NSString* const kAdressForMercedesPage; 
+extern NSString* const kAdressForItunesStore;
 
 //server adresses
 extern NSString * const kAdressForContentServer;

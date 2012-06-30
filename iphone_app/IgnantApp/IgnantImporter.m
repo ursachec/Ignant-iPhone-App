@@ -44,6 +44,8 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @property (nonatomic, strong) Category* currentCategory;
 @property (nonatomic, strong) TumblrEntry* currentTumblrEntry;
 
+@property (nonatomic, strong, readwrite) NSDateFormatter *articlesDateFormatter;
+
 @property (nonatomic, strong, readonly) NSEntityDescription *currentBlogEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentTumblrEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentCategoryDescription;
@@ -86,6 +88,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 
 @synthesize appDelegate = _appDelegate;
 
+@synthesize articlesDateFormatter = _articlesDateFormatter;
 
 
 -(id)init
@@ -96,6 +99,10 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         
         self.appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
+        
+        
+        self.articlesDateFormatter = [[NSDateFormatter alloc] init];
+        [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
         
     }
     
@@ -473,9 +480,7 @@ static const NSUInteger kImportBatchSize = 5;
     
 #warning fix date to take GMT into consideration
     //2012-03-02T00:00:00+00:00
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"yyyy-MM-dd"];
-    NSDate *myDate = [df dateFromString: blogEntryPublishDate];
+    NSDate *myDate = [self.articlesDateFormatter dateFromString: blogEntryPublishDate];
     
     //save to current date for least recent article
     if(_currentDateForLeastRecentArticle==nil || [_currentDateForLeastRecentArticle compare:myDate]==NSOrderedDescending)

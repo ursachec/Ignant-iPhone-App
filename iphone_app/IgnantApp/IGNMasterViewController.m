@@ -54,6 +54,8 @@
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
+
+@property (strong, nonatomic, readwrite) NSDateFormatter* articleCellDateFormatter;
 @end
 
 #pragma mark -
@@ -73,6 +75,8 @@
 @synthesize fetchingDataForFirstRun;
 
 @synthesize importer = _importer;
+
+@synthesize articleCellDateFormatter = _articleCellDateFormatter;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category
@@ -97,6 +101,12 @@
         }
         
         self.importer = nil;
+        
+        
+        self.articleCellDateFormatter = [[NSDateFormatter alloc] init];
+        [self.articleCellDateFormatter setDateStyle:NSDateFormatterShortStyle];
+        [self.articleCellDateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        
     }
     
     return self;
@@ -378,10 +388,7 @@
         aCell.categoryName = blogEntry.categoryName;
         
         if (blogEntry.publishingDate) {
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateStyle:NSDateFormatterShortStyle];
-            [formatter setTimeStyle:NSDateFormatterNoStyle];
-            aCell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
+            aCell.dateString = [self.articleCellDateFormatter stringFromDate:blogEntry.publishingDate];
         }
         
         NSString* currentArticleId = blogEntry.articleId;
@@ -535,16 +542,7 @@
  
 - (void)configureCell:(IgnantCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-//    BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-//    cell.title = [blogEntry.title uppercaseString];
-//    cell.categoryName = blogEntry.categoryName;
-//    
-//    if (blogEntry.publishingDate) {
-//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//        [formatter setDateStyle:NSDateFormatterShortStyle];
-//        [formatter setTimeStyle:NSDateFormatterNoStyle];
-//        cell.dateString = [formatter stringFromDate:blogEntry.publishingDate];
-//    }
+
 }
 
 -(BOOL)isIndexPathLastRow:(NSIndexPath*)indexPath

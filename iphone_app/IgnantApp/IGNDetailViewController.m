@@ -81,6 +81,9 @@
 
 @property(strong, nonatomic, readwrite) UILabel* couldNotLoadDataLabel;
 
+
+@property (nonatomic, strong, readwrite) NSDateFormatter *articlesDateFormatter;
+
 -(void)configureView;
 -(void)setupNavigationButtons;
 
@@ -159,6 +162,8 @@
 
 @synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
+@synthesize articlesDateFormatter = _articlesDateFormatter;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -172,6 +177,10 @@
         self.didLoadContentForRemoteArticle = NO;
            
         self.importer = nil;
+        
+        
+        self.articlesDateFormatter = [[NSDateFormatter alloc] init];
+        [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
     }
     return self;
 }
@@ -753,6 +762,7 @@
     CGRect tempRect = CGRectMake(0, 0, 0, 0);
     CGSize tempSize = CGSizeMake(0, 0);
     
+    
     //set up the blog entry imageview
 //    /////////////////////////// handle the thumb image image
 #warning TODO: trigger loading the imageview with thumb image
@@ -825,17 +835,18 @@
     
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-    //    NSLog(@"(title, date, category) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     
     //set up the description textview
     //set up the user interface for the current objects    
     CGFloat marginTop = 5.0f;
     
+    //start setting up the uiwebview 
     NSString* finalRichText = [self wrapRichTextForArticle:descriptionText];
     
-    [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];
+    [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];    
     self.descriptionWebView.delegate = self;
+    
     CGRect frame = _descriptionWebView.frame;
     CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
     frame.size = fittingSize;
@@ -953,9 +964,8 @@
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
     NSString *remoteContentBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
         
-    NSDateFormatter *aDf = [[NSDateFormatter alloc] init];
-    [aDf setDateFormat:@"yyyy-MM-dd"];
-    NSDate *fDate = [aDf dateFromString:remoteContentBlogEntryPublishDate];
+    
+    NSDate *fDate = [self.articlesDateFormatter dateFromString:remoteContentBlogEntryPublishDate];
     
     [self setupArticleContentViewWithArticleTitle:remoteContentArticleTitle
                                         articleId:remoteContentArticleID

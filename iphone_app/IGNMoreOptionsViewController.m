@@ -18,13 +18,15 @@
 
 #import "MoreCell.h"
 
+#import "Constants.h"
+
 typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,
     indexForTumblrFeed = 1,
     indexForCategories = 2,
-//    indexForMostRed = 3,
-//    indexForSearch = 2,
-    indexForContact = 3,
+    indexForReview = 3,
+    indexForContact = 4
+
 } moreOptionsIndeces;
 
 
@@ -79,6 +81,7 @@ typedef enum _moreOptionsIndeces  {
     [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
     [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
     [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
+    [_listOfOptions insertObject:@"Write a review" atIndex:indexForReview];
     [_listOfOptions insertObject:@"Kontakt" atIndex:indexForContact];
 }
 
@@ -203,7 +206,11 @@ typedef enum _moreOptionsIndeces  {
             categoriesVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self showViewController:categoriesVC];
             break;
-        
+            
+        case indexForReview:
+            [[UIApplication sharedApplication] openURL: [NSURL URLWithString:kAdressForItunesStore]];
+            break;
+            
         case indexForContact:
             [self.navigationController pushViewController:contactVC animated:YES];
             break;
@@ -233,7 +240,9 @@ typedef enum _moreOptionsIndeces  {
         case indexForContact:
             returnImage = [UIImage imageNamed:@"4"];
             break;
-            
+        case indexForReview:    
+            returnImage = [UIImage imageNamed:@"5"];
+            break;
         default:
             break;
     }

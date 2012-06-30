@@ -47,6 +47,7 @@ NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue = @"leastRecentAr
 
 
 NSString* const kAdressForMercedesPage = @"http://www.mercedes-benz.de/";
+NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/at/app/instapaper/id288545208?mt=8";
 
 #if TARGET_IPHONE_SIMULATOR==TRUE
 NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/ignant.php";
