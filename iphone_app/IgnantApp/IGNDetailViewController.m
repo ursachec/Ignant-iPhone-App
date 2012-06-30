@@ -996,66 +996,77 @@
 
 -(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    
 #define IGNANT_TOOLBAR_HEIGHT 50.0f
 #define IGNANT_GRADIENT_HEIGHT 4.0f
-#define ANIMATION_DURATION 0.2f
+#define ANIMATION_DURATION UINavigationControllerHideShowBarDuration
     
     LOG_CURRENT_FUNCTION()
     
-    
-#warning THIS DOES NOT SEEM TO WORK PROPERLY, REWRITE / FIX
-    //hide/show the navigation bar
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    
-//    //hide/show the toolbar
-    CGFloat totalHeight = (self.shareAndMoreToolbar.frame.origin.y+self.shareAndMoreToolbar.frame.size.height+20+44);
-    BOOL isCurrentlyHidden = !(totalHeight<=480.0f);
-    
-    NSLog(@"isCurrentlyHidden: %@    hidden: %@  totalHeight: %f _shareAndMoreToolbar.frame: %@", isCurrentlyHidden ? @"TRUE" : @"FALSE", hidden ? @"TRUE" : @"FALSE", totalHeight, NSStringFromCGRect(self.shareAndMoreToolbar.frame));
-    
+    //hide/show the toolbar    
+    BOOL isCurrentlyHidden = self.navigationController.isNavigationBarHidden;
+        
     //don't change anything if state hasn't change
     if (hidden==isCurrentlyHidden)
     return;
     
+    //hide/show the navigation bar
+    [self.navigationController setNavigationBarHidden:hidden animated:animated];
     
     self.isNavigationBarAndToolbarHidden = hidden;
+    self.contentScrollView.autoresizingMask = UIViewAutoresizingNone;
+    self.view.backgroundColor = [UIColor whiteColor];
     
+    __block UIView* blockReadyShareAndMoreToolBar = self.shareAndMoreToolbar;
+    __block UIView* blockReadyGradientView = self.appDelegate.toolbarGradientView;
+    __block UIScrollView* blockReadyContentScrollView = self.contentScrollView;
     
-    __unsafe_unretained UIView* blockReadyShareAndMoreToolBar = _shareAndMoreToolbar;
-    __unsafe_unretained UIView* blockReadyGradientView = self.appDelegate.toolbarGradientView;
-    __unsafe_unretained UIScrollView* blockReadyContentScrollView = _contentScrollView;
-    __block __typeof__(self) blockSelf = self;
+    __block UIView* blockSelfView = self.view;
     
+    CGFloat navigationBarHeight = 44.0f;
+    CGFloat scrollViewHeight = 366.0f;
+    CGFloat statusBarHeight = 20.0f;
+    CGFloat shareAndMoreToolbarHeight = 50.0f;
     
-    int hiddenMultiplicator = hidden ? 1 : -1;
     void (^toolbarblock)(void);
     toolbarblock = ^{
         
-        //move the toolbar out of the screen
-        CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
-        blockReadyShareAndMoreToolBar.frame = CGRectMake(currentShareAndMoreToolbarFrame.origin.x, currentShareAndMoreToolbarFrame.origin.y+IGNANT_TOOLBAR_HEIGHT*2*hiddenMultiplicator, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
-        
         //move the gradient on/off the screen
-        CGFloat statusBarHeight = 20.0f;
-        CGFloat navigationBarHeight = 44.0f;
         CGRect gradientFrame = blockReadyGradientView.frame;
-        CGRect newGradientFrame = CGRectMake(0, 0, 0, 0);
+        CGRect newGradientFrame = CGRectMake(0.0f, 0.0f, 0.0f, 0.0f);
         if (hidden) {
             newGradientFrame = CGRectMake(0.0f, -(statusBarHeight+navigationBarHeight), gradientFrame.size.width, gradientFrame.size.height);
         }
         else {
             newGradientFrame = CGRectMake(0.0f, statusBarHeight+navigationBarHeight, gradientFrame.size.width, gradientFrame.size.height);
         }
-        
         [blockReadyGradientView setFrame:newGradientFrame];
+
+        //move the toolbar out of the screen
+        CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
+        CGRect newShareAndMoreToolbarFrame = CGRectMake(0.0f, 0.0f, 0.0f, 0.0f);
+        if (hidden) {
+            newShareAndMoreToolbarFrame = CGRectMake(0.0f, blockSelfView.frame.size.height+shareAndMoreToolbarHeight, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
+        }
+        else {
+            newShareAndMoreToolbarFrame = CGRectMake(0.0f, blockSelfView.frame.size.height-shareAndMoreToolbarHeight, currentShareAndMoreToolbarFrame.size.width, currentShareAndMoreToolbarFrame.size.height);
+        }
+        [blockReadyShareAndMoreToolBar setFrame:newShareAndMoreToolbarFrame];
         
         //resize the scroll view
         CGRect currentScrollViewFrame = blockReadyContentScrollView.frame;
-        blockReadyContentScrollView.frame = CGRectMake(0, 0, currentScrollViewFrame.size.width, currentScrollViewFrame.size.height+IGNANT_TOOLBAR_HEIGHT*hiddenMultiplicator);
+        CGRect newScrollViewFrame = CGRectMake(0.0f, 0.0f, 0.0f, 0.0f);
+        if (hidden) {
+            newScrollViewFrame = CGRectMake(0.0f, 0.0f, currentScrollViewFrame.size.width, scrollViewHeight+navigationBarHeight+shareAndMoreToolbarHeight);
+        }
+        else {
+            newScrollViewFrame = CGRectMake(0.0f, 0.0f, currentScrollViewFrame.size.width, scrollViewHeight);
+        }
+        
+        [blockReadyContentScrollView setFrame:newScrollViewFrame];
+        
+        NSLog(@"newScrollViewFrame: %@ shareAndMoreToolbarHeight: %f scrollViewHeight: %f", NSStringFromCGRect(newScrollViewFrame), shareAndMoreToolbarHeight, scrollViewHeight);
+        
     };
-    
-    NSLog(@"blockReadyShareAndMoreToolBar.frame: %@   // self.shareAndMoreToolbar.frame: %@", NSStringFromCGRect(blockReadyShareAndMoreToolBar.frame), NSStringFromCGRect(_shareAndMoreToolbar.frame));
     
     //execute show/hide
     if (!animated) 
@@ -1063,9 +1074,11 @@
         toolbarblock();
     }
     else 
-    {
-        [UIView animateWithDuration:ANIMATION_DURATION 
-                         animations:toolbarblock
+    {        
+        [UIView animateWithDuration:UINavigationControllerHideShowBarDuration 
+                              delay:0.0f 
+                            options:UIViewAnimationCurveEaseInOut 
+                         animations:toolbarblock 
                          completion:^(BOOL finished){
                              
                          }];

@@ -535,7 +535,7 @@ return _categoryViewController;
     NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@", encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-    [request setTimeOutSeconds:10.0f];
+    [request setTimeOutSeconds:6.0f];
 	[request setDelegate:self];
 	[request startAsynchronous];
 }
@@ -556,7 +556,8 @@ return _categoryViewController;
     NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
     NSLog(@"requestFailed");
-    [self.masterViewController setIsFirstRunLoadingViewHidden:YES animated:NO];
+    
+    [self.masterViewController setIsCouldNotLoadDataViewHidden:NO fullscreen:YES];
     
     self.isLoadingDataForFirstRun = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];

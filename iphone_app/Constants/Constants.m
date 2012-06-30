@@ -57,9 +57,9 @@ NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant
 NSString * const kAdressForImageServer = @"http://107.21.216.249/ignant/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://107.21.216.249/ignant/videosrv.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/ignant.php";
-NSString * const kAdressForImageServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
-NSString * const kAdressForVideoServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/videosrv.php";
+NSString * const kAdressForContentServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForImageServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/videosrv.php";
 #endif
 
 NSString * const kReachabilityHostnameToCheck = @"www.google.de";

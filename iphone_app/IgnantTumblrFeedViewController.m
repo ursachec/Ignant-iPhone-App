@@ -352,12 +352,7 @@
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
-    
-    NSLog(@" is.importer.nil: %@", (self.importer == nil) ? @"TRUE" : @"FALSE");
-    
-    
     if (_isLoadingMoreTumblr) {
-        
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueMoreTumblr", NULL);
         dispatch_async(importerDispatchQueue, ^{

@@ -14,7 +14,7 @@
 
 #import "Category.h"
 
-#define ROW_HEIGHT 48.0f
+#import "CategoryCell.h"
 
 @interface CategoriesViewController()
 
@@ -101,34 +101,34 @@
     return numberOfObjects;
 }
 
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"CategoryCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CategoryCell *cell = (CategoryCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        
-        //add the arrow
-        CGFloat paddingRight = 10.0f;
-        CGFloat ratio = .5f;
-        CGSize arrowSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
-        CGRect arrowViewFrame = CGRectMake(cell.contentView.frame.size.width-arrowSize.width-paddingRight, (cell.contentView.frame.size.height-arrowSize.height)/2, arrowSize.width, arrowSize.height);
-        UIImageView* arrowView = [[UIImageView alloc] initWithFrame:arrowViewFrame];
-        arrowView.image = [UIImage imageNamed:@"arrow_right.png"];
-        [cell.contentView addSubview:arrowView];
+        cell = [[CategoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     } 
-    
-    //configure the cell
-    [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
 }
 
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];    
+    NSString* aTitle = category.name;
+    
+    CategoryCell* cCell = (CategoryCell*)cell;
+    [cCell configureWithTitle:aTitle ];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    return ROW_HEIGHT;
+    return kCategoryCellHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -140,24 +140,6 @@
     [self.navigationController pushViewController:categoryVC animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    //add a custom background view
-    UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    customBackgroundView.backgroundColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-    cell.backgroundView = customBackgroundView;
-    
-    //add a custom selected background view
-    UIView *customSelectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    customSelectedBackgroundView.backgroundColor = [UIColor colorWithRed:.0f green:.0f blue:.0f alpha:.5f];
-    cell.selectedBackgroundView = customSelectedBackgroundView;
-    
-    
-    Category *category = (Category*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = category.name;
-    cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:13.0f];
 }
 
 #pragma mark - Fetched results controller

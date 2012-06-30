@@ -461,16 +461,26 @@ NSString * const kImageFilename = @"filename";
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
     
-    if (!self.isMosaicImagesArrayNotEmpty){
-        [self setIsCouldNotLoadDataViewHidden:NO];
-    }
-    
     _isLoadingMoreMosaicImages = NO;
     self.loadingMoreMosaicView.isLoading = NO;
     
-#warning THIS could be a problem for the loading view
-    [self setIsLoadingViewHidden:YES]; 
     _numberOfActiveRequests--;
+    
+    
+    
+    if (!self.isMosaicImagesArrayNotEmpty){
+        [self setIsCouldNotLoadDataViewHidden:NO];
+        
+#warning TODO: implement this in a better way
+        __block __typeof__(self) blockSelf = self;
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [blockSelf dismissModalViewControllerAnimated:YES];
+        });
+    }
+    
+    
 }
 
 #pragma mark - overlay view

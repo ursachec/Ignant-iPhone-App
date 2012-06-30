@@ -200,6 +200,17 @@
             NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
         }
     }
+    else if (!self.isHomeCategory && ![self.appDelegate checkIfAppOnline] ) {
+        
+        if (dateForLastUpdate==nil) 
+        {
+            [self setIsNoConnectionViewHidden:NO];    
+        }
+        else if( [dateForLastUpdate timeIntervalSinceNow]) 
+        {
+            [self setIsNoConnectionViewHidden:YES];
+        }
+    }
     
     //set up some ui elements
     if (self.isHomeCategory) 
@@ -223,12 +234,10 @@
     }
     
     else if (self.appDelegate.shouldLoadDataForFirstRun && ![self.appDelegate checkIfAppOnline]) {
-        [self setIsCouldNotLoadDataViewHidden:NO];
-        self.navigationController.navigationBarHidden = YES;
+        [self setIsCouldNotLoadDataViewHidden:NO fullscreen:YES];
+        self.navigationController.navigationBarHidden = NO;
     }
 }
-
-
 
 - (void)viewDidLoad
 {
@@ -444,6 +453,12 @@
         self.detailViewController.managedObjectContext = self.managedObjectContext;
         self.detailViewController.isNavigationBarAndToolbarHidden = NO;
         [self.navigationController pushViewController:self.detailViewController animated:YES];
+        
+        //deselect the row
+        
+        [self.blogEntriesTableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        
     }
 }
 
@@ -586,15 +601,9 @@
     
     NSLog(@"encodedString go: %@",encodedString);
     
-    NSLog(@"init ASI request");
-    
     NSURL* reqUrl = [[NSURL alloc] initWithString:encodedString];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:reqUrl];
-    
-    NSLog(@"setting delegate...");
     [request setDelegate:self];
-    
-    NSLog(@"starting asynchronous");
     [request startAsynchronous];
 }
 
@@ -602,7 +611,6 @@
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    NSLog(@"requestStarted");
     
     NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     
@@ -616,7 +624,11 @@
     else if (_isLoadingLatestContent) {
         
         if (lastUpdateDateForCurrentCategoryId==nil) {
-            [self setIsLoadingViewHidden:NO];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setIsLoadingViewHidden:NO];
+            });
+            
         }
         
     }
@@ -713,7 +725,9 @@
     
     else if (_isLoadingLatestContent) {
         if ([self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]]==nil) {
-            [self setIsCouldNotLoadDataViewHidden:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setIsCouldNotLoadDataViewHidden:NO];
+            });
         }
         
         _isLoadingLatestContent = NO;
@@ -864,7 +878,6 @@
     NSLog(@"MASTER shouldLoadData: %@", self.appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
 #warning BETTER TEXT!
-    
     
     if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
         self.couldNotLoadDataLabel.text = @"Could not load data from SERVER for first RUN, sorry!";

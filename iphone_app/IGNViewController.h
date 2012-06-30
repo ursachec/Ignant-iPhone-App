@@ -48,6 +48,8 @@
 
 -(void)setIsFirstRunLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden fullscreen:(BOOL)fullscreen;
+
 -(void)setUpForOfflineUse;
 -(void)setUpForOnlineUse;
 

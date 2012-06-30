@@ -13,6 +13,7 @@
 {
     IgnantCell *_cell;
     BOOL _highlighted;
+    BOOL _selected;
 }
 @end
 
@@ -33,6 +34,9 @@
 
 - (void)setHighlighted:(BOOL)highlighted
 {
+    
+    [_cell setHighlighted:highlighted];
+    
     _highlighted = highlighted;
     [self setNeedsDisplay];
 }
@@ -47,7 +51,7 @@
     
 #define CELL_PADDING_TOP 5.0f
     
-#define PADDING_RIGHT 0.0f
+#define PADDING_RIGHT 2.0f
 #define PADDING_LEFT 100.0f
 #define PADDING_TOP 10.0f   
 #define PADDING_BOTTOM 5.0f
@@ -77,8 +81,9 @@
         
     //draw the arrow
     [IGNANT_GRAY_COLOR set];
-    UIImage *arrowImage = [UIImage imageNamed:@"ignantCellArrow.png"];
-    CGSize arrowImageSize = CGSizeMake(20.0f, 30.0f);
+    CGFloat ratio = 0.5f;
+    UIImage *arrowImage = [UIImage imageNamed:@"arrow_right.png"];
+    CGSize arrowImageSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
     CGRect arrowImageRect = CGRectMake(contentRect.size.width-arrowImageSize.width-PADDING_RIGHT, (contentRect.size.height-arrowImageSize.height-CELL_PADDING_TOP)/2, arrowImageSize.width, arrowImageSize.height);
     [arrowImage drawInRect:arrowImageRect];
     
@@ -118,10 +123,19 @@
 
 @end
 
+
+
+@interface IgnantCell()
+- (void)setHighlighted:(BOOL)highlighted;
+@property(nonatomic,strong,readwrite) UIView *overlayView;
+@end
+
 @implementation IgnantCell
 @synthesize cellContentView;
 @synthesize cellImageView;
 @synthesize title, categoryName, dateString;
+@synthesize overlayView = _overlayView;
+
 
 #define COLOR_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
 #define COLOR_SELECTED_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
@@ -140,10 +154,15 @@
         cellContentView.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:cellContentView];
         
+        
         cellImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5.0f, 5.0f, 149.0f,97.0f)];
         cellImageView.backgroundColor = COLOR_IMAGEVIEW_BACKGROUND;
         [self.contentView addSubview:cellImageView];
-                
+        
+        self.overlayView =[[UIView alloc] initWithFrame:self.contentView.bounds];
+        _overlayView.backgroundColor = [UIColor colorWithRed:.0 green:0 blue:0 alpha:.0f];
+        [self.contentView addSubview:_overlayView];
+        
         self.backgroundView =[[UIView alloc] initWithFrame:self.bounds]; 
         self.backgroundView.backgroundColor = COLOR_BACKGROUND_VIEW;
         
@@ -158,6 +177,19 @@
 {
     [super setBackgroundColor:backgroundColor];
     cellContentView.backgroundColor = backgroundColor;
+}
+
+- (void)setHighlighted:(BOOL)highlighted
+{    
+    if (highlighted) {
+        _overlayView.frame = self.contentView.bounds;
+        _overlayView.backgroundColor = [UIColor colorWithRed:.3f green:.3f blue:.3f alpha:.1f];
+    }
+    else {
+        _overlayView.backgroundColor = [UIColor colorWithRed:.0f green:.0f blue:.0f alpha:.0f];
+    }
+    
+    [self setNeedsDisplay];
 }
 
 @end

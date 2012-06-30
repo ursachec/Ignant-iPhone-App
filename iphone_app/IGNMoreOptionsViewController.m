@@ -15,8 +15,8 @@
 #import "ContactViewController.h"
 #import "IGNMasterViewController.h"
 
-//temp icon for categories tempMoreCategoryIcon.png (in mainBundle)
 
+#import "MoreCell.h"
 
 typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,
@@ -124,8 +124,12 @@ typedef enum _moreOptionsIndeces  {
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self configureCell:cell atIndexPath:indexPath];
-
+    NSString* aTitle = [_listOfOptions objectAtIndex:indexPath.row];
+    UIImage* aImage = [self iconImageForRow:indexPath.row];
+    
+    MoreCell* mCell = (MoreCell*)cell;
+    [mCell configureWithTitle:aTitle 
+                        image:aImage];
 }
 
 // Customize the number of sections in the table view.
@@ -139,24 +143,20 @@ typedef enum _moreOptionsIndeces  {
     return _listOfOptions.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kMoreCellHeight;
+}
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"MoreOptionsCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    MoreCell *cell = (MoreCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        
-        NSLog(@"newCell");
-        
-        
-        
+        cell = [[MoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     } 
-    
-    UIView *customBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    customBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    cell.selectedBackgroundView = customBackgroundView;
     
     return cell;
 }
@@ -212,83 +212,8 @@ typedef enum _moreOptionsIndeces  {
             break;
     }
     
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-}
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-#define DEBUG_SHOW_HELP_COLORS false
-    
-    UIView *newContentView = [[UIView alloc] initWithFrame:cell.contentView.frame];
-    newContentView.backgroundColor = [UIColor whiteColor];
-    
-    if(DEBUG_SHOW_HELP_COLORS)
-    newContentView.backgroundColor = [UIColor blueColor];
-    
-    
-    CGSize imageSize = CGSizeMake(18.0f, 20.0f);
-    CGFloat verticalMiddle = (cell.contentView.frame.size.height-imageSize.height)/2;
-    CGFloat paddingLeft = 10.0f;
-    
-    //add the image icon to the category cell
-    CGRect imageFrame = CGRectMake(paddingLeft, verticalMiddle, imageSize.width, imageSize.height);
-    UIImageView* imageView = [[UIImageView alloc] initWithFrame:imageFrame];
-    imageView.image = [self iconImageForRow:indexPath.row];
-    
-#if DEBUG_SHOW_HELP_COLORS
-    imageView.backgroundColor = [UIColor redColor];
-#endif    
-    
-    [newContentView addSubview:imageView];
-    
-    
-    //add the title label to the category cell
-    CGFloat paddingLeftFromImageIcon = 10.0f;
-    CGSize labelSize = CGSizeMake(cell.contentView.frame.size.width-imageFrame.origin.x-imageFrame.size.width-paddingLeftFromImageIcon, cell.contentView.frame.size.height);
-    CGRect labelFrame = CGRectMake(imageFrame.origin.x+imageFrame.size.width+paddingLeftFromImageIcon, 0.0f , labelSize.width, labelSize.height);
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:labelFrame];
-    titleLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
-    
-#if DEBUG_SHOW_HELP_COLORS
-    titleLabel.backgroundColor = [UIColor greenColor];
-#endif
-    
-    titleLabel.text = [_listOfOptions objectAtIndex:indexPath.row];
-    [newContentView addSubview:titleLabel];
-    
-    
-    
-    CGSize separatorSize = CGSizeMake(newContentView.bounds.size.width, 1.0f);
-    CGRect separatorFrame = CGRectMake(0.0f, newContentView.bounds.size.height-separatorSize.height, separatorSize.width, separatorSize.height);
-    UIView* separatorLine = [[UIView alloc] initWithFrame:separatorFrame];
-    separatorLine.backgroundColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
-    
-#if DEBUG_SHOW_HELP_COLORS
-    separatorLine.backgroundColor = [UIColor cyanColor];
-#endif
-    
-    [newContentView addSubview:separatorLine];    
-    
-    
-    
-    //add the arrow
-    CGFloat paddingRight = 10.0f;
-    CGFloat ratio = .5f;
-    CGSize arrowSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
-    CGRect arrowViewFrame = CGRectMake(cell.contentView.frame.size.width-arrowSize.width-paddingRight, (cell.contentView.frame.size.height-arrowSize.height)/2, arrowSize.width, arrowSize.height);
-    
-    UIImageView* arrowView = [[UIImageView alloc] initWithFrame:arrowViewFrame];
-    arrowView.image = [UIImage imageNamed:@"arrow_right.png"];
-    
-#if DEBUG_SHOW_HELP_COLORS
-    arrowView.backgroundColor = [UIColor redColor];
-#endif
-    
-    [newContentView addSubview:arrowView];
-    
-    [cell.contentView addSubview:newContentView];
 }
 
 -(UIImage*)iconImageForRow:(int)row

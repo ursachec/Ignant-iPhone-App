@@ -307,8 +307,6 @@
     
     if (_specificToolbar==nil) {
         
-       
-        
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
         CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-20.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
         UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
@@ -412,7 +410,7 @@
 #warning find better text!
 #warning add fonts to constants    
         someLabel.text = @"Sorry, but you need an internet connection to load this data"; 
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
         someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.couldNotLoadDataLabel = someLabel;
         [someView addSubview:someLabel];
@@ -433,16 +431,48 @@
     else {
         CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.couldNotLoadDataView.frame = newFrame;
+        
         [self.view addSubview:self.couldNotLoadDataView];        
         
         NSLog(@" is couldnotloaddataview nil: %@", (_couldNotLoadDataView == nil) ? @"TRUE" : @"FALSE");
         
         [self setIsLoadingViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];
+        [self setIsFirstRunLoadingViewHidden:YES animated:NO];
         
     }
 }
 
+-(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden fullscreen:(BOOL)fullscreen
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (!fullscreen) {
+        [self setIsCouldNotLoadDataViewHidden:hidden];
+        return;
+    }
+    
+    
+    if (hidden) {
+        [_couldNotLoadDataView removeFromSuperview];
+    }
+    else {
+        CGRect newFrame = CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height);
+        self.couldNotLoadDataView.frame = newFrame;
+        
+        CGFloat paddingTop = 20.0f;
+        CGRect oldFrameForLabel = self.couldNotLoadDataLabel.frame;
+        CGRect newFrameForLabel = CGRectMake(oldFrameForLabel.origin.x, (newFrame.size.height-oldFrameForLabel.size.height)/2+paddingTop, oldFrameForLabel.size.width, oldFrameForLabel.size.height);
+        self.couldNotLoadDataLabel.frame = newFrameForLabel;
+
+        
+        [self.navigationController.view addSubview:self.couldNotLoadDataView];        
+                
+        [self setIsLoadingViewHidden:YES];
+        [self setIsNoConnectionViewHidden:YES];
+        [self setIsFirstRunLoadingViewHidden:YES animated:NO];
+    }
+}
 
 -(void)setUpBackButton
 {
@@ -569,20 +599,16 @@
 #warning find better text!
 #warning add fonts to constants    
         someLabel.text = @"loading..."; 
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:11.0f];
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
         someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.loadingViewLabel = someLabel;
         
         [aView addSubview:someLabel];
         
-
         
         //set up the activity indicator
-        
-
-           
-        CGFloat paddingTop = .0f;
-        CGFloat scalingFactor = 0.8f;
+        CGFloat paddingTop = 5.0f;
+        CGFloat scalingFactor = 0.7f;
         CGSize activityIndicatorSize = CGSizeMake(21.0f, 21.0f);
         CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width*scalingFactor)/2, someLabelFrame.origin.y+someLabelFrame.size.height+paddingTop, activityIndicatorSize.width*scalingFactor, activityIndicatorSize.height*scalingFactor);
         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -640,7 +666,7 @@
         someLabel.text = @"Sorry, but you need an internet connection to view this tumblr feed"; 
 #warning find better text!
 #warning add fonts to constants    
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
+        someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
         
         [someView addSubview:someLabel];
         
