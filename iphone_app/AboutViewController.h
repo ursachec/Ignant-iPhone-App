@@ -11,5 +11,7 @@
 
 @interface AboutViewController : IGNViewController
 @property (retain, nonatomic) IBOutlet UIScrollView *aboutScrollView;
+@property (retain, nonatomic) IBOutlet UITextView *aboutTextView;
+@property (retain, nonatomic) IBOutlet UIImageView *aboutImageView;
 
 @end
