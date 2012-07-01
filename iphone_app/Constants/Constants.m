@@ -40,6 +40,11 @@ NSString * const kDatesForLeastRecentArticleKey = @"leastRecentArticlesDates";
 NSString * const kDatesForLeastRecentArticleKeyDateValue = @"leastRecentArticleDate";
 NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue = @"leastRecentArticleCategoryId";
 
+NSString * const kFavouriteBlogEntriesKey = @"favouriteBlogEntries";
+NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntriesArticleId";
+
+
+
 //################################################################################
 
 //server stuff

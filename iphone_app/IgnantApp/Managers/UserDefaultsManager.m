@@ -152,4 +152,60 @@
     return [updateDates mutableCopy];
 }
 
+#pragma mark - blog entry favourites
+-(BOOL)isBlogEntryFavourite:(NSString*)articleId
+{
+    NSMutableArray* currentFavouriteIds = [self currentFavouriteBlogEntries];
+    for (NSString* aArticleId in currentFavouriteIds) {
+        if ([articleId compare:aArticleId]==NSOrderedSame)
+            return true;
+    }
+    
+    return false;
+}
+
+-(void)setIsBlogEntry:(NSString*)articleId favourite:(BOOL)favourite
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    if (articleId==nil) {
+        NSLog(@"setIsBlogEntry: You are trying to set the favourite state of nil articleId");
+        return;
+    }
+    
+    NSMutableArray* currentFavouriteIds = [self currentFavouriteBlogEntries];    
+    BOOL currentFavouriteStatus = [self isBlogEntryFavourite:articleId];
+    
+    if (currentFavouriteStatus == favourite)
+        return;
+    
+    else if (favourite==true && currentFavouriteStatus==false) {
+        [currentFavouriteIds addObject:articleId];
+    }
+    else if (favourite==false && currentFavouriteStatus==true) {
+        [currentFavouriteIds removeObject:articleId];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:currentFavouriteIds forKey:kFavouriteBlogEntriesKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+-(void)toggleIsFavouriteBlogEntry:(NSString*)articleId
+{
+    BOOL currentFavouriteState = [self isBlogEntryFavourite:articleId];
+    [self setIsBlogEntry:articleId favourite:!currentFavouriteState];
+}
+
+-(NSMutableArray*)currentFavouriteBlogEntries
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kFavouriteBlogEntriesKey];    
+    if (updateDates==nil) {
+        return [[NSMutableArray alloc] initWithCapacity:1];
+    }
+    
+    return [updateDates mutableCopy];
+}
+
 @end

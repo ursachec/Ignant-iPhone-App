@@ -38,6 +38,8 @@ extern NSString * const kDatesForLeastRecentArticleKey;
 extern NSString * const kDatesForLeastRecentArticleKeyDateValue;
 extern NSString * const kDatesForLeastRecentArticleKeyCategoryIdValue;
 
+extern NSString * const kFavouriteBlogEntriesKey;
+extern NSString * const kFavouriteBlogEntriesKeyArticleIdValue;
 
 //################################################################################
 //other constants

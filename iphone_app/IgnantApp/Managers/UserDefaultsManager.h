@@ -21,4 +21,9 @@
 -(NSDate*)lastUpdateForFirstRun;
 -(void)setLastUpdateDateForFirstRun:(NSDate*)date;
 
+-(BOOL)isBlogEntryFavourite:(NSString*)articleId;
+-(void)setIsBlogEntry:(NSString*)articleId favourite:(BOOL)favourite;
+-(void)toggleIsFavouriteBlogEntry:(NSString*)articleId;
+
+
 @end

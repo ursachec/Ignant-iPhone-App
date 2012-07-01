@@ -570,6 +570,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4106DBB215A0D03900F6370F /* Favourites */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Favourites;
+			sourceTree = "<group>";
+		};
 		4146FE3C1582430D001BAC75 /* navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,6 +761,7 @@
 				FEC82EDD154B2E52004F4E95 /* Article Detail  */,
 				FEB3A749150FB8C600AECCC4 /* Image Slideshow */,
 				41F9E7881584FB0800F11927 /* Tumblr */,
+				4106DBB215A0D03900F6370F /* Favourites */,
 				FEA811BD14B254A700E6C3CA /* Mosaik */,
 				FE775DBF1556CC88006D1486 /* More */,
 			);

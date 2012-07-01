@@ -181,6 +181,27 @@
     [self.navigationController pushViewController:tumblrVC animated:YES];
 }
 
+-(void)showArticleWithId:(NSString*)articleId
+{    
+    if (!self.detailViewController) {
+        self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
+    }
+
+    self.detailViewController.didLoadContentForRemoteArticle = NO;
+    self.detailViewController.isShowingArticleFromLocalDatabase = NO;
+    self.detailViewController.viewControllerToReturnTo = self;
+    
+    //set up the selected object and previous/next objects
+    self.detailViewController.currentArticleId = articleId;
+    self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
+    self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
+
+    //set the managedObjectContext and push the view controller
+    self.detailViewController.managedObjectContext = self.managedObjectContext;
+    self.detailViewController.isNavigationBarAndToolbarHidden = NO;
+    [self.navigationController pushViewController:self.detailViewController animated:NO];        
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated
@@ -399,7 +420,6 @@
                            placeholderImage:nil 
                                      success:^(UIImage* image){
                                          
-                                         NSLog(@"imageDidLoad: %@", blockUrlAtCurrentIndex);
                                      } 
                                      failure:^(NSError* error){
                                      

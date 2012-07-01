@@ -45,9 +45,11 @@
 
 @property (strong, nonatomic, readonly) Category* currentCategory;
 
+-(void)loadLatestContent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category;
 
+-(void)showArticleWithId:(NSString*)articleId;
 - (IBAction)showTumblr:(id)sender;
 
 -(void)fetch;

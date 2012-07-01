@@ -41,6 +41,8 @@
 
 @property(nonatomic, readwrite, strong) UIView* toolbarGradientView;
 
+@property(nonatomic, readwrite, strong) NSString* deviceToken;
+
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
@@ -67,6 +69,8 @@
 #pragma mark -
 
 @implementation IGNAppDelegate
+@synthesize deviceToken = _deviceToken;
+
 @synthesize goHomeButton = _goHomeButton;
 @synthesize toolbarGradientView = _toolbarGradientView;
 
@@ -105,6 +109,7 @@
     NSLog(@"didFinishLaunchingWithOptions");
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |UIRemoteNotificationTypeSound)];
+    
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -171,6 +176,14 @@
     [self setupGoHomeButton];
     
     [self.window makeKeyAndVisible];
+    
+    
+    NSDictionary* dict = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (dict) {
+        NSString* articleID = [dict objectForKey:kFKArticleId];
+        [self.masterViewController showArticleWithId:articleID];
+    }
+    
     return YES;
 }
 
@@ -532,7 +545,7 @@ return _categoryViewController;
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
         
-    NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@", encodedString);
+    NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@ /// deviceToken: %@", encodedString, self.deviceToken);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
     [request setTimeOutSeconds:6.0f];
@@ -566,10 +579,18 @@ return _categoryViewController;
 #pragma mark - push notifications
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"devToken=%@",deviceToken);
+    self.deviceToken = [[NSString alloc] initWithData:deviceToken encoding:NSUTF8StringEncoding];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     NSLog(@"Error in registration. Error: %@", err);
+}
+
+- (void)application:(UIApplication *)app didReceiveRemoteNotification:(NSDictionary *)userInfo
+{   
+#warning TODO: is this OK?
+    [self.masterViewController loadLatestContent];
+    
 }
 
 #pragma mark - ui stuff

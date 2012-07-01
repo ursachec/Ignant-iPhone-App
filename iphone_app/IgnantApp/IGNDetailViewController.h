@@ -55,6 +55,7 @@
 @property(unsafe_unretained) NSInteger previousBlogEntryIndex;
 
 @property (strong, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
+@property (retain, nonatomic) IBOutlet UIButton *toggleLikeButton;
 
 - (IBAction)handleRightSwipe:(id)sender;
 
@@ -64,5 +65,7 @@
 -(IBAction)playVideo:(id)sender;
 
 - (IBAction)handleLeftSwipe:(id)sender;
+
+-(IBAction)toggleLike:(id)sender;
 
 @end

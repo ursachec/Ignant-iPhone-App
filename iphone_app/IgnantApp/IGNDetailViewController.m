@@ -42,6 +42,8 @@
 
 - (IBAction)showMercedes:(id)sender;
 
+-(IBAction) toggleLike:(id)sender;
+
 //social media
 -(void)postToFacebook;
 -(void)postToPinterest;
@@ -61,6 +63,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *playVideoButton;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UIWebView *descriptionWebView;
+
 @property (strong, nonatomic) IBOutlet UIView *descriptionWebViewLoadingView;
 
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
@@ -110,6 +113,7 @@
 @synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
 
 @synthesize shareAndMoreToolbar = _shareAndMoreToolbar;
+@synthesize toggleLikeButton = _toggleLikeButton;
 @synthesize articleContentView = _articleContentView;
 @synthesize relatedArticlesView = _relatedArticlesView;
 
@@ -197,6 +201,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
+    
 }
 
 -(void)loadNavigationButtons
@@ -228,6 +235,7 @@
 - (void)viewDidUnload
 {
    
+    [self setToggleLikeButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -260,9 +268,14 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {    
+    
+#warning TODO: DETAIL NAVIGATION these to lines have been outcommented    
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
    
-    [self.appDelegate setIsToolbarHidden:YES animated:YES];
+    [self.appDelegate setIsToolbarHidden:YES animated:animated];
+    
+    //add the loading view to the webview
+    [self setIsDescriptionWebViewLoadingViewHidden:NO animated:NO];
     //----------------------------------------------------------------------------
     
     if (_isShowingArticleFromLocalDatabase) 
@@ -346,6 +359,7 @@
     _navigationDetailViewController.blogEntry = self.nextBlogEntry;
     
     self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
+
     
     [self.navigationController pushViewController:_navigationDetailViewController animated:YES];
 }
@@ -517,7 +531,10 @@
         
         return NO;
 	}
-	
+    
+    
+    
+    
 	return YES;   
 }
 
@@ -564,64 +581,58 @@
     //set up the scrollView's final contentSize
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
     
+    
+    [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
+    
     [self setIsLoadingViewHidden:YES];
-    
-    
 }
 
 #pragma mark - setting up the view
 -(void)setIsDescriptionWebViewLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
 {
+  
+    LOG_CURRENT_FUNCTION()
+    
+    CGFloat animationDuration = .7f;
+    CGFloat alphaForHiddenState = 0.0f;
+    CGFloat alphaForShownState = 1.0f;
+    
+    
     if (animated) {
         
         if (hidden) {
                         
-            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView; 
-            __block UIView* blocKDescriptionWebView = self.descriptionWebView; 
+            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;             
             
-            
-            [UIView animateWithDuration:1.0f 
+            [UIView animateWithDuration:animationDuration 
                              animations:
              ^{
-                 [blocKDescriptionWebViewLoadingView setAlpha:0.0f];
-            } 
-                            completion:
-             ^(BOOL finished){
-                 if (finished) {
-                        [blocKDescriptionWebViewLoadingView removeFromSuperview];
-                 }
-            }];
+                 [blocKDescriptionWebViewLoadingView setAlpha:alphaForHiddenState];
+             } 
+                            completion:^(BOOL finished){}];
             
         }
         else {
             
-            [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
-            
             __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView; 
-            __block UIView* blocKDescriptionWebView = self.descriptionWebView; 
-            
-            
-            [UIView animateWithDuration:1.0f 
+
+            [UIView animateWithDuration:animationDuration 
                              animations:
-             ^{
-                 [blocKDescriptionWebViewLoadingView setAlpha:1.0f];
+            ^{                 
+                 [blocKDescriptionWebViewLoadingView setAlpha:alphaForShownState];                 
              } 
-                             completion:
-             ^(BOOL finished){
-                 
-             }];
+                             completion:^(BOOL finished){ }];
             
         }
-        
-        
     }
+    
     else {
         
         if (hidden) {
-            [self.descriptionWebView removeFromSuperview];
+            [self.descriptionWebViewLoadingView setAlpha:alphaForHiddenState];
         }
         else {
-            [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
+            [self.descriptionWebViewLoadingView setAlpha:alphaForShownState];
         }
     }
 }
@@ -630,7 +641,8 @@
 {
     if (_descriptionWebViewLoadingView==nil) {
         
-        UIView* aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 500.0f)];     
+        UIView* aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 500.0f)];   
+        aView.userInteractionEnabled = false;
         aView.backgroundColor = [UIColor whiteColor];
         
         CGSize indicatorViewSize = CGSizeMake(44.0f, 44.0f);
@@ -841,11 +853,13 @@
     //set up the user interface for the current objects    
     CGFloat marginTop = 5.0f;
     
+    
     //start setting up the uiwebview 
     NSString* finalRichText = [self wrapRichTextForArticle:descriptionText];
     
     [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];    
     self.descriptionWebView.delegate = self;
+    
     
     CGRect frame = _descriptionWebView.frame;
     CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
@@ -885,6 +899,9 @@
     
     //setup ui elements for current blogentry template
     [self setupUIElementsForCurrentBlogEntryTemplate];
+    
+    
+    
 }
 
 -(void)setupRelatedArticlesUI:(NSArray*)relatedArticles
@@ -948,9 +965,17 @@
     
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
     NSLog(@"finished setting up related articles!");
+    
+    //set the appropriate title for the toggle like button
+    [self updateToggleLikeButtonTitle];
 }
 
-
+-(void)updateToggleLikeButtonTitle
+{
+    BOOL isFavourite = [self.appDelegate.userDefaultsManager isBlogEntryFavourite:self.blogEntry.articleId];
+    NSString *likeTitle = isFavourite ? @"UNLIKE" : @"LIKE";
+    [self.toggleLikeButton setTitle:likeTitle forState:UIControlStateNormal];
+}
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary
 {
@@ -1012,13 +1037,7 @@
     
     LOG_CURRENT_FUNCTION()
     
-    //hide/show the toolbar    
-    BOOL isCurrentlyHidden = self.navigationController.isNavigationBarHidden;
         
-    //don't change anything if state hasn't change
-    if (hidden==isCurrentlyHidden)
-    return;
-    
     //hide/show the navigation bar
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
     
@@ -1228,6 +1247,11 @@
 - (IBAction)showMore:(id)sender {
     IGNMoreOptionsViewController *moreOptionsVC = self.appDelegate.moreOptionsViewController;
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
+}
+
+-(IBAction)toggleLike:(id)sender {
+    [self.appDelegate.userDefaultsManager toggleIsFavouriteBlogEntry:self.blogEntry.articleId];    
+    [self updateToggleLikeButtonTitle];
 }
 
 #pragma mark - related articles
