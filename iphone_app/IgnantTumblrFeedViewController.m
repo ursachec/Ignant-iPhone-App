@@ -112,7 +112,7 @@
 }
 
 #pragma mark - helpful methods
--(BOOL)isTumblrEntriesArrayNotEmpty
+-(BOOL)isTumblrEntriesArrayEmpty
 {    
     //decide if to load posts for the first time or not
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
@@ -124,9 +124,12 @@
 {
     [super viewWillAppear:animated];
 
+    [self setUpTumblrTitleView];
+    
+    
     [self setIsNoConnectionViewHidden:YES];
     
-    if ([self isTumblrEntriesArrayNotEmpty]) {
+    if ([self isTumblrEntriesArrayEmpty]) {
         
         if ([self.appDelegate checkIfAppOnline]) {
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = YES;
@@ -136,7 +139,31 @@
             [self setIsNoConnectionViewHidden:NO];
         }
     }
+    else {
+        [self triggerLoadLatestDataIfNecessary];
+    }
+}
+
+-(void)triggerLoadLatestDataIfNecessary
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
     
+    NSTimeInterval updateTimer = -1.0f * 24.0f * 60.0f * 60.f;
+    
+    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
+    
+    if (lastUpdateInSeconds<updateTimer) {
+        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        [self loadLatestTumblrArticles];
+    }
+    else {
+        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+    }
+}
+
+-(void)setUpTumblrTitleView
+{
     CGRect tumblrLogoFrame = CGRectMake(0, 0, 24.0f, 24.0f);
     UIView *aTumblrLogoView = [[UIView alloc] initWithFrame:tumblrLogoFrame];
     aTumblrLogoView.backgroundColor = [UIColor whiteColor];
@@ -182,7 +209,6 @@
         IgnantLoadMoreCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifierLoadMore];
         if (cell == nil) {
             cell = [[IgnantLoadMoreCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierLoadMore];
-            
         }
         
         return cell;
@@ -216,9 +242,7 @@
         return cell;
     }
     
-    
     return nil;
-    
 }
 
 #pragma mark - Table view delegate
@@ -496,6 +520,9 @@
     LOG_CURRENT_FUNCTION() 
     NSLog(@"tumblrFeed didStartImportingData");
     
+    
+    
+    
     if (_isLoadingMoreTumblr) {
         
         _numberOfActiveRequests--;
@@ -506,6 +533,9 @@
     else {
         
     }
+    
+    //set the last update date
+    [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self fetch];
@@ -543,6 +573,7 @@
         }
     });
 }
+
 
 - (void)importerDidSave:(NSNotification *)saveNotification {  
     [self.appDelegate performSelectorOnMainThread:@selector(importerDidSave:) withObject:saveNotification waitUntilDone:NO];

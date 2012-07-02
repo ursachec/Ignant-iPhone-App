@@ -111,7 +111,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (categoryId==nil || date==nil) {
-        NSLog(@"setDateForLeastRecentArticle: You are trying to set the last update date for a nil categoryIdor date, exiting function");
+        NSLog(@"setDateForLeastRecentArticle: You are trying to set the date for least recent article a nil categoryIdor date, exiting function");
         return;
     }
     

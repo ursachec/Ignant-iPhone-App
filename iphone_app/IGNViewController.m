@@ -735,5 +735,10 @@
     
 }
 
+#pragma mark - specific actions
+-(void)triggerLoadLatestDataIfNecessary
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+}
 
 @end

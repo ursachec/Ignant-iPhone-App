@@ -138,6 +138,8 @@ NSString * const kImageFilename = @"filename";
     
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
     [self setIsSpecificToolbarHidden:YES animated:NO];
+    
+    
 }
 
 - (void)viewDidLoad
@@ -439,6 +441,10 @@ NSString * const kImageFilename = @"filename";
     NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
     NSArray* images = [dictionaryFromJSON objectForKey:kTLMosaicEntries];
     
+#warning TODO: DO SOMETHING IF IMAGES ARRAY IS EMPTY
+#warning TODO: ONLY THEN SET THE LAST UPDATE DATE
+    
+    [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
     //add the mosaic images
     [self addMoreMosaicImages:[images copy]];
