@@ -228,33 +228,33 @@ class LightArticlesTest
 		
 		if( strcmp($articleID,'jasmine_deporta')==0) 
 		{
-			$remoteImagesArray[] = new RemoteImage('jasmine_01','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_01.jpg', 455, 720);
-			$remoteImagesArray[] = new RemoteImage('jasmine_02','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_02.jpg',1107,720 );
-			$remoteImagesArray[] = new RemoteImage('jasmine_03','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_03.jpg', 461, 720);
-			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta03','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta03.jpeg', 469, 720);
-			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta04','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta04.jpeg', 1099, 720);
+			$remoteImagesArray[] = new RemoteImage('jasmine_01','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_01.jpg');
+			$remoteImagesArray[] = new RemoteImage('jasmine_02','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_02.jpg');
+			$remoteImagesArray[] = new RemoteImage('jasmine_03','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_03.jpg');
+			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta03','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta03.jpeg');
+			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta04','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta04.jpeg');
 		}
 		
 		else if( strcmp($articleID,'shadow_art')==0) 
 		{
-			$remoteImagesArray[] = new RemoteImage('kumiyamashita11','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita11.jpg', 749, 720 );
-			$remoteImagesArray[] = new RemoteImage('kumiyamashita2','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita2.jpg', 740, 720 );
-			$remoteImagesArray[] = new RemoteImage('kumiyamashita3','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita3.jpg', 502, 720 );
-			$remoteImagesArray[] = new RemoteImage('kumiyamashita4','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita4.jpg', 1069, 720 );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita11','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita11.jpg');
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita2','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita2.jpg' );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita3','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita3.jpg' );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita4','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita4.jpg' );
 					
 		}
 		
 		else if( strcmp($articleID,'cecilia_paredes')==0) 
 		{
 						
-			$remoteImagesArray[] = new RemoteImage('cecilia_01','http://www.ignant.de/wp-content/uploads/2012/02/cecilia01.jpg','descriptiondescription', 720, 725);
-			$remoteImagesArray[] = new RemoteImage('cecilia_02','http://www.ignant.de/wp-content/uploads/2012/02/cecilia02.jpg','descriptiondescription', 720, 653);
-			$remoteImagesArray[] = new RemoteImage('cecilia_03','http://www.ignant.de/wp-content/uploads/2012/02/cecilia03.jpg','descriptiondescription', 720, 720);
-			$remoteImagesArray[] = new RemoteImage('cecilia_04','http://www.ignant.de/wp-content/uploads/2012/02/cecilia04.jpg','descriptiondescription', 720, 679);
-			$remoteImagesArray[] = new RemoteImage('cecilia_05','http://www.ignant.de/wp-content/uploads/2012/02/cecilia05.jpg','descriptiondescription', 720, 720);
-			$remoteImagesArray[] = new RemoteImage('cecilia_06','http://www.ignant.de/wp-content/uploads/2012/02/cecilia06.jpg','descriptiondescription', 720, 720);
-			$remoteImagesArray[] = new RemoteImage('cecilia_07','http://www.ignant.de/wp-content/uploads/2012/02/cecilia07.jpg','descriptiondescription', 720, 727);
-			$remoteImagesArray[] = new RemoteImage('cecilia_08','http://www.ignant.de/wp-content/uploads/2012/02/cecilia08.jpg','descriptiondescription', 720, 806);
+			$remoteImagesArray[] = new RemoteImage('cecilia_01','http://www.ignant.de/wp-content/uploads/2012/02/cecilia01.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_02','http://www.ignant.de/wp-content/uploads/2012/02/cecilia02.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_03','http://www.ignant.de/wp-content/uploads/2012/02/cecilia03.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_04','http://www.ignant.de/wp-content/uploads/2012/02/cecilia04.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_05','http://www.ignant.de/wp-content/uploads/2012/02/cecilia05.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_06','http://www.ignant.de/wp-content/uploads/2012/02/cecilia06.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_07','http://www.ignant.de/wp-content/uploads/2012/02/cecilia07.jpg','descriptiondescription');
+			$remoteImagesArray[] = new RemoteImage('cecilia_08','http://www.ignant.de/wp-content/uploads/2012/02/cecilia08.jpg','descriptiondescription');
 		
 					
 		}
@@ -1109,7 +1109,7 @@ class LightArticlesTest
 		$tempArticleUrl = $this->getThumbLinkForArticleId($articleId);
 		$tempArticleId = $articleId;
 		$tempArticleWidth = 200;
-		$tempArticleHeight = 200;
+		$tempArticleHeight = rand(100, 300);
 		$mosaicEntry = new MosaicEntry($tempArticleUrl, $tempArticleId, $tempArticleWidth, $tempArticleHeight);
 		
 		return $mosaicEntry;
