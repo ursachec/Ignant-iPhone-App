@@ -60,7 +60,7 @@ static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
 @property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
 @property(nonatomic, readwrite, strong) AboutViewController *aboutViewController;
 @property(nonatomic, readwrite, strong) ContactViewController *contactViewController;
-@property(nonatomic, readwrite, strong) FavouritesViewController favouritesViewController;
+@property(nonatomic, readwrite, strong) FavouritesViewController* favouritesViewController;
 
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 @property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
@@ -883,7 +883,14 @@ return _categoryViewController;
     [aButton addTarget:self action:@selector(showHome) forControlEvents:UIControlEventTouchDown];
     
     [self.navigationController.navigationBar addSubview:aButton];
-
 }
+
+#pragma mark - useful methods
++(BOOL)isIOS5{
+    NSString* osVersion = @"5.0";
+    NSString* currentOsVersion = [[UIDevice currentDevice] systemVersion];
+    return [currentOsVersion compare:osVersion options:NSNumericSearch] == NSOrderedDescending;
+}
+
 
 @end

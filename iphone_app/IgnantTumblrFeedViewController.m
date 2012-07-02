@@ -137,12 +137,18 @@
         }
     }
     
+    CGRect tumblrLogoFrame = CGRectMake(0, 0, 24.0f, 24.0f);
+    UIView *aTumblrLogoView = [[UIView alloc] initWithFrame:tumblrLogoFrame];
+    aTumblrLogoView.backgroundColor = [UIColor whiteColor];
     
+    CGSize tumblrLogoSize = CGSizeMake(17.0f, 19.0f);
     UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tumblr_logo_small"]];
-    aImageView.frame = CGRectMake(0, 0, 20.0f, 23.0f);
+    aImageView.frame = CGRectMake((tumblrLogoFrame.size.width-tumblrLogoSize.width)/2, (tumblrLogoFrame.size.height-tumblrLogoSize.height)/2, tumblrLogoSize.width, tumblrLogoSize.height);
     aImageView.backgroundColor = [UIColor clearColor];
-    self.navigationItem.titleView = aImageView;
     
+    [aTumblrLogoView addSubview:aImageView];
+    
+    self.navigationItem.titleView = aTumblrLogoView;
 }
 
 -(NSString*)currentCategoryId
@@ -331,8 +337,6 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (_isLoadingMoreTumblr) {
-        
-        
         
         
     }

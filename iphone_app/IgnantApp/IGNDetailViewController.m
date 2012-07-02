@@ -1224,23 +1224,48 @@
 #pragma mark - show mosaik / more
 - (IBAction)showShare:(id)sender {
     
-    UIActionSheet *shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Twitter",@"Facebook", nil ];
+    UIActionSheet *shareActionSheet = nil;
     
+    #warning TODO: LOCALIZE cancel
+    
+    if ([IGNAppDelegate isIOS5]) {
+        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+                                                       delegate:self 
+                                              cancelButtonTitle:@"Cancel" 
+                                         destructiveButtonTitle:nil 
+                                              otherButtonTitles:@"Twitter",@"Facebook", nil ];
+    }
+    else {
+        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+                                                       delegate:self 
+                                              cancelButtonTitle:@"Cancel" 
+                                         destructiveButtonTitle:nil 
+                                              otherButtonTitles:@"Facebook", nil ];
+    }
     [shareActionSheet showInView:self.view];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     //TODO: maybe put this constants somewhere else
-    int twitterButtonIndex = 0;
-    int facebookButtonIndex = 1;
-    
-    if (buttonIndex==facebookButtonIndex) {
-        [self postToFacebook];
+    if ([IGNAppDelegate isIOS5]) {
+        int facebookButtonIndex = 0;
+        int twitterButtonIndex = 1;
+        
+        if (buttonIndex==facebookButtonIndex) {
+            [self postToFacebook];
+        }
+        
+        else if (buttonIndex==twitterButtonIndex) {
+            [self postToTwitter];
+        }
     }
-    
-    else if (buttonIndex==twitterButtonIndex) {
-        [self postToTwitter];
+    else {
+        int facebookButtonIndex = 0;
+        
+        if (buttonIndex==facebookButtonIndex) {
+            [self postToFacebook];
+        }
     }
 }
 

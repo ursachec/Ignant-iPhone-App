@@ -71,4 +71,6 @@
 
 -(void)showMore;
 
++(BOOL)isIOS5;
+
 @end
