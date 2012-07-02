@@ -16,8 +16,7 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 	public $rCategory;
 	public $webLink;
 	
-	
-	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleThumbImage=null,$pArticleTemplate = null, $pArticleDescriptionText = '', $pRemoteImages = array(),$pRelatedArticles = array(), $pArticleCategory = null, $pWebLink = null){
+	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleThumbImage=null,$pArticleTemplate = null, $pArticleDescriptionText = '', $pTemplate = FK_ARTICLE_TEMPLATE_DEFAULT, $pRemoteImages = array(),$pRelatedArticles = array(), $pArticleCategory = null, $pWebLink = null){
 		$this->id = $pArticleId;
 		$this->title = $pArticleTitle;
 		$this->publishingDate = $pArticlePublishingDate;
@@ -32,6 +31,8 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$this->rCategory = $pArticleCategory;
 		
 		$this->webLink = $pWebLink;
+		
+		$this->template = $pTemplate;
 		
 		//default values
 		$this->isArticleForHomeCategory = false;
@@ -56,7 +57,9 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$returnArray[FK_ARTICLE_TITLE]=$this->title;
 		$returnArray[FK_ARTICLE_PUBLISHING_DATE]=$this->publishingDate;
 		$returnArray[FK_ARTICLE_DESCRIPTION_TEXT]=$this->descriptionText;
+		$returnArray[FK_ARTICLE_TEMPLATE]=$this->template;
 		$returnArray[FK_ARTICLE_WEB_LINK]=$this->webLink;
+		
 		
 		//is article for home category
 		$returnArray[FK_ARTICLE_SHOW_ON_HOME_CATEGORY] = (bool)$this->isArticleForHomeCategory;
@@ -66,10 +69,6 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$includeThumb = true;
 		if($this->thumbImage!=null && $includeThumb)
  		$returnArray[FK_ARTICLE_THUMB_IMAGE]=$this->thumbImage->getArrayForJSONEncoding();
-		
-		//article template
-		if($this->template!=null)
-		$returnArray[FK_ARTICLE_TEMPLATE]=$this->template->getArrayForJSONEncoding();
 		
 		//remote images
 		if(is_array($this->remoteImages))

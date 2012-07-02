@@ -61,6 +61,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 	$categoriesList = array();
 	$articlesForFirstRun = array();
 	
+	sleep(4);
+	
 	//1. get categories list
 	$categoriesList = $contentProxy->getJSONReadyCategories();
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
@@ -98,7 +100,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
 		//---------------------------------------------------------------------	
-		// sleep(1);
+		//sleep(4);
 	
 		//get the array with articles
 		$arrayWithMorePosts = $contentProxy->getJSONReadyLatestArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
@@ -143,7 +145,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 	$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
 	//---------------------------------------------------------------------	
-	sleep(1);
+	sleep(4);
 	
 	//get the array with articles
 	$arrayWithMorePosts = $contentProxy->getJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
