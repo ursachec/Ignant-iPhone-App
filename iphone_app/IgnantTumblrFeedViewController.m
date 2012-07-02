@@ -111,19 +111,10 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - helpful methods
--(BOOL)isTumblrEntriesArrayEmpty
-{    
-    //decide if to load posts for the first time or not
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
-    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
-    return (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad);
-}
-
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
     [self setUpTumblrTitleView];
     
     
@@ -144,11 +135,20 @@
     }
 }
 
+#pragma mark - helpful methods
+-(BOOL)isTumblrEntriesArrayEmpty
+{    
+    //decide if to load posts for the first time or not
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
+    int numberOfLoadedPosts = [sectionInfo numberOfObjects];
+    return (numberOfLoadedPosts<kMinimumNumberOfPostsOnLoad);
+}
+
 -(void)triggerLoadLatestDataIfNecessary
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    NSTimeInterval updateTimer = -1.0f * 24.0f * 60.0f * 60.f;
+    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];

@@ -14,6 +14,9 @@
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
 #define LOG_CURRENT_FUNCTION_AND_CLASS() NSLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
 
+//################################################################################
+//update cycles
+extern int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate;
 
 //################################################################################
 //categories

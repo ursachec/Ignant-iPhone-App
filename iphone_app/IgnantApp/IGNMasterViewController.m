@@ -228,6 +228,7 @@
         }
         else if( [dateForLastUpdate timeIntervalSinceNow]) 
         {
+            [self triggerLoadLatestDataIfNecessary];
             NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
         }
     }
@@ -309,6 +310,24 @@
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     } else {
         return YES;
+    }
+}
+
+-(void)triggerLoadLatestDataIfNecessary
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+    
+    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
+    
+    if (lastUpdateInSeconds<updateTimer) {
+        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        [self loadLatestContent];
+    }
+    else {
+        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
 }
 

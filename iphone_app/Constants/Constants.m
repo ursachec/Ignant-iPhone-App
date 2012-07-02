@@ -15,6 +15,11 @@ int const kFirstRelatedArticleTag = 501;
 int const kSecondRelatedArticleTag = 502;
 int const kThirdRelatedArticleTag = 503;
 
+
+//################################################################################
+//update cycles
+int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate = 24;
+
 //################################################################################
 //categories
 int const kCategoryIndexForHome = -1;
