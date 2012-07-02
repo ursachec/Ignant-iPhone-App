@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		412AA44B159CD3A500CE4502 /* CategoryCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 412AA449159CD3A400CE4502 /* CategoryCell.h */; };
 		412AA44C159CD3A500CE4502 /* CategoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 412AA44A159CD3A500CE4502 /* CategoryCell.m */; };
-		4146FE391582221C001BAC75 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3615822209001BAC75 /* Twitter.framework */; };
-		4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3A158222BB001BAC75 /* Accounts.framework */; };
+		4146FE391582221C001BAC75 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3615822209001BAC75 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4146FE3A158222BB001BAC75 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4146FE3E15824346001BAC75 /* arrow_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 4146FE3D15824346001BAC75 /* arrow_back.png */; };
 		4149698E15A0D63600A87841 /* FavouritesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4149698B15A0D63600A87841 /* FavouritesViewController.h */; };
 		4149698F15A0D63600A87841 /* FavouritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4149698C15A0D63600A87841 /* FavouritesViewController.m */; };
@@ -26,6 +26,7 @@
 		41A4AB1815A1D08E0062A624 /* GANTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 41A4AB1615A1D08E0062A624 /* GANTracker.h */; };
 		41A4AB1915A1D08E0062A624 /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AB1715A1D08E0062A624 /* libGoogleAnalytics.a */; };
 		41A4AB1B15A1D0A50062A624 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AB1A15A1D0A50062A624 /* libsqlite3.0.dylib */; };
+		41A4AB1D15A1D66D0062A624 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AB1C15A1D66D0062A624 /* MessageUI.framework */; };
 		41AB131015937FF800CB6D77 /* ign_footer.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 41AB130E15937FF800CB6D77 /* ign_footer.jpg */; };
 		41AB131115937FF800CB6D77 /* ign_header.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 41AB130F15937FF800CB6D77 /* ign_header.jpg */; };
 		41AB13151593886400CB6D77 /* ign_background_part.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 41AB13141593886400CB6D77 /* ign_background_part.jpg */; };
@@ -284,6 +285,7 @@
 		41A4AB1615A1D08E0062A624 /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GANTracker.h; sourceTree = "<group>"; };
 		41A4AB1715A1D08E0062A624 /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		41A4AB1A15A1D0A50062A624 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		41A4AB1C15A1D66D0062A624 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		41AB130E15937FF800CB6D77 /* ign_footer.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ign_footer.jpg; sourceTree = "<group>"; };
 		41AB130F15937FF800CB6D77 /* ign_header.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ign_header.jpg; sourceTree = "<group>"; };
 		41AB13141593886400CB6D77 /* ign_background_part.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ign_background_part.jpg; sourceTree = "<group>"; };
@@ -556,6 +558,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41A4AB1D15A1D66D0062A624 /* MessageUI.framework in Frameworks */,
 				41A4AB1B15A1D0A50062A624 /* libsqlite3.0.dylib in Frameworks */,
 				41AFBA3315921D3B00B2C22A /* MediaPlayer.framework in Frameworks */,
 				41AFBA241592174500B2C22A /* AVFoundation.framework in Frameworks */,
@@ -716,6 +719,7 @@
 		FE0DDCDF14AE34D0003B8778 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41A4AB1C15A1D66D0062A624 /* MessageUI.framework */,
 				41A4AB1A15A1D0A50062A624 /* libsqlite3.0.dylib */,
 				41AFBA3215921D3B00B2C22A /* MediaPlayer.framework */,
 				41AFBA231592174500B2C22A /* AVFoundation.framework */,

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "IGNViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface ContactViewController : IGNViewController
+@interface ContactViewController : IGNViewController <MFMailComposeViewControllerDelegate>
 - (IBAction)handleTapOnDeutscheJapaner:(id)sender;
 - (IBAction)handleTapOnClaudiu:(id)sender;
 - (IBAction)handleTapOnClemens:(id)sender;
