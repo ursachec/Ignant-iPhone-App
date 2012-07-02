@@ -14,7 +14,7 @@
 #import "FBConnect.h"
 
 
-@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, ContactViewController, FavouritesViewController;
+@class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, ContactViewController, FavouritesViewController, ExternalPageViewController;
 
 @interface IGNAppDelegate : UIResponder <UIApplicationDelegate, IgnantImporterDelegate, FBSessionDelegate>
 {
@@ -35,6 +35,7 @@
 @property(nonatomic, readonly, strong) AboutViewController *aboutViewController;
 @property(nonatomic, readonly, strong) ContactViewController *contactViewController;
 @property(nonatomic, readonly, strong) FavouritesViewController *favouritesViewController;
+@property(nonatomic, readonly, strong) ExternalPageViewController *externalPageViewController;
 
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly, strong) NSManagedObjectModel *managedObjectModel;

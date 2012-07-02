@@ -20,6 +20,9 @@
 #import "NSString+HTML.h"
 #import "NSData+Base64.h"
 
+#import "ExternalPageViewController.h"
+
+
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
@@ -30,6 +33,8 @@
 @interface IGNDetailViewController ()
 {
     BOOL _isLoadingCurrentArticle;
+    BOOL _isShowingLinkOptions;
+    NSURL* _linkOptionsUrl;
  
     CGFloat lastHeightForWebView;
 }
@@ -185,6 +190,9 @@
         
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
         [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
+        
+        
+        _isShowingLinkOptions = false;
     }
     return self;
 }
@@ -526,14 +534,14 @@
 		NSLog(@"url is: %@ ", url);
         
         
-#warning TODO: define here what to do with the link
-//        [[UIApplication sharedApplication] openURL:url];
+        [self showLinkOptions:url];
+        
+        //                 [[UIApplication sharedApplication] openURL:url];
+        //        [self presentModalViewController:self.appDelegate.externalPageViewController animated:YES];
+        //        [self.appDelegate.externalPageViewController openURL:url];
         
         return NO;
 	}
-    
-    
-    
     
 	return YES;   
 }
@@ -585,6 +593,24 @@
     [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
     
     [self setIsLoadingViewHidden:YES];
+}
+
+-(void)showLinkOptions:(NSURL*)url
+{
+    _isShowingLinkOptions = true;
+    _linkOptionsUrl = url;
+    
+    UIActionSheet *linkActionSheet = nil;
+    
+#warning TODO: LOCALIZE cancel, open in safari
+    
+    linkActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+                                                  delegate:self 
+                                         cancelButtonTitle:@"Cancel" 
+                                    destructiveButtonTitle:nil 
+                                         otherButtonTitles:@"Open in Safari", nil ];
+    linkActionSheet.delegate = self;
+    [linkActionSheet showInView:self.view];
 }
 
 #pragma mark - setting up the view
@@ -1247,7 +1273,14 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    //TODO: maybe put this constants somewhere else
+    if(_isShowingLinkOptions){
+        int openInSafariButtonIndex = 0;
+        if (buttonIndex==openInSafariButtonIndex) {            
+            NSLog(@"openInSafari: %@", _linkOptionsUrl);
+            [[UIApplication sharedApplication] openURL:_linkOptionsUrl];
+        }
+    }
+    else
     if ([IGNAppDelegate isIOS5]) {
         int facebookButtonIndex = 0;
         int twitterButtonIndex = 1;

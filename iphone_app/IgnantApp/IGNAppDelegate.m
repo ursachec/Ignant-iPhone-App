@@ -20,6 +20,7 @@
 #import "AboutViewController.h"
 #import "ContactViewController.h"
 #import "FavouritesViewController.h"
+#import "ExternalPageViewController.h"
 
 //import other needed classes
 #import "IgnantImporter.h"
@@ -61,6 +62,7 @@ static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
 @property(nonatomic, readwrite, strong) AboutViewController *aboutViewController;
 @property(nonatomic, readwrite, strong) ContactViewController *contactViewController;
 @property(nonatomic, readwrite, strong) FavouritesViewController* favouritesViewController;
+@property(nonatomic, readwrite, strong) ExternalPageViewController* externalPageViewController;
 
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 @property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
@@ -101,6 +103,7 @@ static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
 @synthesize aboutViewController = _aboutViewController;
 @synthesize contactViewController = _contactViewController;
 @synthesize favouritesViewController = _favouritesViewController;
+@synthesize externalPageViewController = _externalPageViewController;
 
 @synthesize customLoadingView = _customLoadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
@@ -343,6 +346,16 @@ if (_categoryViewController==nil) {
 
 return _categoryViewController;
 }
+
+-(ExternalPageViewController*)externalPageViewController
+{
+if (_externalPageViewController==nil) {
+    _externalPageViewController = [[ExternalPageViewController alloc] initWithNibName:@"ExternalPageViewController" bundle:nil ];
+}
+
+return _externalPageViewController;
+}
+
 
 -(FavouritesViewController*)favouritesViewController
 {

@@ -906,7 +906,7 @@
     }
     
     else {
-        self.couldNotLoadDataLabel.text = @"Could not load data, sorry double!";
+        self.couldNotLoadDataLabel.text = @"Could not load data from server, sorry!";
     }
     
     
