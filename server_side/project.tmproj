@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>classes/BasicImage.php</string>
+	<string>unittests.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -20,19 +20,21 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-20T20:47:41Z</date>
+			<date>2012-06-27T14:38:19Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-20T20:47:52Z</date>
+			<date>2012-06-27T14:37:58Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-21T13:04:49Z</date>
+			<date>2012-06-27T14:38:19Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -44,7 +46,7 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-20T20:59:07Z</date>
+			<date>2012-06-27T14:35:29Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -68,7 +70,7 @@
 			<key>filename</key>
 			<string>/Users/ursachec/privat/Ignant/Ignant-iPhone-App/server_side/apple_push/push.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-20T20:06:38Z</date>
+			<date>2012-06-21T20:11:23Z</date>
 			<key>saveAsAbsolutePath</key>
 			<true/>
 		</dict>
@@ -88,9 +90,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>84</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>6</integer>
+				<integer>34</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -102,29 +104,29 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>21</integer>
+				<integer>47</integer>
 				<key>line</key>
-				<integer>164</integer>
+				<integer>41</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>145</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>10</integer>
+				<integer>32</integer>
 				<key>line</key>
-				<integer>164</integer>
+				<integer>41</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>33</integer>
+				<integer>61</integer>
 				<key>line</key>
-				<integer>164</integer>
+				<integer>41</integer>
 			</dict>
 		</dict>
 		<key>classes/Article.php</key>
@@ -232,29 +234,29 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>208</integer>
+				<integer>70</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>48</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
-			<integer>0</integer>
+			<integer>93</integer>
 			<key>firstVisibleLine</key>
-			<integer>13</integer>
+			<integer>18</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>188</integer>
+				<integer>50</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>48</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>208</integer>
+				<integer>70</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>48</integer>
 			</dict>
 		</dict>
 		<key>classes/MixedImage.php</key>
@@ -348,29 +350,29 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
+				<integer>28</integer>
 				<key>line</key>
-				<integer>68</integer>
+				<integer>5</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>49</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>8</integer>
 				<key>line</key>
-				<integer>68</integer>
+				<integer>5</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>35</integer>
+				<integer>28</integer>
 				<key>line</key>
-				<integer>68</integer>
+				<integer>5</integer>
 			</dict>
 		</dict>
 		<key>getTumblrContent.php</key>
@@ -392,14 +394,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>58</integer>
 				<key>line</key>
-				<integer>21</integer>
+				<integer>70</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>49</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>39</integer>
+				<key>line</key>
+				<integer>70</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>76</integer>
+				<key>line</key>
+				<integer>70</integer>
+			</dict>
 		</dict>
 		<key>imgsrv.php</key>
 		<dict>
@@ -450,44 +468,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>10835</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>6942</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>10827</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>10835</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
 		</dict>
 		<key>unittests.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>138</integer>
 				<key>line</key>
-				<integer>124</integer>
+				<integer>242</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>98</integer>
+			<integer>218</integer>
 		</dict>
 		<key>videosrv.php</key>
 		<dict>
@@ -524,13 +526,12 @@
 		<string>classes/IgnantObject.php</string>
 		<string>classes/MosaicEntry.php</string>
 		<string>getTumblrContent.php</string>
-		<string>tumblrDataDump.txt</string>
 		<string>feedKeys.php</string>
 		<string>/Users/ursachec/privat/Ignant/Ignant-iPhone-App/server_side/apple_push/push.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{239, 61}, {919, 717}}</string>
+	<string>{{361, 61}, {919, 717}}</string>
 </dict>
 </plist>
