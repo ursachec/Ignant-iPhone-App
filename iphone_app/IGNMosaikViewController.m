@@ -138,8 +138,6 @@ NSString * const kImageFilename = @"filename";
     
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
     [self setIsSpecificToolbarHidden:YES animated:NO];
-    
-    
 }
 
 - (void)viewDidLoad
@@ -536,16 +534,16 @@ NSString * const kImageFilename = @"filename";
 {
     NSLog(@"double tap in view");
     
-    [self toggleShowSpecificNavigationBarAnimated:YES];
-    [self toggleShowSpecificToolbar];
-    
+    [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
 
 -(void)triggerActionForTapInView:(MosaicView*)view
 {
     NSLog(@"tap in view");
     
-    [self transitionToDetailViewControllerForArticleId:view.articleId];
+    [self toggleShowSpecificNavigationBarAnimated:YES];
+    [self toggleShowSpecificToolbar];
+    
 }
 
 -(void)setUpToolbarAndMockNavigationBar

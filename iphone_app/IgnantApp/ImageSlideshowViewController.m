@@ -62,7 +62,7 @@
     
     //set up gesture recognizer
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
-    recognizer.numberOfTapsRequired = 2;
+    recognizer.numberOfTapsRequired = 1;
     [self.imageScrollView addGestureRecognizer:recognizer];
     
     
@@ -149,6 +149,8 @@
         }
         
         UIImageView *newImageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*_imageScrollView.frame.size.width, (_imageScrollView.frame.size.height-cImageHeight)/2, cImageWidth , cImageHeight)];
+        newImageView.backgroundColor = [UIColor clearColor];
+        newImageView.contentMode = UIViewContentModeScaleAspectFit;
         
         NSLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
         

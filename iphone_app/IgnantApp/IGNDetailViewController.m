@@ -1551,6 +1551,7 @@
     
     NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForVideoServer,kArticleId,self.blogEntry.articleId];
     NSURL* videoUrl = [[NSURL alloc] initWithString:encodedString];
+    [self.playVideoButton removeFromSuperview];
     
     MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoUrl];        
     [self presentMoviePlayerViewControllerAnimated:moviePlayerViewController];
