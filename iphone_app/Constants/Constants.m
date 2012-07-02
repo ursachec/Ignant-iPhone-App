@@ -76,6 +76,7 @@ NSString * const kAdressForVideoServer = @"http://192.168.2.102/ignant/Ignant-iP
 NSString * const kReachabilityHostnameToCheck = @"www.google.de";
 
 NSString * const kParameterAction = @"action";
+NSString * const kParameterLanguage = @"lang";
 
 //server status
 NSString * const kAPICommandIsServerReachable = @"isServerReachable";

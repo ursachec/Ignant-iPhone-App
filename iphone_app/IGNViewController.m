@@ -741,4 +741,10 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
 }
 
+-(NSString*)currentPreferredLanguage
+{
+    NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
+    return language;
+}
+
 @end

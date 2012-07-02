@@ -614,7 +614,9 @@ return _externalPageViewController;
 {
     self.isLoadingDataForFirstRun = YES;
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetDataForFirstRun,kParameterAction, nil];
+    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetDataForFirstRun,kParameterAction, currentPreferredLanguage,kParameterLanguage, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
         

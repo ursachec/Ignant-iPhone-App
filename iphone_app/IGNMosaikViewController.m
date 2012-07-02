@@ -47,6 +47,7 @@ NSString * const kImageFilename = @"filename";
 @interface IGNMosaikViewController ()
 {
     BOOL _isLoadingMoreMosaicImages;
+    BOOL _isLoadingReplacingMosaicImages;
     int _numberOfActiveRequests;
     CGPoint lastContentOffset;
       
@@ -99,6 +100,7 @@ NSString * const kImageFilename = @"filename";
         _numberOfActiveRequests = 0;
         
         _isLoadingMoreMosaicImages = NO;
+        _isLoadingReplacingMosaicImages = NO;
         
     }
     return self;
@@ -138,13 +140,27 @@ NSString * const kImageFilename = @"filename";
     
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
     [self setIsSpecificToolbarHidden:YES animated:NO];
+    
+    
+    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
+    
+    if (lastUpdateInSeconds<updateTimer && !_isLoadingMoreMosaicImages) {
+        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
+        _isLoadingReplacingMosaicImages = YES;
+        [self removeCurrentImageViews];
+        [self loadMoreMosaicImages];
+    }
+    else {
+        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+    }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+ 
     //trigger the drawing for the images
     [self drawSavedMosaicImages];
     
@@ -170,15 +186,6 @@ NSString * const kImageFilename = @"filename";
 
 - (void)viewDidUnload
 {
-    
-    self.loadingMoreMosaicView = nil;
-    self.overlayView = nil;
-    
-    [self setBigMosaikView:nil];
-    [self setMosaikScrollView:nil];
-    [self setCloseMosaikButton:nil];
-    [self setShareAndMoreToolbar:nil];
-    [self setMockNavigationBar:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -195,17 +202,19 @@ NSString * const kImageFilename = @"filename";
 {    
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
+    _isLoadingMoreMosaicImages = YES;
+    
     _numberOfActiveRequests++;
     
     //show a covering loading view if mosaic images array is empty
-    if(!self.isMosaicImagesArrayNotEmpty)
+    if(!self.isMosaicImagesArrayNotEmpty || _isLoadingReplacingMosaicImages)
     {
         [self setIsLoadingViewHidden:NO];
     }
     
     self.loadingMoreMosaicView.isLoading = YES;
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSetOfMosaicImages,kParameterAction, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSetOfMosaicImages,kParameterAction, [self currentPreferredLanguage],kParameterLanguage, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
@@ -217,6 +226,23 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - client-side loading / saving of the mosaic images
+-(void)replaceCurrentMosaicImagesWithNewOnes:(NSArray*)newMosaicImages
+{
+#warning TODO: implement comparing the existing imags and removing duplicates (unique_id for each image - articleId)
+    
+    //save the new mosaic images array to disk, overwriting the last file
+    NSMutableDictionary *imagesDictionary = [[NSMutableDictionary alloc] init];
+    [imagesDictionary setObject:[newMosaicImages copy] forKey:kImagesKey];
+    
+    //write the data to the file
+    NSString* fullPath = [DIRECTORY_FOR_MOSAIC_IMAGES_FILE stringByAppendingPathComponent:filenameForMosaicImagesPlist];
+    if (![imagesDictionary writeToFile:fullPath atomically:NO])
+    {
+        NSLog(@"didNOTWriteToFile");
+#warning TODO: do something in case the mosaic images couldn't be saved to file
+    }
+}
+
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages
 {
 #warning TODO: implement comparing the existing imags and removing duplicates (unique_id for each image - articleId)
@@ -244,7 +270,7 @@ NSString * const kImageFilename = @"filename";
 -(NSArray*)savedMosaicImages
 {
     //the array of images to be returned
-    NSArray* images;
+    NSArray* images = nil;
     
     //loading data from disk if it exists
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -268,13 +294,17 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - adding images to the mosaic view
+-(void)removeCurrentImageViews
+{
+    for (UIView* oneSubview in self.bigMosaikView.subviews) {
+        [oneSubview removeFromSuperview];
+    }
+}
 
 -(void)drawSavedMosaicImages
 {
     //first of all delete all currently shown images
-    for (UIView* oneSubview in self.bigMosaikView.subviews) {
-        [oneSubview removeFromSuperview];
-    }
+    [self removeCurrentImageViews];
     
 #define PADDING_BOTTOM 5.0f
 #define PADDING_TOP .0f
@@ -420,8 +450,6 @@ NSString * const kImageFilename = @"filename";
 - (void)requestStarted:(ASIHTTPRequest *)request
 {
     LOG_CURRENT_FUNCTION()
-    
-    _isLoadingMoreMosaicImages = YES;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
@@ -444,8 +472,15 @@ NSString * const kImageFilename = @"filename";
     
     [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
-    //add the mosaic images
-    [self addMoreMosaicImages:[images copy]];
+    if (_isLoadingReplacingMosaicImages) {
+        [self replaceCurrentMosaicImagesWithNewOnes:[images copy]];
+    }
+    else {
+        //add the mosaic images
+        [self addMoreMosaicImages:[images copy]];
+    }
+    
+
     
     //redraw the images
     [self drawSavedMosaicImages];
@@ -453,6 +488,8 @@ NSString * const kImageFilename = @"filename";
     _numberOfActiveRequests--;
 
     self.loadingMoreMosaicView.isLoading = NO;
+
+    _isLoadingReplacingMosaicImages = NO;
     
 #warning THIS could be a problem for the loading view
     [self setIsLoadingViewHidden:YES];        
@@ -466,6 +503,7 @@ NSString * const kImageFilename = @"filename";
 
     
     _isLoadingMoreMosaicImages = NO;
+    _isLoadingReplacingMosaicImages = NO;
     self.loadingMoreMosaicView.isLoading = NO;
     
     _numberOfActiveRequests--;
@@ -603,8 +641,6 @@ NSString * const kImageFilename = @"filename";
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    int secondsForNextAllowedUpdate = 2;
-    
     float reload_distance = -20;
     if(y > h + reload_distance) 
     {
@@ -653,6 +689,24 @@ NSString * const kImageFilename = @"filename";
     
     [self.appDelegate showMore];
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)triggerReplaceMosaicWithLatestIfNecessary
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+    
+    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
+    
+    if (lastUpdateInSeconds<updateTimer) {
+        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+//        [self loadLatestTumblrArticles];
+    }
+    else {
+        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+    }
 }
 
 @end

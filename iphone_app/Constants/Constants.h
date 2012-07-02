@@ -68,6 +68,7 @@ extern NSString * const kReachabilityHostnameToCheck;
 
 //top parameter names
 extern NSString * const kParameterAction;
+extern NSString * const kParameterLanguage;
 
 //server status
 extern NSString * const kAPICommandIsServerReachable;
@@ -92,3 +93,4 @@ extern NSString * const kArticleId;
 
 extern NSString * const kDateOfNewestArticle;
 extern NSString * const kDateOfOldestArticle;
+

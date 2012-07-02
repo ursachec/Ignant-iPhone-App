@@ -70,7 +70,10 @@
 -(void)handleTapOnSpecificToolbarMercedes:(id)sender;
 -(void)handleTapOnSpecificToolbarRight:(id)sender;
 
-
 -(void)triggerLoadLatestDataIfNecessary;
+
+
+-(NSString*)currentPreferredLanguage;
+
 
 @end
