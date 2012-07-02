@@ -53,7 +53,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 //################################################################################
 
 //server stuff
-#define shouldUseRemoteServer false
+#define shouldUseRemoteServer true
 
 
 NSString* const kAdressForMercedesPage = @"http://www.mercedes-benz.de/";

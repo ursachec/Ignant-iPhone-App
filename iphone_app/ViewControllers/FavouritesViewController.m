@@ -45,6 +45,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    
+    [_refreshHeaderView removeFromSuperview];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -127,5 +130,13 @@
     return __fetchedResultsController;
 }  
 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	
+}
 
 @end
