@@ -43,7 +43,6 @@
 						<string key="NSFrame">{{0, -1}, {320, 367}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:418</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="199638425">
 							<int key="NSColorSpace">3</int>
@@ -54,7 +53,7 @@
 						<bool key="IBUIAlwaysBounceVertical">YES</bool>
 						<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
 						<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
-						<float key="IBUIRowHeight">70</float>
+						<float key="IBUIRowHeight">55</float>
 						<float key="IBUISectionHeaderHeight">22</float>
 						<float key="IBUISectionFooterHeight">22</float>
 					</object>
@@ -82,7 +81,6 @@
 				<string key="NSFrameSize">{85, 37}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="990812729"/>
 				<string key="NSReuseIdentifierKey">_NS:225</string>
 				<object class="NSColor" key="IBUIBackgroundColor" id="150156930">
 					<int key="NSColorSpace">3</int>
@@ -153,7 +151,6 @@
 				<string key="NSFrameSize">{320, 50}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="361071181"/>
 				<string key="NSReuseIdentifierKey">_NS:567</string>
 				<reference key="IBUIBackgroundColor" ref="199638425"/>
 				<bool key="IBUIUserInteractionEnabled">NO</bool>

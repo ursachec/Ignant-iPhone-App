@@ -19,6 +19,7 @@
 #import "IGNMosaikViewController.h"
 #import "AboutViewController.h"
 #import "ContactViewController.h"
+#import "FavouritesViewController.h"
 
 //import other needed classes
 #import "IgnantImporter.h"
@@ -32,6 +33,14 @@
 #import "NSURL+stringforurl.h"
 
 #import "Reachability.h"
+
+//---google analytics
+#import "GANTracker.h"
+
+// Dispatch period in seconds
+static const NSInteger kGANDispatchPeriodSec = 10;
+static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
+
 
 #define kForceReloadCoreData NO
 
@@ -51,7 +60,7 @@
 @property(nonatomic, readwrite, strong) IGNMosaikViewController *mosaikViewController;
 @property(nonatomic, readwrite, strong) AboutViewController *aboutViewController;
 @property(nonatomic, readwrite, strong) ContactViewController *contactViewController;
-
+@property(nonatomic, readwrite, strong) FavouritesViewController favouritesViewController;
 
 @property (nonatomic, strong) IgnantLoadingView *customLoadingView;
 @property (nonatomic, strong) IgnantNoInternetConnectionView *noInternetConnectionView;
@@ -91,6 +100,7 @@
 @synthesize mosaikViewController = _mosaikViewController;
 @synthesize aboutViewController = _aboutViewController;
 @synthesize contactViewController = _contactViewController;
+@synthesize favouritesViewController = _favouritesViewController;
 
 @synthesize customLoadingView = _customLoadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
@@ -102,7 +112,6 @@
 
 @synthesize ignantToolbar = _ignantToolbar;
 
-#pragma mark - 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -114,6 +123,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+    
+    
+    BOOL googleAnalyticsWasSetUp = [self setupGoogleAnalytics];
+    
     
     //initialize utility objects
     _userDefaultsManager = [[UserDefaultsManager alloc] init];
@@ -187,6 +200,41 @@
     return YES;
 }
 
+
+#pragma mark - 
+-(BOOL)setupGoogleAnalytics
+{
+    LOG_CURRENT_FUNCTION()
+    
+    //init google analytics
+    [[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
+                                           dispatchPeriod:kGANDispatchPeriodSec
+                                                 delegate:nil];
+    NSError *error;
+    
+    if (![[GANTracker sharedTracker] setCustomVariableAtIndex:1
+                                                         name:@"iOS1"
+                                                        value:@"iv1"
+                                                    withError:&error]) {
+        NSLog(@"error in setCustomVariableAtIndex");
+    }
+    
+    if (![[GANTracker sharedTracker] trackEvent:@"Application iOS"
+                                         action:@"Launch iOS"
+                                          label:@"Example iOS"
+                                          value:99
+                                      withError:&error]) {
+        NSLog(@"error in trackEvent");
+    }
+    
+    if (![[GANTracker sharedTracker] trackPageview:@"/app_entry_point"
+                                         withError:&error]) {
+        NSLog(@"error in trackPageview");
+    }
+    
+#warning TODO: add actual return value, do something if it didn't work, like send data to the server
+    return true;
+}
 
 -(void)createCacheFolders
 {
@@ -294,6 +342,15 @@ if (_categoryViewController==nil) {
 }
 
 return _categoryViewController;
+}
+
+-(FavouritesViewController*)favouritesViewController
+{
+    if (_favouritesViewController==nil) {
+        _favouritesViewController = [[FavouritesViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
+    }
+    
+    return _favouritesViewController;
 }
 
 -(ContactViewController*)contactViewController

@@ -8,7 +8,7 @@
 
 #import "MoreCell.h"
 
-CGFloat const kMoreCellHeight = 70.0f;
+CGFloat const kMoreCellHeight = 55.0f;
 
 @interface MoreCell()
 @property(nonatomic,strong,readwrite) UIView *overlayView;

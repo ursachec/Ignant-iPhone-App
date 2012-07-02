@@ -24,6 +24,6 @@
 -(BOOL)isBlogEntryFavourite:(NSString*)articleId;
 -(void)setIsBlogEntry:(NSString*)articleId favourite:(BOOL)favourite;
 -(void)toggleIsFavouriteBlogEntry:(NSString*)articleId;
-
+-(NSMutableArray*)currentFavouriteBlogEntries;
 
 @end

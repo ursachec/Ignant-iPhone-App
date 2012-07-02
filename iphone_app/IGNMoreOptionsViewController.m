@@ -14,7 +14,7 @@
 #import "CategoriesViewController.h"
 #import "ContactViewController.h"
 #import "IGNMasterViewController.h"
-
+#import "FavouritesViewController.h"
 
 #import "MoreCell.h"
 
@@ -24,8 +24,9 @@ typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,
     indexForTumblrFeed = 1,
     indexForCategories = 2,
-    indexForReview = 3,
-    indexForContact = 4
+    indexForFavourites = 3,
+    indexForReview = 4,
+    indexForContact = 5
 
 } moreOptionsIndeces;
 
@@ -81,6 +82,7 @@ typedef enum _moreOptionsIndeces  {
     [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
     [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
     [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
+    [_listOfOptions insertObject:@"Favoriten" atIndex:indexForFavourites];
     [_listOfOptions insertObject:@"Write a review" atIndex:indexForReview];
     [_listOfOptions insertObject:@"Kontakt" atIndex:indexForContact];
 }
@@ -106,7 +108,6 @@ typedef enum _moreOptionsIndeces  {
     UIColor* backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_background_part.jpg"]];
     backgroundView.backgroundColor = backgroundColor;
     [self.moreOptionsTableView setBackgroundView:backgroundView];
-    
 }
 
 - (void)viewDidUnload
@@ -166,7 +167,6 @@ typedef enum _moreOptionsIndeces  {
 
 -(void)showViewController:(UIViewController*)viewController
 {
-    
     NSArray* vcs = self.navigationController.viewControllers;
     BOOL isCategoriesVCOnStack = NO;
     for (id object in vcs) {
@@ -191,6 +191,8 @@ typedef enum _moreOptionsIndeces  {
     IgnantTumblrFeedViewController *tumblrVC = self.appDelegate.tumblrFeedViewController;
     CategoriesViewController *categoriesVC = self.appDelegate.categoriesViewController;
     ContactViewController *contactVC = self.appDelegate.contactViewController;
+    FavouritesViewController *favoritesVC = self.appDelegate.favouritesViewController;
+
     
     switch (indexPath.row) {
         case indexForAboutIgnant:
@@ -205,6 +207,11 @@ typedef enum _moreOptionsIndeces  {
         case indexForCategories:
             categoriesVC.managedObjectContext = self.appDelegate.managedObjectContext;
             [self showViewController:categoriesVC];
+            break;
+            
+        case indexForFavourites:
+            favoritesVC.managedObjectContext = self.appDelegate.managedObjectContext;
+            [self showViewController:favoritesVC];
             break;
             
         case indexForReview:
@@ -242,6 +249,9 @@ typedef enum _moreOptionsIndeces  {
             break;
         case indexForReview:    
             returnImage = [UIImage imageNamed:@"5"];
+            break;
+        case indexForFavourites:    
+            returnImage = [UIImage imageNamed:@"1"];
             break;
         default:
             break;
