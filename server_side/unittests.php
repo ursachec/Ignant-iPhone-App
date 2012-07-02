@@ -156,6 +156,8 @@ class LightArticlesTest
 			$thumbLinks['itv_kjosk']='http://www.ignant.de/wp-content/uploads/2011/10/kjosk_pre2.jpg';
 			$thumbLinks['itv_disco_ball']='http://www.ignant.de/wp-content/uploads/2011/10/brunokol_pre.jpg';
 			
+			$thumbLinks['shadow_art']='http://www.ignant.de/wp-content/uploads/2012/06/shadowpre2.jpg';
+			$thumbLinks['jasmine_deporta']='http://www.ignant.de/wp-content/uploads/2012/05/jasmine_pre2.jpg';			
 			
 			
 			$thumbLinks['test_2']='http://www.ignant.de/wp-content/uploads/2012/06/osma_pre.jpg';
@@ -224,7 +226,25 @@ class LightArticlesTest
 	{
 		$remoteImagesArray = array();
 		
-		if( strcmp($articleID,'cecilia_paredes')==0) 
+		if( strcmp($articleID,'jasmine_deporta')==0) 
+		{
+			$remoteImagesArray[] = new RemoteImage('jasmine_01','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_01.jpg', 455, 720);
+			$remoteImagesArray[] = new RemoteImage('jasmine_02','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_02.jpg',1107,720 );
+			$remoteImagesArray[] = new RemoteImage('jasmine_03','http://www.ignant.de/wp-content/uploads/2012/05/jasmine_03.jpg', 461, 720);
+			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta03','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta03.jpeg', 469, 720);
+			$remoteImagesArray[] = new RemoteImage('Lolita_jasminedeporta04','http://www.ignant.de/wp-content/uploads/2012/05/Lolita_jasminedeporta04.jpeg', 1099, 720);
+		}
+		
+		else if( strcmp($articleID,'shadow_art')==0) 
+		{
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita11','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita11.jpg', 749, 720 );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita2','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita2.jpg', 740, 720 );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita3','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita3.jpg', 502, 720 );
+			$remoteImagesArray[] = new RemoteImage('kumiyamashita4','http://www.ignant.de/wp-content/uploads/2012/06/kumiyamashita4.jpg', 1069, 720 );
+					
+		}
+		
+		else if( strcmp($articleID,'cecilia_paredes')==0) 
 		{
 						
 			$remoteImagesArray[] = new RemoteImage('cecilia_01','http://www.ignant.de/wp-content/uploads/2012/02/cecilia01.jpg','descriptiondescription', 720, 725);
@@ -457,6 +477,16 @@ class LightArticlesTest
 		else if( strcmp($articleID,'brian')==0) 
 		return 'Im vergangenen Jahr berichteten wir schon einmal über die Arbeiten von <a href="http://www.ignant.de/2011/03/01/brian-dettmer/">Brian Dettmer</a>. Dettmer verarbeitet alte Bücher, vorzugsweise Enzyklopädien, Wörterbücher oder Lexika zu Kunstwerken. Er schenkt dem Medium Buch damit neue Aufmerksamkeit und macht die unzähligen Informationen darin auf ungewohnte Weise sichtbar. <!--more--><br />Informationsflüsse haben, durch das Zeitalter des Internets, eine neue physikalische Form angenommen und hinterlassen das greifbare Buch als Zeitzeugen vergangener Tage. Die unsichtbaren Datenströme des Worldwide Web übernehmen und hinterlassen keinerlei Spur in der realen Welt. So mag das Buch mit seine Informationen vielleicht veraltet sein aber es ist beständig, während Informationen im Internet ungreifbar verschwinden und für immer verloren gehen. <br />Seine neusten Werke werden ab heute unter dem Titel "Textonomy" in der <a href="http://www.toomey-tourell.com/">Toomey Tourell Gallery</a> in San Francisco gezeigt.<br /><em>"The richness and depth of the book is universally respected yet often undiscovered as the monopoly of the form and relevance of the information fades over time. The book’s intended function has decreased and the form remains linear in a non-linear world. By altering physical forms of information and shifting preconceived functions, new and unexpected roles emerge. This is the area I currently operate in. Through meticulous excavation or concise alteration I edit or dissect communicative objects or systems such as books, maps, tapes and other media. The medium’s role transforms. Its content is recontextualized and new meanings or interpretations emerge."</em>';
 			
+		
+			
+		//---------------------------------------------
+		else if( strcmp($articleID,'jasmine_deporta')==0)
+		return '<p>Die Fotografin <a href="http://www.jasminedeporta.com/">Jasmine Deporta</a> lebt in Italien und zieht Inspiration aus Farben, Träumen und der Jugendkultur. Mit ihren Fotografien möchte sie ihre Sicht auf die Welt mit uns teilen. In ihrer Serie ‘Lolita’ zum Beispiel verbindet sie die Atmosphäre eines eleganten, fast prüden Hotels mit zwei jungen, weiblichen Models in Vintage Kleidung. <span id="more-35894"></span>Sie verleiht Themen wie Unschuld, Begierde, Naivität und Maßlosigkeit Ausdruck und kombiniert persönliche Eindrücke gekonnt mit alltäglichen Situationen um einen neuen Kontext und eine intime Ästhetik zu schaffen. </p><br /><p><em>Photographer <a href="http://www.jasminedeporta.com/">Jasmine Deporta</a> based in Italy is inspired by colors, dreams and youth. She is determined to not letting her view of the world go unnoticed. Her analoge series ‘Lolita’ for example connects the athmosphere of a classy, almost prudish Hotel with two young seductive models in vintage clothes. Along with innocence, desire, naivety and excess Deporta tries to combine personal and interpesonal structures with common places and situations creating new contexts and a different and intimate aesthetics.</em></p>';
+			
+		//---------------------------------------------
+		else if( strcmp($articleID,'shadow_art')==0)
+		return '<div class="entry-content"><p>Wir haben vor einiger Zeit bereits über die faszinierende ‘Shadow Art’ von <a href="http://www.ignant.de/2010/03/11/kumi-yamashita/">Kumi Yamashita</a> berichtet. Jetzt hat sich die Künstlerin bunten Post-its gewidmet, die aus der Ferne betrachtet nur wie eine Ansammlung farbiger Quadrate an einer weißen Wand aussehen. Tritt man jedoch näher entwickeln sich aus den Schatten, welche die Notizzettel werfen tatsächlich menschliche Gesichter. <span id="more-38444"></span></p><p><em>Some time ago we already introduced the fascinating shadow art by <a href="http://www.ignant.de/2010/03/11/kumi-yamashita/">Kumi Yamashita</a>. Her latest works are based on colorful post-its, looking like a bunch of construction paper pieces neatly arranged on a blank white wall  at first glance. Though if you come a little closer you might notice actual human faces.</em></p></div>';
+		
 		//---------------------------------------------	
 		else if( strcmp($articleID,'wood')==0) 
 		return 'Den Fokus seiner Arbeit legt der junge Künstler <a href="http://geordiewood.com/">Geordie Wood</a> aus Brooklyn, New York auf Portraitaufnahmen und Modefotografie. Schon kurz nach seinem Abschluss in Fotojournalismus und Studiofotografie an der Syrancuse University arbeitete er für namhafte Publikationen wie Complex oder das WAD Magazine. <!--more-->';
@@ -678,6 +708,19 @@ class LightArticlesTest
 		
 		//set up articles
 		$lightArticles = array();
+		
+		
+		
+		
+		$tempArticleId = 'jasmine_deporta';
+		$tempArticleUrl = 'http://www.ignant.de/2012/05/18/jasemine-deporta/';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Jasmine Deporta', date('Y-m-d', mktime(0, 0, 0, 6, 21, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getTestTemplateForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(6),$tempArticleUrl);
+			
+		$tempArticleId = 'shadow_art';
+		$tempArticleUrl = 'http://www.ignant.de/2012/06/21/shadow-art-2/';
+		$lightArticles[] = new LightArticle($tempArticleId, 'Shadow Art', date('Y-m-d', mktime(0, 0, 0, 6, 21, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getTestTemplateForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(6),$tempArticleUrl);
+		
+		
 		$tempArticleId = 'cecilia_paredes';
 		$tempArticleUrl = 'http://www.ignant.de/2012/02/03/cecilia-paredes/';
 		$lightArticles[] = new LightArticle($tempArticleId, 'CECILIA PAREDES', date('Y-m-d', mktime(0, 0, 0, 2, 2, 2012)), $shouldIncludeImageBase64 ? createBase64Image('cecilia_paredes', 'Some image description',$testImagesDirectory.'cecilia_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getTestTemplateForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId),  $this->getCategoryWithId(1),$tempArticleUrl);
@@ -725,6 +768,11 @@ class LightArticlesTest
 		$tempArticleId = 'hui_yi';
 		$tempArticleUrl = 'http://www.ignant.de/2012/03/19/hui-yi/';
 		$lightArticles[] = new LightArticle($tempArticleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 1, 1, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getTestTemplateForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(6),$tempArticleUrl);
+		
+		
+		
+		
+		
 		
 		$tempArticleId = 'monifaktur_cards';
 		$tempArticleUrl = 'http://www.ignant.de/2011/08/15/moni-spielt-mit-offenen-karten/';
