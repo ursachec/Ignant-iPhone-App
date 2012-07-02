@@ -347,7 +347,7 @@ class LightArticlesTest
 	{
 		
 		if( strcmp($articleID,'mark_powell')==0)
-		return 'Eindrucksvolle Portraitaufnahmen von dem mexikanischen Fotografen <a href="http://markalor.com/" target="_blank">Mark Powell</a>. Mir ist es noch nie so schwer gefallen eine passende Auswahl an Bildern zu finden, weshalb ihr unbedingt auch seine Homepage besuchen solltet. Es lohnt sich!<!--more-->'
+		return 'Eindrucksvolle Portraitaufnahmen von dem mexikanischen Fotografen <a href="http://markalor.com/" target="_blank">Mark Powell</a>. Mir ist es noch nie so schwer gefallen eine passende Auswahl an Bildern zu finden, weshalb ihr unbedingt auch seine Homepage besuchen solltet. Es lohnt sich!<!--more-->';
 		
 		//---------------------------------------------
 		else if( strcmp($articleID,'hui_yi')==0) 
