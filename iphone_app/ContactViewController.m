@@ -97,13 +97,13 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
     NSString *emailBody = @"";
     
     if ([recepient compare:kEmailIgnant]==NSOrderedSame) {
-        emailBody = @"Hallo Clemens!";
+        emailBody = @"Hi Clemens!";
     }
     else if ([recepient compare:kEmailClaudiu]==NSOrderedSame) {
-        emailBody = @"Hallo Claudiu!";
+        emailBody = @"Hi Claudiu!";
     }
     else if ([recepient compare:kEmailDeutscheUndJapaner]==NSOrderedSame) {
-        emailBody = @"Hallo Deutsche und Japaner!";
+        emailBody = @"Hi Deutsche und Japaner!";
     }
     
     [picker setMessageBody:emailBody isHTML:NO];

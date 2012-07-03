@@ -190,6 +190,7 @@
         
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
         [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
+#warning TODO: change this to a better format
         
         
         _isShowingLinkOptions = false;
@@ -277,7 +278,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {    
     
-#warning TODO: DETAIL NAVIGATION these to lines have been outcommented    
+#warning TODO: DETAIL NAVIGATION these to lines have been outcommented
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
    
     [self.appDelegate setIsToolbarHidden:YES animated:animated];
@@ -1454,12 +1455,8 @@
     _didLoadContentForRemoteArticle = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-    
         [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
-        
         [self configureView];
-        
-        NSLog(@"(1) before");
         [self setIsLoadingViewHidden:YES];
     });
 }

@@ -656,7 +656,7 @@ NSString * const kImageFilename = @"filename";
 -(UIView *)couldNotLoadDataView
 {
     UIView* defaultView = [super couldNotLoadDataView];
-    self.couldNotLoadDataLabel.text = @"Could not load data for the mosaic";
+    self.couldNotLoadDataLabel.text = NSLocalizedString(@"could_not_load_data_for_mosaic", @"Could not load data for the mosaic");
     
     return defaultView;
 }

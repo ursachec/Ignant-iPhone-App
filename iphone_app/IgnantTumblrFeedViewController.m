@@ -375,7 +375,6 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    
     LOG_CURRENT_FUNCTION()
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -583,7 +582,7 @@
 -(UIView *)couldNotLoadDataView
 {
     UIView* defaultView = [super couldNotLoadDataView];
-    self.couldNotLoadDataLabel.text = @"Could not load tumblr feed";
+    self.couldNotLoadDataLabel.text = NSLocalizedString(@"could_not_load_data_for_tumblr_feed", @"Could not load tumblr feed");
     
     return defaultView;
 }

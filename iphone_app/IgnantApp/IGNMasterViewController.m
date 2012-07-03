@@ -93,8 +93,7 @@
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
         
         if (self.isHomeCategory) {
-#warning TODO: set this title in a better way
-                    self.title = @"Home";
+            self.title = NSLocalizedString(@"vc_title_home", @"Home");
         }
         else if(category!=nil) {
             self.title = category.name;
@@ -102,11 +101,9 @@
         
         self.importer = nil;
         
-        
         self.articleCellDateFormatter = [[NSDateFormatter alloc] init];
         [self.articleCellDateFormatter setDateStyle:NSDateFormatterShortStyle];
         [self.articleCellDateFormatter setTimeStyle:NSDateFormatterNoStyle];
-        
     }
     
     return self;
@@ -122,7 +119,7 @@
     self.isHomeCategory = (currentCategory==nil) ? TRUE : FALSE;
     
     if (self.isHomeCategory) {
-        self.title = @"Home";
+        self.title = NSLocalizedString(@"vc_title_home", @"Home");
     }
     else if(currentCategory!=nil) {
         self.title = currentCategory.name;
@@ -416,7 +413,6 @@
     
     else
     {
-        
         BlogEntry *blogEntry = (BlogEntry*)[self.fetchedResultsController objectAtIndexPath:indexPath];
         
         if (blogEntry==nil)
@@ -503,8 +499,6 @@
         //deselect the row
         
         [self.blogEntriesTableView deselectRowAtIndexPath:indexPath animated:YES];
-        
-        
     }
 }
 
@@ -648,9 +642,7 @@
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    
     NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
-    
     
     if (_isLoadingMoreContent) {
         
@@ -732,9 +724,7 @@
 
 -(IgnantImporter*)importer
 {
-    if (_importer==nil) { 
-        NSLog(@"init importer");
-        
+    if (_importer==nil) {
         _importer = [[IgnantImporter alloc] init];
         _importer.persistentStoreCoordinator = self.appDelegate.persistentStoreCoordinator;
         _importer.delegate = self;

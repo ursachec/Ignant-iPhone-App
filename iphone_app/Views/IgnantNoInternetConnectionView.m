@@ -15,14 +15,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-        
-        // Initialization code
         self.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f];
-        
-        
-        
-        
     }
     return self;
 }

@@ -5,6 +5,10 @@
   Created by Claudiu-Vlad Ursache on 11.06.12.
   Copyright (c) 2012 c.v.ursache. All rights reserved.
 */
+"vc_title_home" = "Home";
+
+"could_not_load_data_for_tumblr_feed" = "Could not load tumblr feed";
+"could_not_load_data_for_mosaic" = "Could not load data for the mosaic";
 
 "toolbar_mosaic" = "Mosaik";
 "toolbar_more" = "More";
