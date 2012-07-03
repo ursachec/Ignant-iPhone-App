@@ -695,33 +695,32 @@ return _externalPageViewController;
         
         [aView addSubview:backgroundImageView];
         
-        
-        //add buttons
-        
+
+        //add buttons        
         CGFloat paddingAmmount = 20.0f;
         CGFloat paddingTop = 9.0f;
         UIFont *buttonFont = [UIFont fontWithName:@"Georgia" size:11.0f]; 
         UIColor*buttonTextColor = [UIColor blackColor];
-        
-#warning TODO: localize text - mosaik     
+          
         CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
         CGRect firstButtonFrame = CGRectMake(paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
         UIButton* firstButton = [UIButton buttonWithType:UIButtonTypeCustom];
         firstButton.titleLabel.font = buttonFont;
         [firstButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         firstButton.frame = firstButtonFrame;
-        [firstButton setTitle:[@"Mosaik" uppercaseString] forState:UIControlStateNormal];
+        
+        
+        [firstButton setTitle:[NSLocalizedString(@"toolbar_mosaic", @"Title for the mosaic button in the toolbar") uppercaseString] forState:UIControlStateNormal];
         [firstButton addTarget:self action:@selector(showMosaik) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:firstButton];
         
-#warning TODO: localize text - mosaik
         CGSize buttonSize2 = CGSizeMake(72.0f, 37.0f);
         CGRect secondButtonFrame = CGRectMake(aView.frame.size.width-buttonSize2.width-paddingAmmount, paddingTop, buttonSize2.width, buttonSize2.height);
         UIButton* secondButton = [UIButton buttonWithType:UIButtonTypeCustom];
         secondButton.titleLabel.font = buttonFont;
         [secondButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         secondButton.frame = secondButtonFrame;
-        [secondButton setTitle:[@"More" uppercaseString] forState:UIControlStateNormal];
+        [secondButton setTitle:[NSLocalizedString(@"toolbar_more", @"Title for the more button in the toolbar") uppercaseString] forState:UIControlStateNormal];
         [secondButton addTarget:self action:@selector(showMore) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:secondButton];
         

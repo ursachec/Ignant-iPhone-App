@@ -601,14 +601,12 @@
     _linkOptionsUrl = url;
     
     UIActionSheet *linkActionSheet = nil;
-    
-#warning TODO: LOCALIZE cancel, open in safari
-    
+        
     linkActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                   delegate:self 
-                                         cancelButtonTitle:@"Cancel" 
+                                         cancelButtonTitle:NSLocalizedString(@"actionsheet_link_cancel", @"Title for the 'Cancel' button in the actionsheet when tapping on a link in the DetailVC") 
                                     destructiveButtonTitle:nil 
-                                         otherButtonTitles:@"Open in Safari", nil ];
+                                         otherButtonTitles:NSLocalizedString(@"actionsheet_link_open_in_safari", @"Title for the 'Open in Safari' button in the actionsheet when tapping on a link in the DetailVC"), nil ];
     linkActionSheet.delegate = self;
     [linkActionSheet showInView:self.view];
 }
@@ -829,9 +827,7 @@
     NSLog(@"setting up the button for showing pictures...");
     
     if ([remoteImages isKindOfClass:[NSArray class]]) {
-        
-#warning TODO: localize
-        NSString *showPicturesButtonText = [NSString stringWithFormat:@"%d Fotos",[remoteImages count]];
+        NSString *showPicturesButtonText = [NSString stringWithFormat:NSLocalizedString(@"fotos_button_title", @"Title of the 'Fotos' button on the Detail View Controller"),[remoteImages count]];
         [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
     }
     
@@ -999,7 +995,7 @@
 -(void)updateToggleLikeButtonTitle
 {
     BOOL isFavourite = [self.appDelegate.userDefaultsManager isBlogEntryFavourite:self.blogEntry.articleId];
-    NSString *likeTitle = isFavourite ? @"UNLIKE" : @"LIKE";
+    NSString *likeTitle = isFavourite ? NSLocalizedString(@"button_title_unlike", @"Title of the 'Unlike' button on the Detail View Controller") : NSLocalizedString(@"button_title_like", @"Title of the 'Like' button on the Detail View Controller");
     [self.toggleLikeButton setTitle:likeTitle forState:UIControlStateNormal];
 }
 
@@ -1014,7 +1010,6 @@
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
     NSString *remoteContentBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
-        
     
     NSDate *fDate = [self.articlesDateFormatter dateFromString:remoteContentBlogEntryPublishDate];
     
@@ -1188,10 +1183,7 @@
     BOOL canTweet = [TWTweetComposeViewController canSendTweet];
     
     if (!canTweet) {
-        
-#warning TODO: show this in a better way
-
-        
+#warning TODO: show this in a better way        
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
                                                      message:NSLocalizedString(@"ui_alert_message_you_need_to_be_logged_in_with_twitter", nil)
                                                     delegate:self 
@@ -1200,7 +1192,6 @@
         [av show];
         
         return;
-        
     }
     else {
         
@@ -1252,21 +1243,19 @@
     
     UIActionSheet *shareActionSheet = nil;
     
-    #warning TODO: LOCALIZE cancel
-    
     if ([IGNAppDelegate isIOS5]) {
         shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                        delegate:self 
-                                              cancelButtonTitle:@"Cancel" 
+                                              cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share") 
                                          destructiveButtonTitle:nil 
-                                              otherButtonTitles:@"Twitter",@"Facebook", nil ];
+                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_twitter", @"Title of the 'Twitter' button in the actionsheet when tapping on share"),NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"), nil ];
     }
     else {
         shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                        delegate:self 
-                                              cancelButtonTitle:@"Cancel" 
+                                              cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share") 
                                          destructiveButtonTitle:nil 
-                                              otherButtonTitles:@"Facebook", nil ];
+                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"), nil ];
     }
     [shareActionSheet showInView:self.view];
 }
@@ -1540,7 +1529,7 @@
 -(UIView *)couldNotLoadDataView
 {
     UIView* defaultView = [super couldNotLoadDataView];
-    self.couldNotLoadDataLabel.text = @"Could not load data for this article";
+    self.couldNotLoadDataLabel.text =  NSLocalizedString(@"could_not_load_data_for_this_article", @"Title of the 'couldNotLoadDataLabel'");
     return defaultView;
 }
 

@@ -324,33 +324,29 @@
         
         [aView addSubview:backgroundImageView];
         
-        
         //add buttons
-        
         CGFloat paddingAmmount = 20.0f;
         CGFloat paddingTop = 9.0f;
         UIFont *buttonFont = [UIFont fontWithName:@"Georgia" size:11.0f]; 
         UIColor*buttonTextColor = [UIColor blackColor];
-        
-#warning TODO: localize text - mosaik     
+           
         CGSize buttonSize = CGSizeMake(85.0f, 37.0f);
         CGRect firstButtonFrame = CGRectMake(paddingAmmount, paddingTop, buttonSize.width, buttonSize.height);
         UIButton* firstButton = [UIButton buttonWithType:UIButtonTypeCustom];
         firstButton.titleLabel.font = buttonFont;
         [firstButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         firstButton.frame = firstButtonFrame;
-        [firstButton setTitle:[@"Mosaik" uppercaseString] forState:UIControlStateNormal];
+        [firstButton setTitle:[NSLocalizedString(@"toolbar_mosaic", @"") uppercaseString] forState:UIControlStateNormal];
         [firstButton addTarget:self action:@selector(handleTapOnSpecificToolbarLeft:) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:firstButton];
         
-#warning TODO: localize text - mosaik
         CGSize buttonSize2 = CGSizeMake(72.0f, 37.0f);
         CGRect secondButtonFrame = CGRectMake(aView.frame.size.width-buttonSize2.width-paddingAmmount, paddingTop, buttonSize2.width, buttonSize2.height);
         UIButton* secondButton = [UIButton buttonWithType:UIButtonTypeCustom];
         secondButton.titleLabel.font = buttonFont;
         [secondButton setTitleColor:buttonTextColor forState:UIControlStateNormal];
         secondButton.frame = secondButtonFrame;
-        [secondButton setTitle:[@"More" uppercaseString] forState:UIControlStateNormal];
+        [secondButton setTitle:[NSLocalizedString(@"toolbar_more", @"") uppercaseString] forState:UIControlStateNormal];
         [secondButton addTarget:self action:@selector(handleTapOnSpecificToolbarRight:) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:secondButton];
         
@@ -363,9 +359,7 @@
         [mercedesButton addTarget:self action:@selector(handleTapOnSpecificToolbarMercedes:) forControlEvents:UIControlEventTouchDown];
         [aView addSubview:mercedesButton];
         
-        
          _specificToolbar = aView;
-        
     }
     
     return _specificToolbar;
@@ -401,15 +395,15 @@
         someView.backgroundColor = [UIColor whiteColor];
         someView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         
+        #warning add fonts to constants
+        
         //set up the label
         CGSize labelSize = CGSizeMake(280.0f, 40.0f);
         CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
         UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
         someLabel.textAlignment = UITextAlignmentCenter;
         someLabel.numberOfLines = 2;
-#warning find better text!
-#warning add fonts to constants    
-        someLabel.text = @"Sorry, but you need an internet connection to load this data"; 
+        someLabel.text = NSLocalizedString(@"could_not_load_data", @"Title for the couldNotLoadDataLabel when trying to load data, but not successful because of some error");; 
         someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
         someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.couldNotLoadDataLabel = someLabel;
@@ -432,9 +426,7 @@
         CGRect newFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.couldNotLoadDataView.frame = newFrame;
         
-        [self.view addSubview:self.couldNotLoadDataView];        
-        
-        NSLog(@" is couldnotloaddataview nil: %@", (_couldNotLoadDataView == nil) ? @"TRUE" : @"FALSE");
+        [self.view addSubview:self.couldNotLoadDataView];
         
         [self setIsLoadingViewHidden:YES];
         [self setIsNoConnectionViewHidden:YES];
@@ -480,9 +472,8 @@
     
     NSString* titleOfReturningToViewController = self.viewControllerToReturnTo.title;
     
-#warning TODO: localize! better text
     if (titleOfReturningToViewController==nil) {
-        titleOfReturningToViewController = @"back";
+        titleOfReturningToViewController = NSLocalizedString(@"back_button_back_title", @"Title of the back button in the navigation bar");
     }
     
 #define PADDING_TOP 1.0f
@@ -525,7 +516,6 @@
     self.navigationItem.leftBarButtonItem = backBarButtonItem;
 }
 
-
 -(UIView*)firstRunLoadingView
 {
     if (_firstRunLoadingView==nil) {
@@ -557,10 +547,8 @@
     return _firstRunLoadingView;
 }
 
-
 -(void)setIsFirstRunLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (hidden) {
@@ -576,7 +564,6 @@
     }
 }
 
-
 -(UIView*)loadingView
 {
     if (_loadingView==nil) {
@@ -584,21 +571,19 @@
         //set up the loading view
         CGRect loadingViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         
-        NSLog(@"loadingViewFrame: %@", NSStringFromCGRect(loadingViewFrame));
-        
         UIView* aView = [[UIView alloc] initWithFrame:loadingViewFrame];
         aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         aView.backgroundColor = [UIColor whiteColor];
+        
+        #warning add fonts to constants
         
         //set up the label
         CGSize labelSize = CGSizeMake(280.0f, 20.0f);
         CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
         UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
         someLabel.textAlignment = UITextAlignmentCenter;
-        someLabel.numberOfLines = 2;
-#warning find better text!
-#warning add fonts to constants    
-        someLabel.text = @"loading..."; 
+        someLabel.numberOfLines = 2;    
+        someLabel.text = NSLocalizedString(@"loading_view_loading_text", @"Text shown when loading data"); 
         someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
         someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.loadingViewLabel = someLabel;
@@ -623,7 +608,6 @@
 
     return _loadingView;
 }
-
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden
 {
@@ -657,15 +641,15 @@
         UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
         someView.backgroundColor = [UIColor whiteColor];
         
+        #warning add fonts to constants
+        
         //set up the label
         CGSize labelSize = CGSizeMake(280.0f, 40.0f);
         CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
         UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
         someLabel.textAlignment = UITextAlignmentCenter;
         someLabel.numberOfLines = 2;
-        someLabel.text = @"Sorry, but you need an internet connection to view this tumblr feed"; 
-#warning find better text!
-#warning add fonts to constants    
+        someLabel.text = NSLocalizedString(@"no_internet_connection_tumblr_text", @"Text shown when no tumblr content loaded and no internet connection available to do so");     
         someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
         
         [someView addSubview:someLabel];

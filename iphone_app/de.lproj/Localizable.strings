@@ -5,6 +5,41 @@
   Created by Claudiu-Vlad Ursache on 11.06.12.
   Copyright (c) 2012 c.v.ursache. All rights reserved.
 */
+
+"toolbar_mosaic" = "Mosaik";
+"toolbar_more" = "More";
+
+"back_button_back_title"="back";
+"loading_view_loading_text" = "loading...";
+
+"actionsheet_link_cancel" = "Abbrechen";
+"actionsheet_link_open_in_safari" = "In Safari öffnen";
+
+"actionsheet_share_cancel" = "Abbrechen";
+"actionsheet_share_twitter" = "Twitter";
+"actionsheet_share_facebook" = "Facebook";
+
+"no_internet_connection_tumblr_text" = "Sorry, but you need an internet connection to view this tumblr feed";
+
+"could_not_load_data_for_this_article" = "Could not load data for this article";
+
+"could_not_load_data_server_error_first_run" = "Could not load data from SERVER for first RUN, sorry!";
+"could_not_load_data" = "Could not load data from server, sorry!";
+"could_not_load_data_no_internet_connection_first_run" = "You need an internet connection to load data for the first time.";
+
+"button_title_unlike" = "UNLIKE";
+"button_title_like" = "LIKE";
+
+"more_options_about_ignant" = "About Ignant";
+"more_options_tumblr_feed" = "Tumblr Feed";
+"more_options_categories" = "Kategorien";
+"more_options_favorites" = "Favoriten";
+"more_options_write_review" = "Write a review";
+"more_options_contact" = "Kontakt";
+
+
+"fotos_button_title" = "%d Fotos";
+
 "ui_alert_message_you_need_to_be_logged_in_with_twitter" = "You need to be logged in your Twitter account!";
 "ui_alert_message_you_need_an_internet_connection" = "Sorry, but you need an internet connection to do that :).";
 "ui_alert_dismiss" = "Dismiss";

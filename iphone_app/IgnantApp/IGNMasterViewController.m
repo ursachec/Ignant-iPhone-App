@@ -909,25 +909,19 @@
 
 -(UIView*)couldNotLoadDataView
 {
-    
     UIView* defaultView = [super couldNotLoadDataView];
-    
-    NSLog(@"MASTER shouldLoadData: %@", self.appDelegate.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
-    
-#warning BETTER TEXT!
-    
+        
     if (self.appDelegate.shouldLoadDataForFirstRun && [self.appDelegate checkIfAppOnline]) {
-        self.couldNotLoadDataLabel.text = @"Could not load data from SERVER for first RUN, sorry!";
+        self.couldNotLoadDataLabel.text = NSLocalizedString(@"could_not_load_data_server_error_first_run", @"Title for the couldNotLoadDataLabel when trying to load firstRun data, but not successful because of server error");
     }
     
     else if (self.appDelegate.shouldLoadDataForFirstRun && ![self.appDelegate checkIfAppOnline]) {
-        self.couldNotLoadDataLabel.text = @"You need an internet connection to load data for the first time.";
+        self.couldNotLoadDataLabel.text = NSLocalizedString(@"could_not_load_data_no_internet_connection_first_run", @"Title for the couldNotLoadDataLabel when trying to load firstRun data, but not successful because of no internet connection");
     }
     
     else {
-        self.couldNotLoadDataLabel.text = @"Could not load data from server, sorry!";
+        self.couldNotLoadDataLabel.text = NSLocalizedString(@"could_not_load_data", @"Title for the couldNotLoadDataLabel when trying to load data, but not successful because of some error");
     }
-    
     
     return defaultView;
 }

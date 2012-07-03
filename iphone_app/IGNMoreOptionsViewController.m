@@ -78,13 +78,12 @@ typedef enum _moreOptionsIndeces  {
 {
     _listOfOptions = [[NSMutableArray alloc] initWithCapacity:12];
     
-#warning localize strings
-    [_listOfOptions insertObject:@"About Ignant" atIndex:indexForAboutIgnant];
-    [_listOfOptions insertObject:@"Tumblr Feed" atIndex:indexForTumblrFeed];
-    [_listOfOptions insertObject:@"Kategorien" atIndex:indexForCategories];
-    [_listOfOptions insertObject:@"Favoriten" atIndex:indexForFavourites];
-    [_listOfOptions insertObject:@"Write a review" atIndex:indexForReview];
-    [_listOfOptions insertObject:@"Kontakt" atIndex:indexForContact];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_about_ignant", @"Title of 'About Ignant' cell on More VC") atIndex:indexForAboutIgnant];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_tumblr_feed", @"Title of 'Tublr' cell on More VC") atIndex:indexForTumblrFeed];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_categories", @"Title of 'Categories' cell on More VC") atIndex:indexForCategories];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_favorites", @"Title of 'Favorites' cell on More VC") atIndex:indexForFavourites];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_write_review", @"Title of 'Write Review' cell on More VC") atIndex:indexForReview];
+    [_listOfOptions insertObject:NSLocalizedString(@"more_options_contact", @"Title of 'Contact' cell on More VC") atIndex:indexForContact];
 }
 
 
@@ -251,7 +250,7 @@ typedef enum _moreOptionsIndeces  {
             returnImage = [UIImage imageNamed:@"5"];
             break;
         case indexForFavourites:    
-            returnImage = [UIImage imageNamed:@"1"];
+            returnImage = [UIImage imageNamed:@"6"];
             break;
         default:
             break;
