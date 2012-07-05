@@ -59,6 +59,10 @@
 		41F9E7371584F26A00F11927 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9E7361584F26A00F11927 /* ImageIO.framework */; };
 		41F9E78C1584FB3800F11927 /* TumblrCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 41F9E78A1584FB3800F11927 /* TumblrCell.h */; };
 		41F9E78D1584FB3800F11927 /* TumblrCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 41F9E78B1584FB3800F11927 /* TumblrCell.m */; };
+		E50220EE15A5C3380033EEA4 /* DefaultNoTop.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */; };
+		E50220EF15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */; };
+		E50220F015A5C3380033EEA4 /* mb_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220ED15A5C3380033EEA4 /* mb_logo.png */; };
+		E50220F215A5C5000033EEA4 /* mb_footer.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220F115A5C4FF0033EEA4 /* mb_footer.png */; };
 		FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE014AE34D0003B8778 /* UIKit.framework */; };
 		FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE214AE34D0003B8778 /* Foundation.framework */; };
 		FE0DDCE514AE34D0003B8778 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE414AE34D0003B8778 /* CoreGraphics.framework */; };
@@ -326,6 +330,10 @@
 		41F9E7361584F26A00F11927 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		41F9E78A1584FB3800F11927 /* TumblrCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TumblrCell.h; sourceTree = "<group>"; };
 		41F9E78B1584FB3800F11927 /* TumblrCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TumblrCell.m; sourceTree = "<group>"; };
+		E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultNoTop.png; sourceTree = "<group>"; };
+		E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DefaultNoTop@2x.png"; sourceTree = "<group>"; };
+		E50220ED15A5C3380033EEA4 /* mb_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_logo.png; sourceTree = "<group>"; };
+		E50220F115A5C4FF0033EEA4 /* mb_footer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_footer.png; sourceTree = "<group>"; };
 		FE0DDCDC14AE34D0003B8778 /* IgnantApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IgnantApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE0DDCE014AE34D0003B8778 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FE0DDCE214AE34D0003B8778 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1035,6 +1043,10 @@
 		FE42566315599F61008E0911 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */,
+				E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */,
+				E50220ED15A5C3380033EEA4 /* mb_logo.png */,
+				E50220F115A5C4FF0033EEA4 /* mb_footer.png */,
 				4146FE3C1582430D001BAC75 /* navigation */,
 				FE1B2C001559A03300F7FFF8 /* application_images */,
 				FE1B2C051559A03300F7FFF8 /* buttons */,
@@ -1536,6 +1548,10 @@
 				41AFB862159A155C00294F93 /* arrow_right_black.png in Resources */,
 				4149699015A0D63600A87841 /* FavouritesViewController.xib in Resources */,
 				41A4AB2415A1E7DD0062A624 /* ExternalPageViewController.xib in Resources */,
+				E50220EE15A5C3380033EEA4 /* DefaultNoTop.png in Resources */,
+				E50220EF15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */,
+				E50220F015A5C3380033EEA4 /* mb_logo.png in Resources */,
+				E50220F215A5C5000033EEA4 /* mb_footer.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

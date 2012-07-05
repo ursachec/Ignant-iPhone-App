@@ -111,6 +111,7 @@
 @synthesize secondRelatedArticleId = _secondRelatedArticleId;
 @synthesize thirdRelatedArticleId = _thirdRelatedArticleId;
 
+@synthesize relatedArticlesTitleLabel = _relatedArticlesTitleLabel;
 @synthesize didLoadContentForRemoteArticle = _didLoadContentForRemoteArticle;
 
 @synthesize currentArticleId, relatedArticlesIds;
@@ -213,6 +214,8 @@
     
     [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
     
+    
+    self.relatedArticlesTitleLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Title for the label that apears on top of the related articles in the Detail View Controller");
 }
 
 -(void)loadNavigationButtons
@@ -245,6 +248,7 @@
 {
    
     [self setToggleLikeButton:nil];
+    [self setRelatedArticlesTitleLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -550,7 +554,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
-#define PADDING_BOTTOM 0.0f 
+#define PADDING_BOTTOM 0.0f
     
     //get the content size of the webview
     CGRect frame = aWebView.frame;
@@ -647,7 +651,6 @@
                  [blocKDescriptionWebViewLoadingView setAlpha:alphaForShownState];                 
              } 
                              completion:^(BOOL finished){ }];
-            
         }
     }
     
@@ -721,12 +724,10 @@
     //set up the view in case the article is already here
     else 
     {    
-        
         //show loading view only for specific blog entry templates
         if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
             [self setIsLoadingViewHidden:NO];
         }
-
         
         //article already loaded,
         //set up the article content view
@@ -788,6 +789,7 @@
 {
 
 #define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
+#define SHOW_DEBUG_COLORS false
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
     LOG_CURRENT_FUNCTION()
@@ -846,8 +848,14 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
-    self.dateLabel.text = [formatter stringFromDate:publishDate];
+    NSString* publishDateString = [formatter stringFromDate:publishDate];
+    CGSize publishDateSize = [publishDateString sizeWithFont:self.dateLabel.font];
+    NSLog(@"publishDateSize: %@", NSStringFromCGSize(publishDateSize));
     
+    self.dateLabel.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, publishDateSize.width, tempRect.size.height);
+    self.dateLabel.text = publishDateString;
+    
+    tempRect = self.dateLabel.frame;
     
     //set up the category name
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
@@ -856,7 +864,7 @@
     if (categoryName!=nil) 
     {
         NSString *category = categoryName;
-        NSString *categoryName = @"∙ "; //special characters: ∙ , ●
+        NSString *categoryName = @" ∙ "; //special characters: ∙ , ●
         
         categoryName = [categoryName stringByAppendingString:category];
         
@@ -871,10 +879,16 @@
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
     
+    if(SHOW_DEBUG_COLORS)
+    {
+        self.dateLabel.backgroundColor = [UIColor blueColor];
+        self.titleLabel.backgroundColor = [UIColor purpleColor];
+        self.categoryLabel.backgroundColor = [UIColor redColor];
+    }
     
     //set up the description textview
     //set up the user interface for the current objects    
-    CGFloat marginTop = 5.0f;
+    CGFloat marginTop = .0f;
     
     
     //start setting up the uiwebview 
@@ -883,7 +897,10 @@
     [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];    
     self.descriptionWebView.delegate = self;
     
-    
+    if (SHOW_DEBUG_COLORS) {
+        self.descriptionWebView.backgroundColor = [UIColor redColor];
+    }
+
     CGRect frame = _descriptionWebView.frame;
     CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
     frame.size = fittingSize;
@@ -892,6 +909,7 @@
     CGRect descriptionWebViewFrame = _descriptionWebView.frame;
     CGSize descriptionTextContentSize = descriptionWebViewFrame.size;
     
+    marginTop = .0f;
     _descriptionWebView.frame = CGRectMake(descriptionWebViewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionWebViewFrame.size.width, descriptionTextContentSize.height);
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
@@ -911,7 +929,8 @@
         NSLog(@"setting the frame of the article content view...");
     
     tempRect = self.articleContentView.frame;
-    self.articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+10.0f);
+    CGFloat paddingBottomOfWebView = 10.0f;
+    self.articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+paddingBottomOfWebView);
     
     
     //add the articleContentView to the scrollView
@@ -922,9 +941,6 @@
     
     //setup ui elements for current blogentry template
     [self setupUIElementsForCurrentBlogEntryTemplate];
-    
-    
-    
 }
 
 -(void)setupRelatedArticlesUI:(NSArray*)relatedArticles
@@ -1023,7 +1039,6 @@
                                       publishDate:fDate];
     return;    
 }
-
 
 #pragma mark - picture slideshow
 
@@ -1249,7 +1264,7 @@
                                                        delegate:self 
                                               cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share") 
                                          destructiveButtonTitle:nil 
-                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_twitter", @"Title of the 'Twitter' button in the actionsheet when tapping on share"),NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"), nil ];
+                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"),NSLocalizedString(@"actionsheet_share_twitter", @"Title of the 'Twitter' button in the actionsheet when tapping on share"), nil ];
     }
     else {
         shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
@@ -1544,5 +1559,4 @@
     
     NSLog(@"start playing video: %@", videoUrl);
 }
-
 @end

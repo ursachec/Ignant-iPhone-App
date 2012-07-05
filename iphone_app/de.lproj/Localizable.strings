@@ -7,6 +7,8 @@
 */
 "vc_title_home" = "Home";
 
+"title_related_articles_detail_vc" = "ARCHIV";
+
 "could_not_load_data_for_tumblr_feed" = "Could not load tumblr feed";
 "could_not_load_data_for_mosaic" = "Could not load data for the mosaic";
 
@@ -42,7 +44,7 @@
 "more_options_contact" = "Kontakt";
 
 
-"fotos_button_title" = "%d Fotos";
+"fotos_button_title" = "%d Fotos »";
 
 "ui_alert_message_you_need_to_be_logged_in_with_twitter" = "You need to be logged in your Twitter account!";
 "ui_alert_message_you_need_an_internet_connection" = "Sorry, but you need an internet connection to do that :).";

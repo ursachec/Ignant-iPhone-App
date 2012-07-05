@@ -142,7 +142,7 @@
 
 -(void)setIsSpecificNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    CGFloat activeAlpha = 0.8f;
+    CGFloat activeAlpha = 1.0f;
     CGFloat animationDuration = 0.3f;
     
     if (!animated) {
@@ -260,7 +260,7 @@
 
 -(void)setIsSpecificToolbarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    CGFloat activeAlpha = 0.8f;
+    CGFloat activeAlpha = 1.0f;
     CGFloat animationDuration = 0.3f;
     
     if (!animated) {
@@ -317,7 +317,7 @@
         //set up the background imageview
         CGSize imageViewSize = toolbarSize;
         UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, imageViewSize.width, imageViewSize.height)];
-        backgroundImageView.image = [UIImage imageNamed:@"ign_footer.jpg"];
+        backgroundImageView.image = [UIImage imageNamed:@"mb_footer.png"];
         
         if(DEBUG_SHOW_DEBUG_COLORS)
             backgroundImageView.backgroundColor = [UIColor greenColor];
@@ -528,7 +528,7 @@
         
         CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, 480.0f-20.0f);
         UIImageView* aImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
-        aImageView.image = [UIImage imageNamed:@"loading_mercedes_k.png"];
+        aImageView.image = [UIImage imageNamed:@"DefaultNoTop@2x"];
         [aView addSubview:aImageView];
         
         CGSize aiSize = CGSizeMake(21.0f, 21.0f);
@@ -575,27 +575,10 @@
         aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         aView.backgroundColor = [UIColor whiteColor];
         
-        #warning add fonts to constants
-        
-        //set up the label
-        CGSize labelSize = CGSizeMake(280.0f, 20.0f);
-        CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
-        UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
-        someLabel.textAlignment = UITextAlignmentCenter;
-        someLabel.numberOfLines = 2;    
-        someLabel.text = NSLocalizedString(@"loading_view_loading_text", @"Text shown when loading data"); 
-        someLabel.font = [UIFont fontWithName:@"Georgia" size:10.0f];
-        someLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        self.loadingViewLabel = someLabel;
-        
-        [aView addSubview:someLabel];
-        
-        
         //set up the activity indicator
-        CGFloat paddingTop = 5.0f;
         CGFloat scalingFactor = 0.7f;
         CGSize activityIndicatorSize = CGSizeMake(21.0f, 21.0f);
-        CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width*scalingFactor)/2, someLabelFrame.origin.y+someLabelFrame.size.height+paddingTop, activityIndicatorSize.width*scalingFactor, activityIndicatorSize.height*scalingFactor);
+        CGRect activityIndicatorFrame = CGRectMake((loadingViewFrame.size.width-activityIndicatorSize.width*scalingFactor)/2, (loadingViewFrame.size.height-activityIndicatorSize.height*scalingFactor)/2, activityIndicatorSize.width*scalingFactor, activityIndicatorSize.height*scalingFactor);
         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         activityIndicator.frame = activityIndicatorFrame;
         activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;

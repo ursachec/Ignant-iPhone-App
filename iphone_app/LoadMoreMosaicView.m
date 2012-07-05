@@ -25,11 +25,17 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        CGSize viewSize = frame.size;
         CGSize activityIndicatorSize = CGSizeMake(20.0f, 20.0f);
-        CGRect activityIndicatorFrame = CGRectMake(0.0f, 0.0f, activityIndicatorSize.width, activityIndicatorSize.height);
+        CGRect activityIndicatorFrame = CGRectMake((viewSize.width-activityIndicatorSize.width)/2, (viewSize.height-activityIndicatorSize.height)/2, activityIndicatorSize.width, activityIndicatorSize.height);
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.backgroundColor = [UIColor clearColor];
         _activityIndicator.frame = activityIndicatorFrame;
         [_activityIndicator setHidesWhenStopped:YES];
+        
+        CGFloat scalingFactor = 0.8f;
+        [_activityIndicator.layer setValue:[NSNumber numberWithFloat:scalingFactor] forKeyPath:@"transform.scale"];
+        
         [self addSubview:_activityIndicator];
         
     }

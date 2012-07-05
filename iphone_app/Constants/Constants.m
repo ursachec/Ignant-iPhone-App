@@ -53,7 +53,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 //################################################################################
 
 //server stuff
-#define shouldUseRemoteServer false
+#define shouldUseRemoteServer true
 
 
 NSString* const kAdressForMercedesPage = @"http://www.mercedes-benz.de/";
@@ -85,6 +85,13 @@ NSString * const kAPIResponseServerOk = @"ok";
 NSString * const kAPIResponseServerError = @"error";
 
 
+//registering for notifications
+NSString * const kAPICommandRegisterForNotifications = @"registerForNotifications";
+NSString * const kAPIKeyRegisterForNotificationsDeviceToken = @"deviceToken";
+NSString * const kAPIKeyDidRegisterForNotifications = @"didRegister";
+NSString * const kAPIResponseRegisterForNotificationsOk = @"regOk";
+NSString * const kAPIResponseRegisterForNotificationsFailed = @"regFalse";
+
 //possible actions
 NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";
 NSString * const kAPICommandGetMoreArticlesForCategory = @"getMoreArticlesForCategory";
@@ -93,6 +100,11 @@ NSString * const kAPICommandGetSingleArticle = @"getSingleArticle";
 NSString * const kAPICommandGetSetOfMosaicImages = @"getSetOfMosaicImages";
 NSString * const kAPICommandGetMoreTumblrArticles = @"getMoreTumblrArticles";
 NSString * const kAPICommandGetLatestTumblrArticles = @"getLatestTumblrArticles";
+
+
+
+
+
 
 
 NSString * const kUndefinedCategoryId = @"undefined";

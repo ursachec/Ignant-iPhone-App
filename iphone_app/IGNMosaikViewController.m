@@ -358,17 +358,24 @@ NSString * const kImageFilename = @"filename";
         CGFloat xposForActiveColumn = [self xposForColumn:activeColumn];
         CGFloat heightOfActiveColumn = columnHeights[activeColumn];
         
-        
         BOOL isColumnLoadMoreView = (imageCounter==1);
         
         if (isColumnLoadMoreView) 
         {
+            //always show the loading mosaic view in the center
+            activeColumn = 1;
+            xposForActiveColumn = [self xposForColumn:activeColumn];
+            heightOfActiveColumn = columnHeights[activeColumn];
+            
+            
+            fMosaicEntryWidth = 100.0f;
+            fMosaicEntryHeight = 50.0f;
+            
             //add a load more view to the scrollview
             CGPoint mosaicViewPoint = CGPointMake(xposForActiveColumn, PADDING_TOP+heightOfActiveColumn+PADDING_BOTTOM);
             CGRect mosaicViewFrame = CGRectMake(mosaicViewPoint.x, mosaicViewPoint.y, fMosaicEntryWidth, fMosaicEntryHeight);
             LoadMoreMosaicView* oneView = [[LoadMoreMosaicView alloc] initWithFrame:mosaicViewFrame];
             oneView.userInteractionEnabled = YES;
-            oneView.backgroundColor = [UIColor clearColor];
             oneView.alpha = 1.0f;
             
             self.loadingMoreMosaicView = oneView;
@@ -394,11 +401,9 @@ NSString * const kImageFilename = @"filename";
 //            tempImageView.image = scaledImage;
             [oneView addSubview:tempImageView];
             
-            
             [self.bigMosaikView addSubview:oneView];
             
             //trigger loading the image
-#warning IDEA: placeholder image ignant logo, looks interesting
             NSURL* mURL = [NSURL URLWithString:mosaicEntryUrl];
             [tempImageView setImageWithURL:mURL
                           placeholderImage:nil];
@@ -572,16 +577,15 @@ NSString * const kImageFilename = @"filename";
 {
     NSLog(@"double tap in view");
     
-    [self transitionToDetailViewControllerForArticleId:view.articleId];
+    [self toggleShowSpecificNavigationBarAnimated:YES];
+    [self toggleShowSpecificToolbar];
 }
 
 -(void)triggerActionForTapInView:(MosaicView*)view
 {
     NSLog(@"tap in view");
     
-    [self toggleShowSpecificNavigationBarAnimated:YES];
-    [self toggleShowSpecificToolbar];
-    
+    [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
 
 -(void)setUpToolbarAndMockNavigationBar

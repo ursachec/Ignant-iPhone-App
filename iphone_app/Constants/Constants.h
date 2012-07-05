@@ -76,6 +76,14 @@ extern NSString * const kAPIKeyIsServerReachable;
 extern NSString * const kAPIResponseServerOk;
 extern NSString * const kAPIResponseServerError;
 
+
+//registering for notifications
+extern NSString * const kAPICommandRegisterForNotifications;
+extern NSString * const kAPIKeyRegisterForNotificationsDeviceToken;
+extern NSString * const kAPIKeyDidRegisterForNotifications;
+extern NSString * const kAPIResponseRegisterForNotificationsOk;
+extern NSString * const kAPIResponseRegisterForNotificationsFailed;
+
 //possible API Commands
 extern NSString * const kAPICommandGetDataForFirstRun;
 extern NSString * const kAPICommandGetMoreArticlesForCategory;
@@ -84,6 +92,7 @@ extern NSString * const kAPICommandGetSingleArticle;
 extern NSString * const kAPICommandGetSetOfMosaicImages;
 extern NSString * const kAPICommandGetMoreTumblrArticles;
 extern NSString * const kAPICommandGetLatestTumblrArticles;
+
 
 //getting content
 extern NSString * const kUndefinedCategoryId;

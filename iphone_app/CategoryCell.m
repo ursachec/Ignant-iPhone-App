@@ -9,7 +9,7 @@
 #import "CategoryCell.h"
 
 
-CGFloat const kCategoryCellHeight = 48.0f;
+CGFloat const kCategoryCellHeight = 62.1f;
 
 @interface CategoryCell()
 @property(nonatomic,strong,readwrite) UIView *overlayView;

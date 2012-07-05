@@ -655,6 +655,20 @@ return _externalPageViewController;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"devToken=%@",deviceToken);
     self.deviceToken = [[NSString alloc] initWithData:deviceToken encoding:NSUTF8StringEncoding];
+    
+    
+//    //register also on server side
+//    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+//    
+//    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandRegisterForNotifications,kParameterAction, currentPreferredLanguage,kParameterLanguage, deviceToken,kAPIKeyRegisterForNotificationsDeviceToken, nil];
+//    NSString *requestString = kAdressForContentServer;
+//    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
+//    
+//    
+//	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
+//    [request setTimeOutSeconds:20.0f];
+//	[request startAsynchronous];
+    
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
@@ -688,7 +702,7 @@ return _externalPageViewController;
         //set up the background imageview
         CGSize imageViewSize = toolbarSize;
         UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, imageViewSize.width, imageViewSize.height)];
-        backgroundImageView.image = [UIImage imageNamed:@"ign_footer.jpg"];
+        backgroundImageView.image = [UIImage imageNamed:@"mb_footer.png"];
         
         if(DEBUG_SHOW_DEBUG_COLORS)
             backgroundImageView.backgroundColor = [UIColor greenColor];

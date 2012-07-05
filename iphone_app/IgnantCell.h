@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 
-
 @interface IgnantCell : UITableViewCell
 {
     UIImage *thumbImage;

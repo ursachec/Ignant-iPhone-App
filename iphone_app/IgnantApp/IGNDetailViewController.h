@@ -19,6 +19,7 @@
 @interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
+@property (retain, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
 
 @property(nonatomic, unsafe_unretained) BOOL didLoadContentForRemoteArticle;
 @property(nonatomic, unsafe_unretained) BOOL isShowingArticleFromLocalDatabase; 

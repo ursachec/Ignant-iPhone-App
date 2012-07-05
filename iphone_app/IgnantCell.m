@@ -7,9 +7,9 @@
 //
 
 #import "IgnantCell.h"
-#import "Constants.h"
+#import "Constants/Constants.h"
 
-@interface IgnantCellContentView : UIView 
+@interface IgnantCellContentView : UIView
 {
     IgnantCell *_cell;
     BOOL _highlighted;
@@ -81,10 +81,11 @@
         
     //draw the arrow
     [IGNANT_GRAY_COLOR set];
+    CGFloat paddingRight = 10.0f;
     CGFloat ratio = 0.5f;
     UIImage *arrowImage = [UIImage imageNamed:@"arrow_right.png"];
     CGSize arrowImageSize = CGSizeMake(17.0f*ratio, 26.0f*ratio);
-    CGRect arrowImageRect = CGRectMake(contentRect.size.width-arrowImageSize.width-PADDING_RIGHT, (contentRect.size.height-arrowImageSize.height-CELL_PADDING_TOP)/2, arrowImageSize.width, arrowImageSize.height);
+    CGRect arrowImageRect = CGRectMake(contentRect.size.width-arrowImageSize.width-paddingRight, (contentRect.size.height-arrowImageSize.height-CELL_PADDING_TOP)/2, arrowImageSize.width, arrowImageSize.height);
     [arrowImage drawInRect:arrowImageRect];
     
     //draw article name
@@ -115,15 +116,13 @@
     [IGNANT_GRAY_COLOR set];
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetRGBStrokeColor(ctx, 0.85, 0.85, 0.85, 1.0);
-    CGContextSetLineWidth(ctx, 1.0);
-    CGContextMoveToPoint(ctx, 0.0f, contentRect.size.height-1.0f);
-    CGContextAddLineToPoint(ctx, 320.0f, contentRect.size.height-1.0f);
+    CGContextSetLineWidth(ctx, 1.2f);
+    CGContextMoveToPoint(ctx, 0.0f, contentRect.size.height-.8f);
+    CGContextAddLineToPoint(ctx, 320.0f, contentRect.size.height-.8f);
     CGContextStrokePath(ctx);
 }
 
 @end
-
-
 
 @interface IgnantCell()
 - (void)setHighlighted:(BOOL)highlighted;
