@@ -133,6 +133,8 @@ class LightArticlesTest
 	{
 			$thumbLinks = array();
 		
+		
+		
 			$thumbLinks['henrique_oliveira']='http://www.ignant.de/wp-content/uploads/2012/02/henrique-oliveira_pre.jpg';
 			$thumbLinks['mark_powell']='http://www.ignant.de/wp-content/uploads/2012/06/evanspre.jpg';
 			$thumbLinks['hui_yi']='http://www.ignant.de/wp-content/uploads/2012/03/huipre.jpg';
@@ -145,13 +147,11 @@ class LightArticlesTest
 			$thumbLinks['brian']='http://www.ignant.de/wp-content/uploads/2012/02/Brian_pre1.jpg';
 			$thumbLinks['wood']='http://www.ignant.de/wp-content/uploads/2012/02/wood_pre.jpg';
 			$thumbLinks['martins_edgar']='http://www.ignant.de/wp-content/uploads/2012/02/Martins.Edgarpre.jpeg';
-			$thumbLinks['monifaktur_cd']='http://www.ignant.de/wp-content/uploads/2013/05/mon_pre.jpg';
-		
-		$thumbLinks['monifaktur_cards']='http://www.ignant.de/2011/08/15/moni-spielt-mit-offenen-karten/';
+			$thumbLinks['monifaktur_cd']='http://www.ignant.de/wp-content/uploads/2013/05/mon_pre.jpg';		
+			$thumbLinks['monifaktur_cards']='http://www.ignant.de/2011/08/15/moni-spielt-mit-offenen-karten/';
 			$thumbLinks['monifaktur_49']='http://www.ignant.de/wp-content/uploads/2012/11/kleines-YouTube.jpg';
-				$thumbLinks['monifaktur_48']='http://www.ignant.de/wp-content/uploads/2011/10/Moniversum-copy.jpg';
-				$thumbLinks['monifaktur_cards']='http://www.ignant.de/wp-content/uploads/2012/08/karten-klein.jpg';
-
+			$thumbLinks['monifaktur_48']='http://www.ignant.de/wp-content/uploads/2011/10/Moniversum-copy.jpg';
+			$thumbLinks['monifaktur_cards']='http://www.ignant.de/wp-content/uploads/2012/08/karten-klein.jpg';
 			$thumbLinks['aicuisine_steak_sandwich']='http://www.ignant.de/wp-content/uploads/2012/06/steak-sandwich-pre.jpg';
 			$thumbLinks['ignantravel_riche_stockholm']='http://www.ignant.de/wp-content/uploads/2012/06/travel6.jpg';
 			
@@ -160,7 +160,6 @@ class LightArticlesTest
 			
 			$thumbLinks['shadow_art']='http://www.ignant.de/wp-content/uploads/2012/06/shadowpre2.jpg';
 			$thumbLinks['jasmine_deporta']='http://www.ignant.de/wp-content/uploads/2012/05/jasmine_pre2.jpg';			
-			
 			
 			$thumbLinks['test_2']='http://www.ignant.de/wp-content/uploads/2012/06/osma_pre.jpg';
 			$thumbLinks['test_3']='http://www.ignant.de/wp-content/uploads/2012/06/flickr_friday_07.06.pre_.jpg';
@@ -180,7 +179,16 @@ class LightArticlesTest
 				if(strcmp($articleID, $article_id)==0)
 				return $article_link;
 			}
-						
+			
+			
+			//TODO: show real images
+			return 'http://www.ignant.de/wp-content/uploads/2012/06/herdernpre.jpg';
+			
+			//39840 39869 39858 
+
+			//"articleId":"39823" ,"articleId":"39806" "articleId":"39780" "articleId":"39747" "articleId":"39725" "articleId":"39626"
+			
+				
 			return;
 	}
 	

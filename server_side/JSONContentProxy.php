@@ -5,6 +5,7 @@ require_once('unittests.php');
 
 require_once("wp_config.inc.php");
 
+require_once('modules/db/dbq_articles.php');
 require_once('modules/db/dbq_notifications.php');
 require_once('modules/db/dbq_categories.php');
 
@@ -60,15 +61,17 @@ class JSONContentProxy{
 		$articlesArray = array();
 		
 		
-		$testArticles = $testingUnit->getLastestArticlesForCategory($pCategoryId);
-		
-		
+		// $testArticles = $testingUnit->getLastestArticlesForCategory($pCategoryId);
+		$testArticles = getLatestArticlesForCategory($pCategoryId);
 		
 		if(is_array($testArticles) && count($testArticles)>0)			
 		foreach($testArticles as $oneArticle){
 			
-			$oneArticle->setIsForHomeCategory($pCategoryId);
-			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
+			if(is_object($oneArticle))
+			{
+				$oneArticle->setIsForHomeCategory($pCategoryId);
+				$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
+			}
 		};
 		
 		return $articlesArray;

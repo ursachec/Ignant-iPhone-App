@@ -55,8 +55,15 @@ function _bool($var){
 
 //get device information maybe
 
+
 require_once('feedKeys.php');
 require_once('JSONContentProxy.php');
+
+require_once("wp_config.inc.php");
+
+require_once('modules/db/dbq_articles.php');
+
+
 
 $contentProxy = new JSONContentProxy();
 
@@ -74,12 +81,11 @@ if(isset($_GET[TL_RETURN_MOSAIC_IMAGE]) && $_GET[TL_RETURN_MOSAIC_IMAGE]=='')
 	if(!_bool($shouldReturnMosaicImage))
 	return;
 	
-	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);	
-	
+	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);		
 }
 else
 {
-	$thumbLink = $contentProxy->getThumbUrlForArticleId($articleId);	
+	$thumbLink = getThumbLinkForArticleId($articleId);	
 }
 
 

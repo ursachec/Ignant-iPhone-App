@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>ignant.php</string>
+	<string>modules/db/dbq_categories.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -18,35 +18,39 @@
 		</dict>
 		<dict>
 			<key>filename</key>
+			<string>LiveContentProvider.php</string>
+			<key>lastUsed</key>
+			<date>2012-07-08T15:47:15Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-05T18:56:35Z</date>
+			<date>2012-07-08T19:10:07Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-06T13:50:33Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-07-08T19:09:57Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>wp_config.inc.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-06T13:50:32Z</date>
+			<date>2012-07-08T22:00:52Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>wp_hello.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-06T13:50:33Z</date>
+			<date>2012-07-08T19:09:10Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-05T18:48:22Z</date>
+			<date>2012-07-08T22:12:12Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -58,25 +62,25 @@
 			<key>filename</key>
 			<string>feedKeys.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-04T14:29:31Z</date>
+			<date>2012-07-08T15:45:12Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>getTumblrContent.php</string>
 			<key>lastUsed</key>
-			<date>2012-06-19T20:37:18Z</date>
+			<date>2012-07-07T18:28:32Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>videosrv.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-04T14:44:42Z</date>
+			<date>2012-07-07T18:28:33Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>imgsrv.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-04T14:44:43Z</date>
+			<date>2012-07-08T21:45:57Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -91,6 +95,16 @@
 			<string>tumblrDataDump.txt</string>
 			<key>lastUsed</key>
 			<date>2012-06-16T19:50:31Z</date>
+		</dict>
+		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
+			<string>db</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>modules/db</string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -116,14 +130,44 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+				<integer>107</integer>
+				<key>line</key>
+				<integer>123</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>94</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>45</integer>
+				<key>line</key>
+				<integer>123</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>107</integer>
+				<key>line</key>
+				<integer>123</integer>
+			</dict>
+		</dict>
+		<key>LiveContentProvider.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>4</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>146</integer>
+			<integer>0</integer>
 		</dict>
 		<key>classes/Article.php</key>
 		<dict>
@@ -230,30 +274,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>70</integer>
+				<integer>45</integer>
 				<key>line</key>
-				<integer>48</integer>
+				<integer>78</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
-			<integer>93</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>18</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>50</integer>
-				<key>line</key>
-				<integer>48</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>70</integer>
-				<key>line</key>
-				<integer>48</integer>
-			</dict>
+			<integer>45</integer>
 		</dict>
 		<key>classes/MixedImage.php</key>
 		<dict>
@@ -346,14 +374,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>22</integer>
+				<integer>18</integer>
 				<key>line</key>
-				<integer>16</integer>
+				<integer>10</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>15</integer>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>8</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>28</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
 		</dict>
 		<key>getTumblrContent.php</key>
 		<dict>
@@ -367,51 +411,93 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>27</integer>
+			<integer>38</integer>
 		</dict>
 		<key>ignant.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>41</integer>
 				<key>line</key>
-				<integer>106</integer>
+				<integer>104</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>80</integer>
 		</dict>
 		<key>imgsrv.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>81</integer>
+				<integer>68</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>46</integer>
+		</dict>
+		<key>modules/db/dbq_articles.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>195</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>173</integer>
+		</dict>
+		<key>modules/db/dbq_categories.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>128</integer>
+				<key>line</key>
+				<integer>18</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>54</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>29</integer>
+				<integer>151</integer>
 				<key>line</key>
-				<integer>81</integer>
+				<integer>18</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>52</integer>
+				<integer>128</integer>
 				<key>line</key>
-				<integer>81</integer>
+				<integer>18</integer>
 			</dict>
+		</dict>
+		<key>modules/db/dbq_notifications.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>69</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>41</integer>
 		</dict>
 		<key>script_to_get_images.sh</key>
 		<dict>
@@ -446,14 +532,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>52</integer>
+				<integer>121</integer>
 				<key>line</key>
-				<integer>205</integer>
+				<integer>240</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
-			<integer>0</integer>
+			<integer>30</integer>
 			<key>firstVisibleLine</key>
-			<integer>243</integer>
+			<integer>343</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>240</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>121</integer>
+				<key>line</key>
+				<integer>240</integer>
+			</dict>
 		</dict>
 		<key>videosrv.php</key>
 		<dict>
@@ -474,9 +576,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>4</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -487,16 +589,16 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>43</integer>
+				<integer>8</integer>
 				<key>line</key>
-				<integer>5</integer>
+				<integer>4</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>4</integer>
 			</dict>
 		</dict>
 		<key>wp_hello.php</key>
@@ -504,9 +606,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>41</integer>
 				<key>line</key>
-				<integer>29</integer>
+				<integer>26</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -527,10 +629,14 @@
 		<string>classes/RelatedArticle.php</string>
 		<string>classes/MixedImage.php</string>
 		<string>ignant.php</string>
+		<string>modules/db/dbq_notifications.php</string>
+		<string>modules/db/dbq_categories.php</string>
+		<string>modules/db/dbq_articles.php</string>
 		<string>classes/Article.php</string>
 		<string>classes/BasicImage.php</string>
 		<string>classes/Template.php</string>
 		<string>JSONContentProxy.php</string>
+		<string>LiveContentProvider.php</string>
 		<string>imgsrv.php</string>
 		<string>videosrv.php</string>
 		<string>classes/IgnantObject.php</string>
@@ -541,6 +647,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{361, 63}, {919, 715}}</string>
+	<string>{{465, 63}, {919, 715}}</string>
 </dict>
 </plist>

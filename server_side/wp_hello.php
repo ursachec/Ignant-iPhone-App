@@ -9,7 +9,7 @@ function textForLanguage($str, $lang)
 	//check if there is a localization string present, if not, just return same string
 	if( strstr($str, $needle)!==FALSE )
 	{
-		preg_match("/(<!--:$lang-->)([-_a-zA-Z ]*)(<!--:-->)/", $str, $results);
+		preg_match("/(<!--:$lang-->)([-_·a-zA-Z0-9 ]*)(<!--:-->)/", $str, $results);
 		return $results[2];
 	}
 	else

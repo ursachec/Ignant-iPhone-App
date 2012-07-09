@@ -102,7 +102,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
 		
 	//2. get latest articles
-	$articlesForFirstRun = $contentProxy->getJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
+	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 	
 	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
@@ -293,7 +293,7 @@ else if(strcmp($apiCommand,API_COMMAND_TEST)==0)
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
 	
 	$articles = array();
-	$categoryId = '864';
+	$categoryId = '564';
 	$articles = $contentProxy->tGetJSONReadyLatestArticlesForCategory($categoryId);
 	
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_ARTICLES] = $articles;
