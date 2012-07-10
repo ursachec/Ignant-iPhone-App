@@ -3,10 +3,21 @@
 require_once('feedKeys.php');
 require_once('unittests.php');
 
+require_once("wp_config.inc.php");
+
+require_once('modules/db/dbq_notifications.php');
+require_once('modules/db/dbq_categories.php');
+
 $testingUnit = new LightArticlesTest();
 
 
 class JSONContentProxy{
+	
+	//----
+	function saveDeviceToken($pDeviceToken, $lang)
+	{
+		return saveDeviceTokenForNotifications($pDeviceToken, $lang);	
+	}
 	
 	//----------
 	function getJSONReadyCategories()
@@ -14,9 +25,16 @@ class JSONContentProxy{
 		global $testingUnit;
 		
 		$categoriesArray = array();
-		
 		$testCategories = array();
-		$testCategories = $testingUnit->getAllCategories();
+		
+		$dbCategories = fetchIgnantCategories();
+		
+		foreach($dbCategories as $c){
+			$oC = new Category($c[DB_FETCH_KEY_CATEGORY_ID], $c[DB_FETCH_KEY_CATEGORY_NAME], '');
+			$testCategories[] = $oC;
+		}
+		
+		// $testCategories = $testingUnit->getAllCategories();
 		if(is_array($testCategories) && count($testCategories)>0)
 		foreach($testCategories as $oneCategory){
 			$categoriesArray[] = $oneCategory->getArrayForJSONEncoding();
@@ -31,6 +49,29 @@ class JSONContentProxy{
 		global $testingUnit;
 		$articleArray = $testingUnit->getJSONReadyArrayForArticleForId($articleId);
 		return $articleArray;
+	}
+	
+	
+	//----------
+	function tGetJSONReadyLatestArticlesForCategory($pCategoryId = '')
+	{
+		global $testingUnit;
+		
+		$articlesArray = array();
+		
+		
+		$testArticles = $testingUnit->getLastestArticlesForCategory($pCategoryId);
+		
+		
+		
+		if(is_array($testArticles) && count($testArticles)>0)			
+		foreach($testArticles as $oneArticle){
+			
+			$oneArticle->setIsForHomeCategory($pCategoryId);
+			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
+		};
+		
+		return $articlesArray;
 	}
 	
 	//----------
@@ -186,9 +227,7 @@ class JSONContentProxy{
 		$returnLink = $testingUnit->getThumbLinkForArticleId($articleId);
 			
 		return $returnLink;
-		
 	}
-	
 };
 
 ?>

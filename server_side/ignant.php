@@ -1,7 +1,7 @@
 <?php
-
 require_once('feedKeys.php');
 require_once('JSONContentProxy.php');
+
 
 //possible API commands
 define('API_COMMAND_ERROR','error');
@@ -12,6 +12,12 @@ define('API_KEY_IS_SERVER_REACHABLE','status');
 define('API_RESPONSE_SERVER_OK','ok');
 define('API_RESPONSE_SERVER_ERROR','error');
 
+/* register for notifications */
+define('API_COMMAND_FOR_NOTIFICATIONS','registerForNotifications');
+define('API_KEY_DID_REGISTER_FOR_NOTIFICATIONS','didRegister');
+define('API_KEY_REGISTER_FOR_NOTIFICATIONS_DEVICE_TOKEN','deviceToken');
+
+/* possible API commands */
 define('API_COMMAND_GET_DATA_FOR_FIRST_RUN','getDataForTheFirstRun');
 define('API_COMMAND_GET_SINGLE_ARTICLE','getSingleArticle');
 define('API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY','getMoreArticlesForCategory');
@@ -19,6 +25,9 @@ define('API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY','getLatestArticlesForCateg
 define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
 define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
 define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
+
+
+define('API_COMMAND_TEST','test');
 
 
 //-- general
@@ -50,6 +59,31 @@ if(strcmp($apiCommand,API_COMMAND_IS_SERVER_REACHABLE)==0)
 	//TODO: define when the server is defined as not reachable
 	$finalJSONArrayForExport[API_KEY_IS_SERVER_REACHABLE] = API_RESPONSE_SERVER_OK;
 }
+
+else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
+{
+	$dTInDB = false;
+	$pDeviceToken = $_GET[API_KEY_REGISTER_FOR_NOTIFICATIONS_DEVICE_TOKEN];
+	$pLang = 'de'; //TODO: get real lang
+	
+	
+	if($pDeviceToken!='')
+	{		
+		$dTInDB = $contentProxy->saveDeviceToken($pDeviceToken, $pLang);
+		//if $dTInDB is TRUE, all is fine, otherwise an error has occured
+	}
+	
+	if($dTInDB)
+	{
+		$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = true;	
+	}
+	else
+	{
+		$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = false;
+	}
+	
+}
+
 //in case error happens, return it to the user!
 // $finalJSONArrayForExport[TL_ERROR] = YES;
 // $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'unknown_api_command';
@@ -201,7 +235,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	$moreMosaicPosts = array();	
 	$moreMosaicPosts =	$contentProxy->getJSONReadyArrayForRandomMosaicEntries();
 	
-	sleep(1);
+	sleep(6);
 	
 	if(!is_array($moreMosaicPosts) || count($moreMosaicPosts)<=0)
 	{
@@ -252,6 +286,18 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 	}
 }
 
+else if(strcmp($apiCommand,API_COMMAND_TEST)==0)
+{
+	
+	$categoriesList = $contentProxy->getJSONReadyCategories();
+	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
+	
+	$articles = array();
+	$categoryId = '864';
+	$articles = $contentProxy->tGetJSONReadyLatestArticlesForCategory($categoryId);
+	
+	$finalJSONArrayForExport[TL_META_INFORMATION][TL_ARTICLES] = $articles;
+}
 
 else
 {

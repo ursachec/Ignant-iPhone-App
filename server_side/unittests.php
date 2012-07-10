@@ -15,6 +15,8 @@ require_once('classes/Template.php');
 require_once('classes/Category.php');
 require_once('classes/MosaicEntry.php');
 
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function encode_img($img)
 {
@@ -768,9 +770,6 @@ class LightArticlesTest
 		$tempArticleId = 'hui_yi';
 		$tempArticleUrl = 'http://www.ignant.de/2012/03/19/hui-yi/';
 		$lightArticles[] = new LightArticle($tempArticleId, 'Huy Yi', date('Y-m-d', mktime(0, 0, 0, 1, 1, 2012)), $shouldIncludeImageBase64 ? createBase64Image($tempArticleId, 'Some image description',$testImagesDirectory.'hui_pre'.$testImagesSuffix.'.'.$testImagesExtension) : null, null,$this->getTestDescriptionTextForArticleId($tempArticleId), $this->getTestTemplateForArticleId($tempArticleId), $this->getRemoteImagesForArticleId($tempArticleId), $this->getRelatedArticlesForArticleId($tempArticleId), $this->getCategoryWithId(6),$tempArticleUrl);
-		
-		
-		
 		
 		
 		
