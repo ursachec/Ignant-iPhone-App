@@ -101,12 +101,21 @@
         
         self.importer = nil;
         
-        self.articleCellDateFormatter = [[NSDateFormatter alloc] init];
-        [self.articleCellDateFormatter setDateStyle:NSDateFormatterShortStyle];
-        [self.articleCellDateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        
     }
     
     return self;
+}
+
+-(NSDateFormatter*)articleCellDateFormatter
+{
+    if (_articleCellDateFormatter==nil) {
+        _articleCellDateFormatter = [[NSDateFormatter alloc] init];
+        [_articleCellDateFormatter setDateStyle:NSDateFormatterShortStyle];
+        [_articleCellDateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    }
+    
+    return _articleCellDateFormatter;
 }
 
 -(void)forceSetCurrentCategory:(Category *)currentCategory
@@ -523,7 +532,7 @@
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptorForDate = [[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO];
 //    NSSortDescriptor *sortDescriptorForTitle = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO] autorelease];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
+    NSArray *sortDescriptors = @[sortDescriptorForDate];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     

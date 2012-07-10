@@ -45,6 +45,8 @@
 
 @property (strong, nonatomic, readonly) Category* currentCategory;
 
+@property (strong, nonatomic, readonly) NSDateFormatter* articleCellDateFormatter;
+
 -(void)loadLatestContent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category;
