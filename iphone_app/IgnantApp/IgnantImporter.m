@@ -45,6 +45,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @property (nonatomic, strong) TumblrEntry* currentTumblrEntry;
 
 @property (nonatomic, strong, readwrite) NSDateFormatter *articlesDateFormatter;
+@property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
 
 @property (nonatomic, strong, readonly) NSEntityDescription *currentBlogEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentTumblrEntryDescription;
@@ -70,6 +71,8 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @synthesize delegate;
 @synthesize insertionContext = _insertionContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+@synthesize numberFormatter = _numberFormatter;
 
 @synthesize currentBlogEntry, currentTumblrEntry, currentBlogEntryDescription, currentTumblrEntryDescription, currentCategory, currentCategoryDescription;
 
@@ -103,6 +106,9 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
         [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
+        
+        
+        self.numberFormatter = [[NSNumberFormatter alloc] init];
         
     }
     
@@ -349,7 +355,7 @@ static const NSUInteger kImportBatchSize = 5;
     for (NSDictionary* oneCategory in categoriesArray) 
     {
         NSString *categoryName = [oneCategory objectForKey:kFKCategoryName];
-        NSString *categoryId = [[oneCategory objectForKey:kFKCategoryId] stringValue];
+        NSString *categoryId = [oneCategory objectForKey:kFKCategoryId];
         NSString *categoryDescription = [oneCategory objectForKey:kFKCategoryDescription];
         
         //create new BlogEntry
@@ -420,7 +426,6 @@ static const NSUInteger kImportBatchSize = 5;
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
     NSString *blogEntryDescriptionText = [oneArticle objectForKey:kFKArticleDescriptionText];
-    NSString *blogEntryPublishDate = [oneArticle objectForKey:kFKArticlePublishingDate];
     NSString *blogEntryCategoryName = [oneArticle objectForKey:kFKArticleCategoryName];
     NSString *blogEntryWebLink = [oneArticle objectForKey:kFKArticleWebLink];
     NSString *blogEntryTemplate = [oneArticle objectForKey:kFKArticleTemplate];
@@ -431,7 +436,7 @@ static const NSUInteger kImportBatchSize = 5;
     id unconvertedBlogEntryArticleId = [oneArticle objectForKey:kFKArticleId]; 
     id unconvertedBlogEntryNumberOfViews = [oneArticle objectForKey:kFKArticleNumberOfViews]; 
     id unconvertedBlogEntryShouldShowOnHomeCategory = [oneArticle objectForKey:kFKArticleShowOnHomeCategory];
-    
+    id unconvertedBlogEntryPublishDate = [oneArticle objectForKey:kFKArticlePublishingDate];
     
     NSNumber* blogEntryShouldShowOnHomeCategory = [NSNumber numberWithBool:[unconvertedBlogEntryShouldShowOnHomeCategory boolValue]];
     
@@ -439,16 +444,26 @@ static const NSUInteger kImportBatchSize = 5;
     NSString *blogEntryArticleId = [unconvertedBlogEntryArticleId isKindOfClass:[NSNumber class]] ? [unconvertedBlogEntryArticleId stringValue] : unconvertedBlogEntryArticleId;
     
     NSNumber * blogEntryNumberOfViews = nil;
-    
     if ([unconvertedBlogEntryNumberOfViews isKindOfClass:[NSString class]]) 
     {
-        NSNumberFormatter * numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
-        blogEntryNumberOfViews = [numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
+        [self.numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+        blogEntryNumberOfViews = [self.numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
     }
     else
     {
         blogEntryNumberOfViews = unconvertedBlogEntryNumberOfViews;
+    }
+    
+   
+    NSNumber *blogEntryPublishDateSecondsSince1970 = nil;
+    if ([unconvertedBlogEntryPublishDate isKindOfClass:[NSString class]])
+    {
+        [self.numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+        blogEntryPublishDateSecondsSince1970 = [self.numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
+    }
+    else
+    {
+        blogEntryPublishDateSecondsSince1970 = unconvertedBlogEntryPublishDate;
     }
     
     //check if entry with this articleId already exists
@@ -478,9 +493,8 @@ static const NSUInteger kImportBatchSize = 5;
     }
     
     
-#warning fix date to take GMT into consideration
-    //2012-03-02T00:00:00+00:00
-    NSDate *myDate = [self.articlesDateFormatter dateFromString: blogEntryPublishDate];
+    NSTimeInterval publishDateInSecondsSince1970 = [blogEntryPublishDateSecondsSince1970 floatValue];
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:publishDateInSecondsSince1970];
     
     //save to current date for least recent article
     if(_currentDateForLeastRecentArticle==nil || [_currentDateForLeastRecentArticle compare:myDate]==NSOrderedDescending)

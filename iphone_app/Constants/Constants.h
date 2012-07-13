@@ -81,8 +81,6 @@ extern NSString * const kAPIResponseServerError;
 extern NSString * const kAPICommandRegisterForNotifications;
 extern NSString * const kAPIKeyRegisterForNotificationsDeviceToken;
 extern NSString * const kAPIKeyDidRegisterForNotifications;
-extern NSString * const kAPIResponseRegisterForNotificationsOk;
-extern NSString * const kAPIResponseRegisterForNotificationsFailed;
 
 //possible API Commands
 extern NSString * const kAPICommandGetDataForFirstRun;

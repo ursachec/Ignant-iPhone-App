@@ -735,7 +735,6 @@
     }
 }
 
-
 -(NSString*)wrapRichTextForArticle:(NSString*)richText
 {
     NSString* style = @"body,input,textarea,a,pre { font-family: Georgia, \"Bitstream Charter\", serif; font-size:12px; } a{ color: black; text-decoration: underline; }";
@@ -744,14 +743,14 @@
 
 -(void)setupUIElementsForCurrentBlogEntryTemplate
 {
-    
     if ([self.blogEntry.tempate compare:kFKArticleTemplateDefault]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateArticle]==NSOrderedSame) {
-        [self.playVideoButton removeFromSuperview];
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.articleContentView addSubview:self.playVideoButton];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
@@ -770,7 +769,7 @@
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateItravel]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
     }
 }
@@ -801,7 +800,7 @@
     CGRect tempRect = CGRectMake(0, 0, 0, 0);
     CGSize tempSize = CGSizeMake(0, 0);
     
-    
+    //TODO: something
     //set up the blog entry imageview
 //    /////////////////////////// handle the thumb image image
 #warning TODO: trigger loading the imageview with thumb image

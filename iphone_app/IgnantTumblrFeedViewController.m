@@ -462,7 +462,7 @@
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptorForDate = [[NSSortDescriptor alloc] initWithKey:@"publishingDate" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForDate, nil];
+    NSArray *sortDescriptors = @[sortDescriptorForDate];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
