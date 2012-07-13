@@ -24,6 +24,11 @@ NSString * const kTLCategoriesList = @"categories";
 NSString * const kTLMosaicImages = @"mosaicImages";
 NSString * const kTLMosaicEntries = @"entries";
 
+
+NSString * const kTLReturnMosaicImage = @"mosaicImg";
+NSString * const kTLReturnRelatedArticleImage = @"relatedImg";
+
+
 //METAINFORMATION
 NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";
 
@@ -75,6 +80,7 @@ NSString * const kFKArticleTemplateArticle = @"article";
 NSString * const kFKArticleTemplateMonifaktur = @"monifaktur";
 NSString * const kFKArticleTemplateVideo = @"video";
 NSString * const kFKArticleTemplateItravel = @"itravel";
+NSString * const kFKArticleTemplateIgnanTV = @"ignantv";
 NSString * const kFKArticleTemplateAicuisine = @"aicuisine";
 
 //RELATED ARTICLE

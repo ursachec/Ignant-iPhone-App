@@ -19,6 +19,9 @@ extern NSString * const kTLCategoriesList;
 extern NSString * const kTLMosaicImages;
 extern NSString * const kTLMosaicEntries;
 
+extern NSString * const kTLReturnMosaicImage;
+extern NSString * const kTLReturnRelatedArticleImage;
+
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
 
@@ -65,6 +68,7 @@ extern NSString * const kFKArticleTemplateArticle;
 extern NSString * const kFKArticleTemplateMonifaktur;
 extern NSString * const kFKArticleTemplateVideo;
 extern NSString * const kFKArticleTemplateItravel;
+extern NSString * const kFKArticleTemplateIgnanTV;
 extern NSString * const kFKArticleTemplateAicuisine;
 
 extern NSString * const kFKRelatedArticleCategoryText;

@@ -9,7 +9,7 @@
 #import "ContactViewController.h"
 #import "Constants.h"
 
-NSString * const kEmailClaudiu = @"claudiu.vlad.ursache@gmail.com";
+NSString * const kEmailClaudiu = @"claudiu@cvursache.com";
 NSString * const kEmailIgnant = @"clemens@ignant.de";
 NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
 
@@ -76,7 +76,7 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
     picker.mailComposeDelegate = self;
     
     // Set up the recipients.
-    NSArray *toRecipients = [NSArray arrayWithObjects:recepient, nil];
+    NSArray *toRecipients = @[recepient];
     [picker setToRecipients:toRecipients];
     
 #warning TODO: LOCALIZE STRINGS

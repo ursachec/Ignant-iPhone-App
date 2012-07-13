@@ -90,7 +90,7 @@
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptorForNumberOfViews = [[NSSortDescriptor alloc] initWithKey:@"numberOfViews" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptorForNumberOfViews, nil];
+    NSArray *sortDescriptors = @[sortDescriptorForNumberOfViews];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
 

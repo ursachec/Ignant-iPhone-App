@@ -53,7 +53,8 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 //################################################################################
 
 //server stuff
-#define shouldUseRemoteServer true
+#define shouldUseRemoteServer false
+#define shouldUseIgnantServer false
 
 
 NSString* const kAdressForMercedesPage = @"http://www.mercedes-benz.de/";
@@ -67,10 +68,14 @@ NSString * const kAdressForVideoServer = @"http://localhost/ignant/Ignant-iPhone
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 NSString * const kAdressForImageServer = @"http://107.21.216.249/ignant/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://107.21.216.249/ignant/videosrv.php";
+#elif shouldUseIgnantServer
+NSString * const kAdressForContentServer = @"http://www.ignant.de/iphone_app/ignant.php";
+NSString * const kAdressForImageServer = @"http://www.ignant.de/iphone_app/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://www.ignant.de/iphone_app/videosrv.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/ignant.php";
-NSString * const kAdressForImageServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
-NSString * const kAdressForVideoServer = @"http://192.168.2.102/ignant/Ignant-iPhone-App/server_side/videosrv.php";
+NSString * const kAdressForContentServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/ignant.php";
+NSString * const kAdressForImageServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://192.168.144.236/ignant/Ignant-iPhone-App/server_side/videosrv.php";
 #endif
 
 NSString * const kReachabilityHostnameToCheck = @"www.google.de";
@@ -89,8 +94,7 @@ NSString * const kAPIResponseServerError = @"error";
 NSString * const kAPICommandRegisterForNotifications = @"registerForNotifications";
 NSString * const kAPIKeyRegisterForNotificationsDeviceToken = @"deviceToken";
 NSString * const kAPIKeyDidRegisterForNotifications = @"didRegister";
-NSString * const kAPIResponseRegisterForNotificationsOk = @"regOk";
-NSString * const kAPIResponseRegisterForNotificationsFailed = @"regFalse";
+
 
 //possible actions
 NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";
