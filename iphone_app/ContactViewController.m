@@ -47,6 +47,15 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
     // e.g. self.myOutlet = nil;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVContactView
+                                    withError:&error];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -72,6 +81,17 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
 #pragma mark - mail composer
 -(void)displayComposerSheetWithRecipient:(NSString*)recepient
 {
+    
+    NSError* error = nil;
+    if (![[GANTracker sharedTracker] trackEvent:@"displayContactMail"
+                                         action:@"shownMailComposer"
+                                          label:recepient
+                                          value:10
+                                      withError:&error]) {
+        NSLog(@"Error: %@", error);
+    }
+    
+    
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
     picker.mailComposeDelegate = self;
     

@@ -276,7 +276,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVArticleDetailView
+    [[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:kGAPVArticleDetailView,self.currentArticleId]
                                     withError:&error];
 }
 
@@ -783,6 +783,17 @@
 }
 
 - (IBAction)showMercedes:(id)sender {
+    
+    NSError* error = nil;
+    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
+                                         action:@"showMercedes"
+                                          label:@""
+                                          value:-1
+                                      withError:&error]) {
+        NSLog(@"Error: %@", error);
+    }
+    
+    
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
@@ -1186,7 +1197,6 @@
 #pragma mark - social media
 -(void)postToFacebook
 {
-
     //initialize facebook in case not yet done
     [self.appDelegate initializeFacebook];
     
@@ -1218,6 +1228,16 @@
                                    nil];
     
     [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
+    
+    NSError* error = nil;
+    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
+                                         action:@"postToFacebook"
+                                          label:currentBlogEntry.articleId
+                                          value:-1
+                                      withError:&error]) {
+        NSLog(@"Error: %@", error);
+    }
+    
 }
 
 
@@ -1244,11 +1264,10 @@
     else {
         
 #warning TODO: if link not set, dismiss and show error (or something)
+       
+        __block __typeof__(self.blogEntry) blockBlogEntry = self.blogEntry;
         
-        NSString* title = self.blogEntry.title;
-        NSString* link = self.blogEntry.webLink;
-        
-        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog",title, link];
+        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog",blockBlogEntry.title, blockBlogEntry.webLink];
         
         TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
         [tweetVC setInitialText:tweet];
@@ -1260,11 +1279,25 @@
             
             switch (result) {
                 case TWTweetComposeViewControllerResultCancelled:
+                {
                     output = @"tweet canceled";
                     break;
+                }
                 case TWTweetComposeViewControllerResultDone:
+                {
                     output = @"tweet done";
-                    break;    
+                    
+                    NSError* error = nil;
+                    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
+                                                         action:@"postToTwitter"
+                                                          label:blockBlogEntry.articleId
+                                                          value:-1
+                                                      withError:&error]) {
+                        NSLog(@"Error: %@", error);
+                    }
+                    
+                    break;
+                }
                 default:
                     break;
             }
@@ -1289,10 +1322,21 @@
 #pragma mark - show mosaik / more
 - (IBAction)showShare:(id)sender {
     
+    
+    NSError* error = nil;
+    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
+                                         action:@"showShare"
+                                          label:self.currentArticleId
+                                          value:-1
+                                      withError:&error]) {
+        NSLog(@"Error: %@", error);
+    }
+    
+    
     UIActionSheet *shareActionSheet = nil;
     
     if ([IGNAppDelegate isIOS5]) {
-        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                        delegate:self 
                                               cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share") 
                                          destructiveButtonTitle:nil 
@@ -1312,7 +1356,17 @@
 {
     if(_isShowingLinkOptions){
         int openInSafariButtonIndex = 0;
-        if (buttonIndex==openInSafariButtonIndex) {            
+        if (buttonIndex==openInSafariButtonIndex) {
+            
+            NSError* error = nil;
+            if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
+                                                 action:@"openInSafari"
+                                                  label:[_linkOptionsUrl absoluteString]
+                                                  value:10
+                                              withError:&error]) {
+                NSLog(@"Error: %@", error);
+            }
+            
             NSLog(@"openInSafari: %@", _linkOptionsUrl);
             [[UIApplication sharedApplication] openURL:_linkOptionsUrl];
         }

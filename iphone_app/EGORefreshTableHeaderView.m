@@ -85,6 +85,7 @@
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		view.frame = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
 		[self addSubview:view];
+        view.alpha = 0.0f;
 		_activityView = view;
 		[view release];
 		
@@ -128,7 +129,6 @@
 	} else {
 		
 		_lastUpdatedLabel.text = nil;
-		
 	}
 
 }

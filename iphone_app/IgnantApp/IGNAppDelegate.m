@@ -759,7 +759,15 @@ return _externalPageViewController;
 
 -(void)showHome
 {
-    NSLog(@"showHome");
+    NSError* error = nil;
+    if (![[GANTracker sharedTracker] trackEvent:@"IGNAppDelegate"
+                                         action:@"showHome"
+                                          label:@""
+                                          value:-1
+                                      withError:&error]) {
+        NSLog(@"Error: %@", error);
+    }
+    
     [self.navigationController popToViewController:self.masterViewController animated:YES];
 }
 

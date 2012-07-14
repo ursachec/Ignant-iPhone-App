@@ -17,6 +17,7 @@ extern NSString* const kGAPVAboutView;
 extern NSString* const kGAPVTumblrView;
 extern NSString* const kGAPVCategoriesView;
 extern NSString* const kGAPVCategoryView;
+extern NSString* const kGAPVMoreView;
 extern NSString* const kGAPVArticleDetailView;
 extern NSString* const kGAPVArticleImageSlideshowView;
 extern NSString* const kGAPVFavoritesView;

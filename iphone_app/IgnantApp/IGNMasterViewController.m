@@ -210,6 +210,15 @@
 
 #pragma mark - View lifecycle
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:kGAPVCategoryView,[self currentCategoryId]]
+                                    withError:&error];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
