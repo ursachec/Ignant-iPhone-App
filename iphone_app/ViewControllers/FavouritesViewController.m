@@ -12,10 +12,11 @@
 
 @interface FavouritesViewController ()
 
-@property (nonatomic, retain, readwrite) IgnantImporter *importer;
+@property (nonatomic, strong, readwrite) IgnantImporter *importer;
 @property (assign, readwrite) BOOL isHomeCategory;
 
 @end
+
 
 @implementation FavouritesViewController
 @synthesize fetchedResultsController = __fetchedResultsController;
@@ -54,8 +55,19 @@
 {
     [super viewWillAppear:animated];
     
+    
     self.fetchedResultsController = nil;
     [self fetch];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVFavoritesView
+                                    withError:&error];
+    
 }
 
 - (void)viewDidUnload

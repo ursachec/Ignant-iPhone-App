@@ -10,6 +10,7 @@
 
 #import "Reachability.h"
 
+
 //import relevant view controller
 #import "IGNMasterViewController.h"
 #import "IGNDetailViewController.h"
@@ -37,10 +38,6 @@
 
 //---google analytics
 #import "GANTracker.h"
-
-// Dispatch period in seconds
-static const NSInteger kGANDispatchPeriodSec = 10;
-static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
 
 
 #define kForceReloadCoreData NO
@@ -230,7 +227,7 @@ static NSString* const kAnalyticsAccountId = @"UA-33084223-1";
         NSLog(@"error in trackEvent");
     }
     
-    if (![[GANTracker sharedTracker] trackPageview:@"/app_entry_point"
+    if (![[GANTracker sharedTracker] trackPageview:kGAPVAppEntryPoint
                                          withError:&error]) {
         NSLog(@"error in trackPageview");
     }

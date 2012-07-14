@@ -15,8 +15,6 @@
 {
     NSUInteger _activePage;
 }
-
-
 -(void)setUpScrollViewWithImages:(NSArray*)images;
 @end
 
@@ -45,6 +43,15 @@
 }
 
 #pragma mark - View lifecycle
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVArticleImageSlideshowView
+                                    withError:&error];
+}
 
 - (void)viewDidLoad
 {
@@ -159,8 +166,6 @@
                               success:^(UIImage* image){ NSLog(@"image.height: %f", image.size.width);} 
                               failure:^(NSError* error){ NSLog(@"error"); 
                               }];
-        
-        
         [self.imageScrollView addSubview:newImageView];
 
         i++;

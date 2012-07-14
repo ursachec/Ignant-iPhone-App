@@ -133,6 +133,14 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - View lifecycle
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVMosaicView
+                                    withError:&error];
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {

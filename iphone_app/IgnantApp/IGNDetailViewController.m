@@ -73,6 +73,8 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
 
+@property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
+
 //properties related to the navigation
 @property (strong, nonatomic) BlogEntry* nextBlogEntry;
 @property (strong, nonatomic) BlogEntry* previousBlogEntry;
@@ -174,6 +176,8 @@
 
 @synthesize articlesDateFormatter = _articlesDateFormatter;
 
+@synthesize numberFormatter = _numberFormatter;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -192,6 +196,8 @@
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
         [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
 #warning TODO: change this to a better format
+        
+        self.numberFormatter = [[NSNumberFormatter alloc] init];
         
         
         _isShowingLinkOptions = false;
@@ -263,13 +269,15 @@
         return YES;
     }
 }
-
+#pragma mark - view methods
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-        
     
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVArticleDetailView
+                                    withError:&error];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -812,10 +820,10 @@
     [self.entryImageView setImageWithURL:thumbURL 
                         placeholderImage:nil 
                                  success:^(UIImage* image){
-                                     NSLog(@"loaded _entryImageView: %@", blockThumbURL);
+                                     NSLog(@"big image loaded _entryImageView: %@", blockThumbURL);
                                  } 
                                  failure:^(NSError* aError){
-                                     NSLog(@"could NOT load _entryImageView: %@", blockThumbURL);
+                                     NSLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
                                  }];
     
     //add the imageViewSize to the finalSizeForArticleContentView
@@ -889,7 +897,6 @@
     //set up the user interface for the current objects    
     CGFloat marginTop = .0f;
     
-    
     //start setting up the uiwebview 
     NSString* finalRichText = [self wrapRichTextForArticle:descriptionText];
     
@@ -931,7 +938,6 @@
     CGFloat paddingBottomOfWebView = 10.0f;
     self.articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+paddingBottomOfWebView);
     
-    
     //add the articleContentView to the scrollView
     [self.contentScrollView addSubview:self.articleContentView];
     
@@ -940,6 +946,27 @@
     
     //setup ui elements for current blogentry template
     [self setupUIElementsForCurrentBlogEntryTemplate];
+}
+
+-(void)triggerLoadingRelatedImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView
+{
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,articleId];
+    NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
+    [self triggerLoadingImageAtURL:thumbURL forImageView:imageView];
+}
+
+-(void)triggerLoadingImageAtURL:(NSURL*)url forImageView:(UIImageView*)imageView
+{
+    __block NSURL* blockThumbURL = url;
+    __block UIImageView* blockImageView = imageView;
+    [blockImageView  setImageWithURL:blockThumbURL
+                    placeholderImage:nil
+                             success:^(UIImage* image){
+                                    NSLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
+                                }
+                             failure:^(NSError* aError){
+                                    NSLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
+                             }];
 }
 
 -(void)setupRelatedArticlesUI:(NSArray*)relatedArticles
@@ -963,12 +990,10 @@
     if (firstRelatedArticle!=nil) {
         self.firstRelatedArticleTitleLabel.text = [firstRelatedArticle objectForKey:kFKArticleTitle];
         self.firstRelatedArticleCategoryLabel.text = [firstRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [firstRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.firstRelatedArticleImageView.image = someImage;   
-        
         self.firstRelatedArticleId = (NSString*)[firstRelatedArticle objectForKey:kFKArticleId];
+        
+        [self triggerLoadingRelatedImageWithArticleId:self.firstRelatedArticleId
+                                         forImageView:self.firstRelatedArticleImageView];
     }
     
     //set up second related article
@@ -978,12 +1003,11 @@
     if (secondRelatedArticle!=nil) {
         self.secondRelatedArticleTitleLabel.text = [secondRelatedArticle objectForKey:kFKArticleTitle];
         self.secondRelatedArticleCategoryLabel.text = [secondRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [secondRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.secondRelatedArticleImageView.image = someImage;
-        
         self.secondRelatedArticleId = (NSString*)[secondRelatedArticle objectForKey:kFKArticleId];
+        
+        [self triggerLoadingRelatedImageWithArticleId:self.secondRelatedArticleId
+                                         forImageView:self.secondRelatedArticleImageView];
+        
     }
     
     //set up third related article
@@ -993,12 +1017,10 @@
     if (thirdRelatedArticle!=nil) {
         self.thirdRelatedArticleTitleLabel.text = [thirdRelatedArticle objectForKey:kFKArticleTitle];
         self.thirdRelatedArticleCategoryLabel.text = [thirdRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
-        
-        NSString* imageBase64String =  [thirdRelatedArticle objectForKey:kFKRelatedArticleBase64Thumbnail];
-        UIImage *someImage = [[UIImage alloc] initWithData:[NSData dataFromBase64String:imageBase64String]];
-        self.thirdRelatedArticleImageView.image = someImage;
-        
         self.thirdRelatedArticleId = (NSString*)[thirdRelatedArticle objectForKey:kFKArticleId];
+        
+        [self triggerLoadingRelatedImageWithArticleId:self.thirdRelatedArticleId
+                                         forImageView:self.thirdRelatedArticleImageView];
     }
     
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
@@ -1025,9 +1047,20 @@
     NSString *remoteContentArticleDescriptionText = [articleDictionary objectForKey:kFKArticleDescriptionText];
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
-    NSString *remoteContentBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
+    id unconvertedBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
     
-    NSDate *fDate = [self.articlesDateFormatter dateFromString:remoteContentBlogEntryPublishDate];
+    NSNumber *blogEntryPublishDateSecondsSince1970 = nil;
+    if ([unconvertedBlogEntryPublishDate isKindOfClass:[NSString class]])
+    {
+        [self.numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+        blogEntryPublishDateSecondsSince1970 = [self.numberFormatter numberFromString:unconvertedBlogEntryPublishDate];
+    }
+    else
+    {
+        blogEntryPublishDateSecondsSince1970 = unconvertedBlogEntryPublishDate;
+    }
+    
+    NSDate *fDate = [NSDate dateWithTimeIntervalSince1970:[blogEntryPublishDateSecondsSince1970 floatValue]];
     
     [self setupArticleContentViewWithArticleTitle:remoteContentArticleTitle
                                         articleId:remoteContentArticleID
@@ -1321,19 +1354,22 @@
 {
     NSString *articleId = nil;
     
-    if ([sender tag] == kFirstRelatedArticleTag) 
+    NSLog(@"trying to showRelatedArticle: %d", [sender tag]);
+    
+    
+    if ([sender tag] == kFirstRelatedArticleTag)
     {
-        articleId = [[NSString alloc] initWithString:_firstRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:self.firstRelatedArticleId];
     }
     
     else if ([sender tag] == kSecondRelatedArticleTag) 
     {
-        articleId = [[NSString alloc] initWithString:_secondRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:self.secondRelatedArticleId];
     } 
     
     else if ([sender tag] == kThirdRelatedArticleTag) 
     {
-        articleId = [[NSString alloc] initWithString:_thirdRelatedArticleId];
+        articleId = [[NSString alloc] initWithString:self.thirdRelatedArticleId];
     }
     
     //tag is falsly set
@@ -1346,6 +1382,7 @@
     NSLog(@"articleId: %@", articleId);
     
     
+    
     BlogEntry* entry = nil;
     entry = [self.importer blogEntryWithId:articleId];
     BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
@@ -1353,7 +1390,6 @@
     //check for the internet connection 
     if(shouldLoadBlogEntryFromRemoteServer && ![self.appDelegate checkIfAppOnline])
     {
-    
 #warning TODO: show this in a better way
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
                                                      message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
@@ -1361,8 +1397,6 @@
                                            cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
                                            otherButtonTitles:nil];
         [av show];
-        
-        
         
         return;
     }

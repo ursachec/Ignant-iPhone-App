@@ -63,6 +63,8 @@
 		E50220EF15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */; };
 		E50220F015A5C3380033EEA4 /* mb_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220ED15A5C3380033EEA4 /* mb_logo.png */; };
 		E50220F215A5C5000033EEA4 /* mb_footer.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220F115A5C4FF0033EEA4 /* mb_footer.png */; };
+		E5B8714715B097EF00720050 /* Constants_Google_Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = E5B8714515B097EF00720050 /* Constants_Google_Analytics.h */; };
+		E5B8714815B097EF00720050 /* Constants_Google_Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */; };
 		FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE014AE34D0003B8778 /* UIKit.framework */; };
 		FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE214AE34D0003B8778 /* Foundation.framework */; };
 		FE0DDCE514AE34D0003B8778 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE414AE34D0003B8778 /* CoreGraphics.framework */; };
@@ -334,6 +336,8 @@
 		E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DefaultNoTop@2x.png"; sourceTree = "<group>"; };
 		E50220ED15A5C3380033EEA4 /* mb_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_logo.png; sourceTree = "<group>"; };
 		E50220F115A5C4FF0033EEA4 /* mb_footer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_footer.png; sourceTree = "<group>"; };
+		E5B8714515B097EF00720050 /* Constants_Google_Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants_Google_Analytics.h; path = Constants/Constants_Google_Analytics.h; sourceTree = "<group>"; };
+		E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Constants_Google_Analytics.m; path = Constants/Constants_Google_Analytics.m; sourceTree = "<group>"; };
 		FE0DDCDC14AE34D0003B8778 /* IgnantApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IgnantApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE0DDCE014AE34D0003B8778 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FE0DDCE214AE34D0003B8778 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1241,6 +1245,8 @@
 			children = (
 				FE775DD615585A1C006D1486 /* Constants.h */,
 				FE775DD715585A1C006D1486 /* Constants.m */,
+				E5B8714515B097EF00720050 /* Constants_Google_Analytics.h */,
+				E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */,
 				41BC104C15726A140071A4D6 /* Constants_API_Flow_Control.h */,
 				41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */,
 				FE775DD3155859B9006D1486 /* Constants_API_Fields.h */,
@@ -1329,6 +1335,7 @@
 				4149698E15A0D63600A87841 /* FavouritesViewController.h in Headers */,
 				41A4AB1815A1D08E0062A624 /* GANTracker.h in Headers */,
 				41A4AB2215A1E7DD0062A624 /* ExternalPageViewController.h in Headers */,
+				E5B8714715B097EF00720050 /* Constants_Google_Analytics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1626,6 +1633,7 @@
 				412AA44C159CD3A500CE4502 /* CategoryCell.m in Sources */,
 				4149698F15A0D63600A87841 /* FavouritesViewController.m in Sources */,
 				41A4AB2315A1E7DD0062A624 /* ExternalPageViewController.m in Sources */,
+				E5B8714815B097EF00720050 /* Constants_Google_Analytics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

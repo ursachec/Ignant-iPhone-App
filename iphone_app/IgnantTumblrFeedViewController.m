@@ -111,6 +111,15 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVTumblrView
+                                    withError:&error];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

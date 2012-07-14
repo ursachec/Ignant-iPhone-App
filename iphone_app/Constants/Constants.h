@@ -9,6 +9,7 @@
 #import "Constants_Colors.h"
 #import "Constants_API_Flow_Control.h"
 #import "Constants_API_Fields.h"
+#import "Constants_Google_Analytics.h"
 
 //some preprocessor commans
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
