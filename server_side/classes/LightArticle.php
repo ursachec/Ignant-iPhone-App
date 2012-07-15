@@ -76,7 +76,7 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 			$remoteImagesForJSONEncoding = $this->remoteImages;
 	
 			foreach($remoteImagesForJSONEncoding as $aImage){
-				if($aImage!=null ]] && is_object($aImage))
+				if($aImage!=null && is_object($aImage))
 				$returnArray[FK_ARTICLE_REMOTE_IMAGES][]=$aImage->getArrayForJSONEncoding();
 			}
 		}

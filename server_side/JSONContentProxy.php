@@ -5,6 +5,7 @@ require_once('unittests.php');
 
 require_once("wp_config.inc.php");
 
+require_once('modules/db/dbq_general.php');
 require_once('modules/db/dbq_articles.php');
 require_once('modules/db/dbq_notifications.php');
 require_once('modules/db/dbq_categories.php');
@@ -49,20 +50,31 @@ class JSONContentProxy{
 	{
 		global $testingUnit;
 		$articleArray = $testingUnit->getJSONReadyArrayForArticleForId($articleId);
+		
+		return $articleArray;
+	}
+
+	//----------
+	function tGetJSONReadyArrayForArticleWithId($articleId = '')
+	{
+		global $testingUnit;
+		$article = getArticleWithId($articleId);
+		$articleArray = $article->getArrayForJSONEncoding();
+		
 		return $articleArray;
 	}
 	
-	
 	//----------
-	function tGetJSONReadyLatestArticlesForCategory($pCategoryId = '')
+	function tGetJSONReadyLatestArticlesForCategory($pCategoryId = '', $numberOfArticles = 10)
 	{
 		global $testingUnit;
 		
 		$articlesArray = array();
 		
-		
-		// $testArticles = $testingUnit->getLastestArticlesForCategory($pCategoryId);
-		$testArticles = getLatestArticlesForCategory($pCategoryId);
+		// $before = microtime(true);
+		$testArticles = getArticlesForCategory($pCategoryId, 0, 'de', $numberOfArticles);
+		// $after = microtime(true);
+		// echo "<br />".($after-$before) . " sec/getArticlesForCategory\n"."<br />";
 		
 		if(is_array($testArticles) && count($testArticles)>0)			
 		foreach($testArticles as $oneArticle){
@@ -74,6 +86,25 @@ class JSONContentProxy{
 			}
 		};
 		
+		return $articlesArray;
+	}
+	
+	//----------
+	function tGetJSONReadyArrayForMorePosts($pCategoryId='', $pTimestampOfOldestArticle=0 )
+	{
+		global $testingUnit;
+		
+		//TODO: check if category id exists
+		
+		$articlesArray = array();
+		
+		$testMorePostsForCategory = getArticlesForCategory($pCategoryId, $pTimestampOfOldestArticle);
+		if(is_array($testMorePostsForCategory) && count($testMorePostsForCategory)>0)
+		foreach($testMorePostsForCategory as $oneArticle){
+			$oneArticle->setIsForHomeCategory($pCategoryId);
+			$articlesArray[] = $oneArticle->getArrayForJSONEncoding();
+		};
+	
 		return $articlesArray;
 	}
 	
@@ -111,7 +142,8 @@ class JSONContentProxy{
 	
 		return $mosaicArray;
 	}
-		
+	
+	
 	//----------
 	function getJSONReadyArrayForMorePosts($pCategoryId='', $pDateOfOldestArticle='0000-00-00' )
 	{

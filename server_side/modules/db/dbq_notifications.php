@@ -17,6 +17,8 @@ function validateDeviceToken($t)
 	return false;	
 }
 
+
+//TODO: rewrite this using PDO
 function saveDeviceTokenForNotifications($deviceToken='', $lang='')
 {			
 		if(!validateDeviceToken($deviceToken) || !validateLang($lang))

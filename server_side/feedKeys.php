@@ -22,7 +22,8 @@ define('TL_META_INFORMATION','meta_information');
 define('TL_RESPONSE_STATUS','response_status');
 define('TL_CATEGORIES_LIST','categories');
 
-define('TL_RETURN_MOSAIC_IMAGE','returnMosaicImage');
+define('TL_RETURN_MOSAIC_IMAGE','mosaicImg');
+define('TL_RETURN_RELATED_ARTICLE_IMAGE','relatedImg');
 
 
 
@@ -72,6 +73,7 @@ define('FK_ARTICLE_TEMPLATE_ARTICLE','article');
 define('FK_ARTICLE_TEMPLATE_MONIFAKTUR','monifaktur');
 define('FK_ARTICLE_TEMPLATE_VIDEO','video');
 define('FK_ARTICLE_TEMPLATE_ITRAVEL','itravel');
+define('FK_ARTICLE_TEMPLATE_IGNANTV','ignantv');
 define('FK_ARTICLE_TEMPLATE_AICUISINE','aicuisine');
 
 //RELATED ARTICLE

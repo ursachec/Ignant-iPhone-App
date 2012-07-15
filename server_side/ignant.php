@@ -26,9 +26,7 @@ define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
 define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
 define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
 
-
 define('API_COMMAND_TEST','test');
-
 
 //-- general
 define('GET_ACTION','action');
@@ -43,7 +41,6 @@ define('SEARCH_OFFSET','searchOffset');
 //-- article list updates
 define('DATE_OF_NEWEST_ARTICLE','dateOfNewestArticle');
 define('DATE_OF_OLDEST_ARTICLE','dateOfOldestArticle');
-
 
 
 //--------------------------
@@ -95,18 +92,14 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 	$categoriesList = array();
 	$articlesForFirstRun = array();
 	
-	sleep(4);
-	
 	//1. get categories list
 	$categoriesList = $contentProxy->getJSONReadyCategories();
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
 		
 	//2. get latest articles
-	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
+	$numberOfArticles = 20;
+	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY, $numberOfArticles);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
-	
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_DATA_FOR_FIRST_RUN';
-	
 }
 
 
@@ -137,7 +130,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		//sleep(4);
 	
 		//get the array with articles
-		$arrayWithMorePosts = $contentProxy->getJSONReadyLatestArticlesForCategory($pCategoryId, $pDateOfOldestArticle);
+		$arrayWithMorePosts = $contentProxy->tGetJSONReadyLatestArticlesForCategory($pCategoryId);
 	
 		// no articles found, do something
 		if(count($arrayWithMorePosts)==0)
@@ -179,10 +172,10 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 	$pNumberOfResultsToBeReturned = $_GET[NUMBER_OF_RESULTS_TO_BE_RETURNED];
 	
 	//---------------------------------------------------------------------	
-	sleep(4);
+	// sleep(4);
 	
 	//get the array with articles
-	$arrayWithMorePosts = $contentProxy->getJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
+	$arrayWithMorePosts = $contentProxy->tGetJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
 	
 	// no articles found, do something
 	if(count($arrayWithMorePosts)==0)
@@ -213,10 +206,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 	//article found
 	$oneArticle = null;
 	
-	$oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	
-	
-	$finalJSONArrayForExport['temp_command'] = 'API_COMMAND_GET_SINGLE_ARTICLE';
+	// $oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
+	$oneArticle = $contentProxy->tGetJSONReadyArrayForArticleWithId($pArticleID);
 
 	if($oneArticle==null)
 	{
@@ -231,11 +222,10 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 
 else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 {		
+	
 	//---------------------------------------------------------------------
 	$moreMosaicPosts = array();	
 	$moreMosaicPosts =	$contentProxy->getJSONReadyArrayForRandomMosaicEntries();
-	
-	sleep(6);
 	
 	if(!is_array($moreMosaicPosts) || count($moreMosaicPosts)<=0)
 	{
@@ -289,14 +279,9 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 else if(strcmp($apiCommand,API_COMMAND_TEST)==0)
 {
 	
-	$categoriesList = $contentProxy->getJSONReadyCategories();
-	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
+	$s = getIgnantCategoriesAsPDOString();
+	print '<br />categories as string: |'.$s."| <br />";
 	
-	$articles = array();
-	$categoryId = '564';
-	$articles = $contentProxy->tGetJSONReadyLatestArticlesForCategory($categoryId);
-	
-	$finalJSONArrayForExport[TL_META_INFORMATION][TL_ARTICLES] = $articles;
 }
 
 else
@@ -308,5 +293,15 @@ else
 //print out the arry
 $jsonExportString = json_encode($finalJSONArrayForExport);	
 print $jsonExportString;
+
+
+function testGetArticles()
+{
+	global $contentProxy;
+	$before = microtime(true);
+	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
+	$after = microtime(true);
+	echo "<br />(totaltime:".($after-$before) . ")s<br />";
+}
 
 ?>

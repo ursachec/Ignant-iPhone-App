@@ -9,7 +9,7 @@ class RelatedArticle extends IgnantObject implements JSONexportableObject
 	
 	public $rCategory;
 	
-	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleCategory = null, $pBase64Thumbnail=null){
+	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate=0, $pArticleCategory = null, $pBase64Thumbnail=null){
 		$this->id = $pArticleId;
 		$this->title = $pArticleTitle;
 		$this->publishingDate = $pArticlePublishingDate;
