@@ -58,6 +58,8 @@
 @property (strong, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
 @property (retain, nonatomic) IBOutlet UIButton *toggleLikeButton;
 
+@property (nonatomic, assign, readonly) BOOL isShowingImageSlideshow;
+
 - (IBAction)handleRightSwipe:(id)sender;
 
 - (IBAction)tapAction:(id)sender;

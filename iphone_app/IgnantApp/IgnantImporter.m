@@ -103,7 +103,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         self.appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
-        [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
+        [self.articlesDateFormatter setDateStyle:NSDateFormatterShortStyle];
         
         self.numberFormatter = [[NSNumberFormatter alloc] init];
         

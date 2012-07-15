@@ -54,6 +54,8 @@
 -(void)postToPinterest;
 -(void)postToTwitter;
 
+@property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
+
 @property (strong, nonatomic) NSString *firstRelatedArticleId;
 @property (strong, nonatomic) NSString *secondRelatedArticleId;
 @property (strong, nonatomic) NSString *thirdRelatedArticleId;
@@ -109,6 +111,8 @@
 
 @implementation IGNDetailViewController
 
+@synthesize isShowingImageSlideshow = _isShowingImageSlideshow;
+
 @synthesize firstRelatedArticleId = _firstRelatedArticleId;
 @synthesize secondRelatedArticleId = _secondRelatedArticleId;
 @synthesize thirdRelatedArticleId = _thirdRelatedArticleId;
@@ -151,18 +155,6 @@
 @synthesize navigationDetailViewController = _navigationDetailViewController;
 
 @synthesize fetchedResults = _fetchedResults;
-@synthesize firstRelatedArticleImageView = _firstRelatedArticleImageView;
-@synthesize secondRelatedArticleImageView = _secondRelatedArticleImageView;
-@synthesize thirdRelatedArticleImageView = _thirdRelatedArticleImageView;
-@synthesize firstRelatedArticleTitleLabel = _firstRelatedArticleTitleLabel;
-@synthesize secondRelatedArticleTitleLabel = _secondRelatedArticleTitleLabel;
-@synthesize thirdRelatedArticleTitleLabel = _thirdRelatedArticleTitleLabel;
-@synthesize thirdRelatedArticleCategoryLabel = _thirdRelatedArticleCategoryLabel;
-@synthesize firstRelatedArticleCategoryLabel = _firstRelatedArticleCategoryLabel;
-@synthesize secondRelatedArticleCategoryLabel = _secondRelatedArticleCategoryLabel;
-@synthesize firstRelatedArticleShowDetailsButton = _firstRelatedArticleShowDetailsButton;
-@synthesize secondRelatedArticleShowDetailsButton = _secondRelatedArticleShowDetailsButton;
-@synthesize thirdRelatedArticleShowDetailsButton = _thirdRelatedArticleShowDetailsButton;
 
 @synthesize currentBlogEntryIndex = _currentBlogEntryIndex;
 @synthesize nextBlogEntryIndex = _nextBlogEntryIndex;
@@ -192,10 +184,8 @@
            
         self.importer = nil;
         
-        
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
-        [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
-#warning TODO: change this to a better format
+        [self.articlesDateFormatter setDateStyle:NSDateFormatterShortStyle];
         
         self.numberFormatter = [[NSNumberFormatter alloc] init];
         
@@ -283,7 +273,6 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-        
      
 }
 
@@ -291,6 +280,9 @@
 {    
     
 #warning TODO: DETAIL NAVIGATION these to lines have been outcommented
+    
+    self.isShowingImageSlideshow = NO;
+    
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
    
     [self.appDelegate setIsToolbarHidden:YES animated:animated];
@@ -1085,8 +1077,11 @@
 
 #pragma mark - picture slideshow
 
-- (IBAction)showPictureSlideshow:(id)sender 
+- (IBAction)showPictureSlideshow:(id)sender
 {
+    self.isShowingImageSlideshow = YES;
+
+    
     ImageSlideshowViewController *slideshowVC = [[ImageSlideshowViewController alloc] initWithNibName:@"ImageSlideshowViewController" bundle:nil];
     
     //set up the slideshowVC
@@ -1097,9 +1092,11 @@
     [self.navigationController presentModalViewController:slideshowVC animated:YES];
 
 }
-- (IBAction)tapAction:(id)sender 
+-(IBAction)tapAction:(id)sender
 {
-    if (self.navigationController.navigationBar.isHidden) 
+    NSLog(@"tapAction ");
+    
+    if (self.navigationController.navigationBar.isHidden)
     {
         [self setNavigationBarAndToolbarHidden:NO animated:YES];
     }

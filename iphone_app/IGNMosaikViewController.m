@@ -126,7 +126,6 @@ NSString * const kImageFilename = @"filename";
     return [self.savedMosaicImages count]>=kMinimumMosaicImagesLoaded;
 }
 
-#pragma mark - handle going back
 -(IBAction)handleBack:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
@@ -146,15 +145,11 @@ NSString * const kImageFilename = @"filename";
 {
     [super viewWillAppear:animated];
     
-    [self setIsSpecificNavigationBarHidden:YES animated:NO];
-    [self setIsSpecificToolbarHidden:YES animated:NO];
-    
-    
-    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+    NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
-    if (lastUpdateInSeconds<updateTimer && !_isLoadingMoreMosaicImages) {
+    if ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages) {
         NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
@@ -163,6 +158,9 @@ NSString * const kImageFilename = @"filename";
     else {
         NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
+    
+    [self setIsSpecificNavigationBarHidden:YES animated:NO];
+    [self setIsSpecificToolbarHidden:YES animated:NO];
 }
 
 - (void)viewDidLoad
@@ -466,11 +464,21 @@ NSString * const kImageFilename = @"filename";
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
+-(void)showViewsForCouldNotGetMosaicData
+{
+    [self setIsCouldNotLoadDataViewHidden:NO];
+    
+    [self setIsSpecificNavigationBarHidden:NO animated:YES];
+    [self.view bringSubviewToFront:self.specificNavigationBar];
+}
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {    
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     _isLoadingMoreMosaicImages = NO;
+    
+    _numberOfActiveRequests--;
     
     //currently using dummy mosaik images
     NSString* jsonString = [request responseString];
@@ -480,8 +488,17 @@ NSString * const kImageFilename = @"filename";
     NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
     NSArray* images = [dictionaryFromJSON objectForKey:kTLMosaicEntries];
     
-#warning TODO: DO SOMETHING IF IMAGES ARRAY IS EMPTY
-#warning TODO: ONLY THEN SET THE LAST UPDATE DATE
+    
+    if ([images count]<1 && !self.isMosaicImagesArrayNotEmpty){
+    
+        [self showViewsForCouldNotGetMosaicData];
+        
+        self.loadingMoreMosaicView.isLoading = NO;
+        _isLoadingReplacingMosaicImages = NO;
+        
+        return;
+    }
+    
     
     [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
@@ -492,19 +509,15 @@ NSString * const kImageFilename = @"filename";
         //add the mosaic images
         [self addMoreMosaicImages:[images copy]];
     }
-    
 
     
     //redraw the images
     [self drawSavedMosaicImages];
     
-    _numberOfActiveRequests--;
-
     self.loadingMoreMosaicView.isLoading = NO;
 
     _isLoadingReplacingMosaicImages = NO;
     
-#warning THIS could be a problem for the loading view
     [self setIsLoadingViewHidden:YES];        
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];    
@@ -512,8 +525,9 @@ NSString * const kImageFilename = @"filename";
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    NSLog(@"MOSAIC: requestFailed");
+    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
     
     _isLoadingMoreMosaicImages = NO;
     _isLoadingReplacingMosaicImages = NO;
@@ -521,21 +535,9 @@ NSString * const kImageFilename = @"filename";
     
     _numberOfActiveRequests--;
     
-    
-    
     if (!self.isMosaicImagesArrayNotEmpty){
-        [self setIsCouldNotLoadDataViewHidden:NO];
-        
-#warning TODO: implement this in a better way
-        __block __typeof__(self) blockSelf = self;
-        double delayInSeconds = 2.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [blockSelf dismissModalViewControllerAnimated:YES];
-        });
+        [self showViewsForCouldNotGetMosaicData];
     }
-    
-    
 }
 
 #pragma mark - overlay view
@@ -673,14 +675,6 @@ NSString * const kImageFilename = @"filename";
     return defaultView;
 }
 
--(void)setIsCouldNotLoadDataViewHidden:(BOOL)hidden
-{
-    [super setIsCouldNotLoadDataViewHidden:hidden];
-
-    //add the closeButton to the view
-    [self.couldNotLoadDataView addSubview:self.closeMosaikButton];
-    [self.couldNotLoadDataView bringSubviewToFront:self.closeMosaikButton];
-}
 #pragma mark - actions
 -(void)handleTapOnSpecificToolbarLeft:(id)sender
 {
