@@ -71,6 +71,15 @@
 
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVCategoriesView
+                                    withError:&error];
+}
+
 - (void)viewDidUnload
 {
     [self setCategoriesTableView:nil];

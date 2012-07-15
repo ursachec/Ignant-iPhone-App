@@ -66,8 +66,15 @@
 {
     [super viewWillAppear:animated];
     
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
-    
+    NSError* error = nil;
+    [[GANTracker sharedTracker] trackPageview:kGAPVAboutView
+                                    withError:&error];
 }
 
 - (void)viewDidUnload

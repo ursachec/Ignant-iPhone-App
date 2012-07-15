@@ -102,11 +102,8 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         
         self.appDelegate = (IGNAppDelegate*)[[UIApplication sharedApplication] delegate];
         
-        
-        
         self.articlesDateFormatter = [[NSDateFormatter alloc] init];
         [self.articlesDateFormatter setDateFormat:@"yyyy-MM-dd"];
-        
         
         self.numberFormatter = [[NSNumberFormatter alloc] init];
         
@@ -459,7 +456,7 @@ static const NSUInteger kImportBatchSize = 5;
     if ([unconvertedBlogEntryPublishDate isKindOfClass:[NSString class]])
     {
         [self.numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
-        blogEntryPublishDateSecondsSince1970 = [self.numberFormatter numberFromString:unconvertedBlogEntryNumberOfViews];
+        blogEntryPublishDateSecondsSince1970 = [self.numberFormatter numberFromString:unconvertedBlogEntryPublishDate];
     }
     else
     {

@@ -13,6 +13,9 @@
 #import "IgnantImporter.h"
 #import "IGNAppDelegate.h"
 
+#import "GANTracker.h"
+#import "Constants/Constants.h"
+
 @class IgnantLoadingView, IgnantNoInternetConnectionView, IGNAppDelegate;
 @class IgnantImporter;
 
