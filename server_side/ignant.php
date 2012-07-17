@@ -30,6 +30,8 @@ define('API_COMMAND_TEST','test');
 
 //-- general
 define('GET_ACTION','action');
+define('LANGUAGE_PARAM','lang');
+define('DEFAULT_LANGUAGE','de');
 define('CURRENT_CATEGORY_ID','categoryId');
 define('NUMBER_OF_RESULTS_TO_BE_RETURNED','numberOfResultsToReturn');
 define('ARTICLE_ID','articleId');
@@ -51,6 +53,14 @@ $contentProxy = new JSONContentProxy();
 $apiCommand = $_GET[GET_ACTION];
 
 
+function getContentLanguage($pLanguage)
+{
+	if(isset($pLanguage) && $pLanguage!='')
+		return $pLanguage;
+		
+	return DEFAULT_LANGUAGE;
+}
+
 if(strcmp($apiCommand,API_COMMAND_IS_SERVER_REACHABLE)==0)
 {
 	//TODO: define when the server is defined as not reachable
@@ -61,12 +71,11 @@ else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
 {
 	$dTInDB = false;
 	$pDeviceToken = $_GET[API_KEY_REGISTER_FOR_NOTIFICATIONS_DEVICE_TOKEN];
-	$pLang = 'de'; //TODO: get real lang
 	
 	
 	if($pDeviceToken!='')
 	{		
-		$dTInDB = $contentProxy->saveDeviceToken($pDeviceToken, $pLang);
+		$dTInDB = $contentProxy->saveDeviceToken($pDeviceToken, getContentLanguage($_GET[LANGUAGE_PARAM]));
 		//if $dTInDB is TRUE, all is fine, otherwise an error has occured
 	}
 	
@@ -78,7 +87,6 @@ else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
 	{
 		$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = false;
 	}
-	
 }
 
 //in case error happens, return it to the user!
@@ -98,7 +106,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 		
 	//2. get latest articles
 	$numberOfArticles = 20;
-	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY, $numberOfArticles);
+	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY, getContentLanguage($_GET[LANGUAGE_PARAM]), $numberOfArticles);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 }
 
@@ -130,7 +138,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		//sleep(4);
 	
 		//get the array with articles
-		$arrayWithMorePosts = $contentProxy->tGetJSONReadyLatestArticlesForCategory($pCategoryId);
+		$arrayWithMorePosts = $contentProxy->tGetJSONReadyLatestArticlesForCategory($pCategoryId, getContentLanguage($_GET[LANGUAGE_PARAM]));
 	
 		// no articles found, do something
 		if(count($arrayWithMorePosts)==0)
@@ -175,7 +183,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 	// sleep(4);
 	
 	//get the array with articles
-	$arrayWithMorePosts = $contentProxy->tGetJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle);
+	$arrayWithMorePosts = $contentProxy->tGetJSONReadyArrayForMorePosts($pCategoryId, $pDateOfOldestArticle, getContentLanguage($_GET[LANGUAGE_PARAM]));
 	
 	// no articles found, do something
 	if(count($arrayWithMorePosts)==0)
@@ -225,7 +233,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	
 	//---------------------------------------------------------------------
 	$moreMosaicPosts = array();	
-	$moreMosaicPosts =	$contentProxy->getJSONReadyArrayForRandomMosaicEntries();
+	$moreMosaicPosts =	$contentProxy->tGetJSONReadyArrayForRandomMosaicEntries();
+
 	
 	if(!is_array($moreMosaicPosts) || count($moreMosaicPosts)<=0)
 	{

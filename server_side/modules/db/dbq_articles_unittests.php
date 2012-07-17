@@ -1,7 +1,5 @@
 <?php
 
-
-
 $s = '<!--:de-->Der Fotograf <a href="http://www.christofferrelander.com/">Christoffer Relander</a> veröffentlichte gerade seine neuste Fotoserie unter dem Namen \'We Are Nature\'. Christoffer ist Grafik Designer und fotografischer Autodidakt aus Finnland, Raseborg. Im Sommer 2009 begann er zu fotografieren und hat seitdem einen ganz eigenen Stil entwickelt, viel experimentiert, an zahlreichen Ausschreibungen teilgenommen sowie eigene Projekte verfolgt. Die Serie \'We Are Nature\' zeigt doppel- und dreifach Überblendungen, die alle in der Kamera selbst, einer Nikon D700 entstanden sind. Christoffer legt die Silhouetten verschiedener Personen über Motive aus der Natur und erschafft damit seine Serie in einem schlichten aber wunderschönen schwarz-weiß Stil. 
 
 <img src="http://www.ignant.de/wp-content/uploads/2012/07/nature01.jpeg"  />
@@ -279,6 +277,31 @@ Preheat the oven to 180°C. Peel asparagus, leave out the top quarter. Butter th
 
 <p style="text-align: center;"><strong><a href="http://aicuisine.com/">Click here</a> for more recipes and inspirational stories about food!</strong></p><!--:-->';
 
+$sMoreNoTranslation = 'Die in New York ansässige Künstlerin <a href="http://www.maureendrennan.net/">Maureen Drennan</a> portraitierte mit ihrer Serie \'Meet Me in the Green Glen\' über mehrere Saisonzeiten hinweg den Arbeitsalltag des kalifornischen Cannabis-Bauern Ben. Ihre Fotografien gehen über die schlichte Dokumentation der Arbeitsprozesse hinaus und ermöglichen einen intimen Blick auf das Leben Bens in sozialer Abgeschiedenheit. <!--more-->
+Nicht nur die Weite der umliegenden Felder trennen seine Farm und ihn von der Außenwelt. Mit dem Anbau von Cannabis bewegt er sich mehr oder minder legal in den strikten Richtlinien der kalifornischen Gesetze, die Anbau, Ernte,Vertrieb und Konsum zu medizinischen Zwecken erlauben, überschreitet damit aber die Grenzen der gesellschaftlichen Akzeptanz. Das <em>grüne Gold</em> ist die finanziell ertragreichste Nutzpflanze des Staates und unterfüttert damit umso mehr ihr zweischneidiges Bild. 
+
+Maureen Drennan interessiert weniger das Abbild des Farmers als Profiteur dieses Systems als die Kontraste, die sein Leben widerspiegeln. Wenn für einen Monat im Jahr die jungen Erntehelfer mit ihm eine lose Gemeinschaft bilden, konzentriert sich nach der langen Zeit des einsame Züchtens und Pflegens alles auf diesen belebenden Moment. Inspiriert von den amerikanischen Schriftstellen Flannery O’ Connor und Annie Proulx verschmelzen das Portrait der Landschaft und das des Farmers zu einer Symbiose aus Einsamkeit und Zufriedenheit zugleich.
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_01.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_02.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_03.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_09.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_04.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_05.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_06.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_07.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/01/drennan_08.jpg" />
+
+<small><p style="text-align: center">All images © <a href="http://www.maureendrennan.net/">Maureen Drennan</a></small>';
+
 $sDummy = '<!--:de-->DeutsCH <img src="www.google.at" /><p>asdsadasdassad</p><!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCHDEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
 
 
@@ -286,12 +309,12 @@ header('Content-type: text/plain');
 	
 	
 	
-// $s || $sWithMore || $sDummy || $sAicuisine
+// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation
 
 $lang = $_GET['lang'];
 
-$resS = descriptionForLanguage($sAicuisine, $lang);
-print $resS;
+// $resS = descriptionForLanguage($sDummy, $lang);
+// print $resS;
 
 function descriptionForLanguage($str, $language)
 {
@@ -300,40 +323,108 @@ function descriptionForLanguage($str, $language)
 	$needleEN = "<!--:en";
 	$needleDE = "<!--:de";
 	$needleMORE = "<!--more";
+	$moreString = "";
+	$finalString = '';
 	$returnString = '';
 	$moreReturnString = '';
 	
+	$containsMoreString = false;
+	$containsMoreString = (strstr($str, $needleMORE)!==FALSE);
+	
 	//check if there is a localization string present, if not, just return same string
-	if( strstr($str, $needleEN)!==FALSE || strstr($str, $needleDE)!==FALSE )
+	
+	$finalMoreString = '';
+	$finalPrefixString = '';
+	
+	//prepare the more string
+	if( $containsMoreString )
 	{		
-		preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $results);
-		$regMatch = $results[2];		
-		$returnString = removeImgTags($regMatch);
-		$returnString = nl2br($returnString);
+		$mS = preg_match("/(<!--more-->(.*)$)/ismU", $str, $moreResults);
+		$moreString = $moreResults[2];	
+		$finalMoreString = $moreString;
 		
-		$moreString = preg_match("/(<!--more-->.*<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $moreResults);
-		$moreRegMatch = $moreResults[2];		
-		$moreReturnString = removeImgTags($moreRegMatch);
-		$moreReturnString = nl2br($moreReturnString);
-
-		return $returnString.$moreReturnString;
+		if( strstr($moreString, $needleEN)!==FALSE || strstr($moreString, $needleDE)!==FALSE )
+		{
+			preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $moreString, $results);
+			$finalMoreString = $results[2];
+		}
 	}
-	else
+	
+	//prepare the prefix string
+	if( strstr($str, $needleEN)!==FALSE || strstr($str, $needleDE)!==FALSE )
 	{
-		$str = removeImgTags($str);
-		$str = nl2br($str);
-		return $str;
+		preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $results);
+		$finalPrefixString = $results[2];
 	}
+	else if($containsMoreString)
+	{
+		$finalPrefixString = $str;
+		
+		preg_match("/^(.*)(<!--more-->.*$)/ismU", $str, $results);
+		$finalPrefixString = $results[1];
+	}
+	else if(!$containsMoreString)
+	{
+		$finalPrefixString = $str;
+	}
+	
+	$finalString = $finalPrefixString.$finalMoreString;
+	
+	$finalString = removeImgTags($finalString);
+	$finalString = nl2br($finalString);
+	return $finalString;
 }
 
 function removeImgTags($string)
 {
 	$str = "";
-	$str = preg_replace('/<img.*<\/p>/si', "", $string);
-	// $str = preg_replace('/<img.*\/>/i', "", $string);
+	// $str = preg_replace('/<img.*<\/p>/si', "", $string);
+	$str = preg_replace('/<img.*\/>/si', "", $string);
 	
 	return $str;
 }
+
+function descriptionForLanguageUnitTests()
+{
+	$testsFailed = 0;
+	$testsPassed = 0;
+	
+	$s_no_tags_de_en = 'DEUTSCH<br /><em>ENGLISH</em>';
+	$s_no_tags_de_en_and_more = 'DEUTSCH<br /><em>ENGLISH</em><!--more-->MORE DEUTSCH <em>MORE ENGLISH</em>';
+	$s_de_en_no_more = '<!--:de-->DEUTSCH<!--:--><!--:en-->ENGLISH<!--:-->';
+	$s_de_en_more_de_en = '<!--:de-->DEUTSCH<!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
+	
+	if(strcmp(descriptionForLanguage($s_no_tags_de_en_and_more, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>MORE DEUTSCH <em>MORE ENGLISH</em>') == 0) 
+	{ 
+		$testsPassed++;
+	}
+	else $testsFailed++;
+	
+	if(strcmp(descriptionForLanguage($s_no_tags_de_en, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>') == 0) 
+	{ 
+		$testsPassed++;
+	}
+	else $testsFailed++;
+
+	if(strcmp(descriptionForLanguage($s_de_en_no_more, 'de'), 'DEUTSCH') == 0) 
+	{ 
+		$testsPassed++;
+	}
+	else 
+		$testsFailed++;
+	
+	if(strcmp(descriptionForLanguage($s_de_en_more_de_en, 'de'), 'DEUTSCHMORE_DEUTSCH') == 0) 
+	{ 
+		$testsPassed++;
+	}
+	else $testsFailed++;
+	
+	print "\n".descriptionForLanguage($s_no_tags_de_en_and_more_with_tags, 'de')."\n";
+	
+	print "\n<br />testsPassed: ".(int)$testsPassed." // testsFailed: ".(int)$testsFailed." <br />\n";
+}
+
+descriptionForLanguageUnitTests();
 
 
 

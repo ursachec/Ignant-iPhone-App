@@ -1006,6 +1006,8 @@ class LightArticlesTest
 		}	
 	}	
 
+	// get list of mosaic images
+
 	public function getBatchOfRandomMosaicEntries()
 	{
 		$returnArray = array();

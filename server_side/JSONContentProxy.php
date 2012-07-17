@@ -10,8 +10,10 @@ require_once('modules/db/dbq_articles.php');
 require_once('modules/db/dbq_notifications.php');
 require_once('modules/db/dbq_categories.php');
 
-$testingUnit = new LightArticlesTest();
+require_once('modules/mosaic/mosaic_getter.php');
 
+
+$testingUnit = new LightArticlesTest();
 
 class JSONContentProxy{
 	
@@ -65,14 +67,14 @@ class JSONContentProxy{
 	}
 	
 	//----------
-	function tGetJSONReadyLatestArticlesForCategory($pCategoryId = '', $numberOfArticles = 10)
+	function tGetJSONReadyLatestArticlesForCategory($pCategoryId = '', $pLanguage = '', $numberOfArticles = 10)
 	{
 		global $testingUnit;
 		
 		$articlesArray = array();
 		
 		// $before = microtime(true);
-		$testArticles = getArticlesForCategory($pCategoryId, 0, 'de', $numberOfArticles);
+		$testArticles = getArticlesForCategory($pCategoryId, 0, $pLanguage, $numberOfArticles);
 		// $after = microtime(true);
 		// echo "<br />".($after-$before) . " sec/getArticlesForCategory\n"."<br />";
 		
@@ -90,7 +92,7 @@ class JSONContentProxy{
 	}
 	
 	//----------
-	function tGetJSONReadyArrayForMorePosts($pCategoryId='', $pTimestampOfOldestArticle=0 )
+	function tGetJSONReadyArrayForMorePosts($pCategoryId='', $pTimestampOfOldestArticle=0, $pLanguage = 'de', $pNumberOfArticles=20 )
 	{
 		global $testingUnit;
 		
@@ -98,7 +100,7 @@ class JSONContentProxy{
 		
 		$articlesArray = array();
 		
-		$testMorePostsForCategory = getArticlesForCategory($pCategoryId, $pTimestampOfOldestArticle);
+		$testMorePostsForCategory = getArticlesForCategory($pCategoryId, $pTimestampOfOldestArticle, $pLanguage, $pNumberOfArticles);
 		if(is_array($testMorePostsForCategory) && count($testMorePostsForCategory)>0)
 		foreach($testMorePostsForCategory as $oneArticle){
 			$oneArticle->setIsForHomeCategory($pCategoryId);
@@ -134,6 +136,23 @@ class JSONContentProxy{
 		$mosaicArray = array();
 		
 		$testRandomMosaicEntries = $testingUnit->getBatchOfRandomMosaicEntries();
+		
+		if(is_array($testRandomMosaicEntries) && count($testRandomMosaicEntries)>0)
+		foreach($testRandomMosaicEntries as $oneMosaicEntry){
+			$mosaicArray[] = $oneMosaicEntry->getArrayForJSONEncoding();
+		};
+	
+		return $mosaicArray;
+	}
+	
+	//----------
+	function tGetJSONReadyArrayForRandomMosaicEntries()
+	{
+		global $testingUnit;
+				
+		$mosaicArray = array();
+		
+		$testRandomMosaicEntries = getBatchOfRandomMosaicEntries();
 		
 		if(is_array($testRandomMosaicEntries) && count($testRandomMosaicEntries)>0)
 		foreach($testRandomMosaicEntries as $oneMosaicEntry){

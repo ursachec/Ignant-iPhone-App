@@ -18,6 +18,21 @@ require_once('../../classes/MosaicEntry.php');
 require_once('../../wp_config.inc.php');
 */
 
+/*
+
+ToDO: fix problem posts
+
+SELECT * FROM wp_posts WHERE ID = 32399
+SELECT * FROM wp_posts WHERE ID = 6254
+SELECT * FROM wp_posts WHERE ID = 11187 AND post_date > '2011-1-1'
+
+SELECT * FROM wp_posts WHERE ID = 29938
+
+
+*/
+
+define('POSTS_DATE_AFTER','2011-5-5');
+
 function getThumbLinkForArticleId($articleId = '')
 {
 	$baseLink = 'http://www.ignant.de/wp-content/uploads/';
@@ -100,7 +115,7 @@ function fetchArticleWithId($articleId = 0, $dbh = null)
 	return $p;
 }
 
-function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter = 0, $numberOfArticles = 10)
+function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore = 0, $numberOfArticles = 10)
 {	
 	$debug_function = false;
 	
@@ -111,11 +126,12 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter =
 	
 	$includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 	
-	$dateAfter = date('Y-m-d');
-	if($timeAfter!=0)
-		$dateAfter =  date('Y-m-d', $timeAfter);
+	$dateAfter = '';
+	$dateBefore = date('Y-m-d');
+	if($timeBefore!=0)
+		$dateBefore =  date('Y-m-d', $timeBefore);
 	
-	if($timeAfter<0)
+	if($timeBefore<0)
 		return $posts;
 	
 	$dbh = newPDOConnection();
@@ -135,6 +151,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter =
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
 		AND pt.`post_date` <= :aDate
+		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
 		
 		$qString .= " ORDER BY pt.`post_date` DESC";	
@@ -142,7 +159,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter =
 		$qString .= ";";
 		
 		$stmt = $dbh->prepare($qString);
-		$stmt->bindParam(':aDate', $dateAfter, PDO::PARAM_STR, 12);				
+		$stmt->bindParam(':aDate', $dateBefore, PDO::PARAM_STR, 12);				
 	}
 	else
 	{
@@ -158,6 +175,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter =
 		AND pt.`post_type` = 'post' 
 		AND tr.`term_taxonomy_id` = :id 
 		AND pt.`post_date` <= :aDate
+		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.") ";
 		
 		$qString .= " ORDER BY pt.`post_date` DESC";
@@ -166,7 +184,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeAfter =
 		
 		$stmt = $dbh->prepare($qString);
 		$stmt->bindParam(':id', $category, PDO::PARAM_INT);
-		$stmt->bindParam(':aDate', $dateAfter, PDO::PARAM_STR, 12);
+		$stmt->bindParam(':aDate', $dateBefore, PDO::PARAM_STR, 12);
 	}
 	
 	$stmt->execute();
@@ -261,7 +279,8 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 	$posts = array();	
 	$includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 	
-	$dateAfter = '2010-1-1';
+	//TODO: define what date best to enter here
+	$dateAfter = POSTS_DATE_AFTER;
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT 
@@ -274,7 +293,7 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
-		AND pt.`post_date` > ".$dateAfter."
+		AND pt.`post_date` > '".$dateAfter."'
 		AND tt.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")
 		ORDER BY RAND() LIMIT ".$numberOfArticles.";";
 	
@@ -347,36 +366,63 @@ function descriptionForLanguage($str, $language)
 	$needleEN = "<!--:en";
 	$needleDE = "<!--:de";
 	$needleMORE = "<!--more";
+	$moreString = "";
+	$finalString = '';
 	$returnString = '';
 	$moreReturnString = '';
 	
+	$containsMoreString = false;
+	$containsMoreString = (strstr($str, $needleMORE)!==FALSE);
+	
 	//check if there is a localization string present, if not, just return same string
-	if( strstr($str, $needleEN)!==FALSE || strstr($str, $needleDE)!==FALSE )
+	
+	$finalMoreString = '';
+	$finalPrefixString = '';
+	
+	//prepare the more string
+	if( $containsMoreString )
 	{		
-		preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $results);
-		$regMatch = $results[2];		
-		$returnString = removeImgTags($regMatch);
-		$returnString = nl2br($returnString);
+		$mS = preg_match("/(<!--more-->(.*)$)/ismU", $str, $moreResults);
+		$moreString = $moreResults[2];	
+		$finalMoreString = $moreString;
 		
-		$moreString = preg_match("/(<!--more-->.*<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $moreResults);
-		$moreRegMatch = $moreResults[2];
-		$moreReturnString = removeImgTags($moreRegMatch);
-		$moreReturnString = nl2br($moreReturnString);
-		
-		return $returnString.$moreReturnString;
+		if( strstr($moreString, $needleEN)!==FALSE || strstr($moreString, $needleDE)!==FALSE )
+		{
+			preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $moreString, $results);
+			$finalMoreString = $results[2];
+		}
 	}
-	else
+	
+	//prepare the prefix string
+	if( strstr($str, $needleEN)!==FALSE || strstr($str, $needleDE)!==FALSE )
 	{
-		$str = removeImgTags($str);
-		$str = nl2br($str);
-		return $str;
+		preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $results);
+		$finalPrefixString = $results[2];
 	}
+	else if($containsMoreString)
+	{
+		$finalPrefixString = $str;
+		
+		preg_match("/^(.*)(<!--more-->.*$)/ismU", $str, $results);
+		$finalPrefixString = $results[1];
+	}
+	else if(!$containsMoreString)
+	{
+		$finalPrefixString = $str;
+	}
+	
+	$finalString = $finalPrefixString.$finalMoreString;
+	
+	$finalString = removeImgTags($finalString);
+	$finalString = nl2br($finalString);
+	return $finalString;
 }
+
 function removeImgTags($string)
 {
 	$str = "";
-	$str = preg_replace('/<img.*<\/p>/si', "", $string);
-	// $str = preg_replace('/<img.*>/i', "", $string);
+	// $str = preg_replace('/<img.*<\/p>/si', "", $string);
+	$str = preg_replace('/<img.*\/>/si', "", $string);
 	
 	return $str;
 }
