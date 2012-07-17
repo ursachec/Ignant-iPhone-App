@@ -22,6 +22,8 @@
 
 #import "ExternalPageViewController.h"
 
+#import "IGNMosaikViewController.h"
+
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
@@ -55,6 +57,10 @@
 -(void)postToTwitter;
 
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
+
+@property (strong, nonatomic, readwrite) NSString *articleTitle;
+@property (strong, nonatomic, readwrite) NSURL *articleWeblink;
+@property (strong, nonatomic, readwrite) NSString *articleDescription;
 
 @property (strong, nonatomic) NSString *firstRelatedArticleId;
 @property (strong, nonatomic) NSString *secondRelatedArticleId;
@@ -111,6 +117,7 @@
 
 @implementation IGNDetailViewController
 
+@synthesize isShownFromMosaic = _isShownFromMosaic;
 @synthesize isShowingImageSlideshow = _isShowingImageSlideshow;
 
 @synthesize firstRelatedArticleId = _firstRelatedArticleId;
@@ -181,6 +188,7 @@
         self.thirdRelatedArticleId = @"";
         
         self.didLoadContentForRemoteArticle = NO;
+        self.isShownFromMosaic = NO;
            
         self.importer = nil;
         
@@ -273,15 +281,18 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-     
+    self.isShownFromMosaic = NO;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
-{    
+{
+    //returning from showing the image slideshow, article detail page is already setup
+    if (_isShowingImageSlideshow) {
+        self.isShowingImageSlideshow = NO;
+        return;
+    }
     
-#warning TODO: DETAIL NAVIGATION these to lines have been outcommented
-    
-    self.isShowingImageSlideshow = NO;
     
     [self setNavigationBarAndToolbarHidden:_isNavigationBarAndToolbarHidden animated:animated];
    
@@ -328,13 +339,19 @@
 #pragma mark - Navigation options
 
 -(void)handleBack:(id)sender
-{    
-    if (self.viewControllerToReturnTo) {
-        [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
+{
+    if (self.isShownFromMosaic) {
+        [self showMosaic];
     }
-    else {
-        NSLog(@"WARNING! viewControllerToReturnTo not found");
-        [self.navigationController popToRootViewControllerAnimated:YES];
+    else
+    {
+        if (self.viewControllerToReturnTo) {
+            [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
+        }
+        else {
+            NSLog(@"WARNING! viewControllerToReturnTo not found");
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
     }
 }
 
@@ -691,7 +708,8 @@
     LOG_CURRENT_FUNCTION()
     
     [self setupArticleContentViewWithArticleTitle:[self.blogEntry title] 
-                                        articleId:[self.blogEntry articleId] 
+                                        articleId:[self.blogEntry articleId]
+                                          webLink:[NSURL URLWithString:[self.blogEntry webLink]]
                                      categoryName:[self.blogEntry categoryName] 
                                   descriptionText:[self.blogEntry descriptionText]  
                                   relatedArticles:[self.blogEntry relatedArticles]   
@@ -789,21 +807,38 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
+-(NSURL*)currentImageThumbURL
+{
+    NSURL* url = nil;
+    
+    if(self.currentArticleId!=nil)
+    {
+        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,self.currentArticleId];
+        url = [[NSURL alloc] initWithString:encodedString];
+    }
+    
+    return url;
+}
+
 -(void)setupArticleContentViewWithArticleTitle:(NSString*)title
                                      articleId:(NSString*)articleID
+                                       webLink:(NSURL*)articleWebLink
                                   categoryName:(NSString*)categoryName
                                descriptionText:(NSString*)descriptionText
                                relatedArticles:(NSArray*)relatedArticles
                                   remoteImages:(NSArray*)remoteImages
                                    publishDate:(NSDate*)publishDate
 {
-
 #define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
 #define SHOW_DEBUG_COLORS false
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
     LOG_CURRENT_FUNCTION()
     
+    self.currentArticleId = articleID;
+    self.articleTitle = title;
+    self.articleWeblink = articleWebLink;
+    self.articleDescription = descriptionText;
     self.remoteImagesArray = [NSArray arrayWithArray:remoteImages];
     
     CGSize finalSizeForArticleContentView = CGSizeMake(0, 0); 
@@ -816,11 +851,9 @@
 //    /////////////////////////// handle the thumb image image
 #warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
-    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,articleID];
-    NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
-    __block NSURL* blockThumbURL = thumbURL;
     
-    [self.entryImageView setImageWithURL:thumbURL 
+    __block NSURL* blockThumbURL = [self currentImageThumbURL];
+    [self.entryImageView setImageWithURL:blockThumbURL
                         placeholderImage:nil 
                                  success:^(UIImage* image){
                                      NSLog(@"big image loaded _entryImageView: %@", blockThumbURL);
@@ -869,7 +902,7 @@
     
     //set up the category name
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"setting up the category name...");
+    NSLog(@"setting up the category name... categoryName: %@", categoryName);
     
     if (categoryName!=nil) 
     {
@@ -1045,6 +1078,8 @@
     LOG_CURRENT_FUNCTION()
     
     NSString *remoteContentArticleTitle = [articleDictionary objectForKey:kFKArticleTitle];
+    NSString *remoteContentArticleWeblinkString = [articleDictionary objectForKey:kFKArticleWebLink];
+    NSURL* remoteContentArticleWeblink = [NSURL URLWithString:remoteContentArticleWeblinkString];
     NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
     NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
     NSString *remoteContentArticleDescriptionText = [articleDictionary objectForKey:kFKArticleDescriptionText];
@@ -1067,6 +1102,7 @@
     
     [self setupArticleContentViewWithArticleTitle:remoteContentArticleTitle
                                         articleId:remoteContentArticleID
+                                          webLink:remoteContentArticleWeblink
                                      categoryName:remoteContentCategoryName
                                   descriptionText:remoteContentArticleDescriptionText
                                   relatedArticles:remoteContentRelatedArticles
@@ -1202,9 +1238,9 @@
     
 #warning add the relevant live information
     
-    NSString* infoLinkToArticleMainPage = currentBlogEntry.webLink;
-    NSString* infoNameOfArticle = currentBlogEntry.title;
-    NSString* infoDescriptionForArticle = currentBlogEntry.descriptionText;
+    NSURL* infoLinkToArticleMainPage = self.articleWeblink;
+    NSString* infoNameOfArticle = self.articleTitle;
+    NSString* infoDescriptionForArticle = self.articleDescription;
     NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
     substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
     
@@ -1219,7 +1255,7 @@
                                    kFacebookAppId, @"app_id",
                                    infoLinkToArticleMainPage, @"link",
                                    infoLinkToThumbForArticle, @"picture",
-                                   infoNameOfArticle, @"name", 
+                                   infoNameOfArticle, @"name",
                                    infoCaptionForArticle, @"caption",
                                    substringInfoDescriptionForArticle, @"description",
                                    nil];
@@ -1229,7 +1265,7 @@
     NSError* error = nil;
     if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
                                          action:@"postToFacebook"
-                                          label:currentBlogEntry.articleId
+                                          label:self.currentArticleId
                                           value:-1
                                       withError:&error]) {
         NSLog(@"Error: %@", error);
@@ -1262,13 +1298,13 @@
         
 #warning TODO: if link not set, dismiss and show error (or something)
        
-        __block __typeof__(self.blogEntry) blockBlogEntry = self.blogEntry;
+        __block __typeof__(self) blockSelf = self;
         
-        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog",blockBlogEntry.title, blockBlogEntry.webLink];
+        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog", blockSelf.articleTitle, blockSelf.articleWeblink];
         
         TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
         [tweetVC setInitialText:tweet];
-        [tweetVC addImage:self.entryImageView.image];
+//        [tweetVC addImage:self.entryImageView.image];
         
         [tweetVC setCompletionHandler:^(TWTweetComposeViewControllerResult result){
             NSString* output;
@@ -1287,7 +1323,7 @@
                     NSError* error = nil;
                     if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
                                                          action:@"postToTwitter"
-                                                          label:blockBlogEntry.articleId
+                                                          label:blockSelf.currentArticleId
                                                           value:-1
                                                       withError:&error]) {
                         NSLog(@"Error: %@", error);
@@ -1303,7 +1339,7 @@
             NSLog(@"output: %@", output);
             
             //dismiss the tweet composition view controller modally
-            [self dismissModalViewControllerAnimated:YES];
+            [blockSelf dismissModalViewControllerAnimated:YES];
         
         }];
         
@@ -1317,6 +1353,16 @@
 }
 
 #pragma mark - show mosaik / more
+-(void)showMosaic
+{
+    IGNMosaikViewController *mosaikVC = self.appDelegate.mosaikViewController;
+    mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    mosaikVC.parentNavigationController = self.navigationController;
+    
+    [self.navigationController presentModalViewController:mosaikVC animated:YES];
+    
+}
+
 - (IBAction)showShare:(id)sender {
     
     
@@ -1634,7 +1680,7 @@
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForVideoServer,kArticleId,self.blogEntry.articleId];
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForVideoServer,kArticleId,self.currentArticleId];
     NSURL* videoUrl = [[NSURL alloc] initWithString:encodedString];
     [self.playVideoButton removeFromSuperview];
     

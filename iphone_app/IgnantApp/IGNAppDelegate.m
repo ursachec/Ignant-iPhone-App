@@ -821,6 +821,7 @@ return _externalPageViewController;
     }    
 }
 
+#pragma mark - toolbar methods
 
 -(UIView*)toolbarGradientView
 {
@@ -850,7 +851,6 @@ return _externalPageViewController;
 
 -(void)setIsToolbarGradientViewHidden:(BOOL)hidden
 {
-    
     if (hidden) {
         [self.toolbarGradientView removeFromSuperview];
     } 
@@ -862,42 +862,28 @@ return _externalPageViewController;
 
 -(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-#define ANIMATION_DURATION .5f    
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+#define ANIMATION_DURATION .5f
+    
+    __block __typeof__(self) blockSelf = self;
+    __block BOOL bHidden = hidden;
+    void (^toolbarblock)(void);
+    toolbarblock = ^{
+        blockSelf.ignantToolbar.alpha = bHidden ? 0.0f : 1.0f;
+        [blockSelf.ignantToolbar setUserInteractionEnabled:!bHidden];
+    };
     
     //execute show/hide
     if (!animated) 
     {
-        if (hidden) {
-            [self.ignantToolbar removeFromSuperview];
-        } 
-        else {
-            self.ignantToolbar.alpha = 1.0f;
-            [self.navigationController.view addSubview:self.ignantToolbar];
-        }
-        
+        toolbarblock();
     }
     else 
     {
-        if (!hidden) {
-            self.ignantToolbar.alpha = 1.0f;
-            [self.navigationController.view addSubview:self.ignantToolbar];
-        }
-        
-        __block __typeof__(self) blockSelf = self;
-        __block BOOL bHidden = hidden;
-        
-        void (^toolbarblock)(void);
-        toolbarblock = ^{
-            blockSelf.ignantToolbar.alpha = bHidden ? 0.0f : 1.0f;
-        };
-        
         [UIView animateWithDuration:ANIMATION_DURATION 
                          animations:toolbarblock
                          completion:^(BOOL finished){
-                             
-                             if (bHidden) {
-                                 [blockSelf.ignantToolbar removeFromSuperview];
-                             }
                          }];
     }
 }

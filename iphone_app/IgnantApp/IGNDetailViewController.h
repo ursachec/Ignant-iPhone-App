@@ -59,6 +59,7 @@
 @property (retain, nonatomic) IBOutlet UIButton *toggleLikeButton;
 
 @property (nonatomic, assign, readonly) BOOL isShowingImageSlideshow;
+@property (nonatomic, assign, readwrite) BOOL isShownFromMosaic;
 
 - (IBAction)handleRightSwipe:(id)sender;
 

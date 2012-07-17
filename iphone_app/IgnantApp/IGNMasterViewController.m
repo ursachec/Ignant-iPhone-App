@@ -228,6 +228,7 @@
     NSLog(@"dateForLastUpdate: %@", dateForLastUpdate);
     
     
+    
     //only check if data is here if not on first run
     if (![self.appDelegate isLoadingDataForFirstRun] && [self.appDelegate checkIfAppOnline])
     if (dateForLastUpdate==nil) 

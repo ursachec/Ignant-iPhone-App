@@ -80,8 +80,6 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
 }
 
@@ -132,6 +130,9 @@
         NSNumber *imageWidth = [oneImageDictionary objectForKey:kFKImageWidth];
         NSNumber *imageHeight = [oneImageDictionary objectForKey:kFKImageHeight];
         
+        if(imageURLString==nil)
+            return;
+        
         CGFloat maxWidth = 320.0f;
         CGFloat cImageWidth = 0.0f, cImageHeight = 0.0f, scale = 1.0;
         
@@ -160,6 +161,8 @@
         newImageView.contentMode = UIViewContentModeScaleAspectFit;
         
         NSLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
+        
+        
         
         [newImageView setImageWithURL:[NSURL URLWithString:imageURLString] 
                      placeholderImage:nil 

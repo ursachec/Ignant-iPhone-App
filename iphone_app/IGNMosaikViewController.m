@@ -128,6 +128,19 @@ NSString * const kImageFilename = @"filename";
 
 -(IBAction)handleBack:(id)sender
 {
+    
+    NSLog(@"handleBack!!!");
+    
+    
+    if (self.viewControllerToReturnTo) {
+        [self.appDelegate.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
+    }
+    else {
+        
+        NSLog(@"WARNING! viewControllerToReturnTo not found");
+        [self.appDelegate.navigationController popToRootViewControllerAnimated:YES];
+    }
+    
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -611,7 +624,7 @@ NSString * const kImageFilename = @"filename";
 
 -(void)handleTapOnSpecificNavBarBackButton:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self handleBack:sender];
 }
 
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId
@@ -623,6 +636,7 @@ NSString * const kImageFilename = @"filename";
         self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
+    self.detailViewController.isShownFromMosaic = YES;
     self.detailViewController.currentArticleId = articleId;
     self.detailViewController.didLoadContentForRemoteArticle = NO;
     self.detailViewController.isShowingArticleFromLocalDatabase = NO;
