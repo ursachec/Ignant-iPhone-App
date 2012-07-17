@@ -225,7 +225,8 @@
     
     //check when was the last time updating the currently set category and trigger load latest/load more
     NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
-    NSLog(@"dateForLastUpdate: %@", dateForLastUpdate);
+    DBLog(@"dateForLastUpdate: %@", dateForLastUpdate);
+    
     
     
     
@@ -245,7 +246,7 @@
         else if( [dateForLastUpdate timeIntervalSinceNow]) 
         {
             [self triggerLoadLatestDataIfNecessary];
-            NSLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
+            DBLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
         }
     }
     else if (!self.isHomeCategory && ![self.appDelegate checkIfAppOnline] ) {
@@ -339,11 +340,11 @@
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if (lastUpdateInSeconds<updateTimer) {
-        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
         [self loadLatestContent];
     }
     else {
-        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
 }
 
@@ -457,7 +458,7 @@
                                      } 
                                      failure:^(NSError* error){
                                      
-                                         NSLog(@"imageDidNotLoad: %@", blockUrlAtCurrentIndex);
+                                         DBLog(@"imageDidNotLoad: %@", blockUrlAtCurrentIndex);
                                      }];
     
     }
@@ -475,7 +476,7 @@
         }
         else
         {
-            NSLog(@"trying to load more posts, will not trigger again");
+            DBLog(@"trying to load more posts, will not trigger again");
         }
     }
     else
@@ -571,7 +572,7 @@
 
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    DBLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
     
@@ -619,7 +620,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"MASTER LOAD LATEST CONTENT encodedString go: %@",encodedString);
+    DBLog(@"MASTER LOAD LATEST CONTENT encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -633,7 +634,7 @@
     
     _numberOfActiveRequests++;
     
-    NSLog(@"loading more content");
+    DBLog(@"loading more content");
     
     //this is done to update the "loading more cell"
 #warning TODO: reload only load more cell
@@ -649,7 +650,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString go: %@",encodedString);
+    DBLog(@"encodedString go: %@",encodedString);
     
     NSURL* reqUrl = [[NSURL alloc] initWithString:encodedString];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:reqUrl];
@@ -690,7 +691,7 @@
     
     if (_isLoadingMoreContent) {
     
-        NSLog(@"is loading more content...");
+        DBLog(@"is loading more content...");
         
         __block __typeof__(self) blockSelf = self;
         
@@ -704,7 +705,7 @@
             newImporter.delegate = blockSelf;
             newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
             
-            NSLog(@"starting importingJSONWithMorePosts..., currentCategoryId: %@", [blockSelf currentCategoryId]);
+            DBLog(@"starting importingJSONWithMorePosts..., currentCategoryId: %@", [blockSelf currentCategoryId]);
             NSString* aCategoryId = [blockSelf currentCategoryId];
             [newImporter importJSONWithMorePosts:[request responseString] forCategoryId:aCategoryId];
         });
@@ -717,7 +718,7 @@
     }
     else if (_isLoadingLatestContent) {
                 
-        NSLog(@"is loading latest content...");
+        DBLog(@"is loading latest content...");
         
         __block __typeof__(self) blockSelf = self;
         
@@ -731,7 +732,7 @@
             newImporter.delegate = blockSelf;
             newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
             
-            NSLog(@"starting importJSONWithLatestPosts...");
+            DBLog(@"starting importJSONWithLatestPosts...");
             [newImporter importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
         });
         dispatch_release(importerDispatchQueue);
@@ -755,7 +756,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    NSLog(@"requestFailed");
+    DBLog(@"requestFailed");
     
 #warning TODO: do something if the request has failed
     
@@ -785,7 +786,7 @@
 
 -(void)didStartImportingData
 {
-    NSLog(@"MasterVC didStartImportingData");
+    DBLog(@"MasterVC didStartImportingData");
     
     LOG_CURRENT_FUNCTION_AND_CLASS()
         
@@ -872,7 +873,7 @@
     float h = size.height;
     float reload_distance = -40.0f;
     
-//    NSLog(@"y: %f  h: %f h + reload_distance: %f  \n lastContentOffset.y: %f  offset.y: %f", y, h, (h + reload_distance), lastContentOffset.y, offset.y);
+//    DBLog(@"y: %f  h: %f h + reload_distance: %f  \n lastContentOffset.y: %f  offset.y: %f", y, h, (h + reload_distance), lastContentOffset.y, offset.y);
     
     if(y > h + reload_distance) 
     {
@@ -895,7 +896,7 @@
 #pragma mark - IgnantNoInternetConnectionViewDelegate
 -(void)retryToLoadData
 {
-    NSLog(@"retryToLoadData");
+    DBLog(@"retryToLoadData");
     
     if ([self.appDelegate checkIfAppOnline]) {
         [self.appDelegate fetchAndLoadDataForFirstRun];

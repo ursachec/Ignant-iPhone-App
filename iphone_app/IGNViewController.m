@@ -67,7 +67,7 @@
 
 -(IgnantImporter*)importer
 {
-    NSLog(@"init importer");
+    DBLog(@"init importer");
     
     if (_importer==nil) {        
         _importer = [[IgnantImporter alloc] init];
@@ -241,7 +241,7 @@
 
 -(void)handleTapOnSpecificNavBarBackButton:(id)sender
 {
-    NSLog(@"handleTapOnSpecificNavBarBackButton");
+    DBLog(@"handleTapOnSpecificNavBarBackButton");
 }
 
 #pragma mark - specific toolbar

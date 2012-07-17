@@ -115,7 +115,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"didFinishLaunchingWithOptions");
+    DBLog(@"didFinishLaunchingWithOptions");
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |UIRemoteNotificationTypeSound)];
     
@@ -135,7 +135,7 @@
     NSDate *lastUpdate = [_userDefaultsManager lastUpdateForFirstRun];
     self.shouldLoadDataForFirstRun = (kForceReloadCoreData || lastUpdate == nil);
         
-    NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    DBLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
     //create cache folders for the thumbs
 //    [self createCacheFolders];
@@ -159,7 +159,7 @@
     // check the last update, stored in NSUserDefaults    
     if (self.shouldLoadDataForFirstRun) {
         
-        NSLog(@"new store");
+        DBLog(@"new store");
         // remove the old store; easier than deleting every object
         // first, test for an existing store
         if ([[NSFileManager defaultManager] fileExistsAtPath:self.persistentStorePath]) {
@@ -216,7 +216,7 @@
                                                          name:@"iOS1"
                                                         value:@"iv1"
                                                     withError:&error]) {
-        NSLog(@"error in setCustomVariableAtIndex");
+        DBLog(@"error in setCustomVariableAtIndex");
     }
     
     if (![[GANTracker sharedTracker] trackEvent:@"Application iOS"
@@ -224,12 +224,12 @@
                                           label:@"Example iOS"
                                           value:99
                                       withError:&error]) {
-        NSLog(@"error in trackEvent");
+        DBLog(@"error in trackEvent");
     }
     
     if (![[GANTracker sharedTracker] trackPageview:kGAPVAppEntryPoint
                                          withError:&error]) {
-        NSLog(@"error in trackPageview");
+        DBLog(@"error in trackPageview");
     }
     
 #warning TODO: add actual return value, do something if it didn't work, like send data to the server
@@ -248,16 +248,16 @@
     {
         if(![fileManager createDirectoryAtPath:thumbImagesCacheDirectory withIntermediateDirectories:YES attributes:nil error:NULL])
         {
-            NSLog(@"Error: Create folder failed %@", thumbImagesCacheDirectory);
+            DBLog(@"Error: Create folder failed %@", thumbImagesCacheDirectory);
         }
         else
         {
-            NSLog(@"created Folder");
+            DBLog(@"created Folder");
         }
     }
     else
     {
-        NSLog(@"directory exists");
+        DBLog(@"directory exists");
     }
 }
 
@@ -322,7 +322,7 @@
              
              abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
              */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            DBLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         } 
     }
@@ -539,7 +539,7 @@ return _externalPageViewController;
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        DBLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
     
@@ -550,7 +550,7 @@ return _externalPageViewController;
 // This method will be called on a secondary thread. Forward to the main thread for safe handling of UIKit objects.
 - (void)importerDidSave:(NSNotification *)saveNotification {
     
-    NSLog(@"APP delegate importerDidSave");
+    DBLog(@"APP delegate importerDidSave");
     
     if ([NSThread isMainThread]) {
         [self.managedObjectContext mergeChangesFromContextDidSaveNotification:saveNotification];
@@ -617,7 +617,7 @@ return _externalPageViewController;
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
         
-    NSLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@ /// deviceToken: %@", encodedString, self.deviceToken);
+    DBLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@ /// deviceToken: %@", encodedString, self.deviceToken);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
     [request setTimeOutSeconds:6.0f];
@@ -638,9 +638,9 @@ return _externalPageViewController;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
+    DBLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
     
-    NSLog(@"requestFailed");
+    DBLog(@"requestFailed");
     
     [self.masterViewController setIsCouldNotLoadDataViewHidden:NO fullscreen:YES];
     
@@ -660,7 +660,7 @@ return _externalPageViewController;
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"encodedString: %@ tokenAsString: %@", encodedString, tokenAsString);
+    DBLog(@"encodedString: %@ tokenAsString: %@", encodedString, tokenAsString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
     [request setTimeOutSeconds:20.0f];
@@ -669,7 +669,7 @@ return _externalPageViewController;
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-    NSLog(@"Error in registration. Error: %@", err);
+    DBLog(@"Error in registration. Error: %@", err);
 }
 
 - (void)application:(UIApplication *)app didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -687,7 +687,7 @@ return _externalPageViewController;
     if (_ignantToolbar==nil) {
         
         CGRect navControllerFrame = self.navigationController.view.frame;
-        NSLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));        
+        DBLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));        
         
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
         CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
@@ -765,7 +765,7 @@ return _externalPageViewController;
                                           label:@""
                                           value:-1
                                       withError:&error]) {
-        NSLog(@"Error: %@", error);
+        DBLog(@"Error: %@", error);
     }
     
     [self.navigationController popToViewController:self.masterViewController animated:YES];
@@ -828,7 +828,7 @@ return _externalPageViewController;
     if (_toolbarGradientView==nil) {
         
         CGRect navBarFrame = self.navigationController.navigationBar.frame;
-        NSLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
+        DBLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
         
         //set up the gradient view
         CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);

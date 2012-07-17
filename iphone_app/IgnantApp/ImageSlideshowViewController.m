@@ -46,6 +46,9 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    
+    DBLog(@"something");
+    
     [super viewDidAppear:animated];
     
     NSError* error = nil;
@@ -58,7 +61,7 @@
     [super viewDidLoad];
     
         
-    NSLog(@"number of remote images: %d", _remoteImagesArray.count);
+    DBLog(@"number of remote images: %d", _remoteImagesArray.count);
     
     _imageScrollView.delegate = self;
     _imageScrollView.pagingEnabled = YES;
@@ -160,14 +163,14 @@
         newImageView.backgroundColor = [UIColor clearColor];
         newImageView.contentMode = UIViewContentModeScaleAspectFit;
         
-        NSLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
+        DBLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
         
         
         
         [newImageView setImageWithURL:[NSURL URLWithString:imageURLString] 
                      placeholderImage:nil 
-                              success:^(UIImage* image){ NSLog(@"image.height: %f", image.size.width);} 
-                              failure:^(NSError* error){ NSLog(@"error"); 
+                              success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);} 
+                              failure:^(NSError* error){ DBLog(@"error"); 
                               }];
         [self.imageScrollView addSubview:newImageView];
 

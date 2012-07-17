@@ -349,7 +349,7 @@
             [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
         }
         else {
-            NSLog(@"WARNING! viewControllerToReturnTo not found");
+            DBLog(@"WARNING! viewControllerToReturnTo not found");
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
     }
@@ -553,7 +553,7 @@
 	
 	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
 		NSURL *url = [request URL];	
-		NSLog(@"url is: %@ ", url);
+		DBLog(@"url is: %@ ", url);
         
         
         [self showLinkOptions:url];
@@ -582,7 +582,7 @@
     aWebView.frame = frame;
     
     NSString *output = [aWebView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"ContentDiv\").offsetHeight;"];
-    NSLog(@"HEREHERE aWebView.frame.size.height: %f height: %@", aWebView.frame.size.height, output);
+    DBLog(@"HEREHERE aWebView.frame.size.height: %f height: %@", aWebView.frame.size.height, output);
     
     //resize the webview to fit the newly loaded content
     CGRect tempRect;
@@ -736,7 +736,7 @@
     }
     else if(_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==NO)
     {
-        NSLog(@"_isShowingArticleFromLocalDatabase= NO, _isLoadingCurrentArticle==NO");
+        DBLog(@"_isShowingArticleFromLocalDatabase= NO, _isLoadingCurrentArticle==NO");
     }
     
     //set up the view in case the article is already here
@@ -800,7 +800,7 @@
                                           label:@""
                                           value:-1
                                       withError:&error]) {
-        NSLog(@"Error: %@", error);
+        DBLog(@"Error: %@", error);
     }
     
     
@@ -856,21 +856,21 @@
     [self.entryImageView setImageWithURL:blockThumbURL
                         placeholderImage:nil 
                                  success:^(UIImage* image){
-                                     NSLog(@"big image loaded _entryImageView: %@", blockThumbURL);
+                                     DBLog(@"big image loaded _entryImageView: %@", blockThumbURL);
                                  } 
                                  failure:^(NSError* aError){
-                                     NSLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
+                                     DBLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
                                  }];
     
     //add the imageViewSize to the finalSizeForArticleContentView
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"adding the imageViewSize to the finalSizeForArticleContentView...");
+    DBLog(@"adding the imageViewSize to the finalSizeForArticleContentView...");
     
     finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
     
     //set up the button for showing pictures
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"setting up the button for showing pictures...");
+    DBLog(@"setting up the button for showing pictures...");
     
     if ([remoteImages isKindOfClass:[NSArray class]]) {
         NSString *showPicturesButtonText = [NSString stringWithFormat:NSLocalizedString(@"fotos_button_title", @"Title of the 'Fotos' button on the Detail View Controller"),[remoteImages count]];
@@ -879,13 +879,13 @@
     
     //set up the title
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"setting up the title...");
+    DBLog(@"setting up the title...");
     
     self.titleLabel.text = [title uppercaseString];
     
     //set up the date label
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"setting up the date label...");
+    DBLog(@"setting up the date label...");
     
     tempRect = self.dateLabel.frame;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -893,7 +893,7 @@
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSString* publishDateString = [formatter stringFromDate:publishDate];
     CGSize publishDateSize = [publishDateString sizeWithFont:self.dateLabel.font];
-    NSLog(@"publishDateSize: %@", NSStringFromCGSize(publishDateSize));
+    DBLog(@"publishDateSize: %@", NSStringFromCGSize(publishDateSize));
     
     self.dateLabel.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, publishDateSize.width, tempRect.size.height);
     self.dateLabel.text = publishDateString;
@@ -902,7 +902,7 @@
     
     //set up the category name
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"setting up the category name... categoryName: %@", categoryName);
+    DBLog(@"setting up the category name... categoryName: %@", categoryName);
     
     if (categoryName!=nil) 
     {
@@ -917,7 +917,7 @@
     
     //add the title, date and category labels size to the finalSizeForArticleContentView
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"adding the title, date and category labels size to the finalSizeForArticleContentView...");
+    DBLog(@"adding the title, date and category labels size to the finalSizeForArticleContentView...");
     
     tempSize = finalSizeForArticleContentView;
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
@@ -955,7 +955,7 @@
     _descriptionWebView.frame = CGRectMake(descriptionWebViewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionWebViewFrame.size.width, descriptionTextContentSize.height);
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"_descriptionWebView.frame: %@", NSStringFromCGRect(_descriptionWebView.frame));
+    DBLog(@"_descriptionWebView.frame: %@", NSStringFromCGRect(_descriptionWebView.frame));
     
     lastHeightForWebView = descriptionTextContentSize.height;
     
@@ -964,11 +964,11 @@
     finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    NSLog(@"(after decriptiontextview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
+    DBLog(@"(after decriptiontextview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
     
     //set the frame of the article content view
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-        NSLog(@"setting the frame of the article content view...");
+        DBLog(@"setting the frame of the article content view...");
     
     tempRect = self.articleContentView.frame;
     CGFloat paddingBottomOfWebView = 10.0f;
@@ -998,10 +998,10 @@
     [blockImageView  setImageWithURL:blockThumbURL
                     placeholderImage:nil
                              success:^(UIImage* image){
-                                    NSLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
+                                    DBLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
                                 }
                              failure:^(NSError* aError){
-                                    NSLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
+                                    DBLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
                              }];
 }
 
@@ -1021,7 +1021,7 @@
     
     //set up first related article
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    NSLog(@"setting up first related article...");
+    DBLog(@"setting up first related article...");
     
     if (firstRelatedArticle!=nil) {
         self.firstRelatedArticleTitleLabel.text = [firstRelatedArticle objectForKey:kFKArticleTitle];
@@ -1034,7 +1034,7 @@
     
     //set up second related article
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    NSLog(@"setting up second related article...");
+    DBLog(@"setting up second related article...");
     
     if (secondRelatedArticle!=nil) {
         self.secondRelatedArticleTitleLabel.text = [secondRelatedArticle objectForKey:kFKArticleTitle];
@@ -1048,7 +1048,7 @@
     
     //set up third related article
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    NSLog(@"setting up third related article...");
+    DBLog(@"setting up third related article...");
     
     if (thirdRelatedArticle!=nil) {
         self.thirdRelatedArticleTitleLabel.text = [thirdRelatedArticle objectForKey:kFKArticleTitle];
@@ -1060,7 +1060,7 @@
     }
     
     if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    NSLog(@"finished setting up related articles!");
+    DBLog(@"finished setting up related articles!");
     
     //set the appropriate title for the toggle like button
     [self updateToggleLikeButtonTitle];
@@ -1130,7 +1130,7 @@
 }
 -(IBAction)tapAction:(id)sender
 {
-    NSLog(@"tapAction ");
+    DBLog(@"tapAction ");
     
     if (self.navigationController.navigationBar.isHidden)
     {
@@ -1206,7 +1206,7 @@
         
         [blockReadyContentScrollView setFrame:newScrollViewFrame];
         
-        NSLog(@"newScrollViewFrame: %@ shareAndMoreToolbarHeight: %f scrollViewHeight: %f", NSStringFromCGRect(newScrollViewFrame), shareAndMoreToolbarHeight, scrollViewHeight);
+        DBLog(@"newScrollViewFrame: %@ shareAndMoreToolbarHeight: %f scrollViewHeight: %f", NSStringFromCGRect(newScrollViewFrame), shareAndMoreToolbarHeight, scrollViewHeight);
         
     };
     
@@ -1268,7 +1268,7 @@
                                           label:self.currentArticleId
                                           value:-1
                                       withError:&error]) {
-        NSLog(@"Error: %@", error);
+        DBLog(@"Error: %@", error);
     }
     
 }
@@ -1276,7 +1276,7 @@
 
 -(void)postToPinterest
 {
-   NSLog(@"should post to pinterest");
+   DBLog(@"should post to pinterest");
 }
 
 -(void)postToTwitter
@@ -1326,7 +1326,7 @@
                                                           label:blockSelf.currentArticleId
                                                           value:-1
                                                       withError:&error]) {
-                        NSLog(@"Error: %@", error);
+                        DBLog(@"Error: %@", error);
                     }
                     
                     break;
@@ -1336,7 +1336,7 @@
             }
         
             
-            NSLog(@"output: %@", output);
+            DBLog(@"output: %@", output);
             
             //dismiss the tweet composition view controller modally
             [blockSelf dismissModalViewControllerAnimated:YES];
@@ -1347,9 +1347,9 @@
         [self presentModalViewController:tweetVC animated:YES];
     }
     
-    NSLog(@"canTweet: %@", canTweet ? @"TRUE" : @"FALSE");
+    DBLog(@"canTweet: %@", canTweet ? @"TRUE" : @"FALSE");
     
-    NSLog(@"should post to twitter"); 
+    DBLog(@"should post to twitter"); 
 }
 
 #pragma mark - show mosaik / more
@@ -1372,7 +1372,7 @@
                                           label:self.currentArticleId
                                           value:-1
                                       withError:&error]) {
-        NSLog(@"Error: %@", error);
+        DBLog(@"Error: %@", error);
     }
     
     
@@ -1407,10 +1407,10 @@
                                                   label:[_linkOptionsUrl absoluteString]
                                                   value:10
                                               withError:&error]) {
-                NSLog(@"Error: %@", error);
+                DBLog(@"Error: %@", error);
             }
             
-            NSLog(@"openInSafari: %@", _linkOptionsUrl);
+            DBLog(@"openInSafari: %@", _linkOptionsUrl);
             [[UIApplication sharedApplication] openURL:_linkOptionsUrl];
         }
     }
@@ -1451,7 +1451,7 @@
 {
     NSString *articleId = nil;
     
-    NSLog(@"trying to showRelatedArticle: %d", [sender tag]);
+    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);
     
     
     if ([sender tag] == kFirstRelatedArticleTag)
@@ -1472,11 +1472,11 @@
     //tag is falsly set
     else
     {
-        NSLog(@"tag is falsly set, doing nothing");
+        DBLog(@"tag is falsly set, doing nothing");
         return;
     }
     
-    NSLog(@"articleId: %@", articleId);
+    DBLog(@"articleId: %@", articleId);
     
     
     
@@ -1503,20 +1503,20 @@
         self.nextDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
-    NSLog(@"articleIdChosen: %@", articleId);
+    DBLog(@"articleIdChosen: %@", articleId);
     self.nextDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
     
     
     if(entry)
     {
-        NSLog(@"entry exists, do not load");
+        DBLog(@"entry exists, do not load");
         self.nextDetailViewController.blogEntry = entry;
         self.nextDetailViewController.isShowingArticleFromLocalDatabase = YES;        
     }
     
     else 
     {
-        NSLog(@"entry DOES NOT exist, DO! load, :%@", articleId);
+        DBLog(@"entry DOES NOT exist, DO! load, :%@", articleId);
         self.nextDetailViewController.currentArticleId = articleId;
         self.nextDetailViewController.didLoadContentForRemoteArticle = NO;
         self.nextDetailViewController.isShowingArticleFromLocalDatabase = NO;
@@ -1543,7 +1543,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"DETAIL encodedString go: %@",encodedString);
+    DBLog(@"DETAIL encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -1554,7 +1554,7 @@
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    NSLog(@"requestStarted");
+    DBLog(@"requestStarted");
     
 }
 
@@ -1564,7 +1564,7 @@
     _isLoadingCurrentArticle = NO;
     
     
-    NSLog(@"[request responseString]: %@", [request responseString]);
+    DBLog(@"[request responseString]: %@", [request responseString]);
     
 #warning todo: handle errors
     [self.importer importJSONStringForSingleArticle:[request responseString]];    
@@ -1573,7 +1573,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
 #warning TODO: do something with the request
-    NSLog(@"requestFailed");
+    DBLog(@"requestFailed");
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
@@ -1587,7 +1587,7 @@
 
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer
 {
-    NSLog(@"importerDidStartParsingSingleArticle");
+    DBLog(@"importerDidStartParsingSingleArticle");
 }
 
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
@@ -1608,7 +1608,7 @@
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {
-    NSLog(@"didFailParsingSingleArticleWithDictionary");
+    DBLog(@"didFailParsingSingleArticleWithDictionary");
     
 #warning TODO: stop showing loading view and return to the master view controlle
 }
@@ -1687,6 +1687,6 @@
     MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoUrl];        
     [self presentMoviePlayerViewControllerAnimated:moviePlayerViewController];
     
-    NSLog(@"start playing video: %@", videoUrl);
+    DBLog(@"start playing video: %@", videoUrl);
 }
 @end

@@ -47,7 +47,7 @@
 -(void)setLastUpdateDate:(NSDate*)date forCategoryId:(NSString*)categoryId
 {
     if (categoryId==nil) {
-        NSLog(@"setLastUpdateDate You are trying to set the last update date for a nil categoryId, exiting method");
+        DBLog(@"setLastUpdateDate You are trying to set the last update date for a nil categoryId, exiting method");
         return;
     }
     
@@ -111,7 +111,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (categoryId==nil || date==nil) {
-        NSLog(@"setDateForLeastRecentArticle: You are trying to set the date for least recent article a nil categoryIdor date, exiting function");
+        DBLog(@"setDateForLeastRecentArticle: You are trying to set the date for least recent article a nil categoryIdor date, exiting function");
         return;
     }
     
@@ -169,7 +169,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (articleId==nil) {
-        NSLog(@"setIsBlogEntry: You are trying to set the favourite state of nil articleId");
+        DBLog(@"setIsBlogEntry: You are trying to set the favourite state of nil articleId");
         return;
     }
     

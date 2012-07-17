@@ -14,6 +14,7 @@
 //some preprocessor commans
 #define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
 #define LOG_CURRENT_FUNCTION_AND_CLASS() NSLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+#define DBLog(message, ...) NSLog((@"DBLog: %s [Line %d]" message), __PRETTY_FUNCTION__, __LINE__, ## __VA_ARGS__)
 
 //################################################################################
 //update cycles

@@ -28,7 +28,7 @@
 }
 -(void) changeNavigationBar
 {
-    NSLog(@"changeNavigationBar");
+    DBLog(@"changeNavigationBar");
 }
 
 

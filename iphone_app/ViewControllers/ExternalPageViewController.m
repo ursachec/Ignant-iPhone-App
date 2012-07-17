@@ -48,7 +48,7 @@
 
 -(void)openURL:(NSURL*)url
 {    
-    NSLog(@"openURL");
+    DBLog(@"openURL");
     NSURLRequest* req = [[NSURLRequest alloc] initWithURL:url];
     [self.externalPageWebView loadRequest:req];
 }
@@ -57,17 +57,17 @@
 #pragma mark - uiwebview delegate
 -(void)webViewDidStartLoad:(UIWebView *)webView
 {
-    NSLog(@"webViewDidStartLoad");
+    DBLog(@"webViewDidStartLoad");
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    NSLog(@"didFinishLoad");
+    DBLog(@"didFinishLoad");
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    NSLog(@"didFailLoadWithError");
+    DBLog(@"didFailLoadWithError");
 }
 
 @end

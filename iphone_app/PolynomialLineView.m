@@ -27,8 +27,6 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    NSLog(@"overwridden drawRect");
-    
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     CGRect contentRect = self.bounds;

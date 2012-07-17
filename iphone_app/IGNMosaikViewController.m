@@ -129,7 +129,7 @@ NSString * const kImageFilename = @"filename";
 -(IBAction)handleBack:(id)sender
 {
     
-    NSLog(@"handleBack!!!");
+    DBLog(@"handleBack!!!");
     
     
     if (self.viewControllerToReturnTo) {
@@ -137,7 +137,7 @@ NSString * const kImageFilename = @"filename";
     }
     else {
         
-        NSLog(@"WARNING! viewControllerToReturnTo not found");
+        DBLog(@"WARNING! viewControllerToReturnTo not found");
         [self.appDelegate.navigationController popToRootViewControllerAnimated:YES];
     }
     
@@ -163,13 +163,13 @@ NSString * const kImageFilename = @"filename";
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages) {
-        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
+        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
         [self loadMoreMosaicImages];
     }
     else {
-        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
     
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
@@ -237,7 +237,7 @@ NSString * const kImageFilename = @"filename";
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"LOAD MORE MOSAIK encodedString go: %@",encodedString);
+    DBLog(@"LOAD MORE MOSAIK encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -257,7 +257,7 @@ NSString * const kImageFilename = @"filename";
     NSString* fullPath = [DIRECTORY_FOR_MOSAIC_IMAGES_FILE stringByAppendingPathComponent:filenameForMosaicImagesPlist];
     if (![imagesDictionary writeToFile:fullPath atomically:NO])
     {
-        NSLog(@"didNOTWriteToFile");
+        DBLog(@"didNOTWriteToFile");
 #warning TODO: do something in case the mosaic images couldn't be saved to file
     }
 }
@@ -280,7 +280,7 @@ NSString * const kImageFilename = @"filename";
     NSString* fullPath = [DIRECTORY_FOR_MOSAIC_IMAGES_FILE stringByAppendingPathComponent:filenameForMosaicImagesPlist];
     if (![imagesDictionary writeToFile:fullPath atomically:NO])
     {
-        NSLog(@"didNOTWriteToFile");
+        DBLog(@"didNOTWriteToFile");
 #warning TODO: do something in case the mosaic images couldn't be saved to file
     }
 }
@@ -538,7 +538,7 @@ NSString * const kImageFilename = @"filename";
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"MOSAIC: requestFailed");
+    DBLog(@"MOSAIC: requestFailed");
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
@@ -598,7 +598,7 @@ NSString * const kImageFilename = @"filename";
 
 -(void)triggerActionForDoubleTapInView:(MosaicView*)view
 {
-    NSLog(@"double tap in view");
+    DBLog(@"double tap in view");
     
     [self toggleShowSpecificNavigationBarAnimated:YES];
     [self toggleShowSpecificToolbar];
@@ -606,7 +606,7 @@ NSString * const kImageFilename = @"filename";
 
 -(void)triggerActionForTapInView:(MosaicView*)view
 {
-    NSLog(@"tap in view");
+    DBLog(@"tap in view");
     
     [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
@@ -629,7 +629,7 @@ NSString * const kImageFilename = @"filename";
 
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId
 {
-    NSLog(@"transitionToDetailViewControllerForArticleId: %@", articleId);
+    DBLog(@"transitionToDetailViewControllerForArticleId: %@", articleId);
     
     //blog entry to be shown is set, show the view controller loading the article data
     if (!self.detailViewController) {
@@ -721,11 +721,11 @@ NSString * const kImageFilename = @"filename";
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if (lastUpdateInSeconds<updateTimer) {
-        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
 //        [self loadLatestTumblrArticles];
     }
     else {
-        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
 }
 

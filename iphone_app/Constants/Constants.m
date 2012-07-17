@@ -8,6 +8,9 @@
 
 #import "Constants.h"
 
+
+
+
 //WARNING! (because of slappy programming) don't change the index to be other than -1, app crashes when navigating in the detailviewcontroller to the last index
 int const kInvalidBlogEntryIndex = -1;
 

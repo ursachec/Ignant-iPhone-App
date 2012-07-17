@@ -88,7 +88,7 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
                                           label:recepient
                                           value:10
                                       withError:&error]) {
-        NSLog(@"Error: %@", error);
+        DBLog(@"Error: %@", error);
     }
     
     

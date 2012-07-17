@@ -219,8 +219,8 @@ static const NSUInteger kImportBatchSize = 5;
     
     
     
-    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
-    NSLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    DBLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
+    DBLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
@@ -273,7 +273,7 @@ static const NSUInteger kImportBatchSize = 5;
     
     //----------------------------------------------------
     //IMPORT ARTICLES
-    NSLog(@"importing articles...");
+    DBLog(@"importing articles...");
     
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
@@ -281,19 +281,19 @@ static const NSUInteger kImportBatchSize = 5;
         [self importOneArticleFromDictionary:oneArticle];
     }
     
-    NSLog(@"saving articles to the insertion context...");
+    DBLog(@"saving articles to the insertion context...");
     savedOk = [self.insertionContext save:&saveError];
     if (saveError==nil) {
-        NSLog(@"saved articles to the insertion context...");
+        DBLog(@"saved articles to the insertion context...");
     }
     else {
-        NSLog(@"failed to save articles to insertion context. error: %@", saveError);
+        DBLog(@"failed to save articles to insertion context. error: %@", saveError);
     }
     
-    NSLog(@"finished importing articles");
+    DBLog(@"finished importing articles");
     
-    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
-    NSLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    DBLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
+    DBLog(@"importJSONWithMorePosts __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:newManagedObjectContext];
@@ -388,13 +388,13 @@ static const NSUInteger kImportBatchSize = 5;
     }
     else 
     {
-        NSLog(@"did not save or publishing date is nil");
+        DBLog(@"did not save or publishing date is nil");
     }
     
     
-    NSLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
+    DBLog(@"self.lastImportDateForMainPageArticle: %@", self.lastImportDateForMainPageArticle);
     
-    NSLog(@"importJSONString __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
+    DBLog(@"importJSONString __onecall_didFinishImportingData: savedOk: %@", savedOk ? @"TRUE" : @"FALSE");
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
@@ -468,7 +468,7 @@ static const NSUInteger kImportBatchSize = 5;
     [checkRequest setPredicate:[NSPredicate predicateWithFormat:@"articleId == %@", blogEntryArticleId]];
     
     
-    NSLog(@"executing fetch request...");
+    DBLog(@"executing fetch request...");
     
     NSError *error = nil;
     NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
@@ -477,7 +477,7 @@ static const NSUInteger kImportBatchSize = 5;
         //rewrite logic can be implemented here
         if ([result count]>0) {
             BlogEntry* entry = (BlogEntry*)[result objectAtIndex:0];
-            NSLog(@"found entry, skipping it: %@",entry.title);
+            DBLog(@"found entry, skipping it: %@",entry.title);
             
             blogEntriesToBeSaved--;
             
@@ -486,7 +486,7 @@ static const NSUInteger kImportBatchSize = 5;
     }
     else {
 #warning handle fetch error
-        NSLog(@"error is not nil this should be handled");
+        DBLog(@"error is not nil this should be handled");
     }
     
     
@@ -573,25 +573,25 @@ static const NSUInteger kImportBatchSize = 5;
     NSDictionary *dictionaryFromJSON = [parser objectWithString:jsonString error:nil];
     NSArray *tumblrPostsArray = [dictionaryFromJSON objectForKey:kTLPosts];
     
-    NSLog(@"starting importing tumblr posts...");
+    DBLog(@"starting importing tumblr posts...");
     for (NSDictionary* oneTumblrPost in tumblrPostsArray) {
         [self importOneTumblrPostFromDictionary:oneTumblrPost];
     }
-    NSLog(@"finished importing tumblr posts.");
+    DBLog(@"finished importing tumblr posts.");
     
     BOOL savedOk = NO;
     NSError *saveError = nil;
     
     
-    NSLog(@"trying to save changes to the context...");
+    DBLog(@"trying to save changes to the context...");
     //try to save the context with the imported articles
     savedOk = [self.insertionContext save:&saveError];
     
     if (savedOk) {
-        NSLog(@"SUCCESS: finished saving changes to the context.");
+        DBLog(@"SUCCESS: finished saving changes to the context.");
     }
     else {
-        NSLog(@"ERROR: could not save changes to the context");
+        DBLog(@"ERROR: could not save changes to the context");
     }
     
     
@@ -633,14 +633,14 @@ static const NSUInteger kImportBatchSize = 5;
         //rewrite logic can be implemented here
         if ([result count]>0) {
             TumblrEntry* entry = (TumblrEntry*)[result objectAtIndex:0];
-            NSLog(@"skipping found tumblr entry: %@",entry.publishingDate);
+            DBLog(@"skipping found tumblr entry: %@",entry.publishingDate);
             
             return;
         }
     }
     else {
 #warning handle fetch error
-        NSLog(@"error is not nil this should be handled");
+        DBLog(@"error is not nil this should be handled");
     }
     
     //save to current date for least recent tumblr entry
@@ -648,7 +648,7 @@ static const NSUInteger kImportBatchSize = 5;
         self.currentDateForLeastRecentTumblrEntry = tumblrEntryPublishingDate;
     
     
-    NSLog(@"importing tumblrEntryUrl: %@, oneTumblrPost: %@", tumblrEntryUrl, oneTumblrPost);
+    DBLog(@"importing tumblrEntryUrl: %@, oneTumblrPost: %@", tumblrEntryUrl, oneTumblrPost);
     self.currentTumblrEntry = nil;
     self.currentTumblrEntry.imageUrl = tumblrEntryUrl;
     self.currentTumblrEntry.publishingDate = tumblrEntryPublishingDate;
@@ -724,7 +724,7 @@ static const NSUInteger kImportBatchSize = 5;
     }
     else {
         #warning handle fetch error
-        NSLog(@"error is not nil this should be handled");
+        DBLog(@"error is not nil this should be handled");
     }
 
     return entry;

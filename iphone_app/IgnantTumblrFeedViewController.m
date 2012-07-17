@@ -163,11 +163,11 @@
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if (lastUpdateInSeconds<updateTimer) {
-        NSLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
         [self loadLatestTumblrArticles];
     }
     else {
-        NSLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
 }
 
@@ -328,7 +328,7 @@
     if (_isLoadingMoreTumblr) return;
     _isLoadingMoreTumblr = YES;
     
-    NSLog(@"loadMoreTumblrArticles");
+    DBLog(@"loadMoreTumblrArticles");
     
     _numberOfActiveRequests++;
     
@@ -339,7 +339,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"LOAD MORE TUMBLR encodedString go: %@",encodedString);
+    DBLog(@"LOAD MORE TUMBLR encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -355,7 +355,7 @@
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    NSLog(@"LOAD LATEST TUMBLR encodedString go: %@",encodedString);
+    DBLog(@"LOAD LATEST TUMBLR encodedString go: %@",encodedString);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
@@ -490,7 +490,7 @@
          
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    DBLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
     
@@ -516,7 +516,7 @@
 -(void)didStartImportingData
 {
     LOG_CURRENT_FUNCTION()
-    NSLog(@"tumblrFeed didStartImportingData");
+    DBLog(@"tumblrFeed didStartImportingData");
     
 
     
@@ -526,7 +526,7 @@
 -(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION() 
-    NSLog(@"tumblrFeed didStartImportingData");
+    DBLog(@"tumblrFeed didStartImportingData");
     
     
     
