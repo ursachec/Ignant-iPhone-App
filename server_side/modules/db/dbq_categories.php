@@ -45,16 +45,16 @@ function getExcludedCategories()
 {
 	//Arcademi 862
 	//Aicuisine 869
-	//Allgemein 1 - ok
-	//Other 7 
-	//Fil-in 857
-	//Behind the blog 855
-	//Interview 858
+	//Allgemein 1 - ok -- 
+	//Other 7 --
+	//Fil-in 857 --
+	//Behind the blog 855 --
+	//Interview 858 --
 	//Video 861
 	//Monifaktur 860
 	//Daily Basics 868
 	
-	$categories = array(1,7,862,857,855,858, 861, 860, 868, 869);
+	$categories = array(1,7,862,857,855,858, 860, 868, 869);
 	return $categories;
 }
 
@@ -104,5 +104,6 @@ function fetchIgnantCategories($con = null)
 	
 	return $categories;
 }
+
 
 ?>
