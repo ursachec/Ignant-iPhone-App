@@ -62,10 +62,10 @@ NSString * const kFKArticleRemoteImages = @"remoteImages";
 NSString * const kFKArticleNumberOfViews = @"numberOfViews";
 NSString * const kFKArticleWebLink = @"webLink";
 NSString * const kFKArticleShowOnHomeCategory = @"shouldShowOnHomeCategory";
+NSString * const kFKArticleVideoEmbedCode = @"videoEmbedCode";
 
 NSString * const kFKArticleCategoryId = @"categoryId";
 NSString * const kFKArticleCategoryName = @"categoryName";
-
 
 NSString * const kFKArticleCategory = @"rCategory";
 NSString * const kFKArticleTemplate = @"rTemplate";

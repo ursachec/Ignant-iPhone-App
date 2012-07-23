@@ -125,6 +125,8 @@
 @synthesize thirdRelatedArticleId = _thirdRelatedArticleId;
 
 @synthesize relatedArticlesTitleLabel = _relatedArticlesTitleLabel;
+@synthesize articleVideoView = _articleVideoView;
+@synthesize articleVideoWebView = _articleVideoWebView;
 @synthesize didLoadContentForRemoteArticle = _didLoadContentForRemoteArticle;
 
 @synthesize currentArticleId, relatedArticlesIds;
@@ -253,6 +255,8 @@
    
     [self setToggleLikeButton:nil];
     [self setRelatedArticlesTitleLabel:nil];
+    [self setArticleVideoView:nil];
+    [self setArticleVideoWebView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -552,16 +556,8 @@
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
 	
 	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-		NSURL *url = [request URL];	
-		DBLog(@"url is: %@ ", url);
-        
-        
+		NSURL *url = [request URL];        
         [self showLinkOptions:url];
-        
-        //                 [[UIApplication sharedApplication] openURL:url];
-        //        [self presentModalViewController:self.appDelegate.externalPageViewController animated:YES];
-        //        [self.appDelegate.externalPageViewController openURL:url];
-        
         return NO;
 	}
     
@@ -571,7 +567,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
-#define PADDING_BOTTOM 0.0f
+#define WEBVIEW_PADDING_BOTTOM 0.0f
     
     //get the content size of the webview
     CGRect frame = aWebView.frame;
@@ -605,7 +601,7 @@
     [self.contentScrollView addSubview:self.relatedArticlesView];
     
     //set up the scrollView's final contentSize
-    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + PADDING_BOTTOM);
+    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + WEBVIEW_PADDING_BOTTOM);
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
     
     //set up the scrollView's final contentSize
@@ -623,7 +619,6 @@
     _linkOptionsUrl = url;
     
     UIActionSheet *linkActionSheet = nil;
-        
     linkActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                   delegate:self 
                                          cancelButtonTitle:NSLocalizedString(@"actionsheet_link_cancel", @"Title for the 'Cancel' button in the actionsheet when tapping on a link in the DetailVC") 
@@ -714,9 +709,9 @@
                                   descriptionText:[self.blogEntry descriptionText]  
                                   relatedArticles:[self.blogEntry relatedArticles]   
                                      remoteImages:[self.blogEntry remoteImages] 
-                                      publishDate:[self.blogEntry publishingDate]];
-    
-    return;  
+                                      publishDate:[self.blogEntry publishingDate]
+                                   videoEmbedCode:[self.blogEntry videoEmbedCode]];
+    return;
 }
 
 
@@ -724,7 +719,6 @@
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-#define PADDING_BOTTOM 5.0f
     [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
     
     //if article still needs to be loaded, show loading view
@@ -743,7 +737,8 @@
     else 
     {    
         //show loading view only for specific blog entry templates
-        if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
+        if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame
+            || [self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame) {
             [self setIsLoadingViewHidden:NO];
         }
         
@@ -764,31 +759,37 @@
     if ([self.blogEntry.tempate compare:kFKArticleTemplateDefault]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
+        [self.articleVideoView removeFromSuperview];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.articleContentView addSubview:self.playVideoButton];
+        [self.articleVideoView removeFromSuperview];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
+        [self.articleVideoView removeFromSuperview];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.articleContentView addSubview:self.playVideoButton];
+        [self.articleContentView addSubview:self.articleVideoView];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
+        [self.articleVideoView removeFromSuperview];
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateItravel]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
+        [self.articleVideoView removeFromSuperview];
     }
 }
 
@@ -828,39 +829,56 @@
                                relatedArticles:(NSArray*)relatedArticles
                                   remoteImages:(NSArray*)remoteImages
                                    publishDate:(NSDate*)publishDate
+                                videoEmbedCode:(NSString*)videoEmbedCode
 {
 #define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
 #define SHOW_DEBUG_COLORS false
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    LOG_CURRENT_FUNCTION()
-    
+        LOG_CURRENT_FUNCTION()
+        
     self.currentArticleId = articleID;
     self.articleTitle = title;
     self.articleWeblink = articleWebLink;
     self.articleDescription = descriptionText;
     self.remoteImagesArray = [NSArray arrayWithArray:remoteImages];
     
-    CGSize finalSizeForArticleContentView = CGSizeMake(0, 0); 
+    CGSize finalSizeForArticleContentView = CGSizeMake(0, 0);
     CGFloat contentViewWidth = 320.0f;
     CGRect tempRect = CGRectMake(0, 0, 0, 0);
     CGSize tempSize = CGSizeMake(0, 0);
     
-    //TODO: something
-    //set up the blog entry imageview
-//    /////////////////////////// handle the thumb image image
+    if ([videoEmbedCode length]>0) {
+        
+        CGFloat videoWidth = 950.0f;
+        CGFloat videoHeight = 534.0f;
+        CGFloat videoNewWidth = 310.0f;
+        CGFloat videoNewHeight = videoNewWidth*videoHeight/videoWidth;
+        NSString* videoDescriptionText = [NSString stringWithFormat:@"<html><head><title></title><style type='text/css'>*{ padding:0; margin:0; }</style></head><body><div style=\"width:%fpx; height:%fpx;\">%@</div></body></html>", videoNewWidth, videoNewHeight, videoEmbedCode];
+        [self.articleVideoWebView loadHTMLString:videoDescriptionText baseURL:nil];
+        CGRect oldFrame = self.articleVideoView.frame;
+        self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
+        
+    }
+    
+    //only load the article image if no video content set
+    else
+    {
+        //set up the blog entry imageview
+        //    /////////////////////////// handle the thumb image image
 #warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
-    
-    __block NSURL* blockThumbURL = [self currentImageThumbURL];
-    [self.entryImageView setImageWithURL:blockThumbURL
-                        placeholderImage:nil 
-                                 success:^(UIImage* image){
-                                     DBLog(@"big image loaded _entryImageView: %@", blockThumbURL);
-                                 } 
-                                 failure:^(NSError* aError){
-                                     DBLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
-                                 }];
+        
+        __block NSURL* blockThumbURL = [self currentImageThumbURL];
+        [self.entryImageView setImageWithURL:blockThumbURL
+                            placeholderImage:nil
+                                     success:^(UIImage* image){
+                                         DBLog(@"big image loaded _entryImageView: %@", blockThumbURL);
+                                     }
+                                     failure:^(NSError* aError){
+                                         DBLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
+                                     }];
+    }
     
     //add the imageViewSize to the finalSizeForArticleContentView
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
@@ -1083,6 +1101,7 @@
     NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
     NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
     NSString *remoteContentArticleDescriptionText = [articleDictionary objectForKey:kFKArticleDescriptionText];
+    NSString *remoteContentArticleVideoEmbedCode = [articleDictionary objectForKey:kFKArticleVideoEmbedCode];
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
     id unconvertedBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
@@ -1107,8 +1126,9 @@
                                   descriptionText:remoteContentArticleDescriptionText
                                   relatedArticles:remoteContentRelatedArticles
                                      remoteImages:remoteContentRemoteImages
-                                      publishDate:fDate];
-    return;    
+                                      publishDate:fDate
+                                   videoEmbedCode:remoteContentArticleVideoEmbedCode];
+    return;
 }
 
 #pragma mark - picture slideshow
@@ -1230,15 +1250,19 @@
 #pragma mark - social media
 -(void)postToFacebook
 {
-    //initialize facebook in case not yet done
-    [self.appDelegate initializeFacebook];
-    
-    //get details for current selected blogentry
-    BlogEntry* currentBlogEntry = self.blogEntry;
+    if (![self.appDelegate.facebook isSessionValid]) {
+        NSLog(@"facebook: session NOT valid");
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"user_likes",
+                                @"read_stream",
+                                nil];
+        [self.appDelegate.facebook authorize:permissions];
+        return;
+    }
     
 #warning add the relevant live information
     
-    NSURL* infoLinkToArticleMainPage = self.articleWeblink;
+    NSString* infoLinkToArticleMainPage = [self.articleWeblink absoluteString];
     NSString* infoNameOfArticle = self.articleTitle;
     NSString* infoDescriptionForArticle = self.articleDescription;
     NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
@@ -1246,9 +1270,10 @@
     
     //IDEA: as an improvement, add server-side script to create small thumbs specific for the facebook app
     //REBUTAL: no, you shouldn't, because the article may be posted on the facebook wall where it is important to have some quality in the picture
-    NSString* infoLinkToThumbForArticle = @"http://www.ignant.de/wp-content/uploads/2012/06/housec_pre2.jpg";
-    NSString* infoCaptionForArticle = @"";
+    NSString* infoLinkToThumbForArticle = [[self currentImageThumbURL] absoluteString];
+    DBLog(@"infoLinkToThumbForArticle: %@", infoLinkToThumbForArticle);
     
+    NSString* infoCaptionForArticle = @"";
     
     //show the facebok dialogue for posting to wall
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -1261,6 +1286,7 @@
                                    nil];
     
     [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
+    
     
     NSError* error = nil;
     if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
@@ -1298,14 +1324,12 @@
         
 #warning TODO: if link not set, dismiss and show error (or something)
        
-        __block __typeof__(self) blockSelf = self;
         
+        __block __typeof__(self) blockSelf = self;
         NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog", blockSelf.articleTitle, blockSelf.articleWeblink];
         
         TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
-        [tweetVC setInitialText:tweet];
-//        [tweetVC addImage:self.entryImageView.image];
-        
+        [tweetVC setInitialText:tweet];        
         [tweetVC setCompletionHandler:^(TWTweetComposeViewControllerResult result){
             NSString* output;
             
@@ -1334,13 +1358,9 @@
                 default:
                     break;
             }
-        
-            
-            DBLog(@"output: %@", output);
             
             //dismiss the tweet composition view controller modally
             [blockSelf dismissModalViewControllerAnimated:YES];
-        
         }];
         
         
@@ -1446,13 +1466,11 @@
     [self updateToggleLikeButtonTitle];
 }
 
-#pragma mark - related articles
 -(void)showRelatedArticle:(id)sender
 {
     NSString *articleId = nil;
     
-    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);
-    
+    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);    
     
     if ([sender tag] == kFirstRelatedArticleTag)
     {
@@ -1478,8 +1496,6 @@
     
     DBLog(@"articleId: %@", articleId);
     
-    
-    
     BlogEntry* entry = nil;
     entry = [self.importer blogEntryWithId:articleId];
     BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
@@ -1487,14 +1503,12 @@
     //check for the internet connection 
     if(shouldLoadBlogEntryFromRemoteServer && ![self.appDelegate checkIfAppOnline])
     {
-#warning TODO: show this in a better way
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
                                                      message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
                                                     delegate:self 
                                            cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
                                            otherButtonTitles:nil];
         [av show];
-        
         return;
     }
     
@@ -1505,7 +1519,6 @@
     
     DBLog(@"articleIdChosen: %@", articleId);
     self.nextDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
-    
     
     if(entry)
     {
@@ -1563,7 +1576,6 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
     
-    
     DBLog(@"[request responseString]: %@", [request responseString]);
     
 #warning todo: handle errors
@@ -1572,7 +1584,6 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-#warning TODO: do something with the request
     DBLog(@"requestFailed");
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -1602,7 +1613,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
         [self configureView];
-        [self setIsLoadingViewHidden:YES];
+//        [self setIsLoadingViewHidden:YES];
     });
 }
 
@@ -1650,8 +1661,6 @@
 
 #pragma mark - swipe UIGestureRecognizer
 
-
-
 - (IBAction)handleRightSwipe:(id)sender 
 {
     LOG_CURRENT_FUNCTION()
@@ -1689,4 +1698,5 @@
     
     DBLog(@"start playing video: %@", videoUrl);
 }
+
 @end

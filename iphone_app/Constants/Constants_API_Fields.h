@@ -61,6 +61,7 @@ extern NSString * const kFKArticleDescriptionText;
 extern NSString * const kFKArticleDescriptionRichText;
 extern NSString * const kFKArticleImages;
 extern NSString * const kFKArticleRelatedArticles;
+extern NSString * const kFKArticleVideoEmbedCode;
 
 //template types
 extern NSString * const kFKArticleTemplateDefault;

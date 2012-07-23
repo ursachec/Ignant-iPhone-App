@@ -16,10 +16,12 @@
 
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate>
+@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
 @property (retain, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
+@property (retain, nonatomic) IBOutlet UIView *articleVideoView;
+@property (retain, nonatomic) IBOutlet UIWebView *articleVideoWebView;
 
 @property(nonatomic, unsafe_unretained) BOOL didLoadContentForRemoteArticle;
 @property(nonatomic, unsafe_unretained) BOOL isShowingArticleFromLocalDatabase; 
