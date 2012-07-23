@@ -302,6 +302,58 @@ Maureen Drennan interessiert weniger das Abbild des Farmers als Profiteur dieses
 
 <small><p style="text-align: center">All images © <a href="http://www.maureendrennan.net/">Maureen Drennan</a></small>';
 
+$sSpecificArticleWeAreNature = '<!--:de-->Der Fotograf <a href="http://www.christofferrelander.com/">Christoffer Relander</a> veröffentlichte gerade seine neuste Fotoserie unter dem Namen \'We Are Nature\'. Christoffer ist Grafik Designer und fotografischer Autodidakt aus Finnland, Raseborg. Im Sommer 2009 begann er zu fotografieren und hat seitdem einen ganz eigenen Stil entwickelt, viel experimentiert, an zahlreichen Ausschreibungen teilgenommen sowie eigene Projekte verfolgt. <!--:--><!--:en-->Photographer <a href="http://www.christofferrelander.com/">Christoffer Relander</a> just finished a new series of photograps called \'We Are Nature\'. Christoffer is graphic designer and self-taught photographer from Finland, Raseborg. He started photographing the summer of 2009. Since then he has been doing assignments and a lot of personal projects. <!--:--><!--more--><!--:de-->Die Serie \'We Are Nature\' zeigt doppel- und dreifach Überblendungen, die alle in der Kamera selbst, einer Nikon D700 entstanden sind. Christoffer legt die Silhouetten verschiedener Personen über Motive aus der Natur und erschafft damit seine Serie in einem schlichten aber wunderschönen schwarz-weiß Stil. 
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature01.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature02.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature03.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature04.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature05.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature06.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature07.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature08.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature09.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature10.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature11.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature12.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature13.jpeg"  />
+
+<p style="text-align: center;"><small>All images © <a href="http://www.christofferrelander.com/">Christoffer Relander</a> | Via: <a href="http://illusion.scene360.com/art/31154/blending-into-nature/">Illusion</a></small></p><!--:--><!--:en-->In his latest series he is developping his double and triple exposures that are all done in-camera with a Nikon D700. He is blending different people with nature photography in a simple but beautiful black and white style. 
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature01.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature02.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature03.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature04.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature06.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature07.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature08.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature10.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature12.jpeg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nature13.jpeg"  />
+
+<p style="text-align: center;"><small>All images © <a href="http://www.christofferrelander.com/">Christoffer Relander</a> | Via: <a href="http://illusion.scene360.com/art/31154/blending-into-nature/">Illusion</a></small></p><!--:-->';
+
 $sDummy = '<!--:de-->DeutsCH <img src="www.google.at" /><p>asdsadasdassad</p><!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCHDEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
 
 
@@ -309,12 +361,18 @@ header('Content-type: text/plain');
 	
 	
 	
-// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation
+// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature
 
 $lang = $_GET['lang'];
 
-// $resS = descriptionForLanguage($sDummy, $lang);
-// print $resS;
+$resS = descriptionForLanguage($sSpecificArticleWeAreNature, $lang);
+print $resS;
+
+function bloatedPrint($s)
+{
+	return;
+	print "\n".$s."\n";
+}
 
 function descriptionForLanguage($str, $language)
 {
@@ -339,14 +397,14 @@ function descriptionForLanguage($str, $language)
 	//prepare the more string
 	if( $containsMoreString )
 	{		
-		$mS = preg_match("/(<!--more-->(.*)$)/ismU", $str, $moreResults);
-		$moreString = $moreResults[2];	
+		$mS = preg_match("/<!--more-->(.*)/is", $str, $moreResults);
+		$moreString = $moreResults[1];	
 		$finalMoreString = $moreString;
-		
+				
 		if( strstr($moreString, $needleEN)!==FALSE || strstr($moreString, $needleDE)!==FALSE )
-		{
+		{					
 			preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $moreString, $results);
-			$finalMoreString = $results[2];
+			$finalMoreString = $results[2];			
 		}
 	}
 	
@@ -424,8 +482,22 @@ function descriptionForLanguageUnitTests()
 	print "\n<br />testsPassed: ".(int)$testsPassed." // testsFailed: ".(int)$testsFailed." <br />\n";
 }
 
-descriptionForLanguageUnitTests();
+// descriptionForLanguageUnitTests();
 
+
+function prepareVideoEmbedCode($embedCode)
+{
+	if($embedCode==null || strlen($embedCode)==0)
+		return '';
+	
+	$str = '';
+	$str = preg_replace('/width=["\'][0-9]*["\']/si', "width=\"310\"", $embedCode);
+	$str = preg_replace('/height=["\'][0-9]*["\']/si', "height=\"202\"", $str);
+	return $str;
+}
+
+// $postVideoEmbedCode = '<iframe src="http://player.vimeo.com/video/40005142?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="950" height="545" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+// print "\n mobile: ".prepareVideoEmbedCode($postVideoEmbedCode);
 
 
 ?>

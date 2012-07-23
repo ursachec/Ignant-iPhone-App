@@ -28,7 +28,6 @@ SELECT * FROM wp_posts WHERE ID = 11187 AND post_date > '2011-1-1'
 
 SELECT * FROM wp_posts WHERE ID = 29938
 
-
 */
 
 define('POSTS_DATE_AFTER','2011-5-5');
@@ -74,9 +73,13 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	
 	$postCategory = new Category($p['category_id'], $p['category_name'],'');
 	$postTemplate = getArticleTemplateForCategoryId($postCategory->id);
-	$postUrl = 'http://www.google.de';
+	$postUrl = $p['post_url'];
+	
+	// $postVideoEmbedCode = '<iframe src="http://player.vimeo.com/video/40005142?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="310" height="202" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 
-	 $lightArticle = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, 	$postRemoteImages, $postRelatedArticles, $postCategory, $postUrl); 
+	$postVideoEmbedCode = prepareVideoEmbedCode($p['video']);
+	
+	 $lightArticle = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, 	$postRemoteImages, $postRelatedArticles, $postCategory, $postUrl, $postVideoEmbedCode); 
 	
 	return $lightArticle;
 }
@@ -91,12 +94,13 @@ function fetchArticleWithId($articleId = 0, $dbh = null)
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT 
-	pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`post_content` AS 'post_content', 
-	tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name' 
+	pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`guid` AS 'post_url', pt.`post_content` AS 'post_content', 
+	tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name', wpm.`meta_value` AS 'video'
 	FROM wp_posts AS pt 
 	LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
 	LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 	LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
+	LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
 	WHERE pt.`post_status` = 'publish'
 	AND pt.`post_type` = 'post'
 	AND pt.`post_parent` = 0
@@ -141,12 +145,13 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 	{	
 		
 		$qString = "SELECT 
-		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`post_content` AS 'post_content', 
-		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name' 
+		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`guid` AS 'post_url', pt.`post_content` AS 'post_content', 
+		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name', wpm.`meta_value` AS 'video'
 		FROM wp_posts AS pt 
 		LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
+		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
@@ -164,12 +169,13 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 	else
 	{
 		$qString = "SELECT 
-		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`post_content` AS 'post_content', 
-		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name' 
+		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`guid` AS 'post_url', pt.`post_content` AS 'post_content', 
+		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name', wpm.`meta_value` AS 'video'
 		FROM wp_posts AS pt 
 		LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
+		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_parent` = 0
 		AND pt.`post_type` = 'post' 
@@ -224,14 +230,17 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 		
 		$postCategory = new Category($p['category_id'], $p['category_name'],'');
 		$postTemplate = getArticleTemplateForCategoryId($postCategory->id);
-		$postUrl = 'http://www.google.de';
+		$postUrl = $p['post_url'];
+					
+		$postVideoEmbedCode = prepareVideoEmbedCode($p['video']);
+			
 		
 		if(strlen($postTitle) == 0)
 		{	
 			continue;
 		}
 				
-		 $lightArticles[] = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, $postRemoteImages, $postRelatedArticles, $postCategory, $postUrl); 
+		 $lightArticles[] = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, $postRemoteImages, $postRelatedArticles, $postCategory, $postUrl, $postVideoEmbedCode); 
 	}
 	
 	// $after = microtime(true);
@@ -284,12 +293,13 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT 
-		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`post_content` AS 'post_content', 
-		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name' 
+		pt.`post_name`, pt.`id`, pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`guid` AS 'post_url', pt.`post_content` AS 'post_content', 
+		tr.`term_taxonomy_id` AS 'category_id', wt.`name` AS 'category_name', wpm.`meta_value` AS 'video'
 		FROM wp_posts AS pt 
 		LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
+		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
@@ -382,14 +392,14 @@ function descriptionForLanguage($str, $language)
 	//prepare the more string
 	if( $containsMoreString )
 	{		
-		$mS = preg_match("/(<!--more-->(.*)$)/ismU", $str, $moreResults);
-		$moreString = $moreResults[2];	
+		$mS = preg_match("/<!--more-->(.*)/is", $str, $moreResults);
+		$moreString = $moreResults[1];	
 		$finalMoreString = $moreString;
-		
+				
 		if( strstr($moreString, $needleEN)!==FALSE || strstr($moreString, $needleDE)!==FALSE )
-		{
+		{					
 			preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $moreString, $results);
-			$finalMoreString = $results[2];
+			$finalMoreString = $results[2];			
 		}
 	}
 	
@@ -418,12 +428,30 @@ function descriptionForLanguage($str, $language)
 	return $finalString;
 }
 
+function removeLastParagraph($s)
+{
+	$str = "";
+	$str = preg_replace('/<p.*\/p>$/si', "", $s);
+	return $str;	
+}
+
 function removeImgTags($string)
 {
 	$str = "";
 	// $str = preg_replace('/<img.*<\/p>/si', "", $string);
 	$str = preg_replace('/<img.*\/>/si', "", $string);
 	
+	return $str;
+}
+
+function prepareVideoEmbedCode($embedCode)
+{
+	if($embedCode==null || strlen($embedCode)==0)
+		return '';
+	
+	$str = '';
+	$str = preg_replace('/width=["\'][0-9]*["\']/si', "width=\"310\"", $embedCode);
+	$str = preg_replace('/height=["\'][0-9]*["\']/si', "height=\"202\"", $str);
 	return $str;
 }
 

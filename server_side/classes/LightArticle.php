@@ -12,11 +12,12 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 	public $isArticleForHomeCategory;
 	public $remoteImages;
 	public $relatedArticles;
+	public $videoEmbedCode;
 	
 	public $rCategory;
 	public $webLink;
 	
-	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleThumbImage=null,$pArticleTemplate = null, $pArticleDescriptionText = '', $pTemplate = FK_ARTICLE_TEMPLATE_DEFAULT, $pRemoteImages = array(),$pRelatedArticles = array(), $pArticleCategory = null, $pWebLink = null){
+	public function __construct($pArticleId = 0, $pArticleTitle='', $pArticlePublishingDate='', $pArticleThumbImage=null,$pArticleTemplate = null, $pArticleDescriptionText = '', $pTemplate = FK_ARTICLE_TEMPLATE_DEFAULT, $pRemoteImages = array(),$pRelatedArticles = array(), $pArticleCategory = null, $pWebLink = null, $pVideoEmbedCode = ''){
 		$this->id = $pArticleId;
 		$this->title = $pArticleTitle;
 		$this->publishingDate = $pArticlePublishingDate;
@@ -33,6 +34,8 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$this->webLink = $pWebLink;
 		
 		$this->template = $pTemplate;
+		
+		$this->videoEmbedCode = $pVideoEmbedCode;
 		
 		//default values
 		$this->isArticleForHomeCategory = false;
@@ -59,7 +62,7 @@ class LightArticle extends IgnantObject implements JSONexportableObject
 		$returnArray[FK_ARTICLE_DESCRIPTION_TEXT]=$this->descriptionText;
 		$returnArray[FK_ARTICLE_TEMPLATE]=$this->template;
 		$returnArray[FK_ARTICLE_WEB_LINK]=$this->webLink;
-		
+		$returnArray[FK_ARTICLE_VIDEO_EMBED_CODE]=$this->videoEmbedCode;
 		
 		//is article for home category
 		$returnArray[FK_ARTICLE_SHOW_ON_HOME_CATEGORY] = (bool)$this->isArticleForHomeCategory;

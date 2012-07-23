@@ -56,6 +56,7 @@ define('FK_ARTICLE_THUMB_IMAGE','thumbImage');
 define('FK_ARTICLE_REMOTE_IMAGES','remoteImages');
 define('FK_ARTICLE_SHOW_ON_HOME_CATEGORY','shouldShowOnHomeCategory');
 define('FK_ARTICLE_WEB_LINK','webLink');
+define('FK_ARTICLE_VIDEO_EMBED_CODE','videoEmbedCode');
 
 define('FK_ARTICLE_CATEGORY_ID','categoryId');
 define('FK_ARTICLE_CATEGORY_NAME','categoryName');
