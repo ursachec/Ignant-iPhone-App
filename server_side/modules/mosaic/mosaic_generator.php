@@ -51,7 +51,7 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 			FROM wp_posts AS pt 
 			LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
 			LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
-			LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = (SELECT meta_value FROM wp_postmeta AS pm WHERE pm.`meta_key`='_thumbnail_id' AND pm.`post_id`=pt.`ID` ) AND wpm.`meta_key` = '_wp_attached_file'
+			LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = (SELECT meta_value FROM wp_postmeta AS pm WHERE pm.`meta_key`='_thumbnail_id' AND pm.`post_id`=pt.`ID`) AND wpm.`meta_key` = '_wp_attached_file'
 			WHERE pt.`post_status` = 'publish'
 			AND pt.`post_type` = 'post'
 			AND pt.`post_parent` = 0
