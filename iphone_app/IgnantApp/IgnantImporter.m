@@ -28,7 +28,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 #import "BlogEntry.h"
 #import "TumblrEntry.h"
 
-#warning DELETE RSS Parser entries before releasing app
 
 @interface IgnantImporter() 
 
@@ -426,6 +425,7 @@ static const NSUInteger kImportBatchSize = 5;
     NSString *blogEntryCategoryName = [oneArticle objectForKey:kFKArticleCategoryName];
     NSString *blogEntryWebLink = [oneArticle objectForKey:kFKArticleWebLink];
     NSString *blogEntryTemplate = [oneArticle objectForKey:kFKArticleTemplate];
+    NSString *blogEntryVideoEmbedCode = [oneArticle objectForKey:kFKArticleVideoEmbedCode];
     
     NSArray *blogEntryRelatedArticles = [oneArticle objectForKey:kFKArticleRelatedArticles];
 
@@ -510,15 +510,7 @@ static const NSUInteger kImportBatchSize = 5;
     self.currentBlogEntry.showInHomeCategory = blogEntryShouldShowOnHomeCategory;
     self.currentBlogEntry.webLink = blogEntryWebLink;
     self.currentBlogEntry.tempate = blogEntryTemplate;
-    
-    
-    /////////////////////////// handle the thumb image image
-#warning TODO: delete these, no more use!
-    
-    NSDictionary *aImageDictionary = [oneArticle objectForKey:kFKArticleThumbImage];
-    NSString* imageIdentifier = [aImageDictionary objectForKey:kFKImageId];
-    NSString* imageCaption = [aImageDictionary objectForKey:kFKImageDescription];
-    NSString* imageBase64String =  [aImageDictionary objectForKey:kFKImageBase64Representation];
+    self.currentBlogEntry.videoEmbedCode = blogEntryVideoEmbedCode;
     
     //handle remote images urls
     NSArray *remoteImages = [oneArticle objectForKey:kFKArticleRemoteImages];
@@ -551,7 +543,6 @@ static const NSUInteger kImportBatchSize = 5;
     }
     
     //try to get article data
-    NSDictionary *metaInformationDictionary = [dictionaryFromJSON objectForKey:kTLMetaInformation];    
     NSDictionary *articleDictionary = [dictionaryFromJSON objectForKey:kTLSingleArticle];
     
     if(delegate!=nil){

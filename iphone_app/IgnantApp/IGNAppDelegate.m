@@ -39,7 +39,6 @@
 //---google analytics
 #import "GANTracker.h"
 
-
 #define kForceReloadCoreData NO
 
 #warning TODO: app description, small artwork with special chars ●●●●●●●●●∙∙∙∙∙∙●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
@@ -190,6 +189,7 @@
     
     [self.window makeKeyAndVisible];
     
+    [self initializeFacebook];
     
     NSDictionary* dict = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (dict) {
@@ -299,6 +299,8 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    
+    [[self facebook] extendAccessTokenIfNeeded];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -432,15 +434,6 @@ return _externalPageViewController;
         _facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
         _facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
     }
-    
-    if (![_facebook isSessionValid]) {
-        
-        NSArray *permissions = [[NSArray alloc] initWithObjects:
-                                @"user_likes", 
-                                @"read_stream",
-                                nil];
-        [_facebook authorize:permissions];
-    }
 }
 
 // Pre 4.2 support
@@ -449,8 +442,10 @@ return _externalPageViewController;
 }
 
 // For 4.2+ support
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
     return [_facebook handleOpenURL:url]; 
 }
 
@@ -914,5 +909,51 @@ return _externalPageViewController;
     return [currentOsVersion compare:osVersion options:NSNumericSearch] == NSOrderedDescending;
 }
 
+#pragma mark - FBSessionDelegate methods
+
+
+/**
+ * Called when the user dismissed the dialog without logging in.
+ */
+- (void)fbDidNotLogin:(BOOL)cancelled
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+}
+
+/**
+ * Called after the access token was extended. If your application has any
+ * references to the previous access token (for example, if your application
+ * stores the previous access token in persistent storage), your application
+ * should overwrite the old access token with the new one in this method.
+ * See extendAccessToken for more details.
+ */
+
+-(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+    NSLog(@"token extended");
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+}
+
+/**
+ * Called when the user logged out.
+ */
+- (void)fbDidLogout
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+}
+
+/**
+ * Called when the current session has expired. This might happen when:
+ *  - the access token expired
+ *  - the app has been disabled
+ *  - the user revoked the app's permissions
+ *  - the user changed his or her password
+ */
+- (void)fbSessionInvalidated
+{
+    LOG_CURRENT_FUNCTION_AND_CLASS()
+}
 
 @end

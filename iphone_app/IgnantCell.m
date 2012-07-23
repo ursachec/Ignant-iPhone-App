@@ -7,7 +7,7 @@
 //
 
 #import "IgnantCell.h"
-#import "Constants/Constants.h"
+#import "Constants.h"
 
 @interface IgnantCellContentView : UIView
 {

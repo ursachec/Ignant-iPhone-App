@@ -11,8 +11,6 @@
 
 @interface CategoriesViewController : IGNViewController <NSFetchedResultsControllerDelegate>
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-
 @property (nonatomic, strong) IBOutlet UITableView *categoriesTableView;
 
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;

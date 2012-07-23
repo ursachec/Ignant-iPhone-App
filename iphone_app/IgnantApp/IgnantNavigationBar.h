@@ -9,7 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface IgnantNavigationBar : UINavigationBar
-
--(void) changeNavigationBar;
-
 @end

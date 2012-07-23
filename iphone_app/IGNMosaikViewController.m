@@ -55,25 +55,14 @@ NSString * const kImageFilename = @"filename";
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
 @property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
-
 @property(nonatomic,strong) IGNDetailViewController* detailViewController;
-
-
 @property(nonatomic,strong) LoadMoreMosaicView* loadingMoreMosaicView;
 
 -(void)drawSavedMosaicImages;
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages;
 -(void)loadMoreMosaicImages;
-
 -(void)setUpOverlayViewForAnimationUsingMosaicView:(MosaicView*)view;
-
 -(void)transitionToDetailViewControllerForArticleId:(NSString*)articleId;
-
--(void)showToolbarAndNavigationBar;
-
-- (IBAction)didTapOnMore:(id)sender;
-- (IBAction)didTapOnMosaik:(id)sender;
-- (IBAction)didTapOnMercedes:(id)sender;
 
 @end
 
@@ -328,17 +317,22 @@ NSString * const kImageFilename = @"filename";
 #define PADDING_BOTTOM 5.0f
 #define PADDING_TOP .0f
     
+    BOOL shouldIncludeLoadingMoreView = false;
+    
     //load the plist with the saved mosaic images in memory
     NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
     
-    //add the load more mosaic view to the image dictionary
-    //TODO: define how to implement
-#warning TODO!!!! define how to implement adding the load more mosaic view
-    NSMutableDictionary* loadMoreMosaicDictionary = [[NSMutableDictionary alloc] init];
-    [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:100.0f] forKey:kImageWidth];
-    [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:50.0f] forKey:kImageHeight];
-    [images addObject:loadMoreMosaicDictionary];
     
+    if(shouldIncludeLoadingMoreView)
+    {
+        //add the load more mosaic view to the image dictionary
+        //TODO: define how to implement
+    #warning TODO!!!! define how to implement adding the load more mosaic view
+        NSMutableDictionary* loadMoreMosaicDictionary = [[NSMutableDictionary alloc] init];
+        [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:100.0f] forKey:kImageWidth];
+        [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:50.0f] forKey:kImageHeight];
+        [images addObject:loadMoreMosaicDictionary];
+    }
     
     //get active column
     const int numberOfColumns = 3;
@@ -378,8 +372,7 @@ NSString * const kImageFilename = @"filename";
         CGFloat heightOfActiveColumn = columnHeights[activeColumn];
         
         BOOL isColumnLoadMoreView = (imageCounter==1);
-        
-        if (isColumnLoadMoreView) 
+        if (isColumnLoadMoreView && shouldIncludeLoadingMoreView)
         {
             //always show the loading mosaic view in the center
             activeColumn = 1;
@@ -675,7 +668,7 @@ NSString * const kImageFilename = @"filename";
         if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreMosaicImages && _numberOfActiveRequests==0) 
         {
-            [self loadMoreMosaicImages];
+//            [self loadMoreMosaicImages];
         }
     }
 }

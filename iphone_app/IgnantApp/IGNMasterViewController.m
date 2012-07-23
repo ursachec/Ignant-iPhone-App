@@ -758,8 +758,6 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     DBLog(@"requestFailed");
     
-#warning TODO: do something if the request has failed
-    
     if (_isLoadingMoreContent) {    
         _numberOfActiveRequests--;
         _isLoadingMoreContent = NO;
@@ -807,11 +805,9 @@
     __block __typeof__(self) blockSelf = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
         [blockSelf.blogEntriesTableView reloadData];
         [blockSelf setIsLoadingViewHidden:YES];
-#warning TODO: implement this in the RIGHT way
-        [blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+        [blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[blockSelf currentCategoryId]];
     });
 }
 

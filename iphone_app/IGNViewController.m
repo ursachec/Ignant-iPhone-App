@@ -184,7 +184,7 @@
 -(UIView*)specificNavigationBar
 {
 #define DEBUG_SHOW_COLORS false
-#define PADDING_TOP 0.0f
+#define NAVBAR_PADDING_TOP 0.0f
 #define PADDING_LEFT 5.0f
     
     if (_specificNavigationBar==nil) {
@@ -208,7 +208,7 @@
         //arrow
         CGFloat arrowRatio = .25f;
         CGSize backArrowSize = CGSizeMake(17.0f*arrowRatio, 26.0f*arrowRatio);
-        CGRect backArrowFrame = CGRectMake(backButtonFrame.origin.x, (backButtonFrame.size.height-backArrowSize.height)/2+PADDING_TOP, backArrowSize.width, backArrowSize.height);
+        CGRect backArrowFrame = CGRectMake(backButtonFrame.origin.x, (backButtonFrame.size.height-backArrowSize.height)/2+NAVBAR_PADDING_TOP, backArrowSize.width, backArrowSize.height);
         UIImageView* backArrowView = [[UIImageView alloc] initWithFrame:backArrowFrame];
         backArrowView.image = [UIImage imageNamed:@"arrow_left_black.png"];
         backArrowView.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor redColor] : [UIColor clearColor];
@@ -220,7 +220,7 @@
         CGSize textSize = [categoryName sizeWithFont:font];
         CGFloat paddingLeft = 5.0f;
         CGSize someLabelSize = CGSizeMake(textSize.width, textSize.height);
-        CGRect someLabelFrame = CGRectMake(backArrowFrame.origin.x+backArrowFrame.size.width+paddingLeft, (backButtonFrame.size.height-someLabelSize.height)/2+PADDING_TOP, someLabelSize.width, someLabelSize.height);
+        CGRect someLabelFrame = CGRectMake(backArrowFrame.origin.x+backArrowFrame.size.width+paddingLeft, (backButtonFrame.size.height-someLabelSize.height)/2+NAVBAR_PADDING_TOP, someLabelSize.width, someLabelSize.height);
         UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
         someLabel.text = categoryName;
         someLabel.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor greenColor] : [UIColor clearColor];

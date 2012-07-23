@@ -7,18 +7,12 @@
 //
 
 #import "CategoriesViewController.h"
-
 #import "IGNMasterViewController.h"
-
 #import "IGNAppDelegate.h"
-
 #import "Category.h"
-
 #import "CategoryCell.h"
 
 @interface CategoriesViewController()
-
-
 @end
 
 @implementation CategoriesViewController
@@ -39,8 +33,6 @@
     return self;
 }
 
-
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -56,18 +48,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    
     UIView* backgroundView = [[UIView alloc] initWithFrame:self.categoriesTableView.frame]; 
     UIColor* backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_background_part.jpg"]];
     backgroundView.backgroundColor = backgroundColor;
     [self.categoriesTableView setBackgroundView:backgroundView];
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
 
 }
 

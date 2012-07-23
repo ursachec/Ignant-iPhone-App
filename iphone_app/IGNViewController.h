@@ -14,12 +14,12 @@
 #import "IGNAppDelegate.h"
 
 #import "GANTracker.h"
-#import "Constants/Constants.h"
+#import "Constants.h"
 
 @class IgnantLoadingView, IgnantNoInternetConnectionView, IGNAppDelegate;
 @class IgnantImporter;
 
-@interface IGNViewController : UIViewController <IgnantNoInternetConnectionViewDelegate>
+@interface IGNViewController : UIViewController <IgnantNoInternetConnectionViewDelegate, IgnantImporterDelegate>
 {
     @protected
     UIView* _loadingView;
@@ -56,10 +56,6 @@
 -(void)setUpForOfflineUse;
 -(void)setUpForOnlineUse;
 
--(void)createImporter;
-
-
--(UIView*)newBackButtonView;
 
 //specific navigation bar
 -(void)toggleShowSpecificNavigationBarAnimated:(BOOL)animated;
