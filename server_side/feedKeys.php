@@ -30,6 +30,7 @@ define('TL_RETURN_MOSAIC_IMAGE','mosaicImg');
 define('TL_RETURN_RELATED_IMAGE','relatedImg');
 define('TL_RETURN_CATEGORY_IMAGE','categoryImg');
 define('TL_RETURN_DETAIL_IMAGE','detailImg');
+define('TL_RETURN_SLIDESHOW_IMAGE','slideshowImg');
 
 
 //GENERAL

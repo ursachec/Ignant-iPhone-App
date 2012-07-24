@@ -76,7 +76,7 @@ if(isset($_GET[TL_RETURN_IMAGE_TYPE]) && $_GET[TL_RETURN_IMAGE_TYPE]!='')
 
 if( strcmp($imageType, TL_RETURN_MOSAIC_IMAGE)==0 )
 {	
-	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);		
+	$thumbLink =  getThumbLinkForArticleId($articleId);
 }
 
 else if( strcmp($imageType, TL_RETURN_RELATED_IMAGE)==0 )
