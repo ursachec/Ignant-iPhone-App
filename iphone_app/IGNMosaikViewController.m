@@ -309,6 +309,14 @@ NSString * const kImageFilename = @"filename";
     }
 }
 
+
+-(void)triggerLoadingMosaicImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView
+{
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,articleId,kTLReturnImageType,kTLReturnMosaicImage];
+    NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
+    [self triggerLoadingImageAtURL:thumbURL forImageView:imageView];
+}
+
 -(void)drawSavedMosaicImages
 {
     //first of all delete all currently shown images
@@ -416,10 +424,7 @@ NSString * const kImageFilename = @"filename";
             [self.bigMosaikView addSubview:oneView];
             
             //trigger loading the image
-            NSURL* mURL = [NSURL URLWithString:mosaicEntryUrl];
-            [tempImageView setImageWithURL:mURL
-                          placeholderImage:nil];
-            
+            [self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
         }
         
         //add one of the columnHeights value to the relevant columnHeight

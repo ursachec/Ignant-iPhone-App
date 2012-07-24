@@ -712,4 +712,22 @@
     return language;
 }
 
+
+#pragma mark - resource loading
+-(void)triggerLoadingImageAtURL:(NSURL*)url forImageView:(UIImageView*)imageView
+{
+    __block NSURL* blockThumbURL = url;
+    __block UIImageView* blockImageView = imageView;
+    [blockImageView  setImageWithURL:blockThumbURL
+                    placeholderImage:nil
+                             success:^(UIImage* image){
+                                 DBLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
+                             }
+                             failure:^(NSError* aError){
+                                 DBLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
+                             }];
+}
+
+
+
 @end

@@ -19,8 +19,11 @@ extern NSString * const kTLCategoriesList;
 extern NSString * const kTLMosaicImages;
 extern NSString * const kTLMosaicEntries;
 
-extern NSString * const kTLReturnMosaicImage;
-extern NSString * const kTLReturnRelatedArticleImage;
+extern NSString * const kTLReturnImageType; 
+extern NSString * const kTLReturnMosaicImage; 
+extern NSString * const kTLReturnRelatedArticleImage; 
+extern NSString * const kTLReturnCategoryImage; 
+extern NSString * const kTLReturnDetailImage; 
 
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;

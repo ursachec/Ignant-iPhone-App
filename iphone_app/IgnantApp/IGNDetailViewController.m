@@ -869,15 +869,9 @@
 #warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
         
-        __block NSURL* blockThumbURL = [self currentImageThumbURL];
-        [self.entryImageView setImageWithURL:blockThumbURL
-                            placeholderImage:nil
-                                     success:^(UIImage* image){
-                                         DBLog(@"big image loaded _entryImageView: %@", blockThumbURL);
-                                     }
-                                     failure:^(NSError* aError){
-                                         DBLog(@"big image could NOT load _entryImageView: %@", blockThumbURL);
-                                     }];
+        [self triggerLoadingDetailImageWithArticleId:self.currentArticleId
+                                        forImageView:self.entryImageView];
+        
     }
     
     //add the imageViewSize to the finalSizeForArticleContentView
@@ -1004,23 +998,16 @@
 
 -(void)triggerLoadingRelatedImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView
 {
-    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,articleId];
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,articleId,kTLReturnImageType,kTLReturnRelatedArticleImage];
     NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
     [self triggerLoadingImageAtURL:thumbURL forImageView:imageView];
 }
 
--(void)triggerLoadingImageAtURL:(NSURL*)url forImageView:(UIImageView*)imageView
+-(void)triggerLoadingDetailImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView
 {
-    __block NSURL* blockThumbURL = url;
-    __block UIImageView* blockImageView = imageView;
-    [blockImageView  setImageWithURL:blockThumbURL
-                    placeholderImage:nil
-                             success:^(UIImage* image){
-                                    DBLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
-                                }
-                             failure:^(NSError* aError){
-                                    DBLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
-                             }];
+    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,articleId,kTLReturnImageType,kTLReturnDetailImage];
+    NSURL* thumbURL = [[NSURL alloc] initWithString:encodedString];
+    [self triggerLoadingImageAtURL:thumbURL forImageView:imageView];
 }
 
 -(void)setupRelatedArticlesUI:(NSArray*)relatedArticles

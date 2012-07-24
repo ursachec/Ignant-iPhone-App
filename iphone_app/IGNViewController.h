@@ -16,6 +16,8 @@
 #import "GANTracker.h"
 #import "Constants.h"
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 @class IgnantLoadingView, IgnantNoInternetConnectionView, IGNAppDelegate;
 @class IgnantImporter;
 
@@ -74,5 +76,7 @@
 
 -(NSString*)currentPreferredLanguage;
 
+
+-(void)triggerLoadingImageAtURL:(NSURL*)url forImageView:(UIImageView*)imageView;
 
 @end

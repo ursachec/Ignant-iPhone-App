@@ -227,9 +227,6 @@
     NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
     DBLog(@"dateForLastUpdate: %@", dateForLastUpdate);
     
-    
-    
-    
     //only check if data is here if not on first run
     if (![self.appDelegate isLoadingDataForFirstRun] && [self.appDelegate checkIfAppOnline])
     if (dateForLastUpdate==nil) 
@@ -448,7 +445,7 @@
         }
         
         NSString* currentArticleId = blogEntry.articleId;
-        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,currentArticleId];
+        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,currentArticleId,kTLReturnImageType,kTLReturnCategoryImage];
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
         __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
         [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
