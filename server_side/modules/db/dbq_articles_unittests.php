@@ -1,5 +1,8 @@
 <?php
 
+require_once('./dbq_articles.php');
+require_once('./dbq_general.php');
+
 $s = '<!--:de-->Der Fotograf <a href="http://www.christofferrelander.com/">Christoffer Relander</a> veröffentlichte gerade seine neuste Fotoserie unter dem Namen \'We Are Nature\'. Christoffer ist Grafik Designer und fotografischer Autodidakt aus Finnland, Raseborg. Im Sommer 2009 begann er zu fotografieren und hat seitdem einen ganz eigenen Stil entwickelt, viel experimentiert, an zahlreichen Ausschreibungen teilgenommen sowie eigene Projekte verfolgt. Die Serie \'We Are Nature\' zeigt doppel- und dreifach Überblendungen, die alle in der Kamera selbst, einer Nikon D700 entstanden sind. Christoffer legt die Silhouetten verschiedener Personen über Motive aus der Natur und erschafft damit seine Serie in einem schlichten aber wunderschönen schwarz-weiß Stil. 
 
 <img src="http://www.ignant.de/wp-content/uploads/2012/07/nature01.jpeg"  />
@@ -354,6 +357,81 @@ $sSpecificArticleWeAreNature = '<!--:de-->Der Fotograf <a href="http://www.chris
 
 <p style="text-align: center;"><small>All images © <a href="http://www.christofferrelander.com/">Christoffer Relander</a> | Via: <a href="http://illusion.scene360.com/art/31154/blending-into-nature/">Illusion</a></small></p><!--:-->';
 
+
+$sWithIframe = '<!--:de-->Notizzettel sind tolle Gedächtnisstützen, doch was nutzt es, wenn man sie nicht sieht? Das kann mit der \'Luminaire Post\' der brasilianischen Designer des <a href="http://www.estudioninho.com/">Studio Ninho</a> nicht passieren. Die Lampe wurde aus zwei verschiedenen Ideen geboren: dem Recycling von gebrauchtem Kork sowie dem Wunsch einen zusätzlichen Nutzen für eine Tischleuchte zu kreieren. <!--:--><!--:en-->Brazilian designers of <a href="http://www.estudioninho.com/">Studio Ninho</a> created the \'Luminaire Post\'. The \'Luminaire Post\' was conceived of two distinct ideas: an unconventional use of recycled cork and the addition of a new function to a table lamp. The result: the creation of a luminaire that uses cork as structure and cork sheet as a dome. <!--:--><!--more--><!--:de-->Das Resultat war der Entwurf der \'Luminaire Post\', die fast vollständig aus Kork besteht und außerdem als Pinboard für Notizen dient. Der Kork kreiert nicht nur einen interessanten Lichteffekt, die Lampe kann fast spielerisch zusammengesetzt und genutzt werden. Der Herstellungsprozess der Lampe ist einfach, kostengünstig und nutzt nachhaltige Materialien, um Abfall, Kosten und Energie zu sparen.
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-1.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-2.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-3.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-4.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-5.jpg" />
+
+<iframe src="http://player.vimeo.com/video/38194410?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="720" height="405" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+<p style="text-align: center;"><small>All images © <a href="http://www.estudioninho.com/">Studio Ninho</a></small></p><!--:--><!--:en-->Thus, not only does it create an interesting light effect, but it also has ludic aspects in its use and assembling. In a simple and fast way, using pins and fittings, the user assembles the \'Luminaire Post\', that also works as a notice board. The manufacture process is simple, cheap and uses sustainable materials, aiming at the reduction of waste, costs and impacts on production.
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-1.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-2.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-3.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-4.jpg" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/Post-Luminaire-5.jpg" />
+
+<iframe src="http://player.vimeo.com/video/38194410?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="720" height="405" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+<p style="text-align: center;"><small>All images © <a href="http://www.estudioninho.com/">Studio Ninho</a></small></p>
+<!--:-->';
+
+$sDanCretu = '<!--:de-->Der Fotograf und Visual Artist <a href="http://dancretu.tumblr.com/">Dan Cretu</a> kreiert Alltagsobjekte aus Gemüse und Früchten. Mit seinen Skulpturen verwandelt Dan Nahrungsmittel, die bei uns regelmäßig auf den Tisch kommen zu Objekten mit Wiedererkennungswert. <!--:--><!--:en-->Photographer and visual artist <a href="http://dancretu.tumblr.com/">Dan Cretu</a> recreates everyday objects out of fruits and vegetables. With his sculptures, Dan transforms common everyday eatables into recognizable objects. Thus a couple of oranges become a bike, cucumber is used for building a camera and popcorn transforms to a smiling face. <!--:--><!--more--><!--:de-->So werden aus ein paar Orangen ein Fahrrad, aus einer Salatgurke wird eine Kamera und Popcorn türmt sich zu einem lächelnden Gesicht auf.
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story01.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story02.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story03.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story04.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story05.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story06.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story07.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story08.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story09.jpg"  />
+
+<p style="text-align: center;"><small>All images © <a href="http://dancretu.tumblr.com/">Dan Cretu</a></small></p>
+<!--:--><!--:en-->
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story01.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story02.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story03.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story04.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story05.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story06.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story07.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story08.jpg"  />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/food-story09.jpg"  />
+
+<p style="text-align: center;"><small>All images © <a href="http://dancretu.tumblr.com/">Dan Cretu</a></small></p><!--:-->';
+
 $sDummy = '<!--:de-->DeutsCH <img src="www.google.at" /><p>asdsadasdassad</p><!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCHDEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
 
 
@@ -361,86 +439,12 @@ header('Content-type: text/plain');
 	
 	
 	
-// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature
+// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu
 
 $lang = $_GET['lang'];
 
-$resS = descriptionForLanguage($sSpecificArticleWeAreNature, $lang);
+$resS = descriptionForLanguage($sDanCretu, $lang);
 print $resS;
-
-function bloatedPrint($s)
-{
-	return;
-	print "\n".$s."\n";
-}
-
-function descriptionForLanguage($str, $language)
-{
-	$results = array();
-	$moreResults = array();
-	$needleEN = "<!--:en";
-	$needleDE = "<!--:de";
-	$needleMORE = "<!--more";
-	$moreString = "";
-	$finalString = '';
-	$returnString = '';
-	$moreReturnString = '';
-	
-	$containsMoreString = false;
-	$containsMoreString = (strstr($str, $needleMORE)!==FALSE);
-	
-	//check if there is a localization string present, if not, just return same string
-	
-	$finalMoreString = '';
-	$finalPrefixString = '';
-	
-	//prepare the more string
-	if( $containsMoreString )
-	{		
-		$mS = preg_match("/<!--more-->(.*)/is", $str, $moreResults);
-		$moreString = $moreResults[1];	
-		$finalMoreString = $moreString;
-				
-		if( strstr($moreString, $needleEN)!==FALSE || strstr($moreString, $needleDE)!==FALSE )
-		{					
-			preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $moreString, $results);
-			$finalMoreString = $results[2];			
-		}
-	}
-	
-	//prepare the prefix string
-	if( strstr($str, $needleEN)!==FALSE || strstr($str, $needleDE)!==FALSE )
-	{
-		preg_match("/(<!--:$language-->)(.*)(<!--:-->)/ismU", $str, $results);
-		$finalPrefixString = $results[2];
-	}
-	else if($containsMoreString)
-	{
-		$finalPrefixString = $str;
-		
-		preg_match("/^(.*)(<!--more-->.*$)/ismU", $str, $results);
-		$finalPrefixString = $results[1];
-	}
-	else if(!$containsMoreString)
-	{
-		$finalPrefixString = $str;
-	}
-	
-	$finalString = $finalPrefixString.$finalMoreString;
-	
-	$finalString = removeImgTags($finalString);
-	$finalString = nl2br($finalString);
-	return $finalString;
-}
-
-function removeImgTags($string)
-{
-	$str = "";
-	// $str = preg_replace('/<img.*<\/p>/si', "", $string);
-	$str = preg_replace('/<img.*\/>/si', "", $string);
-	
-	return $str;
-}
 
 function descriptionForLanguageUnitTests()
 {
@@ -481,23 +485,5 @@ function descriptionForLanguageUnitTests()
 	
 	print "\n<br />testsPassed: ".(int)$testsPassed." // testsFailed: ".(int)$testsFailed." <br />\n";
 }
-
-// descriptionForLanguageUnitTests();
-
-
-function prepareVideoEmbedCode($embedCode)
-{
-	if($embedCode==null || strlen($embedCode)==0)
-		return '';
-	
-	$str = '';
-	$str = preg_replace('/width=["\'][0-9]*["\']/si', "width=\"310\"", $embedCode);
-	$str = preg_replace('/height=["\'][0-9]*["\']/si', "height=\"202\"", $str);
-	return $str;
-}
-
-// $postVideoEmbedCode = '<iframe src="http://player.vimeo.com/video/40005142?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="950" height="545" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
-// print "\n mobile: ".prepareVideoEmbedCode($postVideoEmbedCode);
-
 
 ?>

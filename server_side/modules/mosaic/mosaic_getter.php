@@ -17,7 +17,7 @@ be careful on creating mosaic entries, date before / date after + excluded categ
 
 */
 
-function fetchBatchOfRandomMosaicEntries($number=45)
+function fetchBatchOfRandomMosaicEntries($number=60)
 {
 	$mosaicEntries = array();
 	
@@ -51,10 +51,15 @@ function getBatchOfRandomMosaicEntries()
 		$origImgMetaInfo = unserialize($mE['meta_value']);
 		$origImgWidth = $origImgMetaInfo['width'];
 		$origImgHeight = $origImgMetaInfo['height'];
+		
+		//TODO: log this somewhere, it shouldn't happen!
+		if($origImgWidth==0 || $origImgHeight==0)
+			continue;
+		
 		$newHeight = $newWidth*$origImgHeight/$origImgWidth;
 		$origPostId = $mE['post_id'];
 				
-		$returnMosaicObjects[] = new MosaicEntry($origImgLink, $origPostId, $newWidth, $newHeight);
+		$returnMosaicObjects[] = new MosaicEntry($origImgLink, $origPostId, round($newWidth, 2), round($newHeight, 2));
 	}
 	
 	return $returnMosaicObjects;

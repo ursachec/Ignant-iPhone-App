@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>modules/db/dbq_articles.php</string>
+	<string>modules/mosaic/mosaic_generator.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,7 +26,7 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-17T15:28:46Z</date>
+			<date>2012-07-23T21:18:02Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -38,7 +38,7 @@
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-17T18:51:25Z</date>
+			<date>2012-07-23T21:23:57Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -106,6 +106,16 @@
 			<key>expanded</key>
 			<true/>
 			<key>name</key>
+			<string>thumbs</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>modules/thumbs</string>
+		</dict>
+		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
 			<string>mosaic</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
@@ -146,30 +156,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>41</integer>
+				<integer>68</integer>
 				<key>line</key>
-				<integer>267</integer>
+				<integer>184</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>242</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>30</integer>
-				<key>line</key>
-				<integer>267</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>54</integer>
-				<key>line</key>
-				<integer>267</integer>
-			</dict>
+			<integer>24</integer>
 		</dict>
 		<key>LiveContentProvider.php</key>
 		<dict>
@@ -450,14 +444,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>27</integer>
+				<integer>23</integer>
 				<key>line</key>
-				<integer>19</integer>
+				<integer>140</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>9</integer>
+			<integer>53</integer>
 		</dict>
 		<key>imgsrv.php</key>
 		<dict>
@@ -478,44 +472,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>91</integer>
 				<key>line</key>
-				<integer>234</integer>
+				<integer>29</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>365</integer>
+			<integer>4</integer>
 		</dict>
 		<key>modules/db/dbq_articles_unittests.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>10</integer>
 				<key>line</key>
-				<integer>318</integer>
+				<integer>443</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>295</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>1</integer>
-				<key>line</key>
-				<integer>384</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>318</integer>
-			</dict>
+			<integer>454</integer>
 		</dict>
 		<key>modules/db/dbq_categories.php</key>
 		<dict>
@@ -535,7 +513,7 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>60</integer>
+				<integer>57</integer>
 				<key>line</key>
 				<integer>56</integer>
 			</dict>
@@ -575,19 +553,49 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>modules/mosaic/mosaic_generator.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>52</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>41</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>99</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>52</integer>
+			</dict>
+		</dict>
 		<key>modules/mosaic/mosaic_getter.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>4</integer>
+				<integer>31</integer>
 				<key>line</key>
-				<integer>57</integer>
+				<integer>47</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>237</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>27</integer>
+			<integer>26</integer>
 		</dict>
 		<key>performance_tests.php</key>
 		<dict>
@@ -722,6 +730,7 @@
 		<string>modules/db/dbq_notifications.php</string>
 		<string>modules/db/dbq_categories.php</string>
 		<string>modules/db/dbq_articles.php</string>
+		<string>modules/mosaic/mosaic_generator.php</string>
 		<string>modules/db/dbq_articles_unittests.php</string>
 		<string>modules/db/dbq_general.php</string>
 		<string>classes/Article.php</string>
@@ -739,6 +748,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{312, 63}, {919, 715}}</string>
+	<string>{{488, 63}, {919, 715}}</string>
 </dict>
 </plist>

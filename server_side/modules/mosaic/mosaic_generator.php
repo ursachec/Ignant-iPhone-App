@@ -7,7 +7,23 @@ require_once('../db/dbq_articles.php');
 require_once('../db/dbq_notifications.php');
 require_once('../db/dbq_categories.php');
 
-
+function getRandomImagePostId($postId=0, $dbh=null)
+{
+	if($postId==0)
+	{
+		bloatedPrint("skipping getRandomImagePostId, invalid id given postId: $postId...");
+		return;
+	}
+	
+	$qString = "SELECT pt.`id` AS 'post_id', pt.`guid` AS 'img_url' FROM wp_posts AS pt WHERE pt.`post_type` = 'attachment' AND pt.`post_parent` = :pid ORDER BY RAND() LIMIT 1;";
+	$stmt = $dbh->prepare($qString);
+	$stmt->bindParam(':pid', $postId, PDO::PARAM_INT);
+	$stmt->execute();
+	
+	$randomImagePost = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+	return $randomImagePost['post_id'];
+}
 
 function insertOneMosaicEntry($mosaicPostId = 0, $postId = 0, $dbh = null)
 {
@@ -67,13 +83,14 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 	$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	foreach($posts as $p)
 	{
-		$mid = $p['meta_id'];
 		$pid = $p['post_id'];
-		insertOneMosaicEntry($mid, $pid, $dbh);
+		$mid = getRandomImagePostId($pid, &$dbh);
+		
+		insertOneMosaicEntry($mid, $pid, &$dbh);
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0) //&& $startPosition<30)
+	if(count($posts)>0) // && $startPosition<30)
 	{
 		createMosaicEntries(&$startPosition, $batchSize, &$dbh);
 	}
@@ -94,7 +111,6 @@ $startPosition = 0;
 $batchSize = 20;
 
 createMosaicEntries(&$startPosition, $batchSize, &$dbh);
-
 
 
 $after = microtime(true);

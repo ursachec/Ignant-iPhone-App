@@ -25,8 +25,9 @@ ToDO: fix problem posts
 SELECT * FROM wp_posts WHERE ID = 32399
 SELECT * FROM wp_posts WHERE ID = 6254
 SELECT * FROM wp_posts WHERE ID = 11187 AND post_date > '2011-1-1'
-
 SELECT * FROM wp_posts WHERE ID = 29938
+
+//TODO: problem on mosaic ('got you need an internet connection for that' on the wrong time)
 
 */
 
@@ -423,24 +424,48 @@ function descriptionForLanguage($str, $language)
 	
 	$finalString = $finalPrefixString.$finalMoreString;
 	
-	$finalString = removeImgTags($finalString);
+	$finalString = removeUnwantedHTML($finalString);
 	$finalString = nl2br($finalString);
 	return $finalString;
 }
 
-function removeLastParagraph($s)
+function removeUnwantedHTML($string)
 {
-	$str = "";
-	$str = preg_replace('/<p.*\/p>$/si', "", $s);
-	return $str;	
+	$s = "";
+	$s = removeImgTags($string);
+	$s = removeIframes($s);
+	$s = removeEmptyLines($s);
+	
+	return $s;
 }
 
 function removeImgTags($string)
 {
 	$str = "";
-	// $str = preg_replace('/<img.*<\/p>/si', "", $string);
 	$str = preg_replace('/<img.*\/>/si', "", $string);
+	return $str;
+}
+function removeEmptyLines($string)
+{
+	$str = "";
+	$str = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+$/m", "", $string);
+	$str = rtrim($str);
+	//$str = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+$/", '', $string);
 	
+	return $str;
+}
+
+function removeLastParagraph($s)
+{	
+	$str = "";
+	$str = preg_replace('/<p.*\/p>$/si', "", $s);
+	return $str;	
+}
+
+function removeIframes($string)
+{	
+	$str = "";
+	$str = preg_replace('/<iframe.*\/iframe>/si', "", $string);
 	return $str;
 }
 

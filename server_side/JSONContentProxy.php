@@ -182,7 +182,7 @@ class JSONContentProxy{
 		return $articlesArray;
 	}
 
-	function getJSONReadyArrayForMoreTumblr($pTimestamp = 0, $limit = 10)
+	function getJSONReadyArrayForMoreTumblr($pTimestamp = 0, $limit = 20)
 	{
 		global $testingUnit;
 		$moreTumblPostsArray = array();		

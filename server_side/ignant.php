@@ -105,7 +105,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 	$finalJSONArrayForExport[TL_META_INFORMATION][TL_CATEGORIES_LIST] = $categoriesList;
 		
 	//2. get latest articles
-	$numberOfArticles = 20;
+	$numberOfArticles = 40;
 	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY, getContentLanguage($_GET[LANGUAGE_PARAM]), $numberOfArticles);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 }
@@ -138,7 +138,8 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		//sleep(4);
 	
 		//get the array with articles
-		$arrayWithMorePosts = $contentProxy->tGetJSONReadyLatestArticlesForCategory($pCategoryId, getContentLanguage($_GET[LANGUAGE_PARAM]));
+		$numberOfArticles = 20;
+		$arrayWithMorePosts = $contentProxy->tGetJSONReadyLatestArticlesForCategory($pCategoryId, getContentLanguage($_GET[LANGUAGE_PARAM]), $numberOfArticles);
 	
 		// no articles found, do something
 		if(count($arrayWithMorePosts)==0)
@@ -156,7 +157,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		
 		$finalJSONArrayForExport['error_description'] = 'category_id_not_set';
 	}
-	
 }
 
 //this is called when the user wants to get more articles

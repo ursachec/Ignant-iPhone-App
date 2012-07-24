@@ -9,12 +9,10 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 		$src_img=imagecreatefrompng($name);
 	}
 
-
   if(!$src_img)
   {
     die('could not create image object');
   }
-
   
 
   $image_sizes = getimagesize($name);

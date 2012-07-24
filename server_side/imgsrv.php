@@ -71,8 +71,7 @@ exit;
 $articleId = $_GET[FK_ARTICLE_ID];
 $thumbLink = '';
 
-
-if(isset($_GET[TL_RETURN_MOSAIC_IMAGE]) && $_GET[TL_RETURN_MOSAIC_IMAGE]=='')
+if(isset($_GET[TL_RETURN_MOSAIC_IMAGE]) && $_GET[TL_RETURN_MOSAIC_IMAGE]!='')
 {
 	$shouldReturnMosaicImage = $_GET[TL_RETURN_MOSAIC_IMAGE];
 	if(!_bool($shouldReturnMosaicImage))
@@ -80,20 +79,25 @@ if(isset($_GET[TL_RETURN_MOSAIC_IMAGE]) && $_GET[TL_RETURN_MOSAIC_IMAGE]=='')
 	
 	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);		
 }
-else if(isset($_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]) && $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]=='')
+else if(isset($_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]) && $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]!='')
 {
-	$shouldReturnMosaicImage = $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE];
-	if(!_bool($shouldReturnMosaicImage))
+	$shouldReturnRelatedImage = $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE];
+	if(!_bool($shouldReturnRelatedImage))
 	return;
 	
+	$path_parts = pathinfo($_SERVER['SCRIPT_NAME']);
+	$imgDir = 'http://'.$_SERVER['SERVER_NAME'].'/img';
+	$relatedImgDir = $imgDir.'/related';
 	
-	$thumbLink =  getThumbLinkForArticleId($articleId);
+	$tempArticleId = '39440';
+	$thumbLink = $relatedImgDir.'/'.$tempArticleId.'.png';
+	
+	// $thumbLink =  getThumbLinkForArticleId($articleId);
 }
 else
 {
 	$thumbLink =  getThumbLinkForArticleId($articleId);
 }
-
 
 if(strlen($thumbLink)<=0)
 exit;
