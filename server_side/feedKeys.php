@@ -25,6 +25,11 @@ define('TL_CATEGORIES_LIST','categories');
 define('TL_RETURN_MOSAIC_IMAGE','mosaicImg');
 define('TL_RETURN_RELATED_ARTICLE_IMAGE','relatedImg');
 
+define('TL_RETURN_IMAGE_TYPE','imgType');
+define('TL_RETURN_MOSAIC_IMAGE','mosaicImg');
+define('TL_RETURN_RELATED_IMAGE','relatedImg');
+define('TL_RETURN_CATEGORY_IMAGE','categoryImg');
+define('TL_RETURN_DETAIL_IMAGE','detailImg');
 
 
 //GENERAL

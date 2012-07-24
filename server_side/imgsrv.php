@@ -61,7 +61,6 @@ require_once("wp_config.inc.php");
 require_once('modules/db/dbq_general.php');
 require_once('modules/db/dbq_articles.php');
 
-
 $contentProxy = new JSONContentProxy();
 
 
@@ -70,21 +69,18 @@ exit;
 
 $articleId = $_GET[FK_ARTICLE_ID];
 $thumbLink = '';
+$imageType = '';
 
-if(isset($_GET[TL_RETURN_MOSAIC_IMAGE]) && $_GET[TL_RETURN_MOSAIC_IMAGE]!='')
-{
-	$shouldReturnMosaicImage = $_GET[TL_RETURN_MOSAIC_IMAGE];
-	if(!_bool($shouldReturnMosaicImage))
-	return;
-	
+if(isset($_GET[TL_RETURN_IMAGE_TYPE]) && $_GET[TL_RETURN_IMAGE_TYPE]!='')
+	$imageType = $_GET[TL_RETURN_IMAGE_TYPE];
+
+if( strcmp($imageType, TL_RETURN_MOSAIC_IMAGE)==0 )
+{	
 	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);		
 }
-else if(isset($_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]) && $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]!='')
-{
-	$shouldReturnRelatedImage = $_GET[TL_RETURN_RELATED_ARTICLE_IMAGE];
-	if(!_bool($shouldReturnRelatedImage))
-	return;
-	
+
+else if( strcmp($imageType, TL_RETURN_RELATED_IMAGE)==0 )
+{	
 	$path_parts = pathinfo($_SERVER['SCRIPT_NAME']);
 	$imgDir = 'http://'.$_SERVER['SERVER_NAME'].'/img';
 	$relatedImgDir = $imgDir.'/related';
@@ -94,6 +90,7 @@ else if(isset($_GET[TL_RETURN_RELATED_ARTICLE_IMAGE]) && $_GET[TL_RETURN_RELATED
 	
 	// $thumbLink =  getThumbLinkForArticleId($articleId);
 }
+
 else
 {
 	$thumbLink =  getThumbLinkForArticleId($articleId);
@@ -105,6 +102,4 @@ exit;
 header("Location: $thumbLink");
 
 exit;
-
-
 ?>
