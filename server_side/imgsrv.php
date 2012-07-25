@@ -83,14 +83,15 @@ if( strcmp($imageType, TL_RETURN_MOSAIC_IMAGE)==0 )
 
 else if( strcmp($imageType, TL_RETURN_RELATED_IMAGE)==0 )
 {	
+	/*
 	$path_parts = pathinfo($_SERVER['SCRIPT_NAME']);
 	$imgDir = 'http://'.$_SERVER['SERVER_NAME'].'/img';
 	$relatedImgDir = $imgDir.'/related';
 	
 	$tempArticleId = '39440';
 	$thumbLink = $relatedImgDir.'/'.$tempArticleId.'.png';
-	
-	// $thumbLink =  getThumbLinkForArticleId($articleId);
+	*/
+	$thumbLink =  getThumbLinkForArticleId($articleId);
 }
 
 else

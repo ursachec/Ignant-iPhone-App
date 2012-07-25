@@ -526,7 +526,7 @@
         
         CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, 480.0f-20.0f);
         UIImageView* aImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
-        aImageView.image = [UIImage imageNamed:@"DefaultNoTop@2x"];
+        aImageView.image = [UIImage imageNamed:@"DefaultNoTOPX"];
         [aView addSubview:aImageView];
         
         CGSize aiSize = CGSizeMake(21.0f, 21.0f);

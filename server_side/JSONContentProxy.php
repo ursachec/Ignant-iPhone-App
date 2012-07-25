@@ -201,7 +201,6 @@ class JSONContentProxy{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
 		curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);// allow redirects
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); // return into a variable
 		curl_setopt($ch, CURLOPT_TIMEOUT, 3); // times out after 4s
 		$result = curl_exec($ch); // run the whole process

@@ -57,10 +57,12 @@
 		41F9E7371584F26A00F11927 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9E7361584F26A00F11927 /* ImageIO.framework */; };
 		41F9E78C1584FB3800F11927 /* TumblrCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 41F9E78A1584FB3800F11927 /* TumblrCell.h */; };
 		41F9E78D1584FB3800F11927 /* TumblrCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 41F9E78B1584FB3800F11927 /* TumblrCell.m */; };
-		E50220EE15A5C3380033EEA4 /* DefaultNoTop.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */; };
-		E50220EF15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */; };
+		E50220EE15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EB15A5C3370033EEA4 /* DefaultNoTop@2x.png */; };
+		E50220EF15A5C3380033EEA4 /* DefaultNoTop.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220EC15A5C3380033EEA4 /* DefaultNoTop.png */; };
 		E50220F015A5C3380033EEA4 /* mb_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220ED15A5C3380033EEA4 /* mb_logo.png */; };
 		E50220F215A5C5000033EEA4 /* mb_footer.png in Resources */ = {isa = PBXBuildFile; fileRef = E50220F115A5C4FF0033EEA4 /* mb_footer.png */; };
+		E55338FE15C08FB300D05795 /* DefaultNoTOPX.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */; };
+		E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */; };
 		E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5AFAE5415B8207700E084D3 /* FBConnect.bundle */; };
 		E5AFAE6315B8209D00E084D3 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = E5AFAE5715B8209D00E084D3 /* Facebook.h */; };
 		E5AFAE6415B8209D00E084D3 /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AFAE5815B8209D00E084D3 /* Facebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -344,10 +346,12 @@
 		41F9E7361584F26A00F11927 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		41F9E78A1584FB3800F11927 /* TumblrCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TumblrCell.h; sourceTree = "<group>"; };
 		41F9E78B1584FB3800F11927 /* TumblrCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TumblrCell.m; sourceTree = "<group>"; };
-		E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultNoTop.png; sourceTree = "<group>"; };
-		E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DefaultNoTop@2x.png"; sourceTree = "<group>"; };
+		E50220EB15A5C3370033EEA4 /* DefaultNoTop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DefaultNoTop@2x.png"; sourceTree = "<group>"; };
+		E50220EC15A5C3380033EEA4 /* DefaultNoTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultNoTop.png; sourceTree = "<group>"; };
 		E50220ED15A5C3380033EEA4 /* mb_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_logo.png; sourceTree = "<group>"; };
 		E50220F115A5C4FF0033EEA4 /* mb_footer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mb_footer.png; sourceTree = "<group>"; };
+		E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultNoTOPX.png; path = Resources/other_ui_images/DefaultNoTOPX.png; sourceTree = "<group>"; };
+		E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "DefaultNoTOPX@2x.png"; path = "Resources/other_ui_images/DefaultNoTOPX@2x.png"; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
 		E5AFAE5715B8209D00E084D3 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		E5AFAE5815B8209D00E084D3 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
@@ -1073,8 +1077,10 @@
 		FE42566315599F61008E0911 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				E50220EB15A5C3370033EEA4 /* DefaultNoTop.png */,
-				E50220EC15A5C3380033EEA4 /* DefaultNoTop@2x.png */,
+				E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */,
+				E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */,
+				E50220EB15A5C3370033EEA4 /* DefaultNoTop@2x.png */,
+				E50220EC15A5C3380033EEA4 /* DefaultNoTop.png */,
 				E50220ED15A5C3380033EEA4 /* mb_logo.png */,
 				E50220F115A5C4FF0033EEA4 /* mb_footer.png */,
 				4146FE3C1582430D001BAC75 /* navigation */,
@@ -1592,12 +1598,14 @@
 				41AFB862159A155C00294F93 /* arrow_right_black.png in Resources */,
 				4149699015A0D63600A87841 /* FavouritesViewController.xib in Resources */,
 				41A4AB2415A1E7DD0062A624 /* ExternalPageViewController.xib in Resources */,
-				E50220EE15A5C3380033EEA4 /* DefaultNoTop.png in Resources */,
-				E50220EF15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */,
+				E50220EE15A5C3380033EEA4 /* DefaultNoTop@2x.png in Resources */,
+				E50220EF15A5C3380033EEA4 /* DefaultNoTop.png in Resources */,
 				E50220F015A5C3380033EEA4 /* mb_logo.png in Resources */,
 				E50220F215A5C5000033EEA4 /* mb_footer.png in Resources */,
 				E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */,
 				E5AFAE6615B8209D00E084D3 /* FBDialog.bundle in Resources */,
+				E55338FE15C08FB300D05795 /* DefaultNoTOPX.png in Resources */,
+				E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

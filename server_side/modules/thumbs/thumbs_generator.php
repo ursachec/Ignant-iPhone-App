@@ -51,6 +51,43 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 	imagedestroy($src_img); 
 }
 
+function createSlideshowImageThumbs()
+{
+	
+	
+}
+
+function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $sourceDir = '', $destinationDir = '', $dbh = null)
+{
+	if($dbh==null)
+	{
+		bloatedPrint("database handler is null (startPosition: $startPosition)...");
+		return;
+	}
+	
+	$qString = "SELECT `mosaic_post_id`,`post_id` FROM wp_posts_mosaic ";
+	$qString .= " LIMIT ".$startPosition.",".$batchSize;
+	
+	$stmt = $dbh->prepare($qString);
+	$stmt->execute();
+	$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($posts as $p)
+	{
+		$pid = $p['post_id'];
+    	$mid = $p['mosaic_post_id'];
+	  	createOneArticleImageThumb($pid, $mid, $newWidth, $sourceDir, $destinationDir, $dbh);
+	}
+	$startPosition+=$batchSize;
+	
+	if(count($posts)>0  && $startPosition<30)
+	{
+		createMosaicImageThumbs(&$startPosition, $batchSize, $newWidth , &$dbh);
+	}
+	
+	bloatedPrint("finished recursion with startPosition: $startPosition");
+	return;	
+}
+
 function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $sourceDir = '', $destinationDir = '', $dbh = null)
 {
 	global $includedCategoriesPDOString;
@@ -101,7 +138,6 @@ function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $
 
 function createOneArticleImageThumb($articleId=0, $imageUrl = '', $newWidth = 200, $sourceDir='', $destinationDir = '',  $dhb=null)
 {
-	
 	$sourceImage = $sourceDir.'carapicuibapre.jpg';
 	$destinationImage = $destinationDir.$articleId.'.png';
 	
@@ -123,25 +159,63 @@ bloatedPrint("started generating thumbs...");
 
 $before = microtime(true);
 
+
+// TL_RETURN_MOSAIC_IMAGE 
+// TL_RETURN_RELATED_IMAGE 
+// TL_RETURN_CATEGORY_IMAGE 
+// TL_RETURN_DETAIL_IMAGE 
+// TL_RETURN_SLIDESHOW_IMAGE 
+
+$imageType = TL_RETURN_CATEGORY_IMAGE;
+
+
 $includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 
 $dbh = newPDOConnection();
 $startPosition = 0;
 $batchSize = 20;
-$newWidthForRelatedThumbs = 100;
-$newWidthForCategoryViewThumbs = 149;
-$newWidthForDetailVCThumbs = 310;
+
+$newWidth = 0;
+$doubleWidth = true;
 
 $sourceDir = 'pics/';
-$destinationDir = '/Users/cvursache/privat/temp/related/';
+$destinationDirRoot = '/Users/cvursache/privat/temp/';
+$destinationDir = $destinationDirRoot;
 
-createArticleImageThumbs(&$startPosition, $batchSize, $newWidthForRelatedThumbs, $sourceDir, $destinationDir,  &$dbh);
+if(strcmp($imageType,TL_RETURN_MOSAIC_IMAGE)==0)
+{
+	$newWidth = 100 * 2;
+	$destinationDir .= 'mosaic/'; 
+}
+else if(strcmp($imageType,TL_RETURN_RELATED_IMAGE)==0)
+{
+	$newWidth = 100 * 2;
+	$destinationDir .= 'related/';
+}
+else if(strcmp($imageType,TL_RETURN_CATEGORY_IMAGE)==0)
+{
+	$newWidth = 149 * 2;
+	$destinationDir .= 'category/';
+}	
+else if(strcmp($imageType,TL_RETURN_DETAIL_IMAGE)==0)
+{
+	$newWidth = 310;
+	$destinationDir .= 'detail/';
+}	
+else if(strcmp($imageType,TL_RETURN_SLIDESHOW_IMAGE)==0)
+{
+	$newWidth = 100;
+	$destinationDir .= 'slideshow/';
+}
+		
+createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 
 $after = microtime(true);
 bloatedPrint("execution time: ".($after-$before). " s");
 bloatedPrint("finished running thumbs generator...");
 
 $dbh = null;
+
 
 //create thumbs for mosaic
 //create thumbs for related

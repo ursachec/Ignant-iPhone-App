@@ -90,7 +90,7 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0) // && $startPosition<30)
+	if(count($posts)>0 && $startPosition<30)
 	{
 		createMosaicEntries(&$startPosition, $batchSize, &$dbh);
 	}
