@@ -10,7 +10,6 @@
 
 
 
-
 //WARNING! (because of slappy programming) don't change the index to be other than -1, app crashes when navigating in the detailviewcontroller to the last index
 int const kInvalidBlogEntryIndex = -1;
 
@@ -57,7 +56,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 
 //server stuff
 #define shouldUseRemoteServer false
-#define shouldUseIgnantServer false
+#define shouldUseIgnantServer true
 
 
 NSString* const kAdressForMercedesPage = @"http://m.mercedes-benz.de/";
@@ -72,9 +71,9 @@ NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant
 NSString * const kAdressForImageServer = @"http://107.21.216.249/ignant/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://107.21.216.249/ignant/videosrv.php";
 #elif shouldUseIgnantServer
-NSString * const kAdressForContentServer = @"http://www.ignant.de/iphone_app/ignant.php";
-NSString * const kAdressForImageServer = @"http://www.ignant.de/iphone_app/imgsrv.php";
-NSString * const kAdressForVideoServer = @"http://www.ignant.de/iphone_app/videosrv.php";
+NSString * const kAdressForContentServer = @"http://www.ignant.de/app/ignant.php";
+NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #else
 NSString * const kAdressForContentServer = @"http://192.168.144.236/ign/ignant.php";
 NSString * const kAdressForImageServer = @"http://192.168.144.236/ign/imgsrv.php";

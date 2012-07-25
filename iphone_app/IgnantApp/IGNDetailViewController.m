@@ -762,11 +762,14 @@
         [self.articleVideoView removeFromSuperview];
     }
     
+    /*
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.articleContentView addSubview:self.playVideoButton];
         [self.articleVideoView removeFromSuperview];
     }
+    
+    */
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
@@ -774,7 +777,8 @@
         [self.articleVideoView removeFromSuperview];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame) {
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame
+             || [self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.articleContentView addSubview:self.playVideoButton];
         [self.articleContentView addSubview:self.articleVideoView];
@@ -831,6 +835,7 @@
                                    publishDate:(NSDate*)publishDate
                                 videoEmbedCode:(NSString*)videoEmbedCode
 {
+    
 #define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
 #define SHOW_DEBUG_COLORS false
     

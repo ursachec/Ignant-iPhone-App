@@ -432,6 +432,56 @@ $sDanCretu = '<!--:de-->Der Fotograf und Visual Artist <a href="http://dancretu.
 
 <p style="text-align: center;"><small>All images © <a href="http://dancretu.tumblr.com/">Dan Cretu</a></small></p><!--:-->';
 
+$sItravel = '<!--:de-->Für iGNANTravel reise ich nach Australien und werde fünf Tage im <a href="http://www.tourismnt.com.au/"> Nothern Territory </a> verbringen. Ich frage mich, ob ich das Jetlag überhaupt überwunden habe, bevor es schon wieder zurück geht. Bisher gefällt es mir hier sehr gut und ich habe viel gesehen und erlebt (bin ja mehr oder weniger 21 Stunden am Tag wach). <!--:--><!--:en-->I am in Australia for iGNANTravel. I will spent five days in the <a href="http://www.tourismnt.com.au/"> Nothern Territory </a> and I wonder if I will have overcome the jetlag before flying back again. So far I am really enjoying it and have already seen a lot (because I am practically 21 hours awake a day). <!--:--><!--more--><!--:de-->Hier der erste Sweetspot in Darwin, den ich euch gerne zeigen möchte:
+
+Darwin ist die nördlichste Stadt im <a href="http://www.tourismnt.com.au/"> Nothern Territory </a> von Australien. Einem Stamm der Aboriginals, den <em>Larrakia people</em>, gehört das meiste Land in und um Darwin ursprünglich. Während einer Batji Tour (batji means good), zeigte uns Robbie, der in echt Padj Padj Janama Penanke Ngamatuawia, einsern harte Bäume und kaut dabei auf heilenden schwarz-grünen Ameisen. Am Ende der Tour kommen wir an eine versteckte Küste, die vor allem den <em>Larrakia women</em> als spirituelle Oase und Ort des Friedens dienen soll: Der Lameroo Beach. Neben tiefer Glückseeligkeit habe ich dort auch unzählige dieser wunderbaren Steine gefunden. Da der Ort als Ganzes aufgefasst und gesehen werden muss und soll, gibt es hier ein paar Nahaufnahmen. Wer hat nur all diese Steine gebatikt?
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/batikcoast.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah22.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nah4.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/stein1.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah61.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/stockstein1.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah51.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/steini1.jpg" alt="" />
+
+Die Lehm-Steine formten und färbten sich wohl vor rund 120 Millionen Jahren im inneren Gestein am Grund des Meeres. Heißes Quellwasser muss durch kleine Löcher gelangt sein und hat dort Eisen und Mangan Verbindungen abgelagert. Durch Schwefelgase in der Atmopsphäre wurden die Färbungen permanent \'eingebrannt\'. Danke Mutter Natur für dieses Phänomen.
+
+Erfahrt mehr über das Northern Territory <a href="http://www.tourismnt.com.au/"> <strong>hier</strong></a>.
+
+<p style="text-align: center;"><small>Text &amp; pictures by <a href="http://www.monjagentshow.com/"> Monja Gentschow </a></small></p><!--:--><!--:en-->Here is the first sweetspot I have found in Darwin:
+
+Darwin is the northest city in the <a href="http://www.tourismnt.com.au/"> Nothern Territory </a> of Australia. Most of the land in and around Darwin originally belongs to a tribe of the Aboriginals, the <em>Larrakia people</em>. While a Batji-Tour (batji means good) through the nature of the city, Robbie who\'s real (short version) name is Padj Padj Janama Penanke Ngamatuawia, showed us around and talked about iron wooded trees while chewing on heeling black and green ants. Our tour ended on a coast named Lameroo Beach. It\'s bound to be a sacred site and spiritual place for Larrakia women to take a bath and find peace. Besides deep happiness I also found an endless number of these beautiful stones. For that the coast should be perceived as a whole (and in real), I will show you some close-up shots here. I am wondering, who has batiked all these stones?
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/batikcoast.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah22.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/07/nah4.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/stein1.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah61.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/stockstein1.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/nah51.jpg" alt="" />
+
+<img src="http://www.ignant.de/wp-content/uploads/2013/07/steini1.jpg" alt="" />
+
+The claystones were formed and coloured about 120 million years ago in the sediments of the inland sea. Hot springwater must have passed through the holes of the stones, so that iron and maganese compound were able to deposit. The colours were then fixed by atmospheric oxygen and sulphide gas. Thanks nature for this phenomenon.
+
+For more information about the Northern Territory, click <a href="http://www.tourismnt.com.au//"> <strong>here </strong></a>.
+
+<p style="text-align: center;"><small>Text &amp; pictures by <a href="http://www.monjagentshow.com/"> Monja Gentschow </a></small></p><!--:-->';
+
 $sDummy = '<!--:de-->DeutsCH <img src="www.google.at" /><p>asdsadasdassad</p><!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCHDEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
 
 
@@ -439,11 +489,11 @@ header('Content-type: text/plain');
 	
 	
 	
-// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu
+// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu || $sItravel
 
 $lang = $_GET['lang'];
 
-$resS = descriptionForLanguage($sDanCretu, $lang);
+$resS = descriptionForLanguage($sItravel, $lang);
 print $resS;
 
 function descriptionForLanguageUnitTests()

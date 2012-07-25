@@ -446,7 +446,7 @@ function removeUnwantedHTML($string)
 	$s = "";
 	$s = removeImgTags($string);
 	$s = removeIframes($s);
-	$s = removeEmptyLines($s);
+//	$s = removeEmptyLines($s);
 	
 	return $s;
 }
@@ -454,7 +454,7 @@ function removeUnwantedHTML($string)
 function removeImgTags($string)
 {
 	$str = "";
-	$str = preg_replace('/<img.*\/>/si', "", $string);
+	$str = preg_replace('/<img.*\/>[\n\r]*/i', "", $string);
 	return $str;
 }
 function removeEmptyLines($string)
