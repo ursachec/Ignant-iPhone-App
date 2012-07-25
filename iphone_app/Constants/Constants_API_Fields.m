@@ -29,6 +29,7 @@ NSString * const kTLReturnMosaicImage = @"mosaicImg";
 NSString * const kTLReturnRelatedArticleImage = @"relatedImg";
 NSString * const kTLReturnCategoryImage = @"categoryImg";
 NSString * const kTLReturnDetailImage = @"detailImg";
+NSString * const kTLReturnSlideshowImage = @"slideshowImg";
 
 
 //METAINFORMATION

@@ -424,7 +424,11 @@ NSString * const kImageFilename = @"filename";
             [self.bigMosaikView addSubview:oneView];
             
             //trigger loading the image
-            [self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
+            //[self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
+            
+            NSURL* thumbURL = [[NSURL alloc] initWithString:mosaicEntryUrl];
+            [self triggerLoadingImageAtURL:thumbURL forImageView:tempImageView];
+            
         }
         
         //add one of the columnHeights value to the relevant columnHeight

@@ -23,7 +23,8 @@ extern NSString * const kTLReturnImageType;
 extern NSString * const kTLReturnMosaicImage; 
 extern NSString * const kTLReturnRelatedArticleImage; 
 extern NSString * const kTLReturnCategoryImage; 
-extern NSString * const kTLReturnDetailImage; 
+extern NSString * const kTLReturnDetailImage;
+extern NSString * const kTLReturnSlideshowImage;
 
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
