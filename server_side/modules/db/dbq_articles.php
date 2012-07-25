@@ -153,11 +153,15 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
+		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
 		AND pt.`post_date` <= :aDate
 		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
+		AND wpm2.`meta_value` IS NULL
+		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
 		
 		$qString .= " ORDER BY pt.`post_date` DESC";	
@@ -177,12 +181,16 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
+		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_parent` = 0
 		AND pt.`post_type` = 'post' 
 		AND tr.`term_taxonomy_id` = :id 
 		AND pt.`post_date` <= :aDate
 		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
+		AND wpm2.`meta_value` IS NULL
+		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.") ";
 		
 		$qString .= " ORDER BY pt.`post_date` DESC";
@@ -301,10 +309,14 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
+		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
 		AND pt.`post_date` > '".$dateAfter."'
+		AND wpm2.`meta_value` IS NULL
+		AND wpm2.`meta_value` IS NULL
 		AND tt.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")
 		ORDER BY RAND() LIMIT ".$numberOfArticles.";";
 	
