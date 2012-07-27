@@ -53,8 +53,9 @@ function _bool($var){
   }
 }
 
-require_once('generalConstants.php');
+
 require_once('feedKeys.php');
+require_once('generalConstants.php');
 require_once('JSONContentProxy.php');
 
 require_once("wp_config.inc.php");
@@ -72,33 +73,36 @@ $articleId = $_GET[FK_ARTICLE_ID];
 $thumbLink = '';
 $imageType = '';
 
+
+$dbh = newPDOConnection();
+
 if(isset($_GET[TL_RETURN_IMAGE_TYPE]) && $_GET[TL_RETURN_IMAGE_TYPE]!='')
 	$imageType = $_GET[TL_RETURN_IMAGE_TYPE];
 
 if( strcmp($imageType, TL_RETURN_MOSAIC_IMAGE)==0 )
 {	
-	// $thumbLink =  getThumbLinkForArticleId($articleId);
+	$thumbLink = getThumbLinkForMosaicId($articleId, &$dbh);
 	
-	$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);
+	print "thumbLink: $thumbLink\n\n";
+	exit;
+	
+	//$thumbLink = $contentProxy->getMosaicImageUrlForArticleId($articleId);
 }
 
 else if( strcmp($imageType, TL_RETURN_RELATED_IMAGE)==0 )
 {	
-	/*
-	$path_parts = pathinfo($_SERVER['SCRIPT_NAME']);
-	$imgDir = 'http://'.$_SERVER['SERVER_NAME'].'/img';
-	$relatedImgDir = $imgDir.'/related';
+	$thumbLink =  getThumbLinkForArticleId($articleId, &$dbh);
 	
-	$tempArticleId = '39440';
-	$thumbLink = $relatedImgDir.'/'.$tempArticleId.'.png';
-	*/
-	$thumbLink =  getThumbLinkForArticleId($articleId);
+	print "thumbLink: $thumbLink\n\n";
+	exit;
 }
 
 else
 {
-	$thumbLink =  getThumbLinkForArticleId($articleId);
+	$thumbLink =  getThumbLinkForArticleId($articleId, &$dbh);
 }
+
+$dbh = null;
 
 if(strlen($thumbLink)<=0)
 exit;

@@ -1,25 +1,5 @@
 <?php
 /*
-require_once('../../generalConstants.php');
-require_once('../../feedKeys.php');
-
-require_once('../../classes/IgnantInterfaces.php');
-require_once('../../classes/IgnantObject.php');
-require_once('../../classes/LightArticle.php');
-require_once('../../classes/RelatedArticle.php');
-require_once('../../classes/Article.php');
-require_once('../../classes/BasicImage.php');
-require_once('../../classes/Base64Image.php');
-require_once('../../classes/RemoteImage.php');
-require_once('../../classes/MixedImage.php');
-require_once('../../classes/Template.php');
-require_once('../../classes/Category.php');
-require_once('../../classes/MosaicEntry.php');
-
-require_once('../../wp_config.inc.php');
-*/
-
-/*
 
 ToDO: fix problem posts
 
@@ -29,30 +9,80 @@ SELECT * FROM wp_posts WHERE ID = 11187 AND post_date > '2011-1-1'
 SELECT * FROM wp_posts WHERE ID = 29938
 
 //TODO: problem on mosaic ('got you need an internet connection for that' on the wrong time)
-
 */
-
-
-
 
 // TL_RETURN_MOSAIC_IMAGE | TL_RETURN_RELATED_IMAGE | TL_RETURN_CATEGORY_IMAGE | TL_RETURN_DETAIL_IMAGE | TL_RETURN_SLIDESHOW_IMAGE
 
 
 function getThumbLinkForPostIdAndType($postid=0, $type = null)
 {
+	global $GL_THUMB_FOLDERS;
+	
+	if($postid==0 || $type=='')
+	{
+		die("getThumbLinkForPostIdAndType post id or type not set\n");
+		return;
+	}
+	
+	$subFolder = '';
+	$subFolder = $GL_THUMB_FOLDERS[$type];
+	if(!$subFolder)
+	{
+		die("getThumbLinkForPostIdAndType unknown image type\n");		
+	}
+	
+	$thumbImageSrc = ROOT_THUMB_FOLDER.$subFolder.$postid.'.'.THUMB_IMAGE_EXT;
 		
-		
+	if(@fopen($thumbImageSrc,"r")==true)
+	{
+		return $thumbImageSrc;
+	}	
+	
+	return null;
 }
 
-function getThumbLinkForMosaicId($mosaicId='')
+function getThumbLinkForMosaicId($mosaicPostId='', $dbh = null)
 {
+	if($dbh==null)
+	{
+		print("null database handler\n");
+		return '';
+	}
 	
+	$qString = "SELECT wm.`mosaic_post_id`, wm.`post_id`, wpm.`meta_key`, wpm.`meta_value` AS 'img_url' FROM 
+		wp_posts_mosaic AS wm
+		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = wm.`mosaic_post_id`
+		WHERE wm.`post_id` = :mpId
+		AND wpm.`meta_key` = '_wp_attached_file' LIMIT 1";
 	
+	$stmt = $dbh->prepare($qString);
+	$stmt->bindParam(':mpId', $mosaicPostId, PDO::PARAM_INT);
+	
+	$stmt->execute();
+	$p = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+	if(!$p)
+		return '';
+		
+	$mpid = $p['mosaic_post_id'];
+	$pid = $p['post_id'];
+	
+	$thumbLink = getThumbLinkForPostIdAndType($pid, TL_RETURN_MOSAIC_IMAGE);
+	if($thumbLink)
+		return $thumbLink;
+	
+	$imgUrl = ROOT_IMAGE_FOLDER.$p['img_url'];
+	
+	return $imgUrl;
 }
 
-function getThumbLinkForArticleId($articleId = '')
+function getThumbLinkForArticleId($articleId = '', $dbh = null)
 {	
-	$dbh = newPDOConnection();
+	if($dbh==null)
+	{
+		print("null database handler\n");
+		return '';
+	}
 	
 	$qString = "SELECT wp_postmeta.`meta_value` AS 'img_url' FROM wp_postmeta WHERE wp_postmeta.`post_id` = (SELECT meta_value FROM wp_postmeta AS pm WHERE pm.`meta_key`='_thumbnail_id' AND pm.`post_id`=:pId ) AND wp_postmeta.`meta_key` = '_wp_attached_file' LIMIT 1;";
 	
@@ -62,8 +92,14 @@ function getThumbLinkForArticleId($articleId = '')
 	$stmt->execute();
 	$p = $stmt->fetch(PDO::FETCH_ASSOC);
 	
+	if(!$p)
+		return '';
+	
+	$thumbLink = getThumbLinkForPostIdAndType($articleId, TL_RETURN_RELATED_IMAGE);
+	if($thumbLink)
+		return $thumbLink;
+	
 	$imgUrl = ROOT_IMAGE_FOLDER.$p['img_url'];
-	$dbh = null;
 	
 	return $imgUrl;
 }

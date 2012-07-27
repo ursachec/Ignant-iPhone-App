@@ -1,7 +1,8 @@
 <?php
 
-require_once('../../generalConstants.php');
+
 require_once('../../feedKeys.php');
+require_once('../../generalConstants.php');
 
 require_once("../../wp_config.inc.php");
 require_once('../db/dbq_general.php');
@@ -22,7 +23,8 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 		
 	if(!$src_img)
 	{
-		die('could not create image object');
+		print("\nERROR: could not create image object fn: $fn\n");
+		return;
 	}
 
 	$image_sizes = getimagesize($name);
@@ -77,12 +79,12 @@ function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $s
     	$mid = $p['mosaic_post_id'];
 		$meta_value = $p['meta_value'];
 		
-		print "create image thumb for pid: $pid | mid: $mid | sourceDir: $sourceDir | meta_value: $meta_value \n ";
-	  	//createImageThumb($pid, $mid, $newWidth, $sourceDir, $destinationDir);
+		//print "create image thumb for pid: $pid | mid: $mid | sourceDir: $sourceDir | meta_value: $meta_value \n ";
+	  	createImageThumb($pid, $meta_value, $newWidth, $sourceDir, $destinationDir);
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0  && $startPosition<30)
+	if(count($posts)>0  && $startPosition<MAX_NUMBER_OF_FILE_TO_CREATE)
 	{			
 		createMosaicImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
 	}
@@ -125,12 +127,12 @@ function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $
 	foreach($posts as $p)
 	{
     	$pid = $p['post_id'];
-    	$iid = $p['img_url'];
-	  	createImageThumb($pid, $iid, $newWidth, $sourceDir, $destinationDir);
+    	$img_url = $p['img_url'];
+	  	createImageThumb($pid, $img_url, $newWidth, $sourceDir, $destinationDir);
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0  && $startPosition<30)
+	if(count($posts)>0  && $startPosition<MAX_NUMBER_OF_FILE_TO_CREATE)
 	{
 		createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
 	}
@@ -140,9 +142,11 @@ function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $
 }
 
 function createImageThumb($articleId=0, $imageUrl = '', $newWidth = 200, $sourceDir='', $destinationDir = '')
-{
+{	
 	$sourceImage = $sourceDir.$imageUrl;
 	$destinationImage = $destinationDir.$articleId.'.png';
+	
+	print "\n sourceDir : $sourceDir | imageUrl : $imageUrl | sourceImage : $sourceImage\n";
 	
 	//TODO: check permissions
 	if(@fopen($destinationImage,"r")==true)
@@ -169,7 +173,10 @@ else{
 }
 
 //temp
-$imageType = TL_RETURN_RELATED_IMAGE;
+$imageType = $_GET[TL_RETURN_IMAGE_TYPE];
+if(!$imageType)
+	die('ERROR: image type not set, exiting.');
+
 
 header('Content-type:text/plain');	
 bloatedPrint("started generating thumbs...");
@@ -189,6 +196,8 @@ $doubleWidth = true;
 
 $sourceDir = '';
 $destinationDirRoot = '';
+
+define('MAX_NUMBER_OF_FILE_TO_CREATE', 300);
 
 
 $debug = false;

@@ -1,5 +1,6 @@
 <?php
 
+require_once('../../feedKeys.php');
 require_once('../../generalConstants.php');
 
 require_once("../../wp_config.inc.php");

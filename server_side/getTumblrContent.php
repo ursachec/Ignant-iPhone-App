@@ -1,7 +1,7 @@
 <?php
-require_once('generalConstants.php');
-require_once('feedKeys.php');
 
+require_once('feedKeys.php');
+require_once('generalConstants.php');
 
 //debug variables
 $lastNumberOfTotalPosts = 0;
