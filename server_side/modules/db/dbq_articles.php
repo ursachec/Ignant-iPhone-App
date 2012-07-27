@@ -1,5 +1,6 @@
 <?php
 /*
+require_once('../../generalConstants.php');
 require_once('../../feedKeys.php');
 
 require_once('../../classes/IgnantInterfaces.php');
@@ -31,12 +32,26 @@ SELECT * FROM wp_posts WHERE ID = 29938
 
 */
 
-define('POSTS_DATE_AFTER','2011-5-5');
+
+
+
+// TL_RETURN_MOSAIC_IMAGE | TL_RETURN_RELATED_IMAGE | TL_RETURN_CATEGORY_IMAGE | TL_RETURN_DETAIL_IMAGE | TL_RETURN_SLIDESHOW_IMAGE
+
+
+function getThumbLinkForPostIdAndType($postid=0, $type = null)
+{
+		
+		
+}
+
+function getThumbLinkForMosaicId($mosaicId='')
+{
+	
+	
+}
 
 function getThumbLinkForArticleId($articleId = '')
-{
-	$baseLink = 'http://www.ignant.de/wp-content/uploads/';
-	
+{	
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT wp_postmeta.`meta_value` AS 'img_url' FROM wp_postmeta WHERE wp_postmeta.`post_id` = (SELECT meta_value FROM wp_postmeta AS pm WHERE pm.`meta_key`='_thumbnail_id' AND pm.`post_id`=:pId ) AND wp_postmeta.`meta_key` = '_wp_attached_file' LIMIT 1;";
@@ -47,8 +62,7 @@ function getThumbLinkForArticleId($articleId = '')
 	$stmt->execute();
 	$p = $stmt->fetch(PDO::FETCH_ASSOC);
 	
-	$imgUrl = $baseLink.$p['img_url'];
-	
+	$imgUrl = ROOT_IMAGE_FOLDER.$p['img_url'];
 	$dbh = null;
 	
 	return $imgUrl;
@@ -75,9 +89,6 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	$postCategory = new Category($p['category_id'], $p['category_name'],'');
 	$postTemplate = getArticleTemplateForCategoryId($postCategory->id);
 	$postUrl = $p['post_url'];
-	
-	// $postVideoEmbedCode = '<iframe src="http://player.vimeo.com/video/40005142?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="310" height="202" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
-
 	$postVideoEmbedCode = prepareVideoEmbedCode($p['video']);
 	
 	 $lightArticle = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, 	$postRemoteImages, $postRelatedArticles, $postCategory, $postUrl, $postVideoEmbedCode); 
@@ -446,8 +457,6 @@ function removeUnwantedHTML($string)
 	$s = "";
 	$s = removeImgTags($string);
 	$s = removeIframes($s);
-//	$s = removeEmptyLines($s);
-	
 	return $s;
 }
 
@@ -461,9 +470,7 @@ function removeEmptyLines($string)
 {
 	$str = "";
 	$str = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+$/m", "", $string);
-	$str = rtrim($str);
-	//$str = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+$/", '', $string);
-	
+	$str = rtrim($str);	
 	return $str;
 }
 

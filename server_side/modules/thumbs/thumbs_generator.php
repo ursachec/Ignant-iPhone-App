@@ -1,5 +1,6 @@
 <?php
 
+require_once('../../generalConstants.php');
 require_once('../../feedKeys.php');
 
 require_once("../../wp_config.inc.php");
@@ -9,23 +10,16 @@ require_once('../db/dbq_articles.php');
 require_once('../db/dbq_notifications.php');
 require_once('../db/dbq_categories.php');
 
-//first get list of articles + img_urls to convert and save
-//
-//make a directory for the thumbs
-//
-//start generating thumbs in batches of N
-//save them all to the same directory, under the article id .EXT name
-
-
 function createthumb($name, $filename, $new_w = 0, $new_h = 0){
-	$system=explode('.',$name);
-	if (preg_match('/jpg|jpeg/',$system[1])){
+		
+	$fn = basename($name);
+	if (preg_match('/jpg|jpeg/',$fn)){
 		$src_img=imagecreatefromjpeg($name);
 	}
-	if (preg_match('/png/',$system[1])){
+	if (preg_match('/png/',$fn)){
 		$src_img=imagecreatefrompng($name);
 	}
-	
+		
 	if(!$src_img)
 	{
 		die('could not create image object');
@@ -45,6 +39,11 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 	$dst_img=ImageCreateTrueColor($thumb_w,$thumb_h);
 	imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_w,$old_h); 
 
+	if(!$dst_img)
+	{
+		die('could not create trueColorImage');
+	}
+
 	imagepng($dst_img,$filename); 
 
 	imagedestroy($dst_img); 
@@ -53,19 +52,20 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 
 function createSlideshowImageThumbs()
 {
-	
+	print "create slideshow image thumbs";
 	
 }
 
 function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $sourceDir = '', $destinationDir = '', $dbh = null)
-{
+{		
 	if($dbh==null)
 	{
 		bloatedPrint("database handler is null (startPosition: $startPosition)...");
 		return;
 	}
 	
-	$qString = "SELECT `mosaic_post_id`,`post_id` FROM wp_posts_mosaic ";
+	$qString = "SELECT wm.`mosaic_post_id`, wm.`post_id`, wp.`meta_value` FROM wp_posts_mosaic AS wm 
+	LEFT JOIN wp_postmeta AS wp ON wm.`mosaic_post_id` = wp.`post_id` AND wp.`meta_key` = '_wp_attached_file' ";
 	$qString .= " LIMIT ".$startPosition.",".$batchSize;
 	
 	$stmt = $dbh->prepare($qString);
@@ -75,13 +75,16 @@ function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $s
 	{
 		$pid = $p['post_id'];
     	$mid = $p['mosaic_post_id'];
-	  	createOneArticleImageThumb($pid, $mid, $newWidth, $sourceDir, $destinationDir, $dbh);
+		$meta_value = $p['meta_value'];
+		
+		print "create image thumb for pid: $pid | mid: $mid | sourceDir: $sourceDir | meta_value: $meta_value \n ";
+	  	//createImageThumb($pid, $mid, $newWidth, $sourceDir, $destinationDir);
 	}
 	$startPosition+=$batchSize;
 	
 	if(count($posts)>0  && $startPosition<30)
-	{
-		createMosaicImageThumbs(&$startPosition, $batchSize, $newWidth , &$dbh);
+	{			
+		createMosaicImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
 	}
 	
 	bloatedPrint("finished recursion with startPosition: $startPosition");
@@ -123,22 +126,22 @@ function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $
 	{
     	$pid = $p['post_id'];
     	$iid = $p['img_url'];
-	  	createOneArticleImageThumb($pid, $iid, $newWidth, $sourceDir, $destinationDir, $dbh);
+	  	createImageThumb($pid, $iid, $newWidth, $sourceDir, $destinationDir);
 	}
 	$startPosition+=$batchSize;
 	
 	if(count($posts)>0  && $startPosition<30)
 	{
-		createArticleImageThumbs(&$startPosition, $batchSize, $newWidth , &$dbh);
+		createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
 	}
 	
 	bloatedPrint("finished recursion with startPosition: $startPosition");
 	return;
 }
 
-function createOneArticleImageThumb($articleId=0, $imageUrl = '', $newWidth = 200, $sourceDir='', $destinationDir = '',  $dhb=null)
+function createImageThumb($articleId=0, $imageUrl = '', $newWidth = 200, $sourceDir='', $destinationDir = '')
 {
-	$sourceImage = $sourceDir.'carapicuibapre.jpg';
+	$sourceImage = $sourceDir.$imageUrl;
 	$destinationImage = $destinationDir.$articleId.'.png';
 	
 	//TODO: check permissions
@@ -148,79 +151,101 @@ function createOneArticleImageThumb($articleId=0, $imageUrl = '', $newWidth = 20
 	}
 	else
 	{
-		print("creating one article Image thumb, articleId: $articleId // imageUrl: $imageUrl\n");
+		print("creating one article Image thumb, articleId: $articleId // imageUrl: $imageUrl // destination: $destinationImage\n");
 		createthumb($sourceImage, $destinationImage,$newWidth);
 	}
 }
 
-header('Content-type:text/plain');
+// TL_RETURN_MOSAIC_IMAGE | TL_RETURN_RELATED_IMAGE | TL_RETURN_CATEGORY_IMAGE | TL_RETURN_DETAIL_IMAGE | TL_RETURN_SLIDESHOW_IMAGE
 
+parse_str(implode('&', array_slice($argv, 1)), $_GET);
+
+if(isset($_GET[TL_RETURN_IMAGE_TYPE]) && $_GET[TL_RETURN_IMAGE_TYPE]!=''){
+	$imageType = $_GET[TL_RETURN_IMAGE_TYPE];
+}
+else{
+	bloatedPrint("Image category not set, exiting.");
+	return;
+}
+
+//temp
+$imageType = TL_RETURN_RELATED_IMAGE;
+
+header('Content-type:text/plain');	
 bloatedPrint("started generating thumbs...");
 
 $before = microtime(true);
 
-
-// TL_RETURN_MOSAIC_IMAGE 
-// TL_RETURN_RELATED_IMAGE 
-// TL_RETURN_CATEGORY_IMAGE 
-// TL_RETURN_DETAIL_IMAGE 
-// TL_RETURN_SLIDESHOW_IMAGE 
-
-$imageType = TL_RETURN_CATEGORY_IMAGE;
-
-
 $includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 
 $dbh = newPDOConnection();
+
+
 $startPosition = 0;
 $batchSize = 20;
 
 $newWidth = 0;
 $doubleWidth = true;
 
-$sourceDir = 'pics/';
-$destinationDirRoot = '/Users/cvursache/privat/temp/';
+$sourceDir = '';
+$destinationDirRoot = '';
+
+
+$debug = false;
+
+if($debug)
+{
+	$sourceDir = 'pics/';
+	$destinationDirRoot = '/Users/cvursache/privat/temp/';
+}
+else
+{
+	$sourceDir = '/www/htdocs/w00d3020/ignantblog/wp-content/uploads/';
+	$destinationDirRoot = '/www/htdocs/w00d3020/ignantblog/app/img/';	
+}
+
 $destinationDir = $destinationDirRoot;
 
 if(strcmp($imageType,TL_RETURN_MOSAIC_IMAGE)==0)
 {
 	$newWidth = 100 * 2;
 	$destinationDir .= 'mosaic/'; 
+	
+	createMosaicImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 }
 else if(strcmp($imageType,TL_RETURN_RELATED_IMAGE)==0)
 {
 	$newWidth = 100 * 2;
 	$destinationDir .= 'related/';
+	
+	createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
+	
 }
 else if(strcmp($imageType,TL_RETURN_CATEGORY_IMAGE)==0)
 {
 	$newWidth = 149 * 2;
 	$destinationDir .= 'category/';
+	
+	createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 }	
 else if(strcmp($imageType,TL_RETURN_DETAIL_IMAGE)==0)
 {
 	$newWidth = 310;
 	$destinationDir .= 'detail/';
+	
+	createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 }	
 else if(strcmp($imageType,TL_RETURN_SLIDESHOW_IMAGE)==0)
 {
 	$newWidth = 100;
 	$destinationDir .= 'slideshow/';
+
+	createSlideshowImageThumbs();
 }
-		
-createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 
 $after = microtime(true);
 bloatedPrint("execution time: ".($after-$before). " s");
 bloatedPrint("finished running thumbs generator...");
 
 $dbh = null;
-
-
-//create thumbs for mosaic
-//create thumbs for related
-//create thumbs for category view
-//create thumbs for detail vc
-
-
 ?>

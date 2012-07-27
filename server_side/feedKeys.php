@@ -6,8 +6,6 @@
 define('DB_FETCH_KEY_CATEGORY_NAME', 'cat_name');
 define('DB_FETCH_KEY_CATEGORY_ID', 'cat_id');
 
-
-
 define('ID_FOR_HOME_CATEGORY',-1);
 
 //TOP LEVEL

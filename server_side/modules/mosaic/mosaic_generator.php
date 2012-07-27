@@ -1,5 +1,7 @@
 <?php
 
+require_once('../../generalConstants.php');
+
 require_once("../../wp_config.inc.php");
 
 require_once('../db/dbq_general.php');
