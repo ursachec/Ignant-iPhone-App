@@ -50,7 +50,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 @property (nonatomic, strong, readonly) NSEntityDescription *currentTumblrEntryDescription;
 @property (nonatomic, strong, readonly) NSEntityDescription *currentCategoryDescription;
 
-#warning TODO: this must be deleted, probably
 @property NSUInteger countForNumberOfBlogEntriesToBeSaved;
 
 @property (nonatomic, unsafe_unretained) NSUInteger blogEntriesToBeSaved;
@@ -75,7 +74,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 
 @synthesize currentBlogEntry, currentTumblrEntry, currentBlogEntryDescription, currentTumblrEntryDescription, currentCategory, currentCategoryDescription;
 
-@synthesize countForNumberOfBlogEntriesToBeSaved;
 @synthesize blogEntriesToBeSaved;
 
 @synthesize currentDateForLeastRecentArticle = _currentDateForLeastRecentArticle;
@@ -118,13 +116,13 @@ static const NSUInteger kImportBatchSize = 5;
 
 -(void)finishProcessingCurrentBlogEntry
 {
-    countForNumberOfBlogEntriesToBeSaved++;
+    _countForNumberOfBlogEntriesToBeSaved++;
     
-    if (countForNumberOfBlogEntriesToBeSaved == kImportBatchSize) {
+    if (_countForNumberOfBlogEntriesToBeSaved == kImportBatchSize) {
         
         NSError *saveError = nil;
         NSAssert1([self.insertionContext save:&saveError], @"Unhandled error saving managed object context in import thread: %@", [saveError localizedDescription]);
-        countForNumberOfBlogEntriesToBeSaved = 0;
+        _countForNumberOfBlogEntriesToBeSaved = 0;
     }
 }
 
@@ -377,7 +375,6 @@ static const NSUInteger kImportBatchSize = 5;
     {
         
 #warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
-#warning make sure this method (importJSONString) is only called when importing
         //save date for least recent article
         NSString* homeCategoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
         [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];

@@ -1243,7 +1243,7 @@
 -(void)postToFacebook
 {
     if (![self.appDelegate.facebook isSessionValid]) {
-        NSLog(@"facebook: session NOT valid");
+        DBLog(@"facebook: session NOT valid");
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"user_likes",
                                 @"read_stream",

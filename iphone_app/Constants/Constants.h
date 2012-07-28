@@ -11,18 +11,23 @@
 #import "Constants_API_Fields.h"
 #import "Constants_Google_Analytics.h"
 
-//some preprocessor commans
-#define LOG_CURRENT_FUNCTION() NSLog(@"%@", NSStringFromSelector(_cmd));
-#define LOG_CURRENT_FUNCTION_AND_CLASS() NSLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
 
+/*
 #ifdef DEBUG
 #define DBLog(message, ...) NSLog((@"DBLog: %s [Line %d]" message), __PRETTY_FUNCTION__, __LINE__, ## __VA_ARGS__)
 #else
+*/
 #define DBLog(message, ...)
-#endif
+//#endif
+
+
+//some preprocessor commans
+#define LOG_CURRENT_FUNCTION() DBLog(@"%@", NSStringFromSelector(_cmd));
+#define LOG_CURRENT_FUNCTION_AND_CLASS() DBLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+
 
 //################################################################################
-//update cycles
+//update cyclesabb
 extern int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate;
 
 //################################################################################

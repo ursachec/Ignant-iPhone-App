@@ -68,8 +68,6 @@
 @property(nonatomic, readwrite, strong) UIView* ignantToolbar;
 @property(nonatomic, readwrite, strong) UIButton* goHomeButton;
 
--(void)createCacheFolders;
-
 @end
 
 #pragma mark -
@@ -110,7 +108,6 @@
 
 @synthesize ignantToolbar = _ignantToolbar;
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     DBLog(@"didFinishLaunchingWithOptions");
@@ -123,7 +120,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     
     
-    BOOL googleAnalyticsWasSetUp = [self setupGoogleAnalytics];
+    [self setupGoogleAnalytics];
     
     
     //initialize utility objects
@@ -134,9 +131,6 @@
     self.shouldLoadDataForFirstRun = (kForceReloadCoreData || lastUpdate == nil);
         
     DBLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
-    
-    //create cache folders for the thumbs
-//    [self createCacheFolders];
     
     //initialize the importer
     self.importer = [[IgnantImporter alloc] init];
@@ -232,31 +226,6 @@
     
 #warning TODO: add actual return value, do something if it didn't work, like send data to the server
     return true;
-}
-
--(void)createCacheFolders
-{
-    //create cache folders
-    NSFileManager *fileManager= [NSFileManager defaultManager]; 
-    
-    NSString *applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *thumbImagesCacheDirectory = [applicationDocumentsDir stringByAppendingFormat:@"thumbs/"];
-    BOOL isDir;
-    if(![fileManager fileExistsAtPath:thumbImagesCacheDirectory isDirectory:&isDir])
-    {
-        if(![fileManager createDirectoryAtPath:thumbImagesCacheDirectory withIntermediateDirectories:YES attributes:nil error:NULL])
-        {
-            DBLog(@"Error: Create folder failed %@", thumbImagesCacheDirectory);
-        }
-        else
-        {
-            DBLog(@"created Folder");
-        }
-    }
-    else
-    {
-        DBLog(@"directory exists");
-    }
 }
 
 - (NSString *)persistentStorePath {
@@ -927,7 +896,7 @@ return _externalPageViewController;
  */
 
 -(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
-    NSLog(@"token extended");
+    DBLog(@"token extended");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
     [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
