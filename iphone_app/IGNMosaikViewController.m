@@ -24,7 +24,6 @@
 
 #import "SBJSON.h"
 
-#warning TODO: see what image size to use / maybe do some server directory selection to differentiate between Retina and NON-Retina display versions
 
 static int kMinimumMosaicImagesLoaded = 1;
 
@@ -236,8 +235,6 @@ NSString * const kImageFilename = @"filename";
 #pragma mark - client-side loading / saving of the mosaic images
 -(void)replaceCurrentMosaicImagesWithNewOnes:(NSArray*)newMosaicImages
 {
-#warning TODO: implement comparing the existing imags and removing duplicates (unique_id for each image - articleId)
-    
     //save the new mosaic images array to disk, overwriting the last file
     NSMutableDictionary *imagesDictionary = [[NSMutableDictionary alloc] init];
     [imagesDictionary setObject:[newMosaicImages copy] forKey:kImagesKey];
@@ -253,8 +250,6 @@ NSString * const kImageFilename = @"filename";
 
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages
 {
-#warning TODO: implement comparing the existing imags and removing duplicates (unique_id for each image - articleId)
-    
     //first retrieve the currently saved mosaic images as copy
     NSArray* currentlySavedMosaicImages = [self.savedMosaicImages copy];
     
@@ -330,12 +325,10 @@ NSString * const kImageFilename = @"filename";
     //load the plist with the saved mosaic images in memory
     NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
     
-    
+
+    //add the load more mosaic view to the image dictionary
     if(shouldIncludeLoadingMoreView)
     {
-        //add the load more mosaic view to the image dictionary
-        //TODO: define how to implement
-    #warning TODO!!!! define how to implement adding the load more mosaic view
         NSMutableDictionary* loadMoreMosaicDictionary = [[NSMutableDictionary alloc] init];
         [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:100.0f] forKey:kImageWidth];
         [loadMoreMosaicDictionary setObject:[NSNumber numberWithFloat:50.0f] forKey:kImageHeight];
@@ -418,16 +411,15 @@ NSString * const kImageFilename = @"filename";
             
 #warning THIS is just temporary
             UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, fMosaicEntryWidth, fMosaicEntryHeight)];
-//            tempImageView.image = scaledImage;
             [oneView addSubview:tempImageView];
             
             [self.bigMosaikView addSubview:oneView];
             
             //trigger loading the image
-            //[self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
+            [self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
             
-            NSURL* thumbURL = [[NSURL alloc] initWithString:mosaicEntryUrl];
-            [self triggerLoadingImageAtURL:thumbURL forImageView:tempImageView];
+            //NSURL* thumbURL = [[NSURL alloc] initWithString:mosaicEntryUrl];
+            //[self triggerLoadingImageAtURL:thumbURL forImageView:tempImageView];
             
         }
         

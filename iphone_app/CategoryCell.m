@@ -41,7 +41,6 @@ CGFloat const kCategoryCellHeight = 62.1f;
         newContentView.backgroundColor = [UIColor clearColor];
         
         //--- add the image icon to the category cell
-        CGSize imageSize = CGSizeMake(18.0f, 20.0f);
         CGFloat paddingLeft = 10.0f;
         
         //--- titleLabel

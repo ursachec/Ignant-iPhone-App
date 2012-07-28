@@ -393,8 +393,6 @@
         someView.backgroundColor = [UIColor whiteColor];
         someView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         
-        #warning add fonts to constants
-        
         //set up the label
         CGSize labelSize = CGSizeMake(280.0f, 40.0f);
         CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
@@ -621,16 +619,14 @@
         CGRect noInternetConnectionViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         UIView* someView = [[UIView alloc] initWithFrame:noInternetConnectionViewFrame];
         someView.backgroundColor = [UIColor whiteColor];
-        
-        #warning add fonts to constants
-        
+                
         //set up the label
         CGSize labelSize = CGSizeMake(280.0f, 40.0f);
         CGRect someLabelFrame = CGRectMake((CGRectGetWidth(self.view.frame)-labelSize.width)/2, (CGRectGetHeight(self.view.frame)-labelSize.height)/2, labelSize.width, labelSize.height);
         UILabel* someLabel = [[UILabel alloc] initWithFrame:someLabelFrame];
         someLabel.textAlignment = UITextAlignmentCenter;
         someLabel.numberOfLines = 2;
-        someLabel.text = NSLocalizedString(@"no_internet_connection_tumblr_text", @"Text shown when no tumblr content loaded and no internet connection available to do so");     
+        someLabel.text = NSLocalizedString(@"no_internet_connection_feed_text", @"");     
         someLabel.font = [UIFont fontWithName:@"Georgia" size:12.0f];
         
         [someView addSubview:someLabel];

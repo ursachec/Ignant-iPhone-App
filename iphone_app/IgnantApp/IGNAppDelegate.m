@@ -41,7 +41,6 @@
 
 #define kForceReloadCoreData NO
 
-#warning TODO: app description, small artwork with special chars ●●●●●●●●●∙∙∙∙∙∙●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
 
 @interface IGNAppDelegate()
 
@@ -173,7 +172,6 @@
         }
         else {
             //show relvant window
-            
             
         }
     }

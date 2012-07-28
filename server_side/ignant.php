@@ -49,9 +49,7 @@ define('DATE_OF_OLDEST_ARTICLE','dateOfOldestArticle');
 
 //--------------------------
 $finalJSONArrayForExport = array();
-
 $contentProxy = new JSONContentProxy();
-
 $apiCommand = $_GET[GET_ACTION];
 
 
@@ -146,7 +144,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 		// no articles found, do something
 		if(count($arrayWithMorePosts)==0)
 		{
-			$finalJSONArrayForExport['no_more_posts'] = true;
+			$finalJSONArrayForExport[TL_NO_POSTS] = true;
 		}
 		else
 		{
@@ -190,7 +188,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 	// no articles found, do something
 	if(count($arrayWithMorePosts)==0)
 	{
-		$finalJSONArrayForExport['no_more_articles'] = true;
+		$finalJSONArrayForExport[TL_NO_POSTS] = true;
 	}
 	else
 	{
@@ -222,7 +220,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 	if($oneArticle==null)
 	{
 		
-		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+		$finalJSONArrayForExport[TL_NO_POSTS] = true;
 	}
 	else
 	{
@@ -240,7 +238,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SET_OF_MOSAIC_IMAGES)==0)
 	
 	if(!is_array($moreMosaicPosts) || count($moreMosaicPosts)<=0)
 	{
-		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+		$finalJSONArrayForExport[TL_NO_POSTS] = true;
 	}
 	else
 	{
@@ -260,7 +258,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
 	
 	if(!is_array($moreTumblrPosts) || count($moreTumblrPosts)<=0)
 	{
-		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+		$finalJSONArrayForExport[TL_NO_POSTS] = true;
 	}
 	else
 	{
@@ -279,7 +277,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 	
 	if(!is_array($latestTumblrPosts) || count($latestTumblrPosts)==0)
 	{
-		$finalJSONArrayForExport['no_article_found'] = 'YEPP';
+		$finalJSONArrayForExport[TL_NO_POSTS] = true;
 	}
 	else
 	{

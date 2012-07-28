@@ -177,6 +177,15 @@ $imageType = $_GET[TL_RETURN_IMAGE_TYPE];
 if(!$imageType)
 	die('ERROR: image type not set, exiting.');
 
+$max = 0;
+if(isset($_GET['max']))
+	$max = $_GET['max'];
+else
+	$max = 200;
+
+define('MAX_NUMBER_OF_FILE_TO_CREATE', $max);
+
+//////////////////
 
 header('Content-type:text/plain');	
 bloatedPrint("started generating thumbs...");
@@ -196,9 +205,6 @@ $doubleWidth = true;
 
 $sourceDir = '';
 $destinationDirRoot = '';
-
-define('MAX_NUMBER_OF_FILE_TO_CREATE', 300);
-
 
 $debug = false;
 

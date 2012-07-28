@@ -29,9 +29,7 @@ function getRandomImagePostId($postId=0, $dbh=null)
 }
 
 function insertOneMosaicEntry($mosaicPostId = 0, $postId = 0, $dbh = null)
-{
-	$baseLink = 'http://www.ignant.de/wp-content/uploads/';
-	
+{	
 	if($dbh==null)
 	{
 		bloatedPrint("database handler is null...");
@@ -43,7 +41,7 @@ function insertOneMosaicEntry($mosaicPostId = 0, $postId = 0, $dbh = null)
 		bloatedPrint("skipping entry, invalid id given postId: $postId // mosaicPostId: $mosaicPostId ...");
 		return;
 	}
-		
+			
 	$qString = "INSERT INTO wp_posts_mosaic(`mosaic_post_id`,`post_id`) VALUES(:mid, :pid);";
 	
 	$stmt = $dbh->prepare($qString);
@@ -93,7 +91,7 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0 && $startPosition<30)
+	if(count($posts)>0 && $startPosition<300)
 	{
 		createMosaicEntries(&$startPosition, $batchSize, &$dbh);
 	}
@@ -120,6 +118,6 @@ $after = microtime(true);
 bloatedPrint("execution time: ".($after-$before). " s");
 bloatedPrint("finished running mosaic generator...");
 
-// $dbh = null;
+$dbh = null;
 
 ?>

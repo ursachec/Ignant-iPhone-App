@@ -76,7 +76,7 @@ function getThumbLinkForMosaicId($mosaicPostId='', $dbh = null)
 	return $imgUrl;
 }
 
-function getThumbLinkForArticleId($articleId = '', $dbh = null)
+function getThumbLinkForArticleId($articleId = '', $imgType = '', $dbh = null)
 {	
 	if($dbh==null)
 	{
@@ -95,7 +95,7 @@ function getThumbLinkForArticleId($articleId = '', $dbh = null)
 	if(!$p)
 		return '';
 	
-	$thumbLink = getThumbLinkForPostIdAndType($articleId, TL_RETURN_RELATED_IMAGE);
+	$thumbLink = getThumbLinkForPostIdAndType($articleId, $imgType);
 	if($thumbLink)
 		return $thumbLink;
 	
@@ -384,9 +384,7 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3)
 {	
 	$relatedArticlesArray = array();
-	
-	// return $relatedArticlesArray;
-	
+		
 	//!!!!!!!!!!!!!!!!!!!!!!
 	//TODO: add method to LightArticle: getRelatedArticle() !
 	
@@ -403,11 +401,10 @@ function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3
 		{			
 			continue;
 		}
-		
 				
 		$relatedArticlesArray[] = new RelatedArticle($postId, $postTitle,  $postDate, $postCategory, null);
 	}
-			
+		
 	return $relatedArticlesArray;
 }
 
@@ -493,6 +490,7 @@ function removeUnwantedHTML($string)
 	$s = "";
 	$s = removeImgTags($string);
 	$s = removeIframes($s);
+	$s = removeLastParagraph($s);
 	return $s;
 }
 
@@ -513,7 +511,8 @@ function removeEmptyLines($string)
 function removeLastParagraph($s)
 {	
 	$str = "";
-	$str = preg_replace('/<p.*\/p>$/si', "", $s);
+	$str = rtrim($s);
+	$str = preg_replace('/<p.*\/p>$/si', "", $str);
 	return $str;	
 }
 

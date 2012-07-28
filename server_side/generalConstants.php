@@ -21,6 +21,4 @@ $GL_THUMB_FOLDERS = array(TL_RETURN_MOSAIC_IMAGE => THUMB_FOLDER_MOSAIC,
 				TL_RETURN_DETAIL_IMAGE => THUMB_FOLDER_DETAIL,
 				TL_RETURN_SLIDESHOW_IMAGE => THUMB_FOLDER_SLIDESHOW );
 				
-// http://www.ignant.de/app/imgsrv.php?articleId=39869&imgType=relatedImg
-
 ?>

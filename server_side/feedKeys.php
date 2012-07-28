@@ -30,6 +30,8 @@ define('TL_RETURN_CATEGORY_IMAGE','categoryImg');
 define('TL_RETURN_DETAIL_IMAGE','detailImg');
 define('TL_RETURN_SLIDESHOW_IMAGE','slideshowImg');
 
+define('TL_NO_POSTS','noposts');
+
 
 //GENERAL
 define('IGNANT_OBJECT_TYPE_MOSAIC_ENTRY','mosaic_entry');
