@@ -31,6 +31,8 @@ NSString * const kTLReturnCategoryImage = @"categoryImg";
 NSString * const kTLReturnDetailImage = @"detailImg";
 NSString * const kTLReturnSlideshowImage = @"slideshowImg";
 
+NSString * const kTLNoPosts = @"noposts";
+
 
 //METAINFORMATION
 NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";

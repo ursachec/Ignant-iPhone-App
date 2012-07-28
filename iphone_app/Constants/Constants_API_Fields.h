@@ -26,6 +26,8 @@ extern NSString * const kTLReturnCategoryImage;
 extern NSString * const kTLReturnDetailImage;
 extern NSString * const kTLReturnSlideshowImage;
 
+extern NSString * const kTLNoPosts;
+
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
 
