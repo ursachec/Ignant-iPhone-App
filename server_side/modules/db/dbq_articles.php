@@ -99,7 +99,7 @@ function getThumbLinkForArticleId($articleId = '', $imgType = '', $dbh = null)
 	if($thumbLink)
 		return $thumbLink;
 	
-	$imgUrl = ROOT_IMAGE_FOLDER.$p['img_url'];
+	$imgUrl = utf8_encode(ROOT_IMAGE_FOLDER.$p['img_url']);
 	
 	return $imgUrl;
 }
@@ -109,12 +109,12 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	$lightArticle = null;
 	
 	$p = fetchArticleWithId($articleId);
-	$relatedArticles = fetchRelatedArticlesForArticleID($articleId, 3);
+	$relatedArticles = fetchRelatedArticlesForArticleID($articleId, 3, $lang);
 	
 	$postId = $p['id'];
 	$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 	$postDate = strtotime($p['post_date_gmt']);
-	$postDescription = utf8_encode(descriptionForLanguage($p['post_content'], $lang));
+	$postDescription = base64_encode(utf8_encode(descriptionForLanguage($p['post_content'], $lang)));
 
 	$postRemoteImages = fetchRemoteImagesForArticleID($postId);
 	$postRelatedArticles = array();
@@ -125,7 +125,7 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	$postCategory = new Category($p['category_id'], $p['category_name'],'');
 	$postTemplate = getArticleTemplateForCategoryId($postCategory->id);
 	$postUrl = $p['post_url'];
-	$postVideoEmbedCode = prepareVideoEmbedCode($p['video']);
+	$postVideoEmbedCode = base64_encode(prepareVideoEmbedCode($p['video']));
 	
 	 $lightArticle = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, 	$postRemoteImages, $postRelatedArticles, $postCategory, $postUrl, $postVideoEmbedCode); 
 	
@@ -266,7 +266,7 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 	$lightArticles = array();
 	
 	$posts = fetchArticlesForCategory($cat, $tOfOldestArticle, $numberOfArticles);
-	$relatedArticles = fetchRelatedArticlesForArticleID($postId, count($posts)*3);
+	$relatedArticles = fetchRelatedArticlesForArticleID($postId, count($posts)*3, $lang);
 	
 	// $before = microtime(true);
 	$i = 0;
@@ -275,7 +275,7 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 		$postId = $p['id'];
 		$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 		$postDate = strtotime($p['post_date_gmt']);
-		$postDescription = utf8_encode(descriptionForLanguage($p['post_content'], $lang));
+		$postDescription = base64_encode(utf8_encode(descriptionForLanguage($p['post_content'], $lang)));
 
 		$postRemoteImages = fetchRemoteImagesForArticleID($postId);
 		$postRelatedArticles = array();
@@ -288,7 +288,7 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 		$postTemplate = getArticleTemplateForCategoryId($postCategory->id);
 		$postUrl = $p['post_url'];
 					
-		$postVideoEmbedCode = prepareVideoEmbedCode($p['video']);
+		$postVideoEmbedCode = base64_encode(prepareVideoEmbedCode($p['video']));
 			
 		
 		if(strlen($postTitle) == 0)
@@ -356,13 +356,11 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
-		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
-		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND (wpm2.`meta_key` = 'nsfw' OR wpm2.`meta_key` = 'notmobile' )
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
 		AND pt.`post_date` > '".$dateAfter."'
-		AND wpm2.`meta_value` IS NULL
 		AND wpm2.`meta_value` IS NULL
 		AND tt.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")
 		ORDER BY RAND() LIMIT ".$numberOfArticles.";";
@@ -381,7 +379,7 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 	return $posts;
 }
 
-function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3)
+function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3, $lang = 'en')
 {	
 	$relatedArticlesArray = array();
 		
@@ -398,7 +396,7 @@ function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3
 		$postCategory = new Category($p['category_id'], $p['category_name'],'');
 		
 		if(strlen($postTitle) == 0)
-		{			
+		{
 			continue;
 		}
 				
@@ -407,7 +405,6 @@ function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3
 		
 	return $relatedArticlesArray;
 }
-
 
 function textForLanguage($str, $lang)
 {
@@ -420,10 +417,8 @@ function textForLanguage($str, $lang)
 		preg_match("/(<!--:$lang-->)([-_·a-zA-Z0-9 ]*)(<!--:-->)/", $str, $results);
 		return $results[2];
 	}
-	else
-	{
-		return $str;
-	}
+	
+	return $str;
 }
 
 function descriptionForLanguage($str, $language)

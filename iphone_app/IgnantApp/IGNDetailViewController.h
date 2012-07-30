@@ -14,14 +14,16 @@
 #import "IgnantImporter.h"
 #import "Facebook.h"
 
+#import "TapDetectingWindow.h"
+
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate>
+@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate, TapDetectingWindowDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
-@property (retain, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
-@property (retain, nonatomic) IBOutlet UIView *articleVideoView;
-@property (retain, nonatomic) IBOutlet UIWebView *articleVideoWebView;
+@property (strong, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
+@property (strong, nonatomic) IBOutlet UIView *articleVideoView;
+@property (strong, nonatomic) IBOutlet UIWebView *articleVideoWebView;
 
 @property(nonatomic, unsafe_unretained) BOOL didLoadContentForRemoteArticle;
 @property(nonatomic, unsafe_unretained) BOOL isShowingArticleFromLocalDatabase; 

@@ -13,6 +13,8 @@
 #import "UserDefaultsManager.h"
 #import "FBConnect.h"
 
+#import "TapDetectingWindow.h"
+
 
 @class Facebook, UserDefaultsManager, IgnantImporter, IGNMasterViewController, IGNMoreOptionsViewController, IgnantTumblrFeedViewController, CategoriesViewController, IGNMosaikViewController, AboutViewController, ContactViewController, FavouritesViewController, ExternalPageViewController;
 

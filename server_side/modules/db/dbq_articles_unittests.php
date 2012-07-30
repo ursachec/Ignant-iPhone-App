@@ -1,7 +1,26 @@
 <?php
 
-require_once('./dbq_articles.php');
+require_once('../../classes/IgnantInterfaces.php');
+require_once('../../classes/IgnantObject.php');
+require_once('../../classes/LightArticle.php');
+require_once('../../classes/RelatedArticle.php');
+require_once('../../classes/Article.php');
+require_once('../../classes/BasicImage.php');
+require_once('../../classes/Base64Image.php');
+require_once('../../classes/RemoteImage.php');
+require_once('../../classes/MixedImage.php');
+require_once('../../classes/Template.php');
+require_once('../../classes/Category.php');
+require_once('../../classes/MosaicEntry.php');
+
+require_once('../../feedKeys.php');
+require_once('../../generalConstants.php');
+require_once("../../wp_config.inc.php");
+
 require_once('./dbq_general.php');
+require_once('./dbq_categories.php');
+require_once('./dbq_articles.php');
+
 
 $s = '<!--:de-->Der Fotograf <a href="http://www.christofferrelander.com/">Christoffer Relander</a> veröffentlichte gerade seine neuste Fotoserie unter dem Namen \'We Are Nature\'. Christoffer ist Grafik Designer und fotografischer Autodidakt aus Finnland, Raseborg. Im Sommer 2009 begann er zu fotografieren und hat seitdem einen ganz eigenen Stil entwickelt, viel experimentiert, an zahlreichen Ausschreibungen teilgenommen sowie eigene Projekte verfolgt. Die Serie \'We Are Nature\' zeigt doppel- und dreifach Überblendungen, die alle in der Kamera selbst, einer Nikon D700 entstanden sind. Christoffer legt die Silhouetten verschiedener Personen über Motive aus der Natur und erschafft damit seine Serie in einem schlichten aber wunderschönen schwarz-weiß Stil. 
 
@@ -491,10 +510,10 @@ header('Content-type: text/plain');
 	
 // $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu || $sItravel
 
-$lang = $_GET['lang'];
+//$lang = $_GET['lang'];
 
-$resS = descriptionForLanguage($sItravel, $lang);
-print $resS;
+//$resS = descriptionForLanguage($sItravel, $lang);
+//print $resS;
 
 function descriptionForLanguageUnitTests()
 {
@@ -535,5 +554,36 @@ function descriptionForLanguageUnitTests()
 	
 	print "\n<br />testsPassed: ".(int)$testsPassed." // testsFailed: ".(int)$testsFailed." <br />\n";
 }
+
+
+// $before = microtime(true);
+$testArticles = getArticlesForCategory($pCategoryId, 0, $pLanguage, $numberOfArticles);
+// $after = microtime(true);
+// echo "<br />".($after-$before) . " sec/getArticlesForCategory\n"."<br />";
+
+function fetchRelatedArticlesUnittests()
+{	
+	$numberOfReturns = array(0, 0, 0);
+	$fetches = 12;
+	for($i=0; $i<$fetches; $i++ )
+	{
+		$before = microtime(true);
+		
+		$relatedArticles = fetchRelatedArticlesForArticleID('19534', 3);
+		$c = count($relatedArticles);
+		$numberOfReturns[$c] = $numberOfReturns[$c]+1;
+		
+		$after = microtime(true);
+		print "\n".($after-$before)." ms";
+	}
+	
+	var_dump($numberOfReturns);
+}
+
+$s = '<!--:de-->Google 2012<!--:--><!--:en-->Google 2012<!--:-->';
+$t = textForLanguage($s, 'en');
+print $t;
+
+//fetchRelatedArticlesUnittests();
 
 ?>

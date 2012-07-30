@@ -418,11 +418,17 @@ static const NSUInteger kImportBatchSize = 5;
     
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
-    NSString *blogEntryDescriptionText = [oneArticle objectForKey:kFKArticleDescriptionText];
+    
+    NSString *blogEntryDescriptionTextBase64 = [oneArticle objectForKey:kFKArticleDescriptionText];
+    NSString *blogEntryDescriptionText = [[NSString alloc] initWithData:[NSData dataFromBase64String:blogEntryDescriptionTextBase64] encoding:NSUTF8StringEncoding];
+    
     NSString *blogEntryCategoryName = [oneArticle objectForKey:kFKArticleCategoryName];
     NSString *blogEntryWebLink = [oneArticle objectForKey:kFKArticleWebLink];
     NSString *blogEntryTemplate = [oneArticle objectForKey:kFKArticleTemplate];
-    NSString *blogEntryVideoEmbedCode = [oneArticle objectForKey:kFKArticleVideoEmbedCode];
+    
+    NSString *blogEntryVideoEmbedCodeBase64 = [oneArticle objectForKey:kFKArticleVideoEmbedCode];
+    NSString *blogEntryVideoEmbedCode = [[NSString alloc] initWithData:[NSData dataFromBase64String:blogEntryVideoEmbedCodeBase64] encoding:NSUTF8StringEncoding];
+
     
     NSArray *blogEntryRelatedArticles = [oneArticle objectForKey:kFKArticleRelatedArticles];
 

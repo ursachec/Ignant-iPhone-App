@@ -36,6 +36,8 @@
 {
     BOOL _isLoadingCurrentArticle;
     BOOL _isShowingLinkOptions;
+    BOOL _isExecutingWebviewTapAction;
+    
     NSURL* _linkOptionsUrl;
  
     CGFloat lastHeightForWebView;
@@ -55,6 +57,8 @@
 -(void)postToFacebook;
 -(void)postToPinterest;
 -(void)postToTwitter;
+
+@property (nonatomic, assign) TapDetectingWindow *mWindow;
 
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
 
@@ -201,6 +205,7 @@
         
         
         _isShowingLinkOptions = false;
+        _isExecutingWebviewTapAction = false;
     }
     return self;
 }
@@ -220,8 +225,12 @@
     
     [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
     
-    
     self.relatedArticlesTitleLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Title for the label that apears on top of the related articles in the Detail View Controller");
+    
+    self.mWindow = (TapDetectingWindow *)[[UIApplication sharedApplication].windows objectAtIndex:0];
+    self.mWindow.viewToObserve = self.descriptionWebView;
+    self.mWindow.controllerThatObserves = self;
+    
 }
 
 -(void)loadNavigationButtons
@@ -286,7 +295,6 @@
 {
     [super viewWillDisappear:animated];
     self.isShownFromMosaic = NO;
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -555,13 +563,15 @@
 
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
 	
-	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-		NSURL *url = [request URL];        
+	if (navigationType == UIWebViewNavigationTypeLinkClicked && !_isExecutingWebviewTapAction) {
+		NSURL *url = [request URL];
+        
+        DBLog(@"show link options");
         [self showLinkOptions:url];
         return NO;
 	}
     
-	return YES;   
+    return YES;
 }
 
 
@@ -607,7 +617,6 @@
     //set up the scrollView's final contentSize
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
     
-    
     [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
     
     [self setIsLoadingViewHidden:YES];
@@ -638,25 +647,18 @@
     CGFloat alphaForHiddenState = 0.0f;
     CGFloat alphaForShownState = 1.0f;
     
-    
     if (animated) {
-        
         if (hidden) {
-                        
-            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;             
-            
+            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;
             [UIView animateWithDuration:animationDuration 
                              animations:
              ^{
                  [blocKDescriptionWebViewLoadingView setAlpha:alphaForHiddenState];
              } 
                             completion:^(BOOL finished){}];
-            
         }
         else {
-            
-            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView; 
-
+            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;
             [UIView animateWithDuration:animationDuration 
                              animations:
             ^{                 
@@ -750,8 +752,9 @@
 
 -(NSString*)wrapRichTextForArticle:(NSString*)richText
 {
-    NSString* style = @"body,input,textarea,a,pre { font-family: Georgia, \"Bitstream Charter\", serif; font-size:12px; } a{ color: black; text-decoration: underline; }";
-    return [NSString stringWithFormat:@"<!DOCTYPE html><html><head><script type='text/javascript'>document.onload = function(){document.ontouchmove = function(e){e.preventDefault();}};</script><style type='text/css'>%@</style></head><body style='margin: 0; padding: 0; border:0px;'><div style='width: 310px;' id='ContentDiv'>%@</div></body></html>",style,richText];
+    NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"NoDelayHTML" ofType:@"html"];
+    NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
+    return [NSString stringWithFormat:contents,richText];
 }
 
 -(void)setupUIElementsForCurrentBlogEntryTemplate
@@ -864,8 +867,7 @@
         CGRect oldFrame = self.articleVideoView.frame;
         self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
         
-    }
-    
+    }    
     //only load the article image if no video content set
     else
     {
@@ -873,6 +875,8 @@
         //    /////////////////////////// handle the thumb image image
 #warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
+        
+        DBLog(@"WARNING: videoEmbedCode length 0");
         
         [self triggerLoadingDetailImageWithArticleId:self.currentArticleId
                                         forImageView:self.entryImageView];
@@ -1092,8 +1096,13 @@
     NSURL* remoteContentArticleWeblink = [NSURL URLWithString:remoteContentArticleWeblinkString];
     NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
     NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
-    NSString *remoteContentArticleDescriptionText = [articleDictionary objectForKey:kFKArticleDescriptionText];
-    NSString *remoteContentArticleVideoEmbedCode = [articleDictionary objectForKey:kFKArticleVideoEmbedCode];
+    
+    NSString *remoteContentArticleDescriptionTextBase64 = [articleDictionary objectForKey:kFKArticleDescriptionText];
+    NSString *remoteContentArticleDescriptionText = [[NSString alloc] initWithData:[NSData dataFromBase64String:remoteContentArticleDescriptionTextBase64] encoding:NSUTF8StringEncoding];
+    
+    NSString *remoteContentArticleVideoEmbedCodeBase64 = [articleDictionary objectForKey:kFKArticleVideoEmbedCode];
+    NSString *remoteContentArticleVideoEmbedCode = [[NSString alloc] initWithData:[NSData dataFromBase64String:remoteContentArticleVideoEmbedCodeBase64] encoding:NSUTF8StringEncoding];
+    
     NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
     NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
     id unconvertedBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
@@ -1128,7 +1137,6 @@
 - (IBAction)showPictureSlideshow:(id)sender
 {
     self.isShowingImageSlideshow = YES;
-
     
     ImageSlideshowViewController *slideshowVC = [[ImageSlideshowViewController alloc] initWithNibName:@"ImageSlideshowViewController" bundle:nil];
     
@@ -1407,6 +1415,16 @@
     [shareActionSheet showInView:self.view];
 }
 
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    _isShowingLinkOptions = false;
+}
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet
+{
+    _isShowingLinkOptions = false;
+}
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(_isShowingLinkOptions){
@@ -1446,6 +1464,8 @@
             [self postToFacebook];
         }
     }
+    
+    _isShowingLinkOptions = false;
 }
 
 - (IBAction)showMore:(id)sender {
@@ -1617,10 +1637,9 @@
 }
 
 #pragma mark - UIGestureRecognizer delegate methods
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
        shouldReceiveTouch:(UITouch *)touch
 {
-    
     //check if touch on video button
     if (self.playVideoButton.superview !=nil ) {
         if ([touch.view isDescendantOfView:self.playVideoButton]) {
@@ -1689,6 +1708,25 @@
     [self presentMoviePlayerViewControllerAnimated:moviePlayerViewController];
     
     DBLog(@"start playing video: %@", videoUrl);
+}
+
+
+- (void)userDidTapWebView:(id)tapPoint
+{
+    NSLog(@"userDidTapWebView");
+    _isExecutingWebviewTapAction = true;
+    
+    
+    if(!_isShowingLinkOptions)
+    {
+        [self tapAction:nil];
+    }
+    
+    double delayInSeconds = .8;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        _isExecutingWebviewTapAction = false;
+    });
 }
 
 @end

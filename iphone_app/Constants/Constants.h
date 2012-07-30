@@ -11,15 +11,11 @@
 #import "Constants_API_Fields.h"
 #import "Constants_Google_Analytics.h"
 
-
-/*
 #ifdef DEBUG
 #define DBLog(message, ...) NSLog((@"DBLog: %s [Line %d]" message), __PRETTY_FUNCTION__, __LINE__, ## __VA_ARGS__)
 #else
-*/
 #define DBLog(message, ...)
-//#endif
-
+#endif
 
 //some preprocessor commans
 #define LOG_CURRENT_FUNCTION() DBLog(@"%@", NSStringFromSelector(_cmd));

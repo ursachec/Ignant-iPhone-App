@@ -669,7 +669,7 @@ NSString * const kImageFilename = @"filename";
         if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreMosaicImages && _numberOfActiveRequests==0) 
         {
-//            [self loadMoreMosaicImages];
+            [self loadMoreMosaicImages];
         }
     }
 }
