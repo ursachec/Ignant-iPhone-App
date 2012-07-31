@@ -15,3 +15,5 @@
     #import <QuartzCore/QuartzCore.h>
 #endif
 
+#import "DTCoreText.h"
+
