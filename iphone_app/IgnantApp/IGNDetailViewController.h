@@ -16,9 +16,11 @@
 
 #import "TapDetectingWindow.h"
 
+#import "DTAttributedTextView.h"
+
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <UIWebViewDelegate,IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate, TapDetectingWindowDelegate>
+@interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate, TapDetectingWindowDelegate, DTAttributedTextContentViewDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
 @property (strong, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
@@ -30,6 +32,8 @@
 @property(nonatomic, unsafe_unretained) BOOL isNavigationBarAndToolbarHidden;
 
 @property(strong, nonatomic) NSArray* fetchedResults;
+
+@property (strong, nonatomic) IBOutlet DTAttributedTextView *dtTextView;
 
 @property (strong, nonatomic) IBOutlet UIImageView *firstRelatedArticleImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *secondRelatedArticleImageView;

@@ -32,6 +32,8 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+
+
 @interface IGNDetailViewController ()
 {
     BOOL _isLoadingCurrentArticle;
@@ -62,6 +64,8 @@
 
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
 
+@property (strong, nonatomic, readwrite) UITapGestureRecognizer *dtGestureRecognizer;
+
 @property (strong, nonatomic, readwrite) NSString *articleTitle;
 @property (strong, nonatomic, readwrite) NSURL *articleWeblink;
 @property (strong, nonatomic, readwrite) NSString *articleDescription;
@@ -79,7 +83,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *showPictureSlideshowButton;
 @property (strong, nonatomic) IBOutlet UIButton *playVideoButton;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
-@property (strong, nonatomic) IBOutlet UIWebView *descriptionWebView;
 
 @property (strong, nonatomic) IBOutlet UIView *descriptionWebViewLoadingView;
 
@@ -152,7 +155,6 @@
 @synthesize playVideoButton = _playVideoButton;
 @synthesize titleLabel = _titleLabel;
 
-@synthesize descriptionWebView = _descriptionWebView;
 @synthesize descriptionWebViewLoadingView = _descriptionWebViewLoadingView;
 @synthesize entryImageView = _entryImageView;
 
@@ -223,13 +225,14 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    [self.descriptionWebView addSubview:self.descriptionWebViewLoadingView];
-    
     self.relatedArticlesTitleLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Title for the label that apears on top of the related articles in the Detail View Controller");
     
-    self.mWindow = (TapDetectingWindow *)[[UIApplication sharedApplication].windows objectAtIndex:0];
-    self.mWindow.viewToObserve = self.descriptionWebView;
-    self.mWindow.controllerThatObserves = self;
+    
+    self.dtGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDTViewTap:)];
+    self.dtGestureRecognizer.delegate = self;
+    _dtGestureRecognizer.numberOfTapsRequired = 1;
+    [self.dtTextView addGestureRecognizer:_dtGestureRecognizer];
+    
     
 }
 
@@ -559,69 +562,6 @@
     }
 }
 
-#pragma mark - UIWebView delegate methods
-
-- (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
-	
-	if (navigationType == UIWebViewNavigationTypeLinkClicked && !_isExecutingWebviewTapAction) {
-		NSURL *url = [request URL];
-        
-        DBLog(@"show link options");
-        [self showLinkOptions:url];
-        return NO;
-	}
-    
-    return YES;
-}
-
-
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-    
-#define WEBVIEW_PADDING_BOTTOM 0.0f
-    
-    //get the content size of the webview
-    CGRect frame = aWebView.frame;
-    frame.size.height = 1;
-    aWebView.frame = frame;
-    CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-    frame.size = fittingSize;
-    aWebView.frame = frame;
-    
-    NSString *output = [aWebView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"ContentDiv\").offsetHeight;"];
-    DBLog(@"HEREHERE aWebView.frame.size.height: %f height: %@", aWebView.frame.size.height, output);
-    
-    //resize the webview to fit the newly loaded content
-    CGRect tempRect;
-    CGSize tempSize;
-    
-    CGSize finalSizeForArticleContentView = _articleContentView.bounds.size;
-    tempSize = finalSizeForArticleContentView;
-    
-    _descriptionWebView.frame = CGRectMake(aWebView.frame.origin.x, aWebView.frame.origin.y, _descriptionWebView.bounds.size.width, fittingSize.height);
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+fittingSize.height-lastHeightForWebView);
-    
-    //set the frame of the article content view
-    tempRect = _articleContentView.frame;
-    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height);
-    
-    //set up the related articles view and add it to the contentScrollView
-    CGPoint pointToDrawRelatedArticles = CGPointMake(0, self.articleContentView.bounds.size.height);
-    CGSize nibSizeForRelatedArticles = self.relatedArticlesView.bounds.size;
-    self.relatedArticlesView.frame = CGRectMake(pointToDrawRelatedArticles.x, pointToDrawRelatedArticles.y, nibSizeForRelatedArticles.width, nibSizeForRelatedArticles.height);
-    [self.contentScrollView addSubview:self.relatedArticlesView];
-    
-    //set up the scrollView's final contentSize
-    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + WEBVIEW_PADDING_BOTTOM);
-    self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-    //set up the scrollView's final contentSize
-    self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-    [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
-    
-    [self setIsLoadingViewHidden:YES];
-}
-
 -(void)showLinkOptions:(NSURL*)url
 {
     _isShowingLinkOptions = true;
@@ -750,6 +690,13 @@
     }
 }
 
+-(NSString*)wrapDTRichtext:(NSString*)richText
+{
+    NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"DTWrapper" ofType:@"html"];
+    NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
+    return [NSString stringWithFormat:contents,richText];
+}
+
 -(NSString*)wrapRichTextForArticle:(NSString*)richText
 {
     NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"NoDelayHTML" ofType:@"html"];
@@ -844,6 +791,7 @@
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
         LOG_CURRENT_FUNCTION()
+        
         
     self.currentArticleId = articleID;
     self.articleTitle = title;
@@ -950,39 +898,42 @@
         self.categoryLabel.backgroundColor = [UIColor redColor];
     }
     
-    //set up the description textview
-    //set up the user interface for the current objects    
-    CGFloat marginTop = .0f;
     
-    //start setting up the uiwebview 
-    NSString* finalRichText = [self wrapRichTextForArticle:descriptionText];
+    NSString* finalRichText = [self wrapDTRichtext:descriptionText];
     
-    [self.descriptionWebView loadHTMLString:finalRichText baseURL:nil];    
-    self.descriptionWebView.delegate = self;
+    // Load HTML data
+	NSString *html = @"<a href='http://www.google.de'>anchor</a><p>a paragraph a paragraph a paragraph</p><br /><p style='font-size:16px;'>ANOTHER PARAGRAPH IS HERE</p><br /><p>AND ANOTHER</p><a href='http://www.google.de'>anchor</a><p>a paragraph a paragraph a paragraph</p><br /><p style='font-size:16px;'>ANOTHER PARAGRAPH IS HERE</p><br /><p>AND ANOTHER</p>";
+	NSData *data = [finalRichText dataUsingEncoding:NSUTF8StringEncoding];
+	
+	// Create attributed string from HTML
+	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
+	
+	// example for setting a willFlushCallback, that gets called before elements are written to the generated attributed string
+	void (^callBackBlock)(DTHTMLElement *element) = ^(DTHTMLElement *element) {
+		// if an element is larger than twice the font size put it in it's own block
+		if (element.displayStyle == DTHTMLElementDisplayStyleInline && element.textAttachment.displaySize.height > 2.0 * element.fontDescriptor.pointSize)
+		{
+			element.displayStyle = DTHTMLElementDisplayStyleBlock;
+		}
+	};
+	
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
+                             @"Georgia", DTDefaultFontFamily,  @"black", DTDefaultLinkColor, callBackBlock, DTWillFlushBlockCallBack, nil];
+	
+	NSAttributedString *string = [[NSAttributedString alloc] initWithHTMLData:data options:options documentAttributes:NULL];
     
-    if (SHOW_DEBUG_COLORS) {
-        self.descriptionWebView.backgroundColor = [UIColor redColor];
-    }
-
-    CGRect frame = _descriptionWebView.frame;
-    CGSize fittingSize = [_descriptionWebView sizeThatFits:CGSizeZero];
-    frame.size = fittingSize;
-    _descriptionWebView.frame = frame;
+    CGRect oldDTTextViewFrame = self.dtTextView.frame;
     
-    CGRect descriptionWebViewFrame = _descriptionWebView.frame;
-    CGSize descriptionTextContentSize = descriptionWebViewFrame.size;
+	self.dtTextView.contentView.edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+	self.dtTextView.attributedString = string;
     
-    marginTop = .0f;
-    _descriptionWebView.frame = CGRectMake(descriptionWebViewFrame.origin.x, finalSizeForArticleContentView.height+marginTop, descriptionWebViewFrame.size.width, descriptionTextContentSize.height);
+    CGSize oneTcontentSize = self.dtTextView.contentSize;
     
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"_descriptionWebView.frame: %@", NSStringFromCGRect(_descriptionWebView.frame));
+    self.dtTextView.frame = CGRectMake(oldDTTextViewFrame.origin.x, oldDTTextViewFrame.origin.y, oldDTTextViewFrame.size.width, oneTcontentSize.height);
     
-    lastHeightForWebView = descriptionTextContentSize.height;
-    
-    //add the description textview size to the finalSizeForArticleContentView
     tempSize = finalSizeForArticleContentView;
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+descriptionTextContentSize.height);
+    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+self.dtTextView.frame.size.height);
+    
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
     DBLog(@"(after decriptiontextview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
@@ -1003,6 +954,39 @@
     
     //setup ui elements for current blogentry template
     [self setupUIElementsForCurrentBlogEntryTemplate];
+    
+    
+    
+    
+    
+    CGSize finalSizeForArticleContentView2 = _articleContentView.bounds.size;
+    tempSize = finalSizeForArticleContentView2;
+   
+    
+    //set the frame of the article content view
+    tempRect = _articleContentView.frame;
+    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, tempSize.width, tempSize.height);
+    
+    //set up the related articles view and add it to the contentScrollView
+    CGPoint pointToDrawRelatedArticles = CGPointMake(0, self.articleContentView.bounds.size.height);
+    CGSize nibSizeForRelatedArticles = self.relatedArticlesView.bounds.size;
+    self.relatedArticlesView.frame = CGRectMake(pointToDrawRelatedArticles.x, pointToDrawRelatedArticles.y, nibSizeForRelatedArticles.width, nibSizeForRelatedArticles.height);
+    [self.contentScrollView addSubview:self.relatedArticlesView];
+    
+    
+#define WEBVIEW_PADDING_BOTTOM 0
+    //set up the scrollView's final contentSize
+    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + WEBVIEW_PADDING_BOTTOM);
+    self.contentScrollView.contentSize = contentScrollViewFinalSize;
+    
+    //set up the scrollView's final contentSize
+    self.contentScrollView.contentSize = contentScrollViewFinalSize;
+    
+    
+    [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
+    
+    [self setIsLoadingViewHidden:YES];
+    
 }
 
 -(void)triggerLoadingRelatedImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView
@@ -1148,18 +1132,36 @@
     [self.navigationController presentModalViewController:slideshowVC animated:YES];
 
 }
+
+-(void)handleDTViewTap:(id)sender
+{
+    DBLog(@"handleDTViewTap");
+    
+    [self tapAction:sender];
+}
+
 -(IBAction)tapAction:(id)sender
 {
     DBLog(@"tapAction ");
     
-    if (self.navigationController.navigationBar.isHidden)
-    {
-        [self setNavigationBarAndToolbarHidden:NO animated:YES];
-    }
-    else
-    {
-        [self setNavigationBarAndToolbarHidden:YES animated:YES];
-    }
+    __block __typeof__(self) blockSelf = self;
+    double delayInSeconds = .1;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+        if(_isShowingLinkOptions)
+            return;
+        
+        if (blockSelf.navigationController.navigationBar.isHidden)
+        {
+            [blockSelf setNavigationBarAndToolbarHidden:NO animated:YES];
+        }
+        else
+        {
+            [blockSelf setNavigationBarAndToolbarHidden:YES animated:YES];
+        }
+        
+    });
 }
 
 -(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated
@@ -1482,7 +1484,7 @@
 {
     NSString *articleId = nil;
     
-    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);    
+    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);
     
     if ([sender tag] == kFirstRelatedArticleTag)
     {
@@ -1640,6 +1642,12 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
        shouldReceiveTouch:(UITouch *)touch
 {
+    
+    
+    if ([touch.view isKindOfClass:[DTLinkButton class]]) {
+        return NO;
+    }
+    
     //check if touch on video button
     if (self.playVideoButton.superview !=nil ) {
         if ([touch.view isDescendantOfView:self.playVideoButton]) {
@@ -1679,7 +1687,6 @@
     [self navigateToPreviousArticle];
 }
 
-
 - (IBAction)handleLeftSwipe:(id)sender 
 {
     LOG_CURRENT_FUNCTION()
@@ -1710,23 +1717,61 @@
     DBLog(@"start playing video: %@", videoUrl);
 }
 
-
-- (void)userDidTapWebView:(id)tapPoint
+#pragma mark - Custom Views on Text
+- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForLink:(NSURL *)url identifier:(NSString *)identifier frame:(CGRect)frame
 {
-    NSLog(@"userDidTapWebView");
-    _isExecutingWebviewTapAction = true;
-    
-    
-    if(!_isShowingLinkOptions)
-    {
-        [self tapAction:nil];
-    }
-    
-    double delayInSeconds = .8;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        _isExecutingWebviewTapAction = false;
-    });
+	DTLinkButton *button = [[DTLinkButton alloc] initWithFrame:frame];
+	button.URL = url;
+	button.minimumHitSize = CGSizeMake(25, 25); // adjusts it's bounds so that button is always large enough
+	button.GUID = identifier;
+	
+	// use normal push action for opening URL
+	[button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
+	
+	return button;
 }
+
+-(UIColor*)newRandomColor
+{
+    CGFloat r = arc4random() % 255;
+    CGFloat g = arc4random() % 255;
+    CGFloat b = arc4random() % 255;
+    
+    UIColor* c = [[UIColor alloc] initWithRed:r/255 green:g/255 blue:b/255 alpha:1.0f];
+    
+    return c;
+}
+
+- (BOOL)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView shouldDrawBackgroundForTextBlock:(DTTextBlock *)textBlock frame:(CGRect)frame context:(CGContextRef)context forLayoutFrame:(DTCoreTextLayoutFrame *)layoutFrame
+{
+	UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:10];
+    
+	CGColorRef color = [textBlock.backgroundColor CGColor];
+	if (color)
+	{
+		CGContextSetFillColorWithColor(context, color);
+		CGContextAddPath(context, [roundedRect CGPath]);
+		CGContextFillPath(context);
+		
+		CGContextAddPath(context, [roundedRect CGPath]);
+		CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+		CGContextStrokePath(context);
+		return NO;
+	}
+	
+	return YES;
+}
+
+- (void)linkPushed:(DTLinkButton *)button
+{
+	NSURL *URL = button.URL;
+	
+	if ([[UIApplication sharedApplication] canOpenURL:[URL absoluteURL]])
+	{
+        DBLog(@"show link options");
+        [self showLinkOptions:URL];
+	}
+}
+
 
 @end
