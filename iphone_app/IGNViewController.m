@@ -231,6 +231,21 @@
         backButtonFrame = CGRectMake(backButtonFrame.origin.x, backButtonFrame.origin.y, backArrowSize.width+paddingLeft+someLabelSize.width, backButtonFrame.size.height);
         backButton.frame = backButtonFrame;
         
+        
+        //add the home button
+        UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGRect homeButtonFrame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+        homeButton.frame = homeButtonFrame;
+        homeButton.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor blueColor] : [UIColor clearColor];
+        [homeButton addTarget:self action:@selector(handleTapOnSpecificNavBarHomeButton:) forControlEvents:UIControlEventTouchDown];
+        
+        //resize the frame for the home button
+        homeButtonFrame = CGRectMake((navView.frame.size.width-homeButton.frame.size.width)/2, (navView.frame.size.height-homeButton.frame.size.height)/2,homeButtonFrame.size.width, homeButtonFrame.size.height);
+        homeButton.frame = homeButtonFrame;
+        
+        
+       
+        [navView addSubview:homeButton];
         [navView addSubview:backButton];
         
         _specificNavigationBar = navView;
@@ -242,6 +257,13 @@
 -(void)handleTapOnSpecificNavBarBackButton:(id)sender
 {
     DBLog(@"handleTapOnSpecificNavBarBackButton");
+}
+
+-(void)handleTapOnSpecificNavBarHomeButton:(id)sender
+{
+    DBLog(@"handleTapOnSpecificNavBarHomeButton");
+    [self.appDelegate showHome];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - specific toolbar

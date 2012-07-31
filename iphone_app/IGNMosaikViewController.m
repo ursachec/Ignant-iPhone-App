@@ -109,6 +109,12 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - helpful methods
+-(IBAction)showHome:(id)sender
+{
+    [self.appDelegate showHome];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 -(BOOL)isMosaicImagesArrayNotEmpty
 {
     return [self.savedMosaicImages count]>=kMinimumMosaicImagesLoaded;

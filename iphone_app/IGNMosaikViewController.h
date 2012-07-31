@@ -31,5 +31,7 @@ extern NSString * const kImageFilename;
 @property(nonatomic, unsafe_unretained) BOOL isMosaicImagesArrayNotEmpty;
 @property (retain, nonatomic) IBOutlet UIView *shareAndMoreToolbar;
 
+-(IBAction)showHome:(id)sender;
+
 @end
 

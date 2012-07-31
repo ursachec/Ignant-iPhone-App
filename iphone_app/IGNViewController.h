@@ -63,6 +63,7 @@
 -(void)toggleShowSpecificNavigationBarAnimated:(BOOL)animated;
 -(void)setIsSpecificNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
 -(void)handleTapOnSpecificNavBarBackButton:(id)sender;
+-(void)handleTapOnSpecificNavBarHomeButton:(id)sender;
 
 //sepcific toolbar
 -(void)toggleShowSpecificToolbar;
