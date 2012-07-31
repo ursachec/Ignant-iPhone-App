@@ -97,7 +97,7 @@
     titleSize = [title drawAtPoint:pointToDrawArticleName forWidth:TITLE_WIDTH withFont:titleFont minFontSize:actualFontSize actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines]; 
     
     //draw category name
-    [IGNANT_GRAY_COLOR set];
+    [IGNANT_GRAY_TEXT_COLOR set];
     CGSize categoryNameSize = CGSizeMake(0, 0);
     NSString *categoryName = _cell.categoryName; //stringByAppendingFormat:@" ∙ "]
     size = [categoryName sizeWithFont:dateFont minFontSize:DATE_FONT_SIZE actualFontSize:&actualFontSize forWidth:DATE_WIDTH lineBreakMode:UILineBreakModeTailTruncation];
@@ -106,7 +106,7 @@
     categoryNameSize = size;
     
     //draw date
-    [IGNANT_GRAY_COLOR set];
+    [IGNANT_GRAY_TEXT_COLOR set];
     NSString *date = _cell.dateString;
     size = [date sizeWithFont:dateFont minFontSize:DATE_FONT_SIZE actualFontSize:&actualFontSize forWidth:DATE_WIDTH lineBreakMode:UILineBreakModeTailTruncation];
     pointToDraw = CGPointMake(PADDING_FOR_TEXTS, pointToDrawArticleName.y-size.height);
@@ -115,7 +115,7 @@
     //draw bottom line
     [IGNANT_GRAY_COLOR set];
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(ctx, 0.85, 0.85, 0.85, 1.0);
+    CGContextSetRGBStrokeColor(ctx, 0.9569f, 0.9569f, 0.9569f, 1.0f);
     CGContextSetLineWidth(ctx, 1.2f);
     CGContextMoveToPoint(ctx, 0.0f, contentRect.size.height-.8f);
     CGContextAddLineToPoint(ctx, 320.0f, contentRect.size.height-.8f);
@@ -138,7 +138,7 @@
 
 #define COLOR_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
 #define COLOR_SELECTED_BACKGROUND_VIEW [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]
-#define COLOR_IMAGEVIEW_BACKGROUND [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:0.2f]
+#define COLOR_IMAGEVIEW_BACKGROUND IGNANT_GRAY_COLOR
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

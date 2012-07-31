@@ -65,7 +65,7 @@
         [self.contentView addSubview:cellContentView];
 
         tumblrImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,5,310,310)];
-        [tumblrImageView setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.2]];
+        [tumblrImageView setBackgroundColor:IGNANT_GRAY_COLOR];
         [self.contentView addSubview:tumblrImageView];
 
 

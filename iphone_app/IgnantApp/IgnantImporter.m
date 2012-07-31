@@ -33,8 +33,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
 
 -(void)updateLastDateForImportedArticleForMainPage;
 
--(void)importOneArticleFromDictionary:(NSDictionary*)oneArticleDictionary;
-
 @property (nonatomic, unsafe_unretained) IGNAppDelegate *appDelegate;
 
 @property (nonatomic, strong) NSDate* lastImportDateForMainPageArticle;
@@ -107,23 +105,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     }
     
     return self;
-}
-
-
-#pragma mark - parsing support methods
-
-static const NSUInteger kImportBatchSize = 5;
-
--(void)finishProcessingCurrentBlogEntry
-{
-    _countForNumberOfBlogEntriesToBeSaved++;
-    
-    if (_countForNumberOfBlogEntriesToBeSaved == kImportBatchSize) {
-        
-        NSError *saveError = nil;
-        NSAssert1([self.insertionContext save:&saveError], @"Unhandled error saving managed object context in import thread: %@", [saveError localizedDescription]);
-        _countForNumberOfBlogEntriesToBeSaved = 0;
-    }
 }
 
 #pragma mark - appropriate getters
@@ -210,7 +191,7 @@ static const NSUInteger kImportBatchSize = 5;
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
     {
-        [self importOneArticleFromDictionary:oneArticle];
+        [self importOneArticleFromDictionary:oneArticle forceSave:NO];
     }
     savedOk = [self.insertionContext save:&saveError];
     
@@ -275,7 +256,7 @@ static const NSUInteger kImportBatchSize = 5;
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
     {
-        [self importOneArticleFromDictionary:oneArticle];
+        [self importOneArticleFromDictionary:oneArticle forceSave:NO];
     }
     
     DBLog(@"saving articles to the insertion context...");
@@ -365,7 +346,7 @@ static const NSUInteger kImportBatchSize = 5;
     //enumerate articles
     for (NSDictionary* oneArticle in articlesArray) 
     {
-        [self importOneArticleFromDictionary:oneArticle];
+        [self importOneArticleFromDictionary:oneArticle forceSave:NO];
     }
     savedOk = [self.insertionContext save:&saveError];
     
@@ -410,11 +391,28 @@ static const NSUInteger kImportBatchSize = 5;
 }
 
 
--(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle
+-(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle forceSave:(BOOL)forceSave
 {
     LOG_CURRENT_FUNCTION()
     
+    NSError *saveError = nil;
+    
+    BOOL savedOk = NO;
+    
+    if (forceSave) {
+        [[NSNotificationCenter defaultCenter] addObserver:delegate selector:@selector(importerDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+        
+        //prepare importing
+        NSManagedObjectContext *newManagedObjectContext = [[NSManagedObjectContext alloc] init];
+        [newManagedObjectContext setPersistentStoreCoordinator:[self.insertionContext persistentStoreCoordinator]];
+        
+    }
+    
+    
+
     blogEntriesToBeSaved++;
+    
+    
     
     //create BlogEntry
     NSString *blogEntryTitle = [oneArticle objectForKey:kFKArticleTitle];
@@ -521,9 +519,19 @@ static const NSUInteger kImportBatchSize = 5;
     {    
         self.currentBlogEntry.remoteImages = remoteImages;
     }
+    
+    
+    if (forceSave) {
+        
+        savedOk = [self.insertionContext save:&saveError];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:delegate name:NSManagedObjectContextDidSaveNotification object:self.insertionContext];
+        
+        
+    }
 }
 
--(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle
+-(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle forceSave:(BOOL)forceSave
 {
     LOG_CURRENT_FUNCTION()
     
@@ -547,7 +555,6 @@ static const NSUInteger kImportBatchSize = 5;
     
     //try to get article data
     NSDictionary *articleDictionary = [dictionaryFromJSON objectForKey:kTLSingleArticle];
-    
     if(delegate!=nil){
         [delegate importer:self didFinishParsingSingleArticleWithDictionary:articleDictionary];
     }

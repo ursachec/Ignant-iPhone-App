@@ -47,7 +47,7 @@ CGFloat const kCategoryCellHeight = 62.1f;
         CGSize labelSize = CGSizeMake(newContentView.frame.size.width-paddingLeft, newContentView.frame.size.height);
         CGRect labelFrame = CGRectMake(paddingLeft, 0.0f , labelSize.width, labelSize.height);
         UILabel *aTitleLabel = [[UILabel alloc] initWithFrame:labelFrame];
-        aTitleLabel.backgroundColor = [UIColor colorWithRed:0 green:1.0f blue:0 alpha:0.f];
+        aTitleLabel.backgroundColor = [UIColor colorWithRed:0 green:.0f blue:0 alpha:0.f];
         aTitleLabel.font = [UIFont fontWithName:@"Georgia" size:14.0f];
         
 #if DEBUG_SHOW_HELP_COLORS
@@ -75,7 +75,7 @@ CGFloat const kCategoryCellHeight = 62.1f;
         //separator
         CGSize separatorSize = CGSizeMake(320.0f, 1.0f);
         UIView* aSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(0.0, newContentView.bounds.size.height-separatorSize.height, separatorSize.width, separatorSize.height)];
-        aSeparatorView.backgroundColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
+        aSeparatorView.backgroundColor = IGNANT_GRAY_COLOR;
         [newContentView addSubview:aSeparatorView];
         
         //--- overlay view
@@ -112,7 +112,7 @@ CGFloat const kCategoryCellHeight = 62.1f;
     
     if (highlighted) {
         _overlayView.frame = self.contentView.bounds;
-        _overlayView.backgroundColor = [UIColor colorWithRed:.0f green:0.f blue:0.f alpha:.1f];
+        _overlayView.backgroundColor = IGNANT_GRAY_COLOR;
     }
 }
 

@@ -73,7 +73,6 @@ CGFloat const kMoreCellHeight = 62.1f;
         self.titleLabel = aTitleLabel;
         [newContentView addSubview:aTitleLabel];
         
-        
         //--- arrow
         CGFloat paddingRight = 10.0f;
         CGFloat ratio = .5f;
@@ -85,14 +84,12 @@ CGFloat const kMoreCellHeight = 62.1f;
 #if DEBUG_SHOW_HELP_COLORS
         arrowView.backgroundColor = [UIColor redColor];
 #endif
-        
-        [newContentView addSubview:arrowView];
-        
+        [newContentView addSubview:arrowView];  
         
         //separator
         CGSize separatorSize = CGSizeMake(320.0f, 1.0f);
         UIView* aSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(0.0, newContentView.bounds.size.height-separatorSize.height, separatorSize.width, separatorSize.height)];
-        aSeparatorView.backgroundColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
+        aSeparatorView.backgroundColor = IGNANT_GRAY_COLOR;
         [newContentView addSubview:aSeparatorView];
         
         //--- overlay view
@@ -100,9 +97,7 @@ CGFloat const kMoreCellHeight = 62.1f;
         aOverlayView.backgroundColor = [UIColor colorWithRed:.0 green:.0f blue:.0f alpha:.0f];
         [newContentView addSubview:aOverlayView];
         self.overlayView = newContentView;
-        
         [self.contentView addSubview:newContentView];
-        
         
         //background view
         UIView *bV =[[UIView alloc] initWithFrame:newContentView.bounds]; 
@@ -113,8 +108,6 @@ CGFloat const kMoreCellHeight = 62.1f;
         UIView *sbV =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10.0f)]; 
         sbV.backgroundColor = COLOR_SELECTED_BACKGROUND_VIEW;
         self.selectedBackgroundView = sbV;
-        
-        
     }
     return self;
 }
@@ -134,7 +127,7 @@ CGFloat const kMoreCellHeight = 62.1f;
     
     if (highlighted) {
         _overlayView.frame = self.contentView.bounds;
-        _overlayView.backgroundColor = [UIColor colorWithRed:.0f green:0.f blue:0.f alpha:.1f];
+        _overlayView.backgroundColor = IGNANT_GRAY_COLOR;
     }
 }
 

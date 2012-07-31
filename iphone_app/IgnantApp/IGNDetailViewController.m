@@ -63,8 +63,14 @@
 @property (nonatomic, assign) TapDetectingWindow *mWindow;
 
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
+@property (nonatomic, assign, readwrite) BOOL isImportingRelatedArticle;
+
 
 @property (strong, nonatomic, readwrite) UITapGestureRecognizer *dtGestureRecognizer;
+
+
+@property (strong, nonatomic, readwrite) NSDictionary *remoteArticleDictionary;
+@property (strong, nonatomic, readwrite) NSString *remoteArticleJSONString;
 
 @property (strong, nonatomic, readwrite) NSString *articleTitle;
 @property (strong, nonatomic, readwrite) NSURL *articleWeblink;
@@ -124,45 +130,11 @@
 
 @implementation IGNDetailViewController
 
+@synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
 @synthesize isShownFromMosaic = _isShownFromMosaic;
 @synthesize isShowingImageSlideshow = _isShowingImageSlideshow;
 
-@synthesize firstRelatedArticleId = _firstRelatedArticleId;
-@synthesize secondRelatedArticleId = _secondRelatedArticleId;
-@synthesize thirdRelatedArticleId = _thirdRelatedArticleId;
-
-@synthesize relatedArticlesTitleLabel = _relatedArticlesTitleLabel;
-@synthesize articleVideoView = _articleVideoView;
-@synthesize articleVideoWebView = _articleVideoWebView;
-@synthesize didLoadContentForRemoteArticle = _didLoadContentForRemoteArticle;
-
 @synthesize currentArticleId, relatedArticlesIds;
-
-@synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
-
-@synthesize shareAndMoreToolbar = _shareAndMoreToolbar;
-@synthesize toggleLikeButton = _toggleLikeButton;
-@synthesize articleContentView = _articleContentView;
-@synthesize relatedArticlesView = _relatedArticlesView;
-
-@synthesize previousArticleButton = _previousArticleButton;
-@synthesize nextArticleButton = _nextArticleButton;
-
-@synthesize dateLabel = _dateLabel;
-@synthesize categoryLabel = _categoryLabel;
-
-@synthesize showPictureSlideshowButton = _showPictureSlideshowButton;
-@synthesize playVideoButton = _playVideoButton;
-@synthesize titleLabel = _titleLabel;
-
-@synthesize descriptionWebViewLoadingView = _descriptionWebViewLoadingView;
-@synthesize entryImageView = _entryImageView;
-
-@synthesize blogEntry = _blogEntry;
-@synthesize nextBlogEntry = _nextBlogEntry;
-@synthesize previousBlogEntry = _previousBlogEntry;
-
-@synthesize remoteImagesArray = _remoteImagesArray;
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize contentScrollView = _contentScrollView;
@@ -171,19 +143,9 @@
 
 @synthesize fetchedResults = _fetchedResults;
 
-@synthesize currentBlogEntryIndex = _currentBlogEntryIndex;
-@synthesize nextBlogEntryIndex = _nextBlogEntryIndex;
-@synthesize previousBlogEntryIndex = _previousBlogEntryIndex;
-
 @synthesize nextDetailViewController = _nextDetailViewController;
 
 @synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
-
-@synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
-
-@synthesize articlesDateFormatter = _articlesDateFormatter;
-
-@synthesize numberFormatter = _numberFormatter;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -205,6 +167,7 @@
         
         self.numberFormatter = [[NSNumberFormatter alloc] init];
         
+        self.isImportingRelatedArticle = false;
         
         _isShowingLinkOptions = false;
         _isExecutingWebviewTapAction = false;
@@ -1066,7 +1029,7 @@
 
 -(void)updateToggleLikeButtonTitle
 {
-    BOOL isFavourite = [self.appDelegate.userDefaultsManager isBlogEntryFavourite:self.blogEntry.articleId];
+    BOOL isFavourite = [self.appDelegate.userDefaultsManager isBlogEntryFavourite:[self currentArticleId]];
     NSString *likeTitle = isFavourite ? NSLocalizedString(@"button_title_unlike", @"Title of the 'Unlike' button on the Detail View Controller") : NSLocalizedString(@"button_title_like", @"Title of the 'Like' button on the Detail View Controller");
     [self.toggleLikeButton setTitle:likeTitle forState:UIControlStateNormal];
 }
@@ -1074,6 +1037,10 @@
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary
 {
     LOG_CURRENT_FUNCTION()
+    
+    
+    self.remoteArticleDictionary = articleDictionary;
+    
     
     NSString *remoteContentArticleTitle = [articleDictionary objectForKey:kFKArticleTitle];
     NSString *remoteContentArticleWeblinkString = [articleDictionary objectForKey:kFKArticleWebLink];
@@ -1475,8 +1442,24 @@
     [self.navigationController pushViewController:moreOptionsVC animated:YES];
 }
 
+
+-(void)importRemoteArticleDictionary
+{
+    LOG_CURRENT_FUNCTION()
+    
+    self.isImportingRelatedArticle = true;
+    [self.importer importOneArticleFromDictionary:self.remoteArticleDictionary forceSave:YES];
+}
+
 -(IBAction)toggleLike:(id)sender {
-    [self.appDelegate.userDefaultsManager toggleIsFavouriteBlogEntry:self.blogEntry.articleId];    
+    
+    //if the article is shown with remote data, trigger importing it if necessary
+    if(!self.isShowingArticleFromLocalDatabase)
+    {
+        [self importRemoteArticleDictionary];
+    }
+    
+    [self.appDelegate.userDefaultsManager toggleIsFavouriteBlogEntry:[self currentArticleId]];
     [self updateToggleLikeButtonTitle];
 }
 
@@ -1590,10 +1573,13 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
     
+    
+    self.remoteArticleJSONString = [request responseString];
+    
     DBLog(@"[request responseString]: %@", [request responseString]);
     
 #warning todo: handle errors
-    [self.importer importJSONStringForSingleArticle:[request responseString]];    
+    [self.importer importJSONStringForSingleArticle:[request responseString] forceSave:NO];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -1613,36 +1599,68 @@
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer
 {
     DBLog(@"importerDidStartParsingSingleArticle");
+    
+    __block __typeof__(self) blockSelf = self;
+    
+    if(blockSelf.isImportingRelatedArticle)
+    {
+        DBLog(@"failed importing for favorite");
+    }
+    else
+    {
+        DBLog(@"failed  importing related article");
+    }
 }
 
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {
-    
-#warning TODO: show something if article with id is not found    
-
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
-    _didLoadContentForRemoteArticle = YES;
+    __block __typeof__(self) blockSelf = self;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
-        [self configureView];
-//        [self setIsLoadingViewHidden:YES];
-    });
+    if(blockSelf.isImportingRelatedArticle)
+    {
+        DBLog(@"finished importing related article");
+        
+        blockSelf.isImportingRelatedArticle = false;
+        
+    }
+    else
+    {
+        _didLoadContentForRemoteArticle = YES;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [blockSelf setupArticleContentViewWithRemoteDataDictionary:articleDictionary];
+            [blockSelf configureView];
+        });
+    }
 }
 
 -(void)importer:(IgnantImporter*)importer didFailParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {
     DBLog(@"didFailParsingSingleArticleWithDictionary");
     
-#warning TODO: stop showing loading view and return to the master view controlle
+#warning TODO: handle failing parsing the single article dictionary
+    
+    __block __typeof__(self) blockSelf = self;
+    
+    if(blockSelf.isImportingRelatedArticle)
+    {
+        DBLog(@"failed importing for favorite");
+        
+        blockSelf.isImportingRelatedArticle = false;
+        
+    }
+    else
+    {
+       DBLog(@"failed  importing related article");
+    }
 }
 
 #pragma mark - UIGestureRecognizer delegate methods
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
        shouldReceiveTouch:(UITouch *)touch
 {
-    
     
     if ([touch.view isKindOfClass:[DTLinkButton class]]) {
         return NO;

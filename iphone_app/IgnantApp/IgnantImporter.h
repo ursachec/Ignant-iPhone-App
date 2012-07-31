@@ -41,9 +41,11 @@ extern NSString *const kUserDefaultsLastImportDateForMainPageArticle;
 
 -(void)importJSONWithLatestPosts:(NSString*)jsonString forCategoryId:(NSString*)categoryId;
 
--(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle;
+-(void)importJSONStringForSingleArticle:(NSString*)jsonStringWithSingleArticle forceSave:(BOOL)forceSave;
 
 -(void)importJSONStringForTumblrPosts:(NSString*)jsonString;
+
+-(void)importOneArticleFromDictionary:(NSDictionary*)oneArticle forceSave:(BOOL)forceSave;
 
 
 -(BlogEntry*)blogEntryWithId:(NSString*)blogEntryId;
