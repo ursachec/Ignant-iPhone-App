@@ -65,9 +65,7 @@
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
 @property (nonatomic, assign, readwrite) BOOL isImportingRelatedArticle;
 
-
 @property (strong, nonatomic, readwrite) UITapGestureRecognizer *dtGestureRecognizer;
-
 
 @property (strong, nonatomic, readwrite) NSDictionary *remoteArticleDictionary;
 @property (strong, nonatomic, readwrite) NSString *remoteArticleJSONString;
@@ -93,6 +91,8 @@
 @property (strong, nonatomic) IBOutlet UIView *descriptionWebViewLoadingView;
 
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *entryImageActivityIndicatorView;
+
 
 @property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
 
@@ -109,19 +109,13 @@
 //cluster views
 @property (strong, nonatomic) IBOutlet UIView *articleContentView;
 @property (strong, nonatomic) IBOutlet UIView *relatedArticlesView;
-
 @property(strong, nonatomic, readwrite) UILabel* couldNotLoadDataLabel;
-
-
 @property (nonatomic, strong, readwrite) NSDateFormatter *articlesDateFormatter;
 
 -(void)configureView;
 -(void)setupNavigationButtons;
-
 - (IBAction)showPictureSlideshow:(id)sender;
-
 -(void)startLoadingSingleArticle;
-
 -(void)setNavigationBarAndToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
@@ -133,19 +127,11 @@
 @synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
 @synthesize isShownFromMosaic = _isShownFromMosaic;
 @synthesize isShowingImageSlideshow = _isShowingImageSlideshow;
-
-@synthesize currentArticleId, relatedArticlesIds;
-
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize contentScrollView = _contentScrollView;
-
-@synthesize navigationDetailViewController = _navigationDetailViewController;
+@synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
 
 @synthesize fetchedResults = _fetchedResults;
-
-@synthesize nextDetailViewController = _nextDetailViewController;
-
-@synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
+@synthesize currentArticleId, relatedArticlesIds;
+@synthesize managedObjectContext = _managedObjectContext;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -865,7 +851,6 @@
     NSString* finalRichText = [self wrapDTRichtext:descriptionText];
     
     // Load HTML data
-	NSString *html = @"<a href='http://www.google.de'>anchor</a><p>a paragraph a paragraph a paragraph</p><br /><p style='font-size:16px;'>ANOTHER PARAGRAPH IS HERE</p><br /><p>AND ANOTHER</p><a href='http://www.google.de'>anchor</a><p>a paragraph a paragraph a paragraph</p><br /><p style='font-size:16px;'>ANOTHER PARAGRAPH IS HERE</p><br /><p>AND ANOTHER</p>";
 	NSData *data = [finalRichText dataUsingEncoding:NSUTF8StringEncoding];
 	
 	// Create attributed string from HTML

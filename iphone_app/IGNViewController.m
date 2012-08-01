@@ -736,6 +736,7 @@
 {
     __block NSURL* blockThumbURL = url;
     __block UIImageView* blockImageView = imageView;
+    
     [blockImageView  setImageWithURL:blockThumbURL
                     placeholderImage:nil
                              success:^(UIImage* image){
