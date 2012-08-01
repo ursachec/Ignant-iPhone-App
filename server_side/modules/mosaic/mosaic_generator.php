@@ -1,14 +1,15 @@
 <?php
+$tg_path = dirname(__FILE__).'/';
 
-require_once('../../feedKeys.php');
-require_once('../../generalConstants.php');
+require_once($tg_path.'../../feedKeys.php');
+require_once($tg_path.'../../generalConstants.php');
 
-require_once("../../wp_config.inc.php");
+require_once($tg_path."../../wp_config.inc.php");
 
-require_once('../db/dbq_general.php');
-require_once('../db/dbq_articles.php');
-require_once('../db/dbq_notifications.php');
-require_once('../db/dbq_categories.php');
+require_once($tg_path.'../db/dbq_general.php');
+require_once($tg_path.'../db/dbq_articles.php');
+require_once($tg_path.'../db/dbq_notifications.php');
+require_once($tg_path.'../db/dbq_categories.php');
 
 function getRandomImagePostId($postId=0, $dbh=null)
 {
@@ -91,14 +92,25 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 	}
 	$startPosition+=$batchSize;
 	
-	if(count($posts)>0 && $startPosition<300)
+	if(count($posts)>0 && $startPosition<MAX_NUMBER_OF_FILE_TO_CREATE)
 	{
 		createMosaicEntries(&$startPosition, $batchSize, &$dbh);
 	}
 	
-	bloatedPrint("finished recursion with startPosition: $startPosition");
+	//bloatedPrint("finished recursion with startPosition: $startPosition");
 	return;
 }
+
+
+parse_str(implode('&', array_slice($argv, 1)), $_GET);
+
+$max = 0;
+if(isset($_GET['max']))
+	$max = $_GET['max'];
+else
+	$max = 50;
+
+define('MAX_NUMBER_OF_FILE_TO_CREATE', $max);
 
 header('Content-type:text/plain');
 
@@ -112,7 +124,6 @@ $startPosition = 0;
 $batchSize = 20;
 
 createMosaicEntries(&$startPosition, $batchSize, &$dbh);
-
 
 $after = microtime(true);
 bloatedPrint("execution time: ".($after-$before). " s");

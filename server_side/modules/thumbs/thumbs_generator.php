@@ -1,15 +1,16 @@
 <?php
 
+$tg_path = dirname(__FILE__).'/';
 
-require_once('../../feedKeys.php');
-require_once('../../generalConstants.php');
+require_once($tg_path.'../../feedKeys.php');
+require_once($tg_path.'../../generalConstants.php');
 
-require_once("../../wp_config.inc.php");
-require_once('../db/dbq_general.php');
+require_once($tg_path."../../wp_config.inc.php");
+require_once($tg_path.'../db/dbq_general.php');
 
-require_once('../db/dbq_articles.php');
-require_once('../db/dbq_notifications.php');
-require_once('../db/dbq_categories.php');
+require_once($tg_path.'../db/dbq_articles.php');
+require_once($tg_path.'../db/dbq_notifications.php');
+require_once($tg_path.'../db/dbq_categories.php');
 
 function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 		
@@ -137,7 +138,7 @@ function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $
 		createArticleImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
 	}
 	
-	bloatedPrint("finished recursion with startPosition: $startPosition");
+	//bloatedPrint("finished recursion with startPosition: $startPosition");
 	return;
 }
 
@@ -146,7 +147,7 @@ function createImageThumb($articleId=0, $imageUrl = '', $newWidth = 200, $source
 	$sourceImage = $sourceDir.$imageUrl;
 	$destinationImage = $destinationDir.$articleId.'.png';
 	
-	print "\n sourceDir : $sourceDir | imageUrl : $imageUrl | sourceImage : $sourceImage\n";
+	//print "\n sourceDir : $sourceDir | imageUrl : $imageUrl | sourceImage : $sourceImage\n";
 	
 	//TODO: check permissions
 	if(@fopen($destinationImage,"r")==true)
@@ -169,7 +170,7 @@ if(isset($_GET[TL_RETURN_IMAGE_TYPE]) && $_GET[TL_RETURN_IMAGE_TYPE]!=''){
 }
 else{
 	bloatedPrint("Image category not set, exiting.");
-	return;
+	return -1;
 }
 
 //temp
@@ -181,7 +182,7 @@ $max = 0;
 if(isset($_GET['max']))
 	$max = $_GET['max'];
 else
-	$max = 200;
+	$max = 50;
 
 define('MAX_NUMBER_OF_FILE_TO_CREATE', $max);
 
@@ -264,64 +265,4 @@ bloatedPrint("finished running thumbs generator...");
 
 $dbh = null;
 
-
-/*
-
-no click delay
-
-function NoClickDelay(el) {
-	this.element = typeof el == 'object' ? el : document.getElementById(el);
-	if( window.Touch ) this.element.addEventListener('touchstart', this, false);
-}
-
-NoClickDelay.prototype = {
-	handleEvent: function(e) {
-		switch(e.type) {
-			case 'touchstart': this.onTouchStart(e); break;
-			case 'touchmove': this.onTouchMove(e); break;
-			case 'touchend': this.onTouchEnd(e); break;
-		}
-	},
-
-	onTouchStart: function(e) {
-		e.preventDefault();
-		this.moved = false;
-
-		this.theTarget = document.elementFromPoint(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
-		if(this.theTarget.nodeType == 3) this.theTarget = theTarget.parentNode;
-		this.theTarget.className+= ' pressed';
-
-		this.element.addEventListener('touchmove', this, false);
-		this.element.addEventListener('touchend', this, false);
-	},
-
-	onTouchMove: function(e) {
-		this.moved = true;
-		this.theTarget.className = this.theTarget.className.replace(/ ?pressed/gi, '');
-	},
-
-	onTouchEnd: function(e) {
-		this.element.removeEventListener('touchmove', this, false);
-		this.element.removeEventListener('touchend', this, false);
-
-		if( !this.moved && this.theTarget ) {
-			this.theTarget.className = this.theTarget.className.replace(/ ?pressed/gi, '');
-			var theEvent = document.createEvent('MouseEvents');
-			theEvent.initEvent('click', true, true);
-			this.theTarget.dispatchEvent(theEvent);
-		}
-
-		this.theTarget = undefined;
-	}
-};
-
-
-document.onload = function(){
-     document.ontouchmove = function(e){ e.preventDefault(); } 
-     new NoClickDelay(document.getElementsByTagName('a'));
- };
-
-
-
-*/
 ?>
