@@ -82,6 +82,7 @@ define('FK_ARTICLE_TEMPLATE_VIDEO','video');
 define('FK_ARTICLE_TEMPLATE_ITRAVEL','itravel');
 define('FK_ARTICLE_TEMPLATE_IGNANTV','ignantv');
 define('FK_ARTICLE_TEMPLATE_AICUISINE','aicuisine');
+define('FK_ARTICLE_TEMPLATE_DAILYBASICS','dailybasics');
 
 //RELATED ARTICLE
 define('FK_ARTICLE_CATEGORY_TEXT','categoryText');

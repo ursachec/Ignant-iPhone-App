@@ -18,6 +18,9 @@ function getArticleTemplateForCategoryId($categoryId = 0)
 	
 	else if($categoryId==859)
 		$template = FK_ARTICLE_TEMPLATE_IGNANTV;
+	
+	else if($categoryId==868)
+		$template = FK_ARTICLE_TEMPLATE_DAILYBASICS;
 		
 	
 	return $template;
@@ -54,7 +57,7 @@ function getExcludedCategories()
 	//Monifaktur 860
 	//Daily Basics 868
 	
-	$categories = array(1,7,862,857,855,858, 860, 868, 869);
+	$categories = array(1,7,862,857,855,858, 860);
 	return $categories;
 }
 
