@@ -613,7 +613,7 @@
     if (_isLoadingLatestContent) return;        
     _isLoadingLatestContent = YES;
     
-    NSString *categoryId = self.currentCategory!=nil ? self.currentCategory.categoryId : kUndefinedCategoryId;
+    NSString *categoryId = [self currentCategoryId];
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetLatestArticlesForCategory,kParameterAction,categoryId,kCurrentCategoryId, [self currentPreferredLanguage], kParameterLanguage, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];

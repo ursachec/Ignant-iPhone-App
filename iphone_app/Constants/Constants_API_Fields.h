@@ -73,6 +73,7 @@ extern NSString * const kFKArticleVideoEmbedCode;
 extern NSString * const kFKArticleTemplateDefault;
 extern NSString * const kFKArticleTemplateArticle;
 extern NSString * const kFKArticleTemplateMonifaktur;
+extern NSString * const kFKArticleTemplateDailyBasics;
 extern NSString * const kFKArticleTemplateVideo;
 extern NSString * const kFKArticleTemplateItravel;
 extern NSString * const kFKArticleTemplateIgnanTV;

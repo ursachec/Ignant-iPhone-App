@@ -670,6 +670,12 @@
     
     */
     
+    else if ([self.blogEntry.tempate compare:kFKArticleTemplateDailyBasics]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.playVideoButton removeFromSuperview];
+        [self.articleVideoView removeFromSuperview];
+    }
+    
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
@@ -684,7 +690,7 @@
     }
     
     else if ([self.blogEntry.tempate compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
+        [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
     }

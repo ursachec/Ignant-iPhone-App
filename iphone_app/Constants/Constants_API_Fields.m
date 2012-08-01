@@ -83,6 +83,7 @@ NSString * const kFKArticleRelatedArticles = @"relatedArticles";
 NSString * const kFKArticleTemplateDefault = @"default";
 NSString * const kFKArticleTemplateArticle = @"article";
 NSString * const kFKArticleTemplateMonifaktur = @"monifaktur";
+NSString * const kFKArticleTemplateDailyBasics = @"dailybasics"; 
 NSString * const kFKArticleTemplateVideo = @"video";
 NSString * const kFKArticleTemplateItravel = @"itravel";
 NSString * const kFKArticleTemplateIgnanTV = @"ignantv";
