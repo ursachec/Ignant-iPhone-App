@@ -206,7 +206,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     if (savedOk) {
         
-#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
         //save date for least recent article
         [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
@@ -278,7 +277,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     if (savedOk) {
         
-#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
         //save date for least recent article
         [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
@@ -354,8 +352,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     //update the date of the last imported article for the main page
     if (savedOk && self.currentBlogEntry.publishingDate!=nil) 
     {
-        
-#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
         //save date for least recent article
         NSString* homeCategoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
         [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];

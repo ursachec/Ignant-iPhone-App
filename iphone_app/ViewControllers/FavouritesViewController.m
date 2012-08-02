@@ -13,6 +13,7 @@
 @interface FavouritesViewController ()
 
 @property (nonatomic, strong, readwrite) IgnantImporter *importer;
+@property (nonatomic, strong, readwrite) UIView* noFavouritesView;
 @property (assign, readwrite) BOOL isHomeCategory;
 
 @end
@@ -31,6 +32,26 @@
         self.isHomeCategory = NO;
     }
     return self;
+}
+
+-(UIView*)noFavouritesView
+{
+    if (_noFavouritesView==nil) {
+        
+        UIView* aView = [[UIView alloc] initWithFrame:self.blogEntriesTableView.frame];
+        aView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5f];
+        
+        UILabel *aLabel = [[UILabel alloc] initWithFrame:aView.frame];
+        aLabel.text = NSLocalizedString(@"info_no_favorites", @"text shown when no favorites set");
+        aLabel.numberOfLines = 4;
+        aLabel.font = [UIFont fontWithName:@"Georgia" size:11.0f];
+        aLabel.textAlignment = UITextAlignmentCenter;
+        [aView addSubview:aLabel];
+        
+        _noFavouritesView = aView;
+    }
+    
+    return _noFavouritesView;
 }
 
 -(void)createImporter
@@ -58,7 +79,22 @@
     
     self.fetchedResultsController = nil;
     [self fetch];
+    
+    int section = 0;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    
+    NSInteger numberOfFavourites = [sectionInfo numberOfObjects];
+    
+    if (numberOfFavourites<1) {
+        [self.view addSubview:self.noFavouritesView];
+    }
+    else{
+        [self.noFavouritesView removeFromSuperview];
+    }
+    
 }
+
+
 
 -(void)viewDidAppear:(BOOL)animated
 {

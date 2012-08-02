@@ -304,11 +304,6 @@
 
 -(void)handleBack:(id)sender
 {
-    if (self.isShownFromMosaic) {
-        [self showMosaic];
-    }
-    else
-    {
         if (self.viewControllerToReturnTo) {
             [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
         }
@@ -316,7 +311,6 @@
             DBLog(@"WARNING! viewControllerToReturnTo not found");
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
-    }
 }
 
 -(void)navigateToNextArticle
@@ -1270,7 +1264,6 @@
     BOOL canTweet = [TWTweetComposeViewController canSendTweet];
     
     if (!canTweet) {
-#warning TODO: show this in a better way        
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
                                                      message:NSLocalizedString(@"ui_alert_message_you_need_to_be_logged_in_with_twitter", nil)
                                                     delegate:self 
@@ -1284,7 +1277,6 @@
         
 #warning TODO: if link not set, dismiss and show error (or something)
        
-        
         __block __typeof__(self) blockSelf = self;
         NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog", blockSelf.articleTitle, blockSelf.articleWeblink];
         

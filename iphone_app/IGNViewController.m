@@ -185,7 +185,7 @@
 {
 #define DEBUG_SHOW_COLORS false
 #define NAVBAR_PADDING_TOP 0.0f
-#define PADDING_LEFT 5.0f
+#define PADDING_LEFT 3.0f
     
     if (_specificNavigationBar==nil) {
         
@@ -210,7 +210,7 @@
         CGSize backArrowSize = CGSizeMake(17.0f*arrowRatio, 26.0f*arrowRatio);
         CGRect backArrowFrame = CGRectMake(backButtonFrame.origin.x, (backButtonFrame.size.height-backArrowSize.height)/2+NAVBAR_PADDING_TOP, backArrowSize.width, backArrowSize.height);
         UIImageView* backArrowView = [[UIImageView alloc] initWithFrame:backArrowFrame];
-        backArrowView.image = [UIImage imageNamed:@"arrow_left_black.png"];
+        backArrowView.image = [UIImage imageNamed:@"arrow_left.png"];
         backArrowView.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor redColor] : [UIColor clearColor];
         [backButton addSubview:backArrowView];
         

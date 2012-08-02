@@ -56,7 +56,7 @@
 #define PADDING_TOP 10.0f   
 #define PADDING_BOTTOM 5.0f
 
-#define TITLE_WIDTH 130.0f
+#define TITLE_WIDTH 126.0f
 #define TITLE_FONT_SIZE 12.0f
     
 #define DESCRIPTION_WIDTH 180.0f
