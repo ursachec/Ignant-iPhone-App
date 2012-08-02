@@ -7,6 +7,8 @@
 */
 "vc_title_home" = "Home";
 
+"info_no_favorites"="Tap LIKE in an article to save it for later.";
+
 "title_related_articles_detail_vc" = "ARCHIVE";
 
 "could_not_load_data_for_tumblr_feed" = "Could not load tumblr feed";

@@ -7,6 +7,8 @@
 */
 "vc_title_home" = "Home";
 
+"info_no_favorites"="Benutze die LIKE Funktion im Artikel\n um deine Favoriten hier zu speichern.";
+
 "title_related_articles_detail_vc" = "ARCHIV";
 
 "could_not_load_data_for_tumblr_feed" = "Could not load tumblr feed";
