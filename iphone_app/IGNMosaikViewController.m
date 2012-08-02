@@ -47,10 +47,13 @@ NSString * const kImageFilename = @"filename";
 {
     BOOL _isLoadingMoreMosaicImages;
     BOOL _isLoadingReplacingMosaicImages;
+    BOOL _isMosaicShownForTheFirstTime;
     int _numberOfActiveRequests;
     CGPoint lastContentOffset;
-      
 }
+
+@property(nonatomic,strong) NSMutableArray* currentColumnHeights;
+
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
 @property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
@@ -87,8 +90,10 @@ NSString * const kImageFilename = @"filename";
         // Custom initialization
         _numberOfActiveRequests = 0;
         
-        _isLoadingMoreMosaicImages = NO;
-        _isLoadingReplacingMosaicImages = NO;
+        _isLoadingMoreMosaicImages = false;
+        _isLoadingReplacingMosaicImages = false;
+        
+        _isMosaicShownForTheFirstTime= true;
         
     }
     return self;
@@ -122,10 +127,9 @@ NSString * const kImageFilename = @"filename";
 
 -(IBAction)handleBack:(id)sender
 {
-    
     DBLog(@"handleBack!!!");
     
-    
+    /*
     if (self.viewControllerToReturnTo) {
         [self.appDelegate.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
     }
@@ -134,6 +138,7 @@ NSString * const kImageFilename = @"filename";
         DBLog(@"WARNING! viewControllerToReturnTo not found");
         [self.appDelegate.navigationController popToRootViewControllerAnimated:YES];
     }
+    */
     
     [self dismissModalViewControllerAnimated:YES];
 }
@@ -152,22 +157,40 @@ NSString * const kImageFilename = @"filename";
 {
     [super viewWillAppear:animated];
     
+    __block __typeof__(self) blockSelf = self;
+    
+    [self setIsSpecificToolbarHidden:YES animated:NO];
+    
+    
+    if(_isMosaicShownForTheFirstTime){
+        
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [blockSelf setIsSpecificNavigationBarHidden:YES animated:YES];
+        });
+        _isMosaicShownForTheFirstTime = false;
+    }
+    
+    
     NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
-    if ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages) {
+    if (!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)) {
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
+        
+        _currentColumnHeights = [@[ @0,@0, @0 ] mutableCopy];
+        
         [self loadMoreMosaicImages];
     }
     else {
         DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
     
-    [self setIsSpecificNavigationBarHidden:YES animated:NO];
-    [self setIsSpecificToolbarHidden:YES animated:NO];
+    
 }
 
 - (void)viewDidLoad
@@ -177,11 +200,6 @@ NSString * const kImageFilename = @"filename";
     //trigger the drawing for the images
     [self drawSavedMosaicImages];
     
-    //check if the mosaicImages are loaded and trigger a load if not
-    if(!self.isMosaicImagesArrayNotEmpty)
-    {
-        [self loadMoreMosaicImages];
-    }
     
     // add the big mosaik view to the content scrollview
     self.bigMosaikView.userInteractionEnabled = YES;
@@ -192,9 +210,11 @@ NSString * const kImageFilename = @"filename";
     overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView = overlayView;
     
-    
     //set up the mock navigation bar + toolbar
     [self setUpToolbarAndMockNavigationBar];
+    
+    
+    [self setIsSpecificNavigationBarHidden:NO animated:NO];
 }
 
 - (void)viewDidUnload
@@ -254,10 +274,20 @@ NSString * const kImageFilename = @"filename";
     }
 }
 
+-(NSArray*)columnHeightsForMosaicImages:(NSArray*)mosaicImages
+{
+    NSArray* columnHeights = @[@0, @0, @0];
+    
+    
+    return columnHeights;
+}
+
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages
 {
     //first retrieve the currently saved mosaic images as copy
     NSArray* currentlySavedMosaicImages = [self.savedMosaicImages copy];
+    
+    NSArray* currentColumnHeights = [self columnHeightsForMosaicImages:currentlySavedMosaicImages];
     
     //then add the mosaicImages parameter to the currently saved ones
     NSArray* newArrayOfSavedMosaicImages = [currentlySavedMosaicImages arrayByAddingObjectsFromArray:mosaicImages];
@@ -320,8 +350,13 @@ NSString * const kImageFilename = @"filename";
 
 -(void)drawSavedMosaicImages
 {
+    
+    if (_currentColumnHeights==nil) {
+        _currentColumnHeights = [@[ @0,@0,@0 ] mutableCopy];
+    }
+    
     //first of all delete all currently shown images
-    [self removeCurrentImageViews];
+    // [self removeCurrentImageViews];
     
 #define PADDING_BOTTOM 5.0f
 #define PADDING_TOP .0f
@@ -332,6 +367,8 @@ NSString * const kImageFilename = @"filename";
     NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
     
 
+    NSLog(@"images.count: %d  , _currentColumnHeights: %@", [images count], _currentColumnHeights);
+    
     //add the load more mosaic view to the image dictionary
     if(shouldIncludeLoadingMoreView)
     {
@@ -342,10 +379,15 @@ NSString * const kImageFilename = @"filename";
     }
     
     //get active column
+    
+    int fc = [(NSNumber*)[_currentColumnHeights objectAtIndex:0] intValue];
+    int sc = [(NSNumber*)[_currentColumnHeights objectAtIndex:1] intValue];
+    int tc = [(NSNumber*)[_currentColumnHeights objectAtIndex:2] intValue];
+    
     const int numberOfColumns = 3;
-    int columnHeights[numberOfColumns] = {0,0,0}; 
-    int smallestColumn = 0;
-    int imageCounter = [images count];
+    int columnHeights[numberOfColumns] = {fc,sc,tc};
+    int smallestColumn = MIN(MIN(fc, sc), tc);
+    int imageCounter = [images count];    
     
     for (NSDictionary* oneImageDictionary in images) 
     {
@@ -353,10 +395,13 @@ NSString * const kImageFilename = @"filename";
         NSNumber* mosaicEntryWidth = [oneImageDictionary objectForKey:kMosaicEntryWidth];
         NSNumber* mosaicEntryHeight = [oneImageDictionary objectForKey:kMosaicEntryHeight];
         NSString* mosaicEntryArticleId = [oneImageDictionary objectForKey:kMosaicEntryArticleId];
+        
+#warning TODO: remove kMosaicEntryUlr entries
         NSString* mosaicEntryUrl = [oneImageDictionary objectForKey:kMosaicEntryUrl];
         
         CGFloat fMosaicEntryWidth = [mosaicEntryWidth floatValue];
         CGFloat fMosaicEntryHeight = [mosaicEntryHeight floatValue];
+        
         
         
         //calculate the column with the smallest height
@@ -370,6 +415,8 @@ NSString * const kImageFilename = @"filename";
                 smallestColumn=i;
             }
         }
+        
+        
         
         //define the active column as being the one with the smallest height
         int activeColumn = smallestColumn;
@@ -432,6 +479,10 @@ NSString * const kImageFilename = @"filename";
         //add one of the columnHeights value to the relevant columnHeight
         columnHeights[activeColumn] += (fMosaicEntryHeight+PADDING_BOTTOM);
         
+        if (!isColumnLoadMoreView || !shouldIncludeLoadingMoreView){
+            [_currentColumnHeights replaceObjectAtIndex:activeColumn withObject:@(columnHeights[activeColumn])];
+        }
+        
         imageCounter--;
     }
     
@@ -454,6 +505,10 @@ NSString * const kImageFilename = @"filename";
     
     //add the closeButton to the view
     [self.view addSubview:self.closeMosaikButton];
+    
+    
+    
+    NSLog(@"_currentColumnHeights %@", _currentColumnHeights);
     
 }
 
@@ -514,6 +569,8 @@ NSString * const kImageFilename = @"filename";
     
     
     [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+    
+    NSLog(@"_isLoadingReplacingMosaicImages: %@", _isLoadingReplacingMosaicImages ? @"TRUE" : @"FALSE");
     
     if (_isLoadingReplacingMosaicImages) {
         [self replaceCurrentMosaicImagesWithNewOnes:[images copy]];
@@ -601,7 +658,7 @@ NSString * const kImageFilename = @"filename";
     DBLog(@"double tap in view");
     
     [self toggleShowSpecificNavigationBarAnimated:YES];
-    [self toggleShowSpecificToolbar];
+    //[self toggleShowSpecificToolbar];
 }
 
 -(void)triggerActionForTapInView:(MosaicView*)view

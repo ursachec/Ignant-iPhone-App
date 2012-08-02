@@ -43,13 +43,11 @@
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:190</string>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
-						<bool key="IBUIShowsVerticalScrollIndicator">NO</bool>
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
@@ -152,7 +150,6 @@
 						<string key="NSFrame">{{228, 9}, {72, 37}}</string>
 						<reference key="NSSuperview" ref="143349225"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<reference key="IBUIBackgroundColor" ref="879909851"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -269,7 +266,6 @@
 						<string key="NSFrame">{{140, 2}, {40, 40}}</string>
 						<reference key="NSSuperview" ref="124134317"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -539,6 +535,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">IGNMosaikViewController</string>
 					<string key="superclassName">IGNViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">showHome:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">showHome:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">showHome:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bigMosaikView">UIView</string>
 						<string key="closeMosaikButton">UIButton</string>
