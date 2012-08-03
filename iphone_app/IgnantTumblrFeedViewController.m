@@ -173,6 +173,7 @@
 
 -(void)setUpTumblrTitleView
 {
+    /*
     CGRect tumblrLogoFrame = CGRectMake(0, 0, 24.0f, 24.0f);
     UIView *aTumblrLogoView = [[UIView alloc] initWithFrame:tumblrLogoFrame];
     aTumblrLogoView.backgroundColor = [UIColor whiteColor];
@@ -185,6 +186,7 @@
     [aTumblrLogoView addSubview:aImageView];
     
     self.navigationItem.titleView = aTumblrLogoView;
+    */
 }
 
 -(NSString*)currentCategoryId

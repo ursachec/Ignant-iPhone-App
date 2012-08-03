@@ -64,7 +64,7 @@
         cellContentView.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:cellContentView];
 
-        tumblrImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,5,310,310)];
+        tumblrImageView = [[UIImageView alloc] initWithFrame:CGRectMake(9,9,302,302)];
         [tumblrImageView setBackgroundColor:IGNANT_GRAY_COLOR];
         [self.contentView addSubview:tumblrImageView];
 

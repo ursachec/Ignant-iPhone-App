@@ -719,7 +719,7 @@ return _externalPageViewController;
 }
 
 -(void)showHome
-{
+{    
     NSError* error = nil;
     if (![[GANTracker sharedTracker] trackEvent:@"IGNAppDelegate"
                                          action:@"showHome"

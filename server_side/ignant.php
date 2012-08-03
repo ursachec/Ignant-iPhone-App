@@ -215,7 +215,7 @@ else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 	$oneArticle = null;
 	
 	// $oneArticle = $contentProxy->getJSONReadyArrayForArticleWithId($pArticleID);
-	$oneArticle = $contentProxy->tGetJSONReadyArrayForArticleWithId($pArticleID);
+	$oneArticle = $contentProxy->tGetJSONReadyArrayForArticleWithId($pArticleID, getContentLanguage($_GET[LANGUAGE_PARAM]));
 
 	if($oneArticle==null)
 	{

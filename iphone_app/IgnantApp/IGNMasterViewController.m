@@ -51,6 +51,8 @@
 -(void)loadMoreContent;
 -(NSString*)currentCategoryId;
 
+
+@property (strong, nonatomic, readwrite) UIView* scrollTopHomeButtonView;
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
@@ -219,9 +221,46 @@
                                     withError:&error];
 }
 
+-(void)handleTapOnHomeButtonScrollTop
+{
+    [self.blogEntriesTableView scrollRectToVisible:CGRectMake(0.0f, 0.0f, 310.0f, 10.0f) animated:YES];
+}
+
+-(void)setupHomeButtonScrollTop
+{
+    CGRect navBarFrame = self.navigationController.navigationBar.frame;
+    
+    CGSize buttonSize = CGSizeMake(40.0f, 40.0f);
+    CGRect vFrame = CGRectMake((navBarFrame.size.width-buttonSize.width)/2, (navBarFrame.size.height-buttonSize.height)/2, buttonSize.width, buttonSize.height);
+    
+    UIButton* aButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    aButton.backgroundColor = [UIColor clearColor];
+    [aButton setTitle:@"" forState:UIControlStateNormal];
+    aButton.frame = CGRectMake(0.0f, 0.0f, buttonSize.width, buttonSize.height);
+    [aButton addTarget:self action:@selector(handleTapOnHomeButtonScrollTop) forControlEvents:UIControlEventTouchDown];
+    
+    UIView* aView = [[UIView alloc] initWithFrame:vFrame];
+    [aView addSubview:aButton];
+    
+    self.scrollTopHomeButtonView = aView;
+    
+    [self.navigationController.navigationBar addSubview:self.scrollTopHomeButtonView];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.scrollTopHomeButtonView removeFromSuperview];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if (self.isHomeCategory) {
+        [self setupHomeButtonScrollTop];
+    }
     
     //check when was the last time updating the currently set category and trigger load latest/load more
     NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    

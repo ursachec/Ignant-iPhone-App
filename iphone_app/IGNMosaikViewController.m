@@ -128,18 +128,6 @@ NSString * const kImageFilename = @"filename";
 -(IBAction)handleBack:(id)sender
 {
     DBLog(@"handleBack!!!");
-    
-    /*
-    if (self.viewControllerToReturnTo) {
-        [self.appDelegate.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
-    }
-    else {
-        
-        DBLog(@"WARNING! viewControllerToReturnTo not found");
-        [self.appDelegate.navigationController popToRootViewControllerAnimated:YES];
-    }
-    */
-    
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -354,10 +342,7 @@ NSString * const kImageFilename = @"filename";
     
     //load the plist with the saved mosaic images in memory
     NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
-    
-
-    NSLog(@"images.count: %d  , _currentColumnHeights: %@", [images count], _currentColumnHeights);
-    
+        
     //add the load more mosaic view to the image dictionary
     if(shouldIncludeLoadingMoreView)
     {
@@ -495,10 +480,6 @@ NSString * const kImageFilename = @"filename";
     //add the closeButton to the view
     [self.view addSubview:self.closeMosaikButton];
     
-    
-    
-    NSLog(@"_currentColumnHeights %@", _currentColumnHeights);
-    
 }
 
 #pragma mark - some help methods
@@ -556,10 +537,7 @@ NSString * const kImageFilename = @"filename";
         return;
     }
     
-    
     [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
-    
-    NSLog(@"_isLoadingReplacingMosaicImages: %@", _isLoadingReplacingMosaicImages ? @"TRUE" : @"FALSE");
     
     if (_isLoadingReplacingMosaicImages) {
         [self replaceCurrentMosaicImagesWithNewOnes:[images copy]];

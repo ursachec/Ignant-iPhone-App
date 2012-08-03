@@ -57,10 +57,10 @@ class JSONContentProxy{
 	}
 
 	//----------
-	function tGetJSONReadyArrayForArticleWithId($articleId = '')
+	function tGetJSONReadyArrayForArticleWithId($articleId = '', $pLanguage = '')
 	{
 		global $testingUnit;
-		$article = getArticleWithId($articleId);
+		$article = getArticleWithId($articleId, $pLanguage);
 		$articleArray = $article->getArrayForJSONEncoding();
 		
 		return $articleArray;

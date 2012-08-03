@@ -244,9 +244,26 @@
         homeButton.frame = homeButtonFrame;
         
         
+        CGRect navBarFrame = specificNavigationBarFrame;
+        DBLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
+        
+        //set up the gradient view
+        CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);
+        CGRect gradientViewFrame = CGRectMake(navBarFrame.origin.x, navBarFrame.origin.y+navBarFrame.size.height, gradientViewSize.width, gradientViewSize.height);
+        UIView* aView = [[UIView alloc] initWithFrame:gradientViewFrame];
+        aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        
+        aView.backgroundColor = [UIColor clearColor];
+        
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = aView.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
+        [aView.layer insertSublayer:gradient atIndex:0];
+        
        
         [navView addSubview:homeButton];
         [navView addSubview:backButton];
+        [navView addSubview:aView];
         
         _specificNavigationBar = navView;
     }

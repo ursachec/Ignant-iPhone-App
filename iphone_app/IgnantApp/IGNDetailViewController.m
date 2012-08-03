@@ -49,7 +49,7 @@
 
 -(void)setupNavigationEntries;
 
--(void)setupUIElementsForCurrentBlogEntryTemplate;
+-(void)setupUIElementsForBlogEntryTemplate:(NSString*)template;
 
 - (IBAction)showMercedes:(id)sender;
 
@@ -298,6 +298,7 @@
     }
     
     [self setUpBackButton];
+    
 }
 
 #pragma mark - Navigation options
@@ -513,7 +514,7 @@
     UIActionSheet *linkActionSheet = nil;
     linkActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                   delegate:self 
-                                         cancelButtonTitle:NSLocalizedString(@"actionsheet_link_cancel", @"Title for the 'Cancel' button in the actionsheet when tapping on a link in the DetailVC") 
+                                         cancelButtonTitle:NSLocalizedString(@"actionsheet_link_cancel", @"Title for the 'Cancel' button in the actionsheet when tapping on a link in the DetailVC")
                                     destructiveButtonTitle:nil 
                                          otherButtonTitles:NSLocalizedString(@"actionsheet_link_open_in_safari", @"Title for the 'Open in Safari' button in the actionsheet when tapping on a link in the DetailVC"), nil ];
     linkActionSheet.delegate = self;
@@ -595,7 +596,8 @@
                                   relatedArticles:[self.blogEntry relatedArticles]   
                                      remoteImages:[self.blogEntry remoteImages] 
                                       publishDate:[self.blogEntry publishingDate]
-                                   videoEmbedCode:[self.blogEntry videoEmbedCode]];
+                                   videoEmbedCode:[self.blogEntry videoEmbedCode]
+                                         template:[self.blogEntry tempate]];
     return;
 }
 
@@ -621,12 +623,6 @@
     //set up the view in case the article is already here
     else 
     {    
-        //show loading view only for specific blog entry templates
-        if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame
-            || [self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame) {
-            [self setIsLoadingViewHidden:NO];
-        }
-        
         //article already loaded,
         //set up the article content view
         [self setupArticleContentView];
@@ -647,9 +643,18 @@
     return [NSString stringWithFormat:contents,richText];
 }
 
--(void)setupUIElementsForCurrentBlogEntryTemplate
+-(id)currentBlogEntryTemplate
 {
-    if ([self.blogEntry.tempate compare:kFKArticleTemplateDefault]==NSOrderedSame) {
+    if (self.blogEntry)
+        return self.blogEntry.tempate;
+    
+    
+    
+}
+
+-(void)setupUIElementsForBlogEntryTemplate:(NSString*)template
+{
+    if ([template compare:kFKArticleTemplateDefault]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
@@ -664,32 +669,32 @@
     
     */
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateDailyBasics]==NSOrderedSame) {
+    else if ([template compare:kFKArticleTemplateDailyBasics]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
+    else if ([template compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateVideo]==NSOrderedSame
-             || [self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
+    else if ([template compare:kFKArticleTemplateVideo]==NSOrderedSame
+             || [template compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
-        [self.articleContentView addSubview:self.playVideoButton];
+        [self.playVideoButton removeFromSuperview];
         [self.articleContentView addSubview:self.articleVideoView];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
+    else if ([template compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
     }
     
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateItravel]==NSOrderedSame) {
+    else if ([template compare:kFKArticleTemplateItravel]==NSOrderedSame) {
         [self.articleContentView addSubview:self.showPictureSlideshowButton];
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
@@ -733,6 +738,7 @@
                                   remoteImages:(NSArray*)remoteImages
                                    publishDate:(NSDate*)publishDate
                                 videoEmbedCode:(NSString*)videoEmbedCode
+                                      template:(NSString*)articleTemplate
 {
     
 #define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
@@ -740,6 +746,10 @@
     
     if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
         LOG_CURRENT_FUNCTION()
+        
+        
+    NSLog(@"articleTemplate: %@", articleTemplate);
+    [self setupUIElementsForBlogEntryTemplate:articleTemplate];
         
         
     self.currentArticleId = articleID;
@@ -900,8 +910,7 @@
     //setup related articles UI for presentation, don't add the view to the contentView yet
     [self setupRelatedArticlesUI:relatedArticles];
     
-    //setup ui elements for current blogentry template
-    [self setupUIElementsForCurrentBlogEntryTemplate];
+    
     
     
     
@@ -1032,6 +1041,8 @@
     NSURL* remoteContentArticleWeblink = [NSURL URLWithString:remoteContentArticleWeblinkString];
     NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
     NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
+    NSString *remoteContentTemplate = [articleDictionary objectForKey:kFKArticleTemplate];
+    
     
     NSString *remoteContentArticleDescriptionTextBase64 = [articleDictionary objectForKey:kFKArticleDescriptionText];
     NSString *remoteContentArticleDescriptionText = [[NSString alloc] initWithData:[NSData dataFromBase64String:remoteContentArticleDescriptionTextBase64] encoding:NSUTF8StringEncoding];
@@ -1064,7 +1075,8 @@
                                   relatedArticles:remoteContentRelatedArticles
                                      remoteImages:remoteContentRemoteImages
                                       publishDate:fDate
-                                   videoEmbedCode:remoteContentArticleVideoEmbedCode];
+                                   videoEmbedCode:remoteContentArticleVideoEmbedCode
+                                         template:remoteContentTemplate];
     return;
 }
 
@@ -1532,11 +1544,13 @@
     
     [self configureView];
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSingleArticle,kParameterAction,self.currentArticleId,kArticleId, [self currentPreferredLanguage],kParameterLanguage, nil];
+    NSString* lang = [self currentPreferredLanguage];
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSingleArticle,kParameterAction,self.currentArticleId,kArticleId, lang,kParameterLanguage, nil];
     NSString *requestString = kAdressForContentServer;
     NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
     
-    DBLog(@"DETAIL encodedString go: %@",encodedString);
+    DBLog(@"DETAIL encodedString go: %@ language: %@",encodedString, lang);
     
 	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
 	[request setDelegate:self];
