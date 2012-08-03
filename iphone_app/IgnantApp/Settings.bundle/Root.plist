@@ -14,26 +14,6 @@
 			<key>Key</key>
 			<string>app_title</string>
 		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<true/>
-			<key>Key</key>
-			<string>enable_image_caching</string>
-			<key>Title</key>
-			<string>Offline Image Caching</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Reset on next start</string>
-			<key>Key</key>
-			<string>reset_on_next_start</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

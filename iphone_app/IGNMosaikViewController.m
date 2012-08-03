@@ -162,17 +162,6 @@ NSString * const kImageFilename = @"filename";
     [self setIsSpecificToolbarHidden:YES animated:NO];
     
     
-    if(_isMosaicShownForTheFirstTime){
-        
-        double delayInSeconds = 2.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [blockSelf setIsSpecificNavigationBarHidden:YES animated:YES];
-        });
-        _isMosaicShownForTheFirstTime = false;
-    }
-    
-    
     NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
@@ -657,7 +646,7 @@ NSString * const kImageFilename = @"filename";
 {
     DBLog(@"double tap in view");
     
-    [self toggleShowSpecificNavigationBarAnimated:YES];
+    //[self toggleShowSpecificNavigationBarAnimated:YES];
     //[self toggleShowSpecificToolbar];
 }
 
