@@ -92,6 +92,7 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *entryImageActivityIndicatorView;
+@property (retain, nonatomic) IBOutlet UIButton *showSlideshowButton;
 
 
 @property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
@@ -123,6 +124,7 @@
 #pragma mark - 
 
 @implementation IGNDetailViewController
+@synthesize showSlideshowButton = _showSlideshowButton;
 
 @synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
 @synthesize isShownFromMosaic = _isShownFromMosaic;
@@ -218,6 +220,7 @@
     [self setRelatedArticlesTitleLabel:nil];
     [self setArticleVideoView:nil];
     [self setArticleVideoWebView:nil];
+    [self setShowSlideshowButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -1663,6 +1666,12 @@
         return NO;
     }
     
+    if (self.showSlideshowButton.superview !=nil ) {
+        if ([touch.view isDescendantOfView:self.showSlideshowButton]) {
+            return NO;
+        }
+    }
+    
     //check if touch on video button
     if (self.playVideoButton.superview !=nil ) {
         if ([touch.view isDescendantOfView:self.playVideoButton]) {
@@ -1787,6 +1796,5 @@
         [self showLinkOptions:URL];
 	}
 }
-
 
 @end

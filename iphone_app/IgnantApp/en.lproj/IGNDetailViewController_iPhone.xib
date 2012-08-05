@@ -127,6 +127,7 @@
 								<string key="NSFrame">{{228, 9}, {72, 37}}</string>
 								<reference key="NSSuperview" ref="267608236"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<reference key="IBUIBackgroundColor" ref="1039196447"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -217,7 +218,7 @@
 						<string key="NSFrame">{{5, 5}, {310, 202}}</string>
 						<reference key="NSSuperview" ref="434890582"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="1016190113"/>
+						<reference key="NSNextKeyView" ref="52358291"/>
 						<string key="NSReuseIdentifierKey">_NS:567</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -377,9 +378,32 @@
 						<string key="NSFrame">{{5, 278}, {310, 144}}</string>
 						<reference key="NSSuperview" ref="434890582"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="200986340"/>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					</object>
+					<object class="IBUIButton" id="52358291">
+						<reference key="NSNextResponder" ref="434890582"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{5, 5}, {310, 202}}</string>
+						<reference key="NSSuperview" ref="434890582"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="1016190113"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<reference key="IBUIBackgroundColor" ref="1039196447"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIHighlightedTitleColor" ref="200986340"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="813268997"/>
+						<reference key="IBUIFontDescription" ref="598474197"/>
+						<reference key="IBUIFont" ref="107772336"/>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 529}</string>
@@ -483,6 +507,7 @@
 						<string key="NSFrame">{{215, 141}, {100, 21}}</string>
 						<reference key="NSSuperview" ref="948537283"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:328</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -696,6 +721,7 @@
 						<string key="NSFrame">{{5, 0}, {310, 202}}</string>
 						<reference key="NSSuperview" ref="811570113"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="349262139"/>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -935,6 +961,14 @@
 					<int key="connectionID">154</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">showSlideshowButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="52358291"/>
+					</object>
+					<int key="connectionID">158</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
 						<string key="label">gestureRecognizers</string>
 						<reference key="source" ref="434890582"/>
@@ -1126,6 +1160,15 @@
 					</object>
 					<int key="connectionID">156</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">showPictureSlideshow:</string>
+						<reference key="source" ref="52358291"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">159</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -1166,6 +1209,7 @@
 							<reference ref="87348537"/>
 							<reference ref="1016190113"/>
 							<reference ref="1052636046"/>
+							<reference ref="52358291"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Article Content View</string>
@@ -1384,6 +1428,12 @@
 						<reference key="object" ref="1052636046"/>
 						<reference key="parent" ref="434890582"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">157</int>
+						<reference key="object" ref="52358291"/>
+						<reference key="parent" ref="434890582"/>
+						<string key="objectName">Show slideshow Button</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1400,6 +1450,7 @@
 				<string key="140.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="153.CustomClassName">DTAttributedTextView</string>
 				<string key="153.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="157.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1435,7 +1486,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">156</int>
+			<int key="maxID">159</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1517,6 +1568,7 @@
 						<string key="dateLabel">UILabel</string>
 						<string key="descriptionWebViewLoadingView">UIView</string>
 						<string key="dtTextView">DTAttributedTextView</string>
+						<string key="entryImageActivityIndicatorView">UIActivityIndicatorView</string>
 						<string key="entryImageView">UIImageView</string>
 						<string key="firstRelatedArticleCategoryLabel">UILabel</string>
 						<string key="firstRelatedArticleImageView">UIImageView</string>
@@ -1531,6 +1583,7 @@
 						<string key="secondRelatedArticleTitleLabel">UILabel</string>
 						<string key="shareAndMoreToolbar">UIView</string>
 						<string key="showPictureSlideshowButton">UIButton</string>
+						<string key="showSlideshowButton">UIButton</string>
 						<string key="thirdRelatedArticleCategoryLabel">UILabel</string>
 						<string key="thirdRelatedArticleImageView">UIImageView</string>
 						<string key="thirdRelatedArticleShowDetailsButton">UIButton</string>
@@ -1570,6 +1623,10 @@
 						<object class="IBToOneOutletInfo" key="dtTextView">
 							<string key="name">dtTextView</string>
 							<string key="candidateClassName">DTAttributedTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="entryImageActivityIndicatorView">
+							<string key="name">entryImageActivityIndicatorView</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="entryImageView">
 							<string key="name">entryImageView</string>
@@ -1625,6 +1682,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="showPictureSlideshowButton">
 							<string key="name">showPictureSlideshowButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="showSlideshowButton">
+							<string key="name">showSlideshowButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="thirdRelatedArticleCategoryLabel">

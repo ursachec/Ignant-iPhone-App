@@ -264,38 +264,32 @@
     
     //check when was the last time updating the currently set category and trigger load latest/load more
     NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
-    DBLog(@"dateForLastUpdate: %@", dateForLastUpdate);
+    DBLog(@"dateForLastUpdate: %@ isLoadingDataForFirstRun: %@", dateForLastUpdate, [self.appDelegate isLoadingDataForFirstRun] ? @"TRUE" : @"FALSE");
     
     //only check if data is here if not on first run
-    if (![self.appDelegate isLoadingDataForFirstRun] && [self.appDelegate checkIfAppOnline])
-    if (dateForLastUpdate==nil) 
+    if ((dateForLastUpdate==nil) && ![self.appDelegate isLoadingDataForFirstRun] && [self.appDelegate checkIfAppOnline])
     {
-        [self loadLatestContent];        
+        [self loadLatestContent];
     }
-    
-    if (!self.isHomeCategory && [self.appDelegate checkIfAppOnline])
+    else if(![self.appDelegate isLoadingDataForFirstRun])
     {
-        if (dateForLastUpdate==nil) 
-        {
-            [self loadLatestContent];        
-        }
-        else if( [dateForLastUpdate timeIntervalSinceNow]) 
+        if ( [self.appDelegate checkIfAppOnline])
         {
             [self triggerLoadLatestDataIfNecessary];
-            DBLog(@"dateForLastUpdate not nil, timeIntervalSinceNow: %f", [dateForLastUpdate timeIntervalSinceNow]);
+        }
+        else if ( ![self.appDelegate checkIfAppOnline] ) {
+            
+            if (dateForLastUpdate==nil)
+            {
+                [self setIsNoConnectionViewHidden:NO];
+            }
+            else if( [dateForLastUpdate timeIntervalSinceNow])
+            {
+                [self setIsNoConnectionViewHidden:YES];
+            }
         }
     }
-    else if (!self.isHomeCategory && ![self.appDelegate checkIfAppOnline] ) {
-        
-        if (dateForLastUpdate==nil) 
-        {
-            [self setIsNoConnectionViewHidden:NO];    
-        }
-        else if( [dateForLastUpdate timeIntervalSinceNow]) 
-        {
-            [self setIsNoConnectionViewHidden:YES];
-        }
-    }
+    
     
     //set up some ui elements
     if (self.isHomeCategory) 

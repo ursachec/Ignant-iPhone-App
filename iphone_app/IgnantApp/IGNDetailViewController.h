@@ -20,7 +20,7 @@
 
 @class BlogEntry;
 
-@interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate, TapDetectingWindowDelegate, DTAttributedTextContentViewDelegate>
+@interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, FBSessionDelegate, DTAttributedTextContentViewDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
 @property (strong, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
