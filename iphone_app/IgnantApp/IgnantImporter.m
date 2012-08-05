@@ -594,8 +594,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     
     if (savedOk) {
-        
-#warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentTumblrEntry is not set right, not sure
             //save date for least recent article
             [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentTumblrEntry withCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForTumblr]];
             

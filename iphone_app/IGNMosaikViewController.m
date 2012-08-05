@@ -144,11 +144,8 @@ NSString * const kImageFilename = @"filename";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    __block __typeof__(self) blockSelf = self;
-    
+        
     [self setIsSpecificToolbarHidden:YES animated:NO];
-    
     
     NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
@@ -264,8 +261,6 @@ NSString * const kImageFilename = @"filename";
     //first retrieve the currently saved mosaic images as copy
     NSArray* currentlySavedMosaicImages = [self.savedMosaicImages copy];
     
-    NSArray* currentColumnHeights = [self columnHeightsForMosaicImages:currentlySavedMosaicImages];
-    
     //then add the mosaicImages parameter to the currently saved ones
     NSArray* newArrayOfSavedMosaicImages = [currentlySavedMosaicImages arrayByAddingObjectsFromArray:mosaicImages];
     
@@ -370,13 +365,8 @@ NSString * const kImageFilename = @"filename";
         NSNumber* mosaicEntryHeight = [oneImageDictionary objectForKey:kMosaicEntryHeight];
         NSString* mosaicEntryArticleId = [oneImageDictionary objectForKey:kMosaicEntryArticleId];
         
-#warning TODO: remove kMosaicEntryUlr entries
-        NSString* mosaicEntryUrl = [oneImageDictionary objectForKey:kMosaicEntryUrl];
-        
         CGFloat fMosaicEntryWidth = [mosaicEntryWidth floatValue];
         CGFloat fMosaicEntryHeight = [mosaicEntryHeight floatValue];
-        
-        
         
         //calculate the column with the smallest height
         int smallestHeight = 0, i = 0;        
@@ -389,8 +379,6 @@ NSString * const kImageFilename = @"filename";
                 smallestColumn=i;
             }
         }
-        
-        
         
         //define the active column as being the one with the smallest height
         int activeColumn = smallestColumn;
@@ -436,18 +424,12 @@ NSString * const kImageFilename = @"filename";
             oneView.articleId = mosaicEntryArticleId;
             oneView.alpha = 1.0f;
             
-#warning THIS is just temporary
             UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, fMosaicEntryWidth, fMosaicEntryHeight)];
             [oneView addSubview:tempImageView];
-            
             [self.bigMosaikView addSubview:oneView];
             
             //trigger loading the image
             [self triggerLoadingMosaicImageWithArticleId:mosaicEntryArticleId forImageView:tempImageView];
-            
-            //NSURL* thumbURL = [[NSURL alloc] initWithString:mosaicEntryUrl];
-            //[self triggerLoadingImageAtURL:thumbURL forImageView:tempImageView];
-            
         }
         
         //add one of the columnHeights value to the relevant columnHeight

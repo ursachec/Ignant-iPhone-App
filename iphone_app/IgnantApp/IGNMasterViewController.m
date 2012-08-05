@@ -668,7 +668,6 @@
     DBLog(@"loading more content");
     
     //this is done to update the "loading more cell"
-#warning TODO: reload only load more cell
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.blogEntriesTableView reloadData];
     });

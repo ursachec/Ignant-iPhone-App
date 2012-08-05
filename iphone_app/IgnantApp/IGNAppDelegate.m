@@ -118,7 +118,6 @@
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     
-    
     [self setupGoogleAnalytics];
     
     
@@ -159,13 +158,8 @@
             NSAssert3(oldStoreRemovalSuccess, @"Unhandled error adding persistent store in %s at line %d: %@", __FUNCTION__, __LINE__, [error localizedDescription]);
         }
         
-#warning CHECK IF internet connection exists and show screen if not ("Ignant needs an internet connection for this", <load again button>)
         if([self checkIfAppOnline]){
             [self fetchAndLoadDataForFirstRun];
-        }
-        else {
-            //show relvant window
-            
         }
     }
     
@@ -193,7 +187,7 @@
 
 
 #pragma mark - 
--(BOOL)setupGoogleAnalytics
+-(void)setupGoogleAnalytics
 {
     LOG_CURRENT_FUNCTION()
     
@@ -222,9 +216,6 @@
                                          withError:&error]) {
         DBLog(@"error in trackPageview");
     }
-    
-#warning TODO: add actual return value, do something if it didn't work, like send data to the server
-    return true;
 }
 
 - (NSString *)persistentStorePath {
@@ -635,7 +626,7 @@ return _externalPageViewController;
 
 - (void)application:(UIApplication *)app didReceiveRemoteNotification:(NSDictionary *)userInfo
 {   
-#warning TODO: is this OK?
+#warning TODO: check if this is OK
     [self.masterViewController loadLatestContent];
     
 }

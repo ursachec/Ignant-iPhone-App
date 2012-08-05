@@ -88,12 +88,9 @@
 @property (strong, nonatomic) IBOutlet UIButton *playVideoButton;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (strong, nonatomic) IBOutlet UIView *descriptionWebViewLoadingView;
-
 @property (strong, nonatomic) IBOutlet UIImageView *entryImageView;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *entryImageActivityIndicatorView;
 @property (retain, nonatomic) IBOutlet UIButton *showSlideshowButton;
-
 
 @property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
 
@@ -125,11 +122,6 @@
 
 @implementation IGNDetailViewController
 @synthesize showSlideshowButton = _showSlideshowButton;
-
-@synthesize isShowingArticleFromLocalDatabase = _isShowingArticleFromLocalDatabase;
-@synthesize isShownFromMosaic = _isShownFromMosaic;
-@synthesize isShowingImageSlideshow = _isShowingImageSlideshow;
-@synthesize isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
 
 @synthesize fetchedResults = _fetchedResults;
 @synthesize currentArticleId, relatedArticlesIds;
@@ -178,12 +170,10 @@
     
     self.relatedArticlesTitleLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Title for the label that apears on top of the related articles in the Detail View Controller");
     
-    
     self.dtGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDTViewTap:)];
     self.dtGestureRecognizer.delegate = self;
     _dtGestureRecognizer.numberOfTapsRequired = 1;
     [self.dtTextView addGestureRecognizer:_dtGestureRecognizer];
-    
     
 }
 
@@ -215,20 +205,17 @@
 
 - (void)viewDidUnload
 {
-   
     [self setToggleLikeButton:nil];
     [self setRelatedArticlesTitleLabel:nil];
     [self setArticleVideoView:nil];
     [self setArticleVideoWebView:nil];
     [self setShowSlideshowButton:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     } else {
@@ -265,8 +252,6 @@
    
     [self.appDelegate setIsToolbarHidden:YES animated:animated];
     
-    //add the loading view to the webview
-    [self setIsDescriptionWebViewLoadingViewHidden:NO animated:NO];
     //----------------------------------------------------------------------------
     
     if (_isShowingArticleFromLocalDatabase) 
@@ -524,69 +509,6 @@
     [linkActionSheet showInView:self.view];
 }
 
-#pragma mark - setting up the view
--(void)setIsDescriptionWebViewLoadingViewHidden:(BOOL)hidden animated:(BOOL)animated
-{
-  
-    LOG_CURRENT_FUNCTION()
-    
-    CGFloat animationDuration = .7f;
-    CGFloat alphaForHiddenState = 0.0f;
-    CGFloat alphaForShownState = 1.0f;
-    
-    if (animated) {
-        if (hidden) {
-            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;
-            [UIView animateWithDuration:animationDuration 
-                             animations:
-             ^{
-                 [blocKDescriptionWebViewLoadingView setAlpha:alphaForHiddenState];
-             } 
-                            completion:^(BOOL finished){}];
-        }
-        else {
-            __block UIView* blocKDescriptionWebViewLoadingView = self.descriptionWebViewLoadingView;
-            [UIView animateWithDuration:animationDuration 
-                             animations:
-            ^{                 
-                 [blocKDescriptionWebViewLoadingView setAlpha:alphaForShownState];                 
-             } 
-                             completion:^(BOOL finished){ }];
-        }
-    }
-    
-    else {
-        
-        if (hidden) {
-            [self.descriptionWebViewLoadingView setAlpha:alphaForHiddenState];
-        }
-        else {
-            [self.descriptionWebViewLoadingView setAlpha:alphaForShownState];
-        }
-    }
-}
-
--(UIView*)descriptionWebViewLoadingView
-{
-    if (_descriptionWebViewLoadingView==nil) {
-        
-        UIView* aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 500.0f)];   
-        aView.userInteractionEnabled = false;
-        aView.backgroundColor = [UIColor whiteColor];
-        
-        CGSize indicatorViewSize = CGSizeMake(44.0f, 44.0f);
-        UIActivityIndicatorView* indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        indicatorView.frame = CGRectMake((aView.frame.size.width-indicatorViewSize.width)/2, 0.0f, indicatorViewSize.width, indicatorViewSize.height);
-//        [indicatorView startAnimating];
-//        [aView addSubview:indicatorView];
-        
-        _descriptionWebViewLoadingView = aView;
-    }
-    
-    return _descriptionWebViewLoadingView;
-}
-
-
 -(void)setupArticleContentView
 {
     LOG_CURRENT_FUNCTION()
@@ -644,15 +566,6 @@
     NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"NoDelayHTML" ofType:@"html"];
     NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
     return [NSString stringWithFormat:contents,richText];
-}
-
--(id)currentBlogEntryTemplate
-{
-    if (self.blogEntry)
-        return self.blogEntry.tempate;
-    
-    
-    
 }
 
 -(void)setupUIElementsForBlogEntryTemplate:(NSString*)template
@@ -942,8 +855,6 @@
     //set up the scrollView's final contentSize
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
     
-    
-    [self setIsDescriptionWebViewLoadingViewHidden:YES animated:YES];
     
     [self setIsLoadingViewHidden:YES];
     
@@ -1237,8 +1148,6 @@
     NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
     substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
     
-    //IDEA: as an improvement, add server-side script to create small thumbs specific for the facebook app
-    //REBUTAL: no, you shouldn't, because the article may be posted on the facebook wall where it is important to have some quality in the picture
     NSString* infoLinkToThumbForArticle = [[self currentImageThumbURL] absoluteString];
     DBLog(@"infoLinkToThumbForArticle: %@", infoLinkToThumbForArticle);
     

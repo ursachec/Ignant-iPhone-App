@@ -54,20 +54,16 @@
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 
-
 @property (strong, nonatomic) IgnantImporter *importer;
 @property (strong, nonatomic) UserDefaultsManager *userDefaultsManager;
 
 @property (readonly, strong, nonatomic) NSString *persistentStorePath;
 
-
 -(void)fetchAndLoadDataForFirstRun;
 -(void)initializeFacebook;
-
 -(BOOL)checkIfAppOnline;
 
 -(void)setIsToolbarGradientViewHidden:(BOOL)hidden;
-
 -(void)setIsToolbarHidden:(BOOL)hidden;
 -(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 

@@ -246,7 +246,6 @@
             cell = [[TumblrCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];                        
         }
         
-#warning TODO: add placeholder image
         [cell.tumblrImageView setImageWithURL:urlAtCurrentIndex
                              placeholderImage:nil];
         
