@@ -59,6 +59,7 @@
 		E52EEBBA15C7DCE40017FBF7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E52EEBB915C7DCE40017FBF7 /* CoreText.framework */; };
 		E52EEBBB15C7DD020017FBF7 /* libDTCoreText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E52EEBB015C7DC650017FBF7 /* libDTCoreText.a */; };
 		E52EEBC015C85AD10017FBF7 /* arrow_right_244.png in Resources */ = {isa = PBXBuildFile; fileRef = E52EEBBF15C85AD10017FBF7 /* arrow_right_244.png */; };
+		E539C38515CF28A700562A43 /* DTWrapper.html in Resources */ = {isa = PBXBuildFile; fileRef = E539C38415CF28A700562A43 /* DTWrapper.html */; };
 		E55338FE15C08FB300D05795 /* DefaultNoTOPX.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */; };
 		E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */; };
 		E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5AFAE5415B8207700E084D3 /* FBConnect.bundle */; };
@@ -355,6 +356,7 @@
 		E52EEB9D15C7DC640017FBF7 /* DTCoreText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DTCoreText.xcodeproj; path = ../submodules/DTCoreText/DTCoreText.xcodeproj; sourceTree = "<group>"; };
 		E52EEBB915C7DCE40017FBF7 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		E52EEBBF15C85AD10017FBF7 /* arrow_right_244.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_right_244.png; sourceTree = "<group>"; };
+		E539C38415CF28A700562A43 /* DTWrapper.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = DTWrapper.html; sourceTree = "<group>"; };
 		E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultNoTOPX.png; path = Resources/other_ui_images/DefaultNoTOPX.png; sourceTree = "<group>"; };
 		E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "DefaultNoTOPX@2x.png"; path = "Resources/other_ui_images/DefaultNoTOPX@2x.png"; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
@@ -841,6 +843,7 @@
 				FE0DDCEB14AE34D0003B8778 /* InfoPlist.strings */,
 				FE0DDCEE14AE34D0003B8778 /* main.m */,
 				FE0DDCF014AE34D0003B8778 /* IgnantApp-Prefix.pch */,
+				E539C38415CF28A700562A43 /* DTWrapper.html */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1522,6 +1525,7 @@
 				E55338FE15C08FB300D05795 /* DefaultNoTOPX.png in Resources */,
 				E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */,
 				E52EEBC015C85AD10017FBF7 /* arrow_right_244.png in Resources */,
+				E539C38515CF28A700562A43 /* DTWrapper.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

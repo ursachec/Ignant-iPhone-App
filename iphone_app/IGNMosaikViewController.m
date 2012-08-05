@@ -153,9 +153,9 @@ NSString * const kImageFilename = @"filename";
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     
-    BOOL forceLoad = true;
+    BOOL forceLoad = false;
     
-    if ((!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages))) {
+    if (forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages))) {
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
@@ -168,10 +168,6 @@ NSString * const kImageFilename = @"filename";
         DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
     
-    
-    if (forceLoad) {
-        [self loadMoreMosaicImages];
-    }
 }
 
 - (void)viewDidLoad

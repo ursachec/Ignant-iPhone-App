@@ -559,13 +559,6 @@
     return [NSString stringWithFormat:contents,richText];
 }
 
--(NSString*)wrapRichTextForArticle:(NSString*)richText
-{
-    NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"NoDelayHTML" ofType:@"html"];
-    NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
-    return [NSString stringWithFormat:contents,richText];
-}
-
 -(void)setupUIElementsForBlogEntryTemplate:(NSString*)template
 {
     if ([template compare:kFKArticleTemplateDefault]==NSOrderedSame) {
