@@ -17,7 +17,7 @@ be careful on creating mosaic entries, date before / date after + excluded categ
 
 */
 
-function fetchBatchOfRandomMosaicEntries($number=40)
+function fetchBatchOfRandomMosaicEntries($number=60)
 {
 	$mosaicEntries = array();
 	
@@ -34,7 +34,6 @@ function fetchBatchOfRandomMosaicEntries($number=40)
 	
 	return $mosaicEntries;
 }
-
 
 function getBatchOfRandomMosaicEntries()
 {
