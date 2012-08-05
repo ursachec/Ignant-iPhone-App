@@ -481,7 +481,6 @@
         NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,currentArticleId,kTLReturnImageType,kTLReturnCategoryImage];
         DBLog(@"imgurl: %@", encodedString);
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
-        __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
         [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
                            placeholderImage:nil 
                                      success:^(UIImage* image){

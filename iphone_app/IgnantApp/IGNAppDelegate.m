@@ -628,9 +628,6 @@ return _categoryViewController;
     
     if (_ignantToolbar==nil) {
         
-        CGRect navControllerFrame = self.navigationController.view.frame;
-        DBLog(@"navControllerFrame: %@", NSStringFromCGRect(navControllerFrame));        
-        
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
         CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
         UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
