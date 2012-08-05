@@ -21,7 +21,6 @@
 #import "AboutViewController.h"
 #import "ContactViewController.h"
 #import "FavouritesViewController.h"
-#import "ExternalPageViewController.h"
 
 //import other needed classes
 #import "IgnantImporter.h"
@@ -304,15 +303,6 @@ if (_categoryViewController==nil) {
 }
 
 return _categoryViewController;
-}
-
--(ExternalPageViewController*)externalPageViewController
-{
-if (_externalPageViewController==nil) {
-    _externalPageViewController = [[ExternalPageViewController alloc] initWithNibName:@"ExternalPageViewController" bundle:nil ];
-}
-
-return _externalPageViewController;
 }
 
 
