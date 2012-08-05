@@ -54,6 +54,8 @@ NSString * const kImageFilename = @"filename";
 
 @property(nonatomic,strong) NSMutableArray* currentColumnHeights;
 
+
+@property(nonatomic,strong) NSArray* currentBatchOfMosaicImages;
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
 @property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
@@ -127,7 +129,6 @@ NSString * const kImageFilename = @"filename";
 
 -(IBAction)handleBack:(id)sender
 {
-    DBLog(@"handleBack!!!");
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -151,7 +152,10 @@ NSString * const kImageFilename = @"filename";
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
-    if (!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)) {
+    
+    BOOL forceLoad = true;
+    
+    if ((!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages))) {
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
@@ -165,6 +169,9 @@ NSString * const kImageFilename = @"filename";
     }
     
     
+    if (forceLoad) {
+        [self loadMoreMosaicImages];
+    }
 }
 
 - (void)viewDidLoad
@@ -187,7 +194,6 @@ NSString * const kImageFilename = @"filename";
     //set up the mock navigation bar + toolbar
     [self setUpToolbarAndMockNavigationBar];
     
-    
     [self setIsSpecificNavigationBarHidden:NO animated:NO];
 }
 
@@ -207,7 +213,12 @@ NSString * const kImageFilename = @"filename";
 #pragma mark - server communication actions
 -(void)loadMoreMosaicImages
 {    
-    LOG_CURRENT_FUNCTION_AND_CLASS()
+    LOG_CURRENT_FUNCTION()
+    
+    if (_isLoadingMoreMosaicImages)
+        return;
+    
+    
     
     _isLoadingMoreMosaicImages = YES;
     
@@ -235,6 +246,10 @@ NSString * const kImageFilename = @"filename";
 #pragma mark - client-side loading / saving of the mosaic images
 -(void)replaceCurrentMosaicImagesWithNewOnes:(NSArray*)newMosaicImages
 {
+    LOG_CURRENT_FUNCTION()
+    
+    self.currentBatchOfMosaicImages = newMosaicImages;
+    
     //save the new mosaic images array to disk, overwriting the last file
     NSMutableDictionary *imagesDictionary = [[NSMutableDictionary alloc] init];
     [imagesDictionary setObject:[newMosaicImages copy] forKey:kImagesKey];
@@ -263,6 +278,10 @@ NSString * const kImageFilename = @"filename";
     
     //then add the mosaicImages parameter to the currently saved ones
     NSArray* newArrayOfSavedMosaicImages = [currentlySavedMosaicImages arrayByAddingObjectsFromArray:mosaicImages];
+    
+    self.currentBatchOfMosaicImages = mosaicImages;
+    
+    DBLog(@"currentlySavedMosaicImages.count: %d , newArrayOfSavedMosaicImages.count: %d", [currentlySavedMosaicImages count],  [newArrayOfSavedMosaicImages count]);
     
     //save the new mosaic images array to disk, overwriting the last file
     NSMutableDictionary *imagesDictionary = [[NSMutableDictionary alloc] init];
@@ -322,13 +341,13 @@ NSString * const kImageFilename = @"filename";
 
 -(void)drawSavedMosaicImages
 {
-    
+        
     if (_currentColumnHeights==nil) {
         _currentColumnHeights = [@[ @0,@0,@0 ] mutableCopy];
     }
     
     //first of all delete all currently shown images
-    // [self removeCurrentImageViews];
+//     [self removeCurrentImageViews];
     
 #define PADDING_BOTTOM 5.0f
 #define PADDING_TOP .0f
@@ -336,7 +355,9 @@ NSString * const kImageFilename = @"filename";
     BOOL shouldIncludeLoadingMoreView = false;
     
     //load the plist with the saved mosaic images in memory
-    NSMutableArray* images = [[NSArray arrayWithArray:self.savedMosaicImages] mutableCopy];
+    NSMutableArray* images = [[NSArray arrayWithArray:self.currentBatchOfMosaicImages] mutableCopy];
+    
+    NSLog(@"drawSavedMosaicImages images.count: %d", [images count]);
         
     //add the load more mosaic view to the image dictionary
     if(shouldIncludeLoadingMoreView)
@@ -348,7 +369,6 @@ NSString * const kImageFilename = @"filename";
     }
     
     //get active column
-    
     int fc = [(NSNumber*)[_currentColumnHeights objectAtIndex:0] intValue];
     int sc = [(NSNumber*)[_currentColumnHeights objectAtIndex:1] intValue];
     int tc = [(NSNumber*)[_currentColumnHeights objectAtIndex:2] intValue];
@@ -525,6 +545,7 @@ NSString * const kImageFilename = @"filename";
         [self replaceCurrentMosaicImagesWithNewOnes:[images copy]];
     }
     else {
+                
         //add the mosaic images
         [self addMoreMosaicImages:[images copy]];
     }

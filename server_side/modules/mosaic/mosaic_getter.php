@@ -17,7 +17,7 @@ be careful on creating mosaic entries, date before / date after + excluded categ
 
 */
 
-function fetchBatchOfRandomMosaicEntries($number=60)
+function fetchBatchOfRandomMosaicEntries($number=40)
 {
 	$mosaicEntries = array();
 	
@@ -31,7 +31,6 @@ function fetchBatchOfRandomMosaicEntries($number=60)
 	$mosaicEntries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	
 	$dbh = null;
-	
 	
 	return $mosaicEntries;
 }

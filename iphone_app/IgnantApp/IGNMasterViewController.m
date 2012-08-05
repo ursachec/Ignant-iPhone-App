@@ -25,10 +25,7 @@
 #import "IgnantLoadMoreCell.h"
 #import "IgnantLoadingMoreCell.h"
 
-
 #import "IgnantLoadingView.h"
-
-
 #import "IgnantImporter.h"
 
 //imports for ASIHTTPRequest
@@ -36,7 +33,6 @@
 #import "NSURL+stringforurl.h"
 
 #import "Constants.h"
-
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
@@ -481,6 +477,7 @@
         NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,currentArticleId,kTLReturnImageType,kTLReturnCategoryImage];
         DBLog(@"imgurl: %@", encodedString);
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
+        __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
         [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
                            placeholderImage:nil 
                                      success:^(UIImage* image){

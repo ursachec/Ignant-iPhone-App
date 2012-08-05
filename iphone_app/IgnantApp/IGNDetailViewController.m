@@ -693,12 +693,8 @@
     else
     {
         //set up the blog entry imageview
-        //    /////////////////////////// handle the thumb image image
-#warning TODO: trigger loading the imageview with thumb image
 #warning TODO: do something if the image was not loaded
-        
-        DBLog(@"WARNING: videoEmbedCode length 0");
-        
+                
         [self triggerLoadingDetailImageWithArticleId:self.currentArticleId
                                         forImageView:self.entryImageView];
         
