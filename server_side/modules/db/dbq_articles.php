@@ -200,8 +200,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
-		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
-		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND (wpm2.`meta_key` = 'nsfw' OR wpm2.`meta_key` = 'notmobile' )
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
@@ -228,8 +227,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
 		LEFT JOIN wp_terms AS wt ON wt.`term_id` = tt.`term_id`
 		LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = pt.`id` AND wpm.`meta_key` = 'video'
-		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND wpm2.`meta_key` = 'nsfw'
-		LEFT JOIN wp_postmeta AS wpm3 ON wpm3.`post_id` = pt.`id` AND wpm3.`meta_key` = 'notmobile'
+		LEFT JOIN wp_postmeta AS wpm2 ON wpm2.`post_id` = pt.`id` AND (wpm2.`meta_key` = 'nsfw' OR wpm2.`meta_key` = 'notmobile' )
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_parent` = 0
 		AND pt.`post_type` = 'post' 

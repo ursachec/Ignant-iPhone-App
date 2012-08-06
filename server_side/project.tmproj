@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>modules/mosaic/mosaic_getter.php</string>
+	<string>modules/db/dbq_articles.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,7 +26,7 @@
 			<key>filename</key>
 			<string>JSONContentProxy.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-28T14:48:49Z</date>
+			<date>2012-08-03T15:23:11Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -38,7 +38,7 @@
 			<key>filename</key>
 			<string>ignant.php</string>
 			<key>lastUsed</key>
-			<date>2012-08-01T11:44:26Z</date>
+			<date>2012-08-03T15:08:40Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -56,7 +56,7 @@
 			<key>filename</key>
 			<string>unittests.php</string>
 			<key>lastUsed</key>
-			<date>2012-08-01T16:19:17Z</date>
+			<date>2012-08-03T15:06:04Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -92,7 +92,7 @@
 			<key>filename</key>
 			<string>imgsrv.php</string>
 			<key>lastUsed</key>
-			<date>2012-07-29T18:22:47Z</date>
+			<date>2012-08-03T15:06:03Z</date>
 		</dict>
 		<dict>
 			<key>expanded</key>
@@ -154,29 +154,29 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>22</integer>
 				<key>line</key>
-				<integer>75</integer>
+				<integer>62</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>56</integer>
+			<integer>49</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>79</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>78</integer>
+				<integer>62</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>29</integer>
 				<key>line</key>
-				<integer>75</integer>
+				<integer>62</integer>
 			</dict>
 		</dict>
 		<key>LiveContentProvider.php</key>
@@ -484,14 +484,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>49</integer>
 				<key>line</key>
-				<integer>193</integer>
+				<integer>217</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>167</integer>
+			<integer>202</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>30</integer>
+				<key>line</key>
+				<integer>217</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>64</integer>
+				<key>line</key>
+				<integer>217</integer>
+			</dict>
 		</dict>
 		<key>imgsrv.php</key>
 		<dict>
@@ -528,30 +544,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>24</integer>
+				<integer>29</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>358</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>19</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>24</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
+			<integer>341</integer>
 		</dict>
 		<key>modules/db/dbq_articles_unittests.php</key>
 		<dict>
@@ -644,14 +644,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>50</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>19</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>121</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>13</integer>
+			<integer>28</integer>
 		</dict>
 		<key>modules/thumbs/thumbs_generator.php</key>
 		<dict>
@@ -825,6 +825,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{266, -46}, {919, 715}}</string>
+	<string>{{505, 63}, {919, 715}}</string>
 </dict>
 </plist>
