@@ -119,6 +119,7 @@
 #pragma mark - 
 
 @implementation IGNDetailViewController
+@synthesize archiveLabel = _archiveLabel;
 @synthesize showSlideshowButton = _showSlideshowButton;
 
 @synthesize fetchedResults = _fetchedResults;
@@ -208,6 +209,7 @@
     [self setArticleVideoView:nil];
     [self setArticleVideoWebView:nil];
     [self setShowSlideshowButton:nil];
+    [self setArchiveLabel:nil];
     [super viewDidUnload];
     
 }
@@ -528,6 +530,10 @@
 - (void)configureView
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
+    
+    
+    self.archiveLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Archive label");
+    
     
     [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
     
@@ -1693,4 +1699,8 @@
 	}
 }
 
+- (void)dealloc {
+    [_archiveLabel release];
+    [super dealloc];
+}
 @end

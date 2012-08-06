@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1296</int>
+		<int key="IBDocument.SystemTarget">1280</int>
 		<string key="IBDocument.SystemVersion">12A269</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
 		<string key="IBDocument.AppKitVersion">1187</string>
@@ -127,7 +127,6 @@
 								<string key="NSFrame">{{228, 9}, {72, 37}}</string>
 								<reference key="NSSuperview" ref="267608236"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<reference key="IBUIBackgroundColor" ref="1039196447"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -378,7 +377,6 @@
 						<string key="NSFrame">{{5, 278}, {310, 144}}</string>
 						<reference key="NSSuperview" ref="434890582"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="200986340"/>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -507,7 +505,6 @@
 						<string key="NSFrame">{{215, 141}, {100, 21}}</string>
 						<reference key="NSSuperview" ref="948537283"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:328</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -721,7 +718,6 @@
 						<string key="NSFrame">{{5, 0}, {310, 202}}</string>
 						<reference key="NSSuperview" ref="811570113"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="349262139"/>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -967,6 +963,14 @@
 						<reference key="destination" ref="52358291"/>
 					</object>
 					<int key="connectionID">158</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">archiveLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="180620552"/>
+					</object>
+					<int key="connectionID">160</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
@@ -1486,7 +1490,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">159</int>
+			<int key="maxID">160</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1560,13 +1564,13 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="archiveLabel">UILabel</string>
 						<string key="articleContentView">UIView</string>
 						<string key="articleVideoView">UIView</string>
 						<string key="articleVideoWebView">UIWebView</string>
 						<string key="categoryLabel">UILabel</string>
 						<string key="contentScrollView">UIScrollView</string>
 						<string key="dateLabel">UILabel</string>
-						<string key="descriptionWebViewLoadingView">UIView</string>
 						<string key="dtTextView">DTAttributedTextView</string>
 						<string key="entryImageActivityIndicatorView">UIActivityIndicatorView</string>
 						<string key="entryImageView">UIImageView</string>
@@ -1592,6 +1596,10 @@
 						<string key="toggleLikeButton">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="archiveLabel">
+							<string key="name">archiveLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="articleContentView">
 							<string key="name">articleContentView</string>
 							<string key="candidateClassName">UIView</string>
@@ -1615,10 +1623,6 @@
 						<object class="IBToOneOutletInfo" key="dateLabel">
 							<string key="name">dateLabel</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="descriptionWebViewLoadingView">
-							<string key="name">descriptionWebViewLoadingView</string>
-							<string key="candidateClassName">UIView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="dtTextView">
 							<string key="name">dtTextView</string>
@@ -1730,10 +1734,6 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1296" key="NS.object.0"/>
-		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">

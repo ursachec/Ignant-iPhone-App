@@ -38,6 +38,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *firstRelatedArticleImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *secondRelatedArticleImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *thirdRelatedArticleImageView;
+@property (retain, nonatomic) IBOutlet UILabel *archiveLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel *firstRelatedArticleTitleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *secondRelatedArticleTitleLabel;
