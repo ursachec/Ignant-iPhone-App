@@ -191,7 +191,9 @@
     NSError *error = nil;
     BOOL success = [self.fetchedResultsController performFetch:&error];
     NSAssert2(success, @"Unhandled error performing fetch at SongsViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
-    [self.categoriesTableView reloadData];
+	if (success) {
+		[self.categoriesTableView reloadData];
+	}
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

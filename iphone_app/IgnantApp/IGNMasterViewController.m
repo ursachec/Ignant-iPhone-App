@@ -611,7 +611,9 @@
     NSError *error = nil;
     BOOL success = [self.fetchedResultsController performFetch:&error];
     NSAssert2(success, @"Unhandled error performing fetch at IGNMasterViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
-    [self.blogEntriesTableView reloadData];
+	if (success) {
+		[self.blogEntriesTableView reloadData];
+	}
 }
  
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

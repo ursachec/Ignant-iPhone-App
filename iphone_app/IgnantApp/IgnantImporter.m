@@ -472,11 +472,10 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         
         //rewrite logic can be implemented here
         if ([result count]>0) {
-            BlogEntry* entry = (BlogEntry*)[result objectAtIndex:0];
-            DBLog(@"found entry, skipping it: %@",entry.title);
+            //BlogEntry* entry = (BlogEntry*)[result objectAtIndex:0];
+            //DBLog(@"found entry, skipping it: %@",entry.title);
             
             blogEntriesToBeSaved--;
-            
             return;
         }
     }

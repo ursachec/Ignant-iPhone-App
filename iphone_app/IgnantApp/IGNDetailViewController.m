@@ -1187,19 +1187,14 @@
         TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
         [tweetVC setInitialText:tweet];        
         [tweetVC setCompletionHandler:^(TWTweetComposeViewControllerResult result){
-            NSString* output;
-            
-            
+			
             switch (result) {
                 case TWTweetComposeViewControllerResultCancelled:
                 {
-                    output = @"tweet canceled";
                     break;
                 }
                 case TWTweetComposeViewControllerResultDone:
                 {
-                    output = @"tweet done";
-                    
                     NSError* error = nil;
                     if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
                                                          action:@"postToTwitter"
@@ -1454,20 +1449,15 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     DBLog(@"requestStarted");
-    
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
-    
-    
     self.remoteArticleJSONString = [request responseString];
     
     DBLog(@"[request responseString]: %@", [request responseString]);
-    
-#warning todo: handle errors
     [self.importer importJSONStringForSingleArticle:[request responseString] forceSave:NO];
 }
 
@@ -1480,7 +1470,6 @@
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
-
 #pragma mark - IgnantImporterDelegate
 
 -(void)importerDidStartParsingSingleArticle:(IgnantImporter*)importer
@@ -1488,7 +1477,6 @@
     DBLog(@"importerDidStartParsingSingleArticle");
     
     __block __typeof__(self) blockSelf = self;
-    
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"failed importing for favorite");
@@ -1504,13 +1492,10 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     __block __typeof__(self) blockSelf = self;
-    
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"finished importing related article");
-        
         blockSelf.isImportingRelatedArticle = false;
-        
     }
     else
     {
@@ -1528,15 +1513,12 @@
     DBLog(@"didFailParsingSingleArticleWithDictionary");
     
 #warning TODO: handle failing parsing the single article dictionary
-    
+	
     __block __typeof__(self) blockSelf = self;
-    
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"failed importing for favorite");
-        
         blockSelf.isImportingRelatedArticle = false;
-        
     }
     else
     {
