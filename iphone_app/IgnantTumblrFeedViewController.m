@@ -503,7 +503,10 @@
     NSError *error = nil;
     BOOL success = [self.fetchedResultsController performFetch:&error];
     NSAssert2(success, @"Unhandled error performing fetch at SongsViewController.m, line %d: %@", __LINE__, [error localizedDescription]);
-    [self.tumblrTableView reloadData];
+    
+    if (success) {
+        [self.tumblrTableView reloadData];
+    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

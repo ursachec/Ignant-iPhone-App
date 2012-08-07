@@ -466,7 +466,6 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     
     DBLog(@"executing fetch request...");
-    
     NSError *error = nil;
     NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
     if (error==nil) {
