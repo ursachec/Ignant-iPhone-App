@@ -1,13 +1,21 @@
 App store submission process
 - finish writing app description
 - choose pages for screenshot (5 ? )
--
+- 
 
 Marketing
 - prepare mail to write to technical blogs 
 - prepare mail to write to non-technical blogs
-- ask findingberlin or other friendly sites to write a review about it
+- ask findingberlin or other friendly sites to write a review about the app
+- make app website upload-ready 
 
 
 Server stuff
 
+- write mail to install PHP module 'memcached'
+- call/write mail to add cronjob to shell script
+- call/write mail to tell the server people about a possible spike in usage
+
+
+App stuff
+- add alertview asking "would you consider writing a review for this app"

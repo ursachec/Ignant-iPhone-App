@@ -99,7 +99,6 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
     NSArray *toRecipients = @[recepient];
     [picker setToRecipients:toRecipients];
     
-#warning TODO: LOCALIZE STRINGS
     //set the subject
     NSString* emailSubject = @"";
     if ([recepient compare:kEmailIgnant]==NSOrderedSame) {

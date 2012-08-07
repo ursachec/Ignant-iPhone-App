@@ -560,15 +560,11 @@
 -(void)didFailImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-#warning TODO: DO SOMETHING IN THIS CASE!!!
-    
-    if (_isLoadingMoreTumblr) {
         
+    if (_isLoadingMoreTumblr) {
         _numberOfActiveRequests--;
         _showLoadMoreTumblr = YES;
         _isLoadingMoreTumblr = NO;
-        
     }
     else {
         
@@ -576,8 +572,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {            
-#warning TODO: show appropriate window here: could not import data for first run, or similar
+        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
             _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
     });

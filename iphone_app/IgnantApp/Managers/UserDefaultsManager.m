@@ -108,8 +108,6 @@
 
 -(void)setDateForLeastRecentArticle:(NSDate*)date withCategoryId:(NSString*)categoryId
 {
-    #warning THIS MAY NOT BE FUNCTIONING PROPERLY; IT CAN BE THAT THe self.currentDateForLeastRecentArticle is not set right, not sure
-    
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     if (categoryId==nil || date==nil) {

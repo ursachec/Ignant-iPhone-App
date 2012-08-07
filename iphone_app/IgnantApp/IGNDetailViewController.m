@@ -686,17 +686,11 @@
         [self.articleVideoWebView loadHTMLString:videoDescriptionText baseURL:nil];
         CGRect oldFrame = self.articleVideoView.frame;
         self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
-        
-    }    
-    //only load the article image if no video content set
+    }
     else
     {
-        //set up the blog entry imageview
-#warning TODO: do something if the image was not loaded
-                
         [self triggerLoadingDetailImageWithArticleId:self.currentArticleId
                                         forImageView:self.entryImageView];
-        
     }
     
     //add the imageViewSize to the finalSizeForArticleContentView
@@ -1133,8 +1127,6 @@
         return;
     }
     
-#warning add the relevant live information
-    
     NSString* infoLinkToArticleMainPage = [self.articleWeblink absoluteString];
     NSString* infoNameOfArticle = self.articleTitle;
     NSString* infoDescriptionForArticle = self.articleDescription;
@@ -1142,8 +1134,6 @@
     substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
     
     NSString* infoLinkToThumbForArticle = [[self currentImageThumbURL] absoluteString];
-    DBLog(@"infoLinkToThumbForArticle: %@", infoLinkToThumbForArticle);
-    
     NSString* infoCaptionForArticle = @"";
     
     //show the facebok dialogue for posting to wall
@@ -1158,7 +1148,6 @@
     
     [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
     
-    
     NSError* error = nil;
     if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
                                          action:@"postToFacebook"
@@ -1167,9 +1156,7 @@
                                       withError:&error]) {
         DBLog(@"Error: %@", error);
     }
-    
 }
-
 
 -(void)postToPinterest
 {
@@ -1486,8 +1473,6 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    DBLog(@"requestFailed");
-    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     _isLoadingCurrentArticle = NO;
         
@@ -1699,8 +1684,4 @@
 	}
 }
 
-- (void)dealloc {
-    [_archiveLabel release];
-    [super dealloc];
-}
 @end
