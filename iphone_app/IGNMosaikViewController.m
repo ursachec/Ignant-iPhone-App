@@ -167,7 +167,6 @@ NSString * const kImageFilename = @"filename";
     else {
         DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
     }
-    
 }
 
 - (void)viewDidLoad
