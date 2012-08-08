@@ -41,6 +41,36 @@ function getThumbLinkForPostIdAndType($postid=0, $type = null)
 	return null;
 }
 
+
+function getThumbLinkForSlideshowPostId($slideshowPostId = '', $imgType = '', $dbh = null)
+{	
+	if($dbh==null)
+	{
+		print("null database handler\n");
+		return '';
+	}
+	
+	$qString = "SELECT wp_posts.`guid` AS 'img_url' FROM wp_posts WHERE `wp_posts`.id=:pId AND `wp_posts`.post_type='attachment'  LIMIT 1;";
+	
+	$stmt = $dbh->prepare($qString);
+	$stmt->bindParam(':pId', $slideshowPostId, PDO::PARAM_INT);
+
+	$stmt->execute();
+	$p = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+	if(!$p)
+		return '';
+	
+	$thumbLink = getThumbLinkForPostIdAndType($slideshowPostId, $imgType);
+	if($thumbLink)
+		return $thumbLink;
+	
+	$imgUrl = utf8_encode($p['img_url']);
+	
+	return $imgUrl;
+}
+
+
 function getThumbLinkForMosaicId($mosaicPostId='', $dbh = null)
 {
 	if($dbh==null)
@@ -499,8 +529,6 @@ function fetchRemoteImagesIdsForArticleDescription($postId='', $articleDescripti
 	if(strlen($postId)==0 || strlen($articleDescription)==0)
 		return;
 	
-
-	
 	$remoteImagesArray = array();
 	
 	$id = (int)$postId;
@@ -544,8 +572,9 @@ function fetchRemoteImagesIdsForArticleDescription($postId='', $articleDescripti
 		
 		if( strstr(basename($iUrl), 'pre')==false)
 		{
-			$remoteImagesArray[] = new RemoteImage($articleId.'_'.$counter.'_pid_'.$iPostId,$iUrl, '',0,0,$iPostId);
+			$remoteImagesArray[] = new RemoteImage($postId.'_'.$counter,$iUrl, '',0,0,$iPostId);
 		}
+		$counter++;
 	}
 	
 	$dbh = null;
