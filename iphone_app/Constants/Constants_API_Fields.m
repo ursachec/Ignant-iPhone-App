@@ -109,3 +109,6 @@ NSString * const kFKImageURL = @"url";
 NSString * const kFKImageWidth = @"width";
 NSString * const kFKImageHeight = @"height";
 NSString * const kFKImageReferenceArticleId = @"refArticleId";
+
+NSString * const kFKImagePostId = @"imgPostId";
+

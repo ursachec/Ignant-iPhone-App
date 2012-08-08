@@ -132,6 +132,7 @@
         
 #warning TODO: check if these params are set right
         NSString *imageURLString = [oneImageDictionary objectForKey:kFKImageURL];
+		NSString *slideshowPostIdString = [oneImageDictionary objectForKey:kFKImagePostId];
         NSNumber *imageWidth = [oneImageDictionary objectForKey:kFKImageWidth];
         NSNumber *imageHeight = [oneImageDictionary objectForKey:kFKImageHeight];
         
@@ -165,10 +166,14 @@
         newImageView.backgroundColor = [UIColor clearColor];
         newImageView.contentMode = UIViewContentModeScaleAspectFit;
         
-        DBLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
-        
-        
-        [newImageView setImageWithURL:[NSURL URLWithString:imageURLString] 
+        DBLog(@"cImageWidth: %f , cImageHeight: %f",cImageWidth,cImageHeight);
+		
+		NSString* currentArticleId = slideshowPostIdString;
+        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@&%@=%@",kAdressForImageServer,kArticleId,currentArticleId,kTLReturnImageType,kTLReturnSlideshowImage];
+        NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
+        __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
+		
+        [newImageView setImageWithURL:blockUrlAtCurrentIndex 
                      placeholderImage:nil 
                               success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);} 
                               failure:^(NSError* error){ DBLog(@"error"); 

@@ -99,3 +99,5 @@ extern NSString * const kFKImageWidth;
 extern NSString * const kFKImageHeight;
 extern NSString * const kFKImageReferenceArticleId;
 
+extern NSString * const kFKImagePostId;
+
