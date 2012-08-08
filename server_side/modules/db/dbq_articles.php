@@ -114,9 +114,17 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	$postId = $p['id'];
 	$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 	$postDate = strtotime($p['post_date_gmt']);
-	$postDescription = base64_encode(utf8_encode(descriptionForLanguage($p['post_content'], $lang)));
+	$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang)));
 
-	$postRemoteImages = fetchRemoteImagesForArticleID($postId);
+	//post images
+	//$remoteImagesForArticleDescription = getRemoteImagesForArticleDescription($postId, $p['post_content'], $lang);
+	
+	$remoteImagesForArticleDescription = fetchRemoteImagesIdsForArticleDescription($postId, $p['post_content'], $lang);
+	
+	//$postRemoteImages = fetchRemoteImagesForArticleID($postId);
+	$postRemoteImages = $remoteImagesForArticleDescription;
+	
+	
 	$postRelatedArticles = array();
 	$postRelatedArticles[] = $relatedArticles[0];
 	$postRelatedArticles[] = $relatedArticles[1];
@@ -266,16 +274,20 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 	$posts = fetchArticlesForCategory($cat, $tOfOldestArticle, $numberOfArticles);
 	$relatedArticles = fetchRelatedArticlesForArticleID($postId, count($posts)*3, $lang);
 	
-	// $before = microtime(true);
 	$i = 0;
 	foreach($posts as $p){
 
 		$postId = $p['id'];
 		$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 		$postDate = strtotime($p['post_date_gmt']);
-		$postDescription = base64_encode(utf8_encode(descriptionForLanguage($p['post_content'], $lang)));
-
-		$postRemoteImages = fetchRemoteImagesForArticleID($postId);
+		$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang)));
+		
+		
+		$remoteImagesForArticleDescription = fetchRemoteImagesIdsForArticleDescription($postId, $p['post_content'], $lang);
+		//$postRemoteImages = fetchRemoteImagesForArticleID($postId);
+		$postRemoteImages = $remoteImagesForArticleDescription;
+		
+		
 		$postRelatedArticles = array();
 		$postRelatedArticles[] = $relatedArticles[$i];
 		$postRelatedArticles[] = $relatedArticles[$i+1];
@@ -287,7 +299,6 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 		$postUrl = $p['post_url'];
 					
 		$postVideoEmbedCode = base64_encode(prepareVideoEmbedCode($p['video']));
-			
 		
 		if(strlen($postTitle) == 0)
 		{	
@@ -296,9 +307,6 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 				
 		 $lightArticles[] = new LightArticle($postId, $postTitle, $postDate, null, null, $postDescription, $postTemplate, $postRemoteImages, $postRelatedArticles, $postCategory, $postUrl, $postVideoEmbedCode); 
 	}
-	
-	// $after = microtime(true);
-	// echo "<br />".($after-$before) . " sec/foreach\n"."<br />";
 	
 	return $lightArticles;
 }
@@ -412,11 +420,21 @@ function textForLanguage($str, $lang)
 	//check if there is a localization string present, if not, just return same string
 	if( strstr($str, $needle)!==FALSE )
 	{
-		preg_match("/(<!--:$lang-->)([-_·a-zA-Z0-9 ]*)(<!--:-->)/", $str, $results);
+		preg_match("/(<!--:$lang-->)(.*)(<!--:-->)/", $str, $results);
 		return $results[2];
 	}
 	
 	return $str;
+}
+
+function cleanedDescriptionForLanguage($str, $language)
+{
+	$description = descriptionForLanguage($str, $language);
+	
+	$finalString = removeUnwantedHTML($description);
+	$finalString = nl2br($finalString);
+	
+	return $finalString;
 }
 
 function descriptionForLanguage($str, $language)
@@ -473,9 +491,104 @@ function descriptionForLanguage($str, $language)
 	
 	$finalString = $finalPrefixString.$finalMoreString;
 	
-	$finalString = removeUnwantedHTML($finalString);
-	$finalString = nl2br($finalString);
 	return $finalString;
+}
+
+function fetchRemoteImagesIdsForArticleDescription($postId='', $articleDescription='', $language='de')
+{
+	if(strlen($postId)==0 || strlen($articleDescription)==0)
+		return;
+	
+
+	
+	$remoteImagesArray = array();
+	
+	$id = (int)$postId;
+	$dbh = newPDOConnection();
+	
+	
+	$query = "SELECT wp_posts.guid AS 'img_url', wp_posts.id AS 'img_post_id' FROM wp_posts WHERE post_type = 'attachment' AND post_parent = :id ";
+	
+	
+	$imageLinks = getImageLinksForArticleDescription($articleDescription, $language);
+	if(is_array($imageLinks) && count($imageLinks)>0)
+	{
+		$counter=0;
+		foreach($imageLinks as $i)
+		{
+			if($counter>0)
+				$linksQuerySubstring .= " OR ";
+			
+			$linksQuerySubstring .= " guid='".$i."' ";
+		
+			$counter++;
+		}
+		
+		$query .= " AND ( ".$linksQuerySubstring." ) ";
+	}
+	
+	
+	$query .= " LIMIT 16;";
+	
+	$stmt = $dbh->prepare($query);
+	$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+	$stmt->execute();
+	
+	$images = $stmt->fetchAll();
+	
+	$counter = 0;
+	foreach($images as $i)
+	{
+		$iUrl = $i['img_url'];
+		$iPostId = $i['img_post_id'];
+		
+		if( strstr(basename($iUrl), 'pre')==false)
+		{
+			$remoteImagesArray[] = new RemoteImage($articleId.'_'.$counter.'_pid_'.$iPostId,$iUrl, '',0,0,$iPostId);
+		}
+	}
+	
+	$dbh = null;
+	return $remoteImagesArray;
+}
+
+function getRemoteImagesForArticleDescription($postId='', $articleDescription='', $language='de')
+{
+	if(strlen($postId)==0 || strlen($articleDescription)==0)
+		return;
+		
+	$postRemoteImages = array();
+	$counter = 0;
+	
+	$imageLinks = getImageLinksForArticleDescription($articleDescription, $language);
+	
+	if(is_array($imageLinks) && count($imageLinks)>0)
+	foreach($imageLinks as $i)
+	{
+		if( strstr(basename($i), 'pre')==false)
+			$postRemoteImages[] = new RemoteImage($postId.'_'.$counter,$i, '');
+		
+		$counter++;
+	}
+	
+	return $postRemoteImages;	
+}
+
+function getImageLinksForArticleDescription($articleDescription='', $language='de')
+{
+	if(strlen($articleDescription)==0)
+		return; 
+	
+	$imageLinks = array();
+	$desc = descriptionForLanguage($articleDescription, $language);
+	preg_match_all("/<img.*[\/]?>[\n\r]*/i", $desc, $imgTags, PREG_SET_ORDER);
+	foreach ($imgTags as $wert) {
+		preg_match("/src=[\"\']([^\"\']*)[\"\']/", $wert[0], $results);	
+		if(strlen($results[1])>0)
+			$imageLinks[] = $results[1];
+	}	
+	
+	return $imageLinks;
 }
 
 function removeUnwantedHTML($string)
@@ -490,7 +603,7 @@ function removeUnwantedHTML($string)
 function removeImgTags($string)
 {
 	$str = "";
-	$str = preg_replace('/<img.*\/>[\n\r]*/i', "", $string);
+	$str = preg_replace('/<img.*[\/]?>[\n\r]*/i', "", $string);
 	return $str;
 }
 function removeEmptyLines($string)

@@ -501,18 +501,46 @@ For more information about the Northern Territory, click <a href="http://www.tou
 
 <p style="text-align: center;"><small>Text &amp; pictures by <a href="http://www.monjagentshow.com/"> Monja Gentschow </a></small></p><!--:-->';
 
+
+$sAndyCurlowe = 'In seinen Arbeiten erkundet der Maler <a href="http://curlowe.com/home.html">Andy Curlowe</a> das Zusammenspiel der Natur und dem menschlichen Einfluss auf diese. Dabei stehen kurvige Formen und undeutliche Konturen im Kontrast zu klaren, geometrischen Strukturen. Sie symbolisieren die Natur, beziehungsweise den menschlichen Einfluss durch Industrie und Kalkül. <!--more-->Egal ob die zwei Welten im Konflikt oder in Einklang leben, zwischen ihnen entsteht immer eine Distanz. Beide kämpfen um die Oberhand während Zwischenräume oder Zwischenlösungen ungenutzt bleiben. 
+
+<em>\'My work from last year and this year has been a reflection of the everchanging relationship between the natural world and the world human influence. The curved lines and blurred contours of natural forms encounter the sharp geometry of industry and calculation. Whether in conflict or in harmony, these works emphasize the power struggles and symbiotic resting places between these two worlds.\'</em>
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_8.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_6.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_2.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_3.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_4.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_5.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_1.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_7.jpg">
+
+<img src="http://www.ignant.de/wp-content/uploads/2012/03/andy_9.jpg">
+
+<p style="text-align: center"><small>All images © <a href="http://curlowe.com/home.html">Andy Curlowe</a></small></p>';
+
 $sDummy = '<!--:de-->DeutsCH <img src="www.google.at" /><p>asdsadasdassad</p><!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCHDEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
+
+
+
 
 
 header('Content-type: text/plain');
 	
 	
 	
-// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu || $sItravel
+// $s || $sWithMore || $sDummy || $sAicuisine || $sMoreNoTranslation || $sSpecificArticleWeAreNature || $sWithIframe || $sDanCretu || $sItravel || $sAndyCurlowe
 
-//$lang = $_GET['lang'];
+//$lang = 'de';
 
-//$resS = descriptionForLanguage($sItravel, $lang);
+//$resS = cleanedDescriptionForLanguage($sAndyCurlowe, $lang);
 //print $resS;
 
 function descriptionForLanguageUnitTests()
@@ -525,32 +553,32 @@ function descriptionForLanguageUnitTests()
 	$s_de_en_no_more = '<!--:de-->DEUTSCH<!--:--><!--:en-->ENGLISH<!--:-->';
 	$s_de_en_more_de_en = '<!--:de-->DEUTSCH<!--:--><!--:en-->ENGLISH<!--:--><!--more--><!--:de-->MORE_DEUTSCH<!--:--><!--:en-->MORE_ENGLISH<!--:-->';
 	
-	if(strcmp(descriptionForLanguage($s_no_tags_de_en_and_more, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>MORE DEUTSCH <em>MORE ENGLISH</em>') == 0) 
+	if(strcmp(cleanedDescriptionForLanguage($s_no_tags_de_en_and_more, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>MORE DEUTSCH <em>MORE ENGLISH</em>') == 0) 
 	{ 
 		$testsPassed++;
 	}
 	else $testsFailed++;
 	
-	if(strcmp(descriptionForLanguage($s_no_tags_de_en, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>') == 0) 
+	if(strcmp(cleanedDescriptionForLanguage($s_no_tags_de_en, 'de'), 'DEUTSCH<br /><em>ENGLISH</em>') == 0) 
 	{ 
 		$testsPassed++;
 	}
 	else $testsFailed++;
 
-	if(strcmp(descriptionForLanguage($s_de_en_no_more, 'de'), 'DEUTSCH') == 0) 
+	if(strcmp(cleanedDescriptionForLanguage($s_de_en_no_more, 'de'), 'DEUTSCH') == 0) 
 	{ 
 		$testsPassed++;
 	}
 	else 
 		$testsFailed++;
 	
-	if(strcmp(descriptionForLanguage($s_de_en_more_de_en, 'de'), 'DEUTSCHMORE_DEUTSCH') == 0) 
+	if(strcmp(cleanedDescriptionForLanguage($s_de_en_more_de_en, 'de'), 'DEUTSCHMORE_DEUTSCH') == 0) 
 	{ 
 		$testsPassed++;
 	}
 	else $testsFailed++;
 	
-	print "\n".descriptionForLanguage($s_no_tags_de_en_and_more_with_tags, 'de')."\n";
+	print "\n".cleanedDescriptionForLanguage($s_no_tags_de_en_and_more_with_tags, 'de')."\n";
 	
 	print "\n<br />testsPassed: ".(int)$testsPassed." // testsFailed: ".(int)$testsFailed." <br />\n";
 }
@@ -579,10 +607,6 @@ function fetchRelatedArticlesUnittests()
 	
 	var_dump($numberOfReturns);
 }
-
-$s = '<!--:de-->Google 2012<!--:--><!--:en-->Google 2012<!--:-->';
-$t = textForLanguage($s, 'en');
-print $t;
 
 //fetchRelatedArticlesUnittests();
 

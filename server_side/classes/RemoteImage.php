@@ -4,13 +4,15 @@
 class RemoteImage extends BasicImage implements JSONexportableObject
 {
 	public $url;
+	public $imagePostId;
 	
-	public function __construct( $pImageId=0, $pImageUrl='', $pImageDescription = '', $pImageWidth='', $pImageHeight=''){
+	public function __construct( $pImageId=0, $pImageUrl='', $pImageDescription = '', $pImageWidth='', $pImageHeight='', $pImagePostId = 0){
 		$this->id = $pImageId;
 		$this->url = $pImageUrl;
 		$this->description = $pImageDescription;
 		$this->width = $pImageWidth;
 		$this->height = $pImageHeight;
+		$this->imagePostId = $pImagePostId;
 	}
 
 	public function getArrayForJSONEncoding()
@@ -22,6 +24,7 @@ class RemoteImage extends BasicImage implements JSONexportableObject
 		$returnArray[IMAGE_DESCRIPTION]=$this->description;
 		$returnArray[IMAGE_WIDTH]=$this->width;
 		$returnArray[IMAGE_HEIGHT]=$this->height;
+		$returnArray[IMAGE_POST_ID]=$this->imagePostId;
 		
 		return $returnArray;
 	}

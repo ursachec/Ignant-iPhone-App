@@ -102,6 +102,7 @@ define('IMAGE_BASE64_REPRESENTATION','base64Representation');
 define('IMAGE_URL','url');
 define('IMAGE_WIDTH','width');
 define('IMAGE_HEIGHT','height');
+define('IMAGE_POST_ID','imgPostId');
 
 //TEMPLATE
 

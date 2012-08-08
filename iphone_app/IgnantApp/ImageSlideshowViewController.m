@@ -168,7 +168,6 @@
         DBLog(@"imageURLString: %@ cImageWidth: %f , cImageHeight: %f", imageURLString,cImageWidth,cImageHeight);
         
         
-        
         [newImageView setImageWithURL:[NSURL URLWithString:imageURLString] 
                      placeholderImage:nil 
                               success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);} 
