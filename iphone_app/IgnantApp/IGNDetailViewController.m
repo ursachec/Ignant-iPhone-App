@@ -229,8 +229,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:kGAPVArticleDetailView,self.currentArticleId]
-                                    withError:&error];
+	GATrackPageView(&error, [NSString stringWithFormat:kGAPVArticleDetailView,self.currentArticleId]);
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -617,14 +616,7 @@
 - (IBAction)showMercedes:(id)sender {
     
     NSError* error = nil;
-    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
-                                         action:@"showMercedes"
-                                          label:@""
-                                          value:-1
-                                      withError:&error]) {
-        DBLog(@"Error: %@", error);
-    }
-    
+	GATrackEvent(&error, @"IGNDetailViewController", @"showMercedes", @"", -1);
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
@@ -1149,13 +1141,8 @@
     [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
     
     NSError* error = nil;
-    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
-                                         action:@"postToFacebook"
-                                          label:self.currentArticleId
-                                          value:-1
-                                      withError:&error]) {
-        DBLog(@"Error: %@", error);
-    }
+	GATrackEvent(&error, @"IGNDetailViewController", @"postToFacebook", self.currentArticleId, -1);
+	
 }
 
 -(void)postToPinterest
@@ -1196,14 +1183,7 @@
                 case TWTweetComposeViewControllerResultDone:
                 {
                     NSError* error = nil;
-                    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
-                                                         action:@"postToTwitter"
-                                                          label:blockSelf.currentArticleId
-                                                          value:-1
-                                                      withError:&error]) {
-                        DBLog(@"Error: %@", error);
-                    }
-                    
+					GATrackEvent(&error, @"IGNDetailViewController", @"postToTwitter", blockSelf.currentArticleId, -1);
                     break;
                 }
                 default:
@@ -1238,13 +1218,7 @@
     
     
     NSError* error = nil;
-    if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
-                                         action:@"showShare"
-                                          label:self.currentArticleId
-                                          value:-1
-                                      withError:&error]) {
-        DBLog(@"Error: %@", error);
-    }
+	GATrackEvent(&error, @"IGNDetailViewController", @"showShare", self.currentArticleId, -1);
     
     
     UIActionSheet *shareActionSheet = nil;
@@ -1283,13 +1257,7 @@
         if (buttonIndex==openInSafariButtonIndex) {
             
             NSError* error = nil;
-            if (![[GANTracker sharedTracker] trackEvent:@"IGNDetailViewController"
-                                                 action:@"openInSafari"
-                                                  label:[_linkOptionsUrl absoluteString]
-                                                  value:10
-                                              withError:&error]) {
-                DBLog(@"Error: %@", error);
-            }
+			GATrackEvent(&error, @"IGNDetailViewController", @"openInSafari", [_linkOptionsUrl absoluteString], 10);
             
             DBLog(@"openInSafari: %@", _linkOptionsUrl);
             [[UIApplication sharedApplication] openURL:_linkOptionsUrl];
@@ -1335,6 +1303,11 @@
 
 -(IBAction)toggleLike:(id)sender {
     
+	
+	NSError* error = nil;
+	
+	GATrackEvent(&error, @"IGNDetailViewController", @"toggleLike", self.currentArticleId, 10);
+	
     //if the article is shown with remote data, trigger importing it if necessary
     if(!self.isShowingArticleFromLocalDatabase)
     {
@@ -1349,6 +1322,10 @@
 {
     NSString *articleId = nil;
     
+	
+	GATrackEvent(&error, @"IGNDetailViewController", @"showRelated", self.currentArticleId, 10);
+	
+	
     DBLog(@"trying to showRelatedArticle: %d", [sender tag]);
     
     if ([sender tag] == kFirstRelatedArticleTag)

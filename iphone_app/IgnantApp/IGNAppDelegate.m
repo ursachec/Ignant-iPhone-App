@@ -203,18 +203,10 @@
         DBLog(@"error in setCustomVariableAtIndex");
     }
     
-    if (![[GANTracker sharedTracker] trackEvent:@"Application iOS"
-                                         action:@"Launch iOS"
-                                          label:@"Example iOS"
-                                          value:99
-                                      withError:&error]) {
-        DBLog(@"error in trackEvent");
-    }
-    
-    if (![[GANTracker sharedTracker] trackPageview:kGAPVAppEntryPoint
-                                         withError:&error]) {
-        DBLog(@"error in trackPageview");
-    }
+	
+	
+	GATrackEvent(&error, @"Application iOS", @"Launch iOS", @"Example iOS", 99);
+	GATrackPageView(&error, kGAPVAppEntryPoint);
 }
 
 - (NSString *)persistentStorePath {
@@ -699,13 +691,7 @@ return _categoryViewController;
 -(void)showHome
 {    
     NSError* error = nil;
-    if (![[GANTracker sharedTracker] trackEvent:@"IGNAppDelegate"
-                                         action:@"showHome"
-                                          label:@""
-                                          value:-1
-                                      withError:&error]) {
-        DBLog(@"Error: %@", error);
-    }
+	GATrackEvent(&error, @"IGNAppDelegate", @"showHome", @"", -1);
     
     [self.navigationController popToViewController:self.masterViewController animated:YES];
 }

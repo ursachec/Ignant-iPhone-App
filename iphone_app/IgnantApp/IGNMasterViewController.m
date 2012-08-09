@@ -213,8 +213,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:kGAPVCategoryView,[self currentCategoryId]]
-                                    withError:&error];
+	GATrackPageView(&error, [NSString stringWithFormat:kGAPVCategoryView,[self currentCategoryId]);
 }
 
 -(void)handleTapOnHomeButtonScrollTop

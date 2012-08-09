@@ -70,8 +70,7 @@ typedef enum _moreOptionsIndeces  {
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVMoreView
-                                    withError:&error];
+	GATrackPageView(&error, kGAPVMoreView);
 }
 
 

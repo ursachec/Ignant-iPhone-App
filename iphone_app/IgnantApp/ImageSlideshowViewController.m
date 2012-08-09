@@ -56,9 +56,8 @@
     
     [super viewDidAppear:animated];
     
-    NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVArticleImageSlideshowView
-                                    withError:&error];
+    NSError* error = nil;	
+	GATrackPageView(&error, kGAPVArticleImageSlideshowView);
 }
 
 - (void)viewDidLoad

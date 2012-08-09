@@ -116,8 +116,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVTumblrView
-                                    withError:&error];
+	GATrackPageView(&error, kGAPVTumblrView);
 }
 
 -(void)viewWillAppear:(BOOL)animated

@@ -51,9 +51,8 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
 {
     [super viewDidAppear:animated];
     
-    NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVContactView
-                                    withError:&error];
+	NSError* error = nil;
+	GATrackPageView(&error, kGAPVContactView);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -83,18 +82,11 @@ NSString * const kEmailDeutscheUndJapaner = @"info@deutscheundjapaner.de";
 {
     
     NSError* error = nil;
-    if (![[GANTracker sharedTracker] trackEvent:@"displayContactMail"
-                                         action:@"shownMailComposer"
-                                          label:recepient
-                                          value:10
-                                      withError:&error]) {
-        DBLog(@"Error: %@", error);
-    }
-    
+	GATrackEvent(&error, @"displayContactMail", @"shownMailComposer", recepient, 10);
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
     picker.mailComposeDelegate = self;
-    
+	
     // Set up the recipients.
     NSArray *toRecipients = @[recepient];
     [picker setToRecipients:toRecipients];

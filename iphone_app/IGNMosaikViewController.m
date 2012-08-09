@@ -138,8 +138,7 @@ NSString * const kImageFilename = @"filename";
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVMosaicView
-                                    withError:&error];
+	GATrackPageView(&error, kGAPVMosaicView);
 }
 
 -(void)viewWillAppear:(BOOL)animated

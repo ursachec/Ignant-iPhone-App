@@ -101,8 +101,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVFavoritesView
-                                    withError:&error];
+	GATrackPageView(&error, kGAPVFavoritesView);
     
 }
 

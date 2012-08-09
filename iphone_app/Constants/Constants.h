@@ -22,6 +22,10 @@
 #define LOG_CURRENT_FUNCTION_AND_CLASS() DBLog(@"%@ self.class: %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
 
 
+#define GATrackEvent(anError, anEvent, anAction, aLabel, aValue) [[GANTracker sharedTracker] trackEvent:anEvent action:anAction label:aLabel value:aValue withError:anError]
+#define GATrackPageView(anError, aPageview, ...) [[GANTracker sharedTracker] trackPageview:aPageview,##__VA_ARGS__ withError:anError]
+
+
 //################################################################################
 //update cyclesabb
 extern int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate;

@@ -65,8 +65,8 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-    [[GANTracker sharedTracker] trackPageview:kGAPVCategoriesView
-                                    withError:&error];
+	GATrackPageView(&error, kGAPVCategoriesView);
+	
 }
 
 - (void)viewDidUnload
