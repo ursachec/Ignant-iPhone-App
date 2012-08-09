@@ -14,6 +14,8 @@
 @interface ImageSlideshowViewController()
 {
     NSUInteger _activePage;
+	
+	dispatch_queue_t imagesQueue;
 }
 -(void)setUpScrollViewWithImages:(NSArray*)images;
 @end
@@ -30,6 +32,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+		
+		imagesQueue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+		
     }
     return self;
 }
@@ -173,11 +178,15 @@
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
         __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
 		
-        [newImageView setImageWithURL:blockUrlAtCurrentIndex 
-                     placeholderImage:nil 
-                              success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);} 
-                              failure:^(NSError* error){ DBLog(@"error"); 
-                              }];
+	
+		[newImageView setImageWithURL:blockUrlAtCurrentIndex
+					 placeholderImage:nil
+							  success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);}
+							  failure:^(NSError* error){ DBLog(@"error");
+							  }];
+
+	
+        
         [self.imageScrollView addSubview:newImageView];
 
         i++;

@@ -155,7 +155,7 @@ NSString * const kImageFilename = @"filename";
     
     BOOL forceLoad = false;
     
-    if (forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages))) {
+    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)))  && [self checkIfAppOnline]) {
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
         _isLoadingReplacingMosaicImages = YES;
         [self removeCurrentImageViews];
@@ -212,8 +212,6 @@ NSString * const kImageFilename = @"filename";
     
     if (_isLoadingMoreMosaicImages)
         return;
-    
-    
     
     _isLoadingMoreMosaicImages = YES;
     
