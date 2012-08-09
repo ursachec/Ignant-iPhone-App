@@ -8,6 +8,20 @@ require_once($tg_path.'../../generalConstants.php');
 require_once($tg_path."../../wp_config.inc.php");
 require_once($tg_path.'../db/dbq_general.php');
 
+require_once($tg_path.'../../classes/IgnantInterfaces.php');
+require_once($tg_path.'../../classes/IgnantObject.php');
+require_once($tg_path.'../../classes/LightArticle.php');
+require_once($tg_path.'../../classes/RelatedArticle.php');
+require_once($tg_path.'../../classes/Article.php');
+require_once($tg_path.'../../classes/BasicImage.php');
+require_once($tg_path.'../../classes/Base64Image.php');
+require_once($tg_path.'../../classes/RemoteImage.php');
+require_once($tg_path.'../../classes/MixedImage.php');
+require_once($tg_path.'../../classes/Template.php');
+require_once($tg_path.'../../classes/Category.php');
+require_once($tg_path.'../../classes/MosaicEntry.php');
+
+
 require_once($tg_path.'../db/dbq_articles.php');
 require_once($tg_path.'../db/dbq_notifications.php');
 require_once($tg_path.'../db/dbq_categories.php');
@@ -53,12 +67,6 @@ function createthumb($name, $filename, $new_w = 0, $new_h = 0){
 	imagedestroy($src_img); 
 }
 
-function createSlideshowImageThumbs()
-{
-	print "create slideshow image thumbs";
-	
-}
-
 function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $sourceDir = '', $destinationDir = '', $dbh = null)
 {		
 	if($dbh==null)
@@ -92,6 +100,73 @@ function createMosaicImageThumbs($startPosition, $batchSize, $newWidth = 200, $s
 	
 	bloatedPrint("finished recursion with startPosition: $startPosition");
 	return;	
+}
+
+function generateImagesForSlideshowIds($pid='', $remoteImages=array(), $newWidth=460, $sourceDir='', $destinationDir=''){
+	
+	print "\ngenerating ".count($remoteImages)." images for slideshow ids on post id: $pid\n";
+		
+	foreach($remoteImages as $i)
+	{	
+		
+		if( is_object($i) )
+		{
+			$img_url = preg_replace('/http:\/\/www.ignant.de\/wp-content\/uploads\//s', '', $i->url);
+			$img_post_id = $i->imagePostId;
+			
+			//print "creating image thumb (url:$img_url) (id:$img_post_id) ...\n";
+			createImageThumb($img_post_id, $img_url, $newWidth, $sourceDir, $destinationDir);	
+		}
+	}	
+}
+
+function createSlideshowImageThumbs($startPosition, $batchSize, $newWidth = 460, $sourceDir = '', $destinationDir = '', $dbh = null)
+{
+	global $includedCategoriesPDOString;
+	
+	if($dbh==null)
+	{
+		bloatedPrint("database handler is null (startPosition: $startPosition)...");
+		return;
+	}
+	
+	bloatedPrint("(createSlideshowImageThumbs startPosition: $startPosition )...");
+	
+	$qString = "SELECT 
+			pt.`post_name`, pt.`id` AS 'post_id', pt.`post_title` AS 'post_title', pt.`post_date_gmt`, pt.`guid` AS 'post_url', pt.`post_content` AS 'post_content', wpm.`meta_value` AS 'img_url', wpm.`post_id` AS 'meta_id'
+			FROM wp_posts AS pt 
+			LEFT JOIN wp_term_relationships AS tr ON pt.`id` = tr.`object_id` 
+			LEFT JOIN wp_term_taxonomy AS tt ON tt.`term_taxonomy_id` = tr.`term_taxonomy_id` 
+			LEFT JOIN wp_postmeta AS wpm ON wpm.`post_id` = (SELECT meta_value FROM wp_postmeta AS pm WHERE pm.`meta_key`='_thumbnail_id' AND pm.`post_id`=pt.`ID`) AND wpm.`meta_key` = '_wp_attached_file'
+			WHERE pt.`post_status` = 'publish'
+			AND pt.`post_type` = 'post'
+			AND pt.`post_parent` = 0
+			AND pt.`post_date` > '".POSTS_DATE_AFTER."'
+			AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
+	
+	$qString .= " ORDER BY pt.`post_date` DESC";	
+	$qString .= " LIMIT ".$startPosition.",".$batchSize;
+	$qString .= ";";
+	
+	$stmt = $dbh->prepare($qString);
+	$stmt->execute();
+	$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	$lang='de';
+	foreach($posts as $p)
+	{
+		$pid = $p['post_id'];		
+		$remoteImages = fetchRemoteImagesIdsForArticleDescription($pid, $p['post_content'], $lang);
+		generateImagesForSlideshowIds($pid, $remoteImages, $newWidth, $sourceDir, $destinationDir);
+	}
+	$startPosition+=$batchSize;
+	
+	if(count($posts)>0  && $startPosition<MAX_NUMBER_OF_FILE_TO_CREATE)
+	{
+		createSlideshowImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir, &$dbh);
+	}
+	
+	//bloatedPrint("finished recursion with startPosition: $startPosition");
+	return;
 }
 
 function createArticleImageThumbs($startPosition, $batchSize, $newWidth = 200, $sourceDir = '', $destinationDir = '', $dbh = null)
@@ -253,10 +328,10 @@ else if(strcmp($imageType,TL_RETURN_DETAIL_IMAGE)==0)
 }	
 else if(strcmp($imageType,TL_RETURN_SLIDESHOW_IMAGE)==0)
 {
-	$newWidth = 100;
+	$newWidth = 460;
 	$destinationDir .= 'slideshow/';
 
-	createSlideshowImageThumbs();
+	createSlideshowImageThumbs(&$startPosition, $batchSize, $newWidth, $sourceDir, $destinationDir,  &$dbh);
 }
 
 $after = microtime(true);

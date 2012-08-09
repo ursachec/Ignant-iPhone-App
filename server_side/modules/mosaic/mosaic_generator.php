@@ -6,10 +6,21 @@ require_once($tg_path.'../../generalConstants.php');
 
 require_once($tg_path."../../wp_config.inc.php");
 
+
+
+
+
 require_once($tg_path.'../db/dbq_general.php');
 require_once($tg_path.'../db/dbq_articles.php');
 require_once($tg_path.'../db/dbq_notifications.php');
 require_once($tg_path.'../db/dbq_categories.php');
+
+
+
+
+/*
+
+*/
 
 function getRandomImagePostId($postId=0, $dbh=null)
 {
@@ -52,6 +63,24 @@ function insertOneMosaicEntry($mosaicPostId = 0, $postId = 0, $dbh = null)
 	$stmt->execute();
 }
 
+function clearAllMosaicEntries($dbh = null)
+{
+	if($dbh==null)
+	{
+		bloatedPrint("database handler is null (startPosition: $startPosition)...");
+		return;
+	}
+	
+	$qString = "TRUNCATE wp_posts_mosaic;";
+	
+	$stmt = $dbh->prepare($qString);
+	$stmt->execute();
+	
+	print "\ntruncated mosaic entries table...\n";
+	
+	return;	
+}
+
 function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 {
 	global $includedCategoriesPDOString;
@@ -74,6 +103,7 @@ function createMosaicEntries($startPosition, $batchSize, $dbh = null)
 			WHERE pt.`post_status` = 'publish'
 			AND pt.`post_type` = 'post'
 			AND pt.`post_parent` = 0
+			AND wpm2.`meta_value` IS NULL
 			AND pt.`post_date` > '".POSTS_DATE_AFTER."'
 			AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
 	
@@ -123,6 +153,8 @@ $includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 $dbh = newPDOConnection();
 $startPosition = 0;
 $batchSize = 20;
+
+//clearAllMosaicEntries(&$dbh);
 
 createMosaicEntries(&$startPosition, $batchSize, &$dbh);
 

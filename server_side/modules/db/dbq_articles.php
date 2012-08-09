@@ -1,13 +1,6 @@
 <?php
 /*
 
-ToDO: fix problem posts
-
-SELECT * FROM wp_posts WHERE ID = 32399
-SELECT * FROM wp_posts WHERE ID = 6254
-SELECT * FROM wp_posts WHERE ID = 11187 AND post_date > '2011-1-1'
-SELECT * FROM wp_posts WHERE ID = 29938
-
 //TODO: problem on mosaic ('got you need an internet connection for that' on the wrong time)
 */
 
@@ -245,7 +238,6 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		AND pt.`post_date` <= :aDate
 		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
 		AND wpm2.`meta_value` IS NULL
-		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
 		
 		$qString .= " ORDER BY pt.`post_date` DESC";	
@@ -272,7 +264,6 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		AND tr.`term_taxonomy_id` = :id 
 		AND pt.`post_date` <= :aDate
 		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
-		AND wpm2.`meta_value` IS NULL
 		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.") ";
 		
