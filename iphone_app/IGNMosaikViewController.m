@@ -333,24 +333,18 @@ NSString * const kImageFilename = @"filename";
 
 -(void)drawSavedMosaicImages
 {
-        
+#define PADDING_BOTTOM 5.0f
+#define PADDING_TOP .0f
+	
     if (_currentColumnHeights==nil) {
         _currentColumnHeights = [@[ @0,@0,@0 ] mutableCopy];
     }
-    
-    //first of all delete all currently shown images
-//     [self removeCurrentImageViews];
-    
-#define PADDING_BOTTOM 5.0f
-#define PADDING_TOP .0f
-    
+	
     BOOL shouldIncludeLoadingMoreView = false;
     
     //load the plist with the saved mosaic images in memory
     NSMutableArray* images = [[NSArray arrayWithArray:self.currentBatchOfMosaicImages] mutableCopy];
-    
-    NSLog(@"drawSavedMosaicImages images.count: %d", [images count]);
-        
+            
     //add the load more mosaic view to the image dictionary
     if(shouldIncludeLoadingMoreView)
     {
@@ -407,7 +401,6 @@ NSString * const kImageFilename = @"filename";
             xposForActiveColumn = [self xposForColumn:activeColumn];
             heightOfActiveColumn = columnHeights[activeColumn];
             
-            
             fMosaicEntryWidth = 100.0f;
             fMosaicEntryHeight = 50.0f;
             
@@ -437,6 +430,7 @@ NSString * const kImageFilename = @"filename";
             oneView.alpha = 1.0f;
             
             UIImageView* tempImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, fMosaicEntryWidth, fMosaicEntryHeight)];
+			tempImageView.backgroundColor = IGNANT_GRAY_COLOR;
             [oneView addSubview:tempImageView];
             [self.bigMosaikView addSubview:oneView];
             
@@ -730,22 +724,9 @@ NSString * const kImageFilename = @"filename";
     [self dismissModalViewControllerAnimated:YES];
 }
 
--(void)triggerReplaceMosaicWithLatestIfNecessary
+-(void)loadLatestContent
 {
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
-    
-    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
-    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
-    
-    if (lastUpdateInSeconds<updateTimer) {
-        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
-//        [self loadLatestTumblrArticles];
-    }
-    else {
-        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
-    }
+
 }
 
 @end

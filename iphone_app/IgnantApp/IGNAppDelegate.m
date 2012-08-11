@@ -249,6 +249,8 @@
      */
     
     [[self facebook] extendAccessTokenIfNeeded];
+	[self.masterViewController triggerLoadLatestDataIfNecessary];
+	
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

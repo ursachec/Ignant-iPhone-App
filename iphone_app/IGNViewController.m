@@ -736,9 +736,16 @@
 }
 
 #pragma mark - specific actions
+-(void)loadLatestContent
+{
+	LOG_CURRENT_FUNCTION_AND_CLASS()
+}
+
 -(void)triggerLoadLatestDataIfNecessary
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
+	
+	[self loadLatestContent];
 }
 
 -(NSString*)currentPreferredLanguage
@@ -757,6 +764,12 @@
     [blockImageView  setImageWithURL:blockThumbURL
                     placeholderImage:nil
                              success:^(UIImage* image){
+								 
+								 blockImageView.alpha = .0f;
+								 [UIView animateWithDuration:ASYNC_IMAGE_DURATION animations:^{
+									 blockImageView.alpha = 1.0f;
+								 }];
+								 
                                  DBLog(@"loaded triggerLoadingImageAtURL: %@", blockThumbURL);
                              }
                              failure:^(NSError* aError){

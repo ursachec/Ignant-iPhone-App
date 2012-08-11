@@ -169,6 +169,8 @@
     
     self.relatedArticlesTitleLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Title for the label that apears on top of the related articles in the Detail View Controller");
     
+	self.entryImageView.backgroundColor = IGNANT_GRAY_COLOR;
+	
     self.dtGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDTViewTap:)];
     self.dtGestureRecognizer.delegate = self;
     _dtGestureRecognizer.numberOfTapsRequired = 1;
@@ -1322,7 +1324,7 @@
 {
     NSString *articleId = nil;
     
-	
+	NSError* error = nil;
 	GATrackEvent(&error, @"IGNDetailViewController", @"showRelated", self.currentArticleId, 10);
 	
 	

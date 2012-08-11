@@ -244,10 +244,19 @@
         {
             cell = [[TumblrCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];                        
         }
-        
-        [cell.tumblrImageView setImageWithURL:urlAtCurrentIndex
-                             placeholderImage:nil];
-        
+		
+		__block UIImageView* blockImageView = cell.tumblrImageView;
+        [blockImageView		setImageWithURL:urlAtCurrentIndex
+                             placeholderImage:nil
+								 success:^(UIImage* image){
+									 
+											 blockImageView.alpha = .0f;
+											 [UIView animateWithDuration:ASYNC_IMAGE_DURATION animations:^{
+												 blockImageView.alpha = 1.0f;
+											 }];	  
+									  }
+								failure:^(NSError* error){
+								}];
         return cell;
     }
     

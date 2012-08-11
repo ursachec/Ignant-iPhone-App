@@ -51,9 +51,6 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    
-    DBLog(@"something");
-    
     [super viewDidAppear:animated];
     
     NSError* error = nil;	
@@ -64,21 +61,16 @@
 {
     [super viewDidLoad];
     
-        
-    DBLog(@"number of remote images: %d", _remoteImagesArray.count);
-    
     _imageScrollView.delegate = self;
     _imageScrollView.pagingEnabled = YES;
     
     //set up the scroll view
     [self setUpScrollViewWithImages:_remoteImagesArray];
     
-    
     //set up gesture recognizer
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
     recognizer.numberOfTapsRequired = 1;
     [self.imageScrollView addGestureRecognizer:recognizer];
-    
     
     //add the specific navigation bar
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
@@ -167,9 +159,34 @@
         }
         
         UIImageView *newImageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*_imageScrollView.frame.size.width, (_imageScrollView.frame.size.height-cImageHeight)/2, cImageWidth , cImageHeight)];
-        newImageView.backgroundColor = [UIColor clearColor];
         newImageView.contentMode = UIViewContentModeScaleAspectFit;
         
+		
+		
+		CGSize avSize = CGSizeMake(21.0f, 21.0f);
+		CGFloat scalingFactor = 0.8;
+		UIActivityIndicatorView* av = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+		av.frame = CGRectMake((newImageView.frame.size.width-avSize.width)/2, (newImageView.frame.size.height-avSize.height)/2, avSize.width, avSize.height);
+		
+		[av.layer setValue:[NSNumber numberWithFloat:scalingFactor] forKeyPath:@"transform.scale"];
+		
+		
+		[av startAnimating];
+		[newImageView addSubview:av];
+		
+		
+		/*
+		CGSize aiSize = CGSizeMake(21.0f, 21.0f);
+        CGFloat scalingFactor = 0.8;
+        UIActivityIndicatorView *aiV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        aiV.frame = CGRectMake((newImageView.frame.size.width-aiSize.width)/2, 265.0f, aiSize.width*scalingFactor, aiSize.height*scalingFactor);
+        [newImageView addSubview:aiV];
+        [aiV startAnimating];
+		
+		[aiV.layer setValue:[NSNumber numberWithFloat:scalingFactor] forKeyPath:@"transform.scale"];
+		*/
+		
+		
         DBLog(@"cImageWidth: %f , cImageHeight: %f",cImageWidth,cImageHeight);
 		
 		NSString* currentArticleId = slideshowPostIdString;
@@ -177,10 +194,19 @@
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
         __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
 		
-	
+		__block UIImageView* blockNewImageView = newImageView;
+		__block UIActivityIndicatorView* blockAv = av;
 		[newImageView setImageWithURL:blockUrlAtCurrentIndex
 					 placeholderImage:nil
-							  success:^(UIImage* image){ DBLog(@"image.height: %f", image.size.width);}
+							  success:^(UIImage* image){
+								  
+								  [blockAv removeFromSuperview];
+								  
+								  blockNewImageView.alpha = 0.0f;
+								  [UIView animateWithDuration:ASYNC_IMAGE_DURATION animations:^{
+									  blockNewImageView.alpha = 1.0f;
+								  }];
+							  }
 							  failure:^(NSError* error){ DBLog(@"error");
 							  }];
 

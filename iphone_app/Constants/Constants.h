@@ -27,6 +27,11 @@
 
 
 //################################################################################
+// animation duration
+#define ASYNC_IMAGE_DURATION 0.5f
+
+
+//################################################################################
 //update cyclesabb
 extern int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate;
 

@@ -213,7 +213,7 @@
     [super viewDidAppear:animated];
     
     NSError* error = nil;
-	GATrackPageView(&error, [NSString stringWithFormat:kGAPVCategoryView,[self currentCategoryId]);
+	GATrackPageView(&error, [NSString stringWithFormat:kGAPVCategoryView,[self currentCategoryId]]);
 }
 
 -(void)handleTapOnHomeButtonScrollTop
@@ -477,10 +477,14 @@
         DBLog(@"imgurl: %@", encodedString);
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
         __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
-        [aCell.cellImageView setImageWithURL:urlAtCurrentIndex
+		__block UIImageView* blockImageView = aCell.cellImageView;
+        [blockImageView setImageWithURL:urlAtCurrentIndex
                            placeholderImage:nil 
                                      success:^(UIImage* image){
-                                         
+										 blockImageView.alpha = .0f;
+										 [UIView animateWithDuration:ASYNC_IMAGE_DURATION animations:^{
+											 blockImageView.alpha = 1.0f;
+										 }];
                                      } 
                                      failure:^(NSError* error){
                                      

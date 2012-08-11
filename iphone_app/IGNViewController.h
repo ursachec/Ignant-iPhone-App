@@ -43,6 +43,8 @@
 
 @property (nonatomic, unsafe_unretained) UIViewController* viewControllerToReturnTo;
 
+-(void)loadLatestContent;
+
 -(void)setUpBackButton;
 
 -(void)setIsLoadingViewHidden:(BOOL)hidden;

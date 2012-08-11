@@ -20,7 +20,7 @@ int const kThirdRelatedArticleTag = 503;
 
 //################################################################################
 //update cycles
-int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate = 24;
+int const kDefaultNumberOfHoursBeforeTriggeringLatestUpdate = 1;
 
 //################################################################################
 //categories
