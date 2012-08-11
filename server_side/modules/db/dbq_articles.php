@@ -299,14 +299,12 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 
 		$postId = $p['id'];
 		$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
+				
 		$postDate = strtotime($p['post_date_gmt']);
 		$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang)));
-		
-		
+			
 		$remoteImagesForArticleDescription = fetchRemoteImagesIdsForArticleDescription($postId, $p['post_content'], $lang);
-		//$postRemoteImages = fetchRemoteImagesForArticleID($postId);
 		$postRemoteImages = $remoteImagesForArticleDescription;
-		
 		
 		$postRelatedArticles = array();
 		$postRelatedArticles[] = $relatedArticles[$i];
@@ -436,7 +434,8 @@ function textForLanguage($str, $lang)
 
 	if( strstr($str, $needle)!==FALSE )
 	{
-		preg_match("/(<!--:$lang-->)(.*)(<!--:-->)/", $str, $results);
+		//TODO: write a better regex, this is not good when article name includes a '<' character
+		preg_match("/(<!--:$lang-->)([^<]*)(<!--:-->)/", $str, $results);		
 		return $results[2];
 	}
 	
