@@ -63,7 +63,6 @@ function getThumbLinkForSlideshowPostId($slideshowPostId = '', $imgType = '', $d
 	return $imgUrl;
 }
 
-
 function getThumbLinkForMosaicId($mosaicPostId='', $dbh = null)
 {
 	if($dbh==null)
@@ -169,7 +168,6 @@ function fetchArticleWithId($articleId = 0, $dbh = null)
 	
 	$includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 	
-
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT 
@@ -210,7 +208,8 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 	$includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 	
 	$dateAfter = '';
-	$dateBefore = date('Y-m-d');
+	$defaultTime = mktime(0, 0, 0, date("m"), date("d")+1, date("y"));
+	$dateBefore = date('Y-m-d', $defaultTime);
 	if($timeBefore!=0)
 		$dateBefore =  date('Y-m-d', $timeBefore);
 	
@@ -410,9 +409,6 @@ function fetchRelatedArticlesForArticleID($articleId = '', $numberOfArticles = 3
 {	
 	$relatedArticlesArray = array();
 		
-	//!!!!!!!!!!!!!!!!!!!!!!
-	//TODO: add method to LightArticle: getRelatedArticle() !
-	
 	$posts = fetchRandomArticles($numberOfArticles);
 	
 	foreach($posts as $p){
@@ -438,7 +434,6 @@ function textForLanguage($str, $lang)
 	$results = array();
 	$needle = "<!--";
 
-	//check if there is a localization string present, if not, just return same string
 	if( strstr($str, $needle)!==FALSE )
 	{
 		preg_match("/(<!--:$lang-->)(.*)(<!--:-->)/", $str, $results);
@@ -525,9 +520,7 @@ function fetchRemoteImagesIdsForArticleDescription($postId='', $articleDescripti
 	$id = (int)$postId;
 	$dbh = newPDOConnection();
 	
-	
 	$query = "SELECT wp_posts.guid AS 'img_url', wp_posts.id AS 'img_post_id' FROM wp_posts WHERE post_type = 'attachment' AND post_parent = :id ";
-	
 	
 	$imageLinks = getImageLinksForArticleDescription($articleDescription, $language);
 	if(is_array($imageLinks) && count($imageLinks)>0)

@@ -33,7 +33,7 @@ define('API_COMMAND_TEST','test');
 //-- general
 define('GET_ACTION','action');
 define('LANGUAGE_PARAM','lang');
-define('DEFAULT_LANGUAGE','de');
+define('DEFAULT_LANGUAGE','en');
 define('CURRENT_CATEGORY_ID','categoryId');
 define('NUMBER_OF_RESULTS_TO_BE_RETURNED','numberOfResultsToReturn');
 define('ARTICLE_ID','articleId');
@@ -51,13 +51,16 @@ define('DATE_OF_OLDEST_ARTICLE','dateOfOldestArticle');
 $finalJSONArrayForExport = array();
 $contentProxy = new JSONContentProxy();
 $apiCommand = $_GET[GET_ACTION];
+$acceptedLanguages = array('de','en');
 
 
 function getContentLanguage($pLanguage)
 {
-	if(isset($pLanguage) && $pLanguage!='')
+	global $acceptedLanguages;
+	if(isset($pLanguage) && $pLanguage!='' && in_array($pLanguage, $acceptedLanguages)){
 		return $pLanguage;
-		
+	}	
+	
 	return DEFAULT_LANGUAGE;
 }
 
@@ -89,12 +92,6 @@ else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
 	}
 }
 
-//in case error happens, return it to the user!
-// $finalJSONArrayForExport[TL_ERROR] = YES;
-// $finalJSONArrayForExport[TL_ERROR_MESSAGE] = 'unknown_api_command';
-
-//this is combined data from more commands
-//that should be returned the first time a user opens the app
 else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 {
 	$categoriesList = array();
@@ -109,18 +106,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)
 	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY, getContentLanguage($_GET[LANGUAGE_PARAM]), $numberOfArticles);
 	$finalJSONArrayForExport[TL_ARTICLES] = $articlesForFirstRun;
 }
-
-
-//this is called when the user wants to get more articles
-//of a specific category, home being -1
-
-/*			
-- get updated articles 
-	- PARAMS:
-		- NAME: category_id / VALUE: (int) or (string) with Category id, "home" for home articles 
-		- NAME: pDateOfOldestArticle / VALUE: (dateformat TBD)
-		- NAME: numberOFResultsToBeReturned  / VALUE: (int) number of articles to be returned
-*/
 
 else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 {
@@ -159,17 +144,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY)==0)
 	}
 }
 
-//this is called when the user wants to get more articles
-//of a specific category, home being -1
-
-/*			
-- get updated articles 
-	- PARAMS:
-		- NAME: category_id / VALUE: (int) or (string) with Category id, "home" for home articles 
-		- NAME: pDateOfOldestArticle / VALUE: (dateformat TBD)
-		- NAME: numberOFResultsToBeReturned  / VALUE: (int) number of articles to be returned
-*/
-
 else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 {
 	//input parameters
@@ -196,14 +170,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_ARTICLES_FOR_CATEGORY)==0)
 		$finalJSONArrayForExport[TL_META_INFORMATION][TL_OVERWRITE] = true;
 	}	
 }
-
-
-//this is called mostly when a related article has been tapped on
-/*
-- load one article (used when browsing in the related articles section)
-	- PARAMS:
-		- NAME: article_id / VALUE: (int) or (string) with the article id
-*/
 
 else if(strcmp($apiCommand,API_COMMAND_GET_SINGLE_ARTICLE)==0)
 {
@@ -266,10 +232,6 @@ else if(strcmp($apiCommand,API_COMMAND_GET_MORE_TUMBLR_ARTICLES)==0)
 	}
 }
 
-/**
- * get the latest 20 articles and return them to the app
- * the app should then compare the latest saved posts and add the ones that are newer
- */
 else if(strcmp($apiCommand,API_COMMAND_GET_LATEST_TUMBLR_ARTICLES)==0)
 {	
 	$latestTumblrPosts = array();
@@ -302,15 +264,5 @@ else
 //print out the arry
 $jsonExportString = json_encode($finalJSONArrayForExport);	
 print $jsonExportString;
-
-
-function testGetArticles()
-{
-	global $contentProxy;
-	$before = microtime(true);
-	$articlesForFirstRun = $contentProxy->tGetJSONReadyLatestArticlesForCategory(ID_FOR_HOME_CATEGORY);
-	$after = microtime(true);
-	echo "<br />(totaltime:".($after-$before) . ")s<br />";
-}
 
 ?>

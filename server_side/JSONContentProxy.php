@@ -72,11 +72,7 @@ class JSONContentProxy{
 		global $testingUnit;
 		
 		$articlesArray = array();
-		
-		// $before = microtime(true);
 		$testArticles = getArticlesForCategory($pCategoryId, 0, $pLanguage, $numberOfArticles);
-		// $after = microtime(true);
-		// echo "<br />".($after-$before) . " sec/getArticlesForCategory\n"."<br />";
 		
 		if(is_array($testArticles) && count($testArticles)>0)			
 		foreach($testArticles as $oneArticle){
