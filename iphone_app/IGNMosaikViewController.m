@@ -132,6 +132,36 @@ NSString * const kImageFilename = @"filename";
     [self dismissModalViewControllerAnimated:YES];
 }
 
+-(void)loadLatestContent
+{
+	
+	NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
+    
+    BOOL forceLoad = false;
+    
+    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)))  && [self.appDelegate checkIfAppOnline]) {
+		
+        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+		
+        _isLoadingReplacingMosaicImages = YES;
+        [self removeCurrentImageViews];
+        _currentColumnHeights = [@[ @0,@0, @0 ] mutableCopy];
+        [self loadMoreMosaicImages];
+    }
+    else {
+        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
+		
+		if ([self.currentBatchOfMosaicImages count]==0) {
+			NSArray* currentlySavedMosaicImages = [self.savedMosaicImages copy];
+			self.currentBatchOfMosaicImages = currentlySavedMosaicImages;
+			[self drawSavedMosaicImages];
+		}
+    }
+	
+}
+
 #pragma mark - View lifecycle
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -147,25 +177,7 @@ NSString * const kImageFilename = @"filename";
         
     [self setIsSpecificToolbarHidden:YES animated:NO];
     
-    NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
-    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
-    NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
-    
-    
-    BOOL forceLoad = false;
-    
-    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)))  && [self.appDelegate checkIfAppOnline]) {
-        DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);        
-        _isLoadingReplacingMosaicImages = YES;
-        [self removeCurrentImageViews];
-        
-        _currentColumnHeights = [@[ @0,@0, @0 ] mutableCopy];
-        
-        [self loadMoreMosaicImages];
-    }
-    else {
-        DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
-    }
+    [self loadLatestContent];
 }
 
 - (void)viewDidLoad
@@ -174,7 +186,6 @@ NSString * const kImageFilename = @"filename";
  
     //trigger the drawing for the images
     [self drawSavedMosaicImages];
-    
     
     // add the big mosaik view to the content scrollview
     self.bigMosaikView.userInteractionEnabled = YES;
@@ -722,11 +733,6 @@ NSString * const kImageFilename = @"filename";
     
     [self.appDelegate showMore];
     [self dismissModalViewControllerAnimated:YES];
-}
-
--(void)loadLatestContent
-{
-
 }
 
 @end
