@@ -27,6 +27,7 @@ define('API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY','getLatestArticlesForCateg
 define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
 define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
 define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
+define('API_COMMAND_APP_STORE_LINK','asl');
 
 define('API_COMMAND_TEST','test');
 
@@ -68,6 +69,18 @@ if(strcmp($apiCommand,API_COMMAND_IS_SERVER_REACHABLE)==0)
 {
 	//TODO: define when the server is defined as not reachable
 	$finalJSONArrayForExport[API_KEY_IS_SERVER_REACHABLE] = API_RESPONSE_SERVER_OK;
+}
+
+else if(strcmp($apiCommand,API_COMMAND_APP_STORE_LINK)==0)
+{
+	
+	//header('Location: itms-apps://ax.itunes.apple.com/app/instapaper/id288545208?mt=8');
+	header('Location: itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8');
+	
+	//TODO: define when the server is defined as not reachable
+	//$finalJSONArrayForExport[API_KEY_IS_SERVER_REACHABLE] = API_RESPONSE_SERVER_OK;
+	
+	exit;
 }
 
 else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)

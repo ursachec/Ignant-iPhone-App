@@ -294,6 +294,11 @@
 
 -(void)handleBack:(id)sender
 {
+	if (self.isShownFromMosaic) {
+        [self showMosaic];
+    }
+    else
+    {
         if (self.viewControllerToReturnTo) {
             [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
         }
@@ -301,6 +306,7 @@
             DBLog(@"WARNING! viewControllerToReturnTo not found");
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
+	}
 }
 
 -(void)navigateToNextArticle
