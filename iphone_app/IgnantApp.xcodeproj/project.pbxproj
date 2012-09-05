@@ -62,6 +62,8 @@
 		E539C38515CF28A700562A43 /* DTWrapper.html in Resources */ = {isa = PBXBuildFile; fileRef = E539C38415CF28A700562A43 /* DTWrapper.html */; };
 		E55338FE15C08FB300D05795 /* DefaultNoTOPX.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */; };
 		E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */; };
+		E562C68A15F7BC4B0031C416 /* UIView+PositioningUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E562C68815F7BC4B0031C416 /* UIView+PositioningUtils.h */; };
+		E562C68B15F7BC4B0031C416 /* UIView+PositioningUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */; };
 		E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5AFAE5415B8207700E084D3 /* FBConnect.bundle */; };
 		E5AFAE6315B8209D00E084D3 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = E5AFAE5715B8209D00E084D3 /* Facebook.h */; };
 		E5AFAE6415B8209D00E084D3 /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AFAE5815B8209D00E084D3 /* Facebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -359,6 +361,8 @@
 		E539C38415CF28A700562A43 /* DTWrapper.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = DTWrapper.html; sourceTree = "<group>"; };
 		E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultNoTOPX.png; path = Resources/other_ui_images/DefaultNoTOPX.png; sourceTree = "<group>"; };
 		E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "DefaultNoTOPX@2x.png"; path = "Resources/other_ui_images/DefaultNoTOPX@2x.png"; sourceTree = "<group>"; };
+		E562C68815F7BC4B0031C416 /* UIView+PositioningUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+PositioningUtils.h"; path = "Categories/Views/UIView+PositioningUtils.h"; sourceTree = "<group>"; };
+		E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PositioningUtils.m"; path = "Categories/Views/UIView+PositioningUtils.m"; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
 		E5AFAE5715B8209D00E084D3 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		E5AFAE5815B8209D00E084D3 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
@@ -712,6 +716,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E562C68615F7BC040031C416 /* Own Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E562C68715F7BC130031C416 /* Views */,
+			);
+			name = "Own Categories";
+			sourceTree = "<group>";
+		};
+		E562C68715F7BC130031C416 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E562C68815F7BC4B0031C416 /* UIView+PositioningUtils.h */,
+				E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		E5AFAE5615B8209000E084D3 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -779,6 +800,7 @@
 				FE0DDD0E14AE34F8003B8778 /* Model */,
 				FE0DDD1014AE350F003B8778 /* Resources */,
 				FE3D9D2114DF109600B5E252 /* External libraries */,
+				E562C68615F7BC040031C416 /* Own Categories */,
 				FEBA71D2150CE1470016AD6E /* External Categories */,
 				FE0DDCDF14AE34D0003B8778 /* Frameworks */,
 				FE0DDCDD14AE34D0003B8778 /* Products */,
@@ -1297,6 +1319,7 @@
 				E5AFAE8815B820B400E084D3 /* SBJsonWriter.h in Headers */,
 				E5AFAE9515B8A1E500E084D3 /* BlogEntry.h in Headers */,
 				E5E2999315C5DCA40092ADBA /* TapDetectingWindow.h in Headers */,
+				E562C68A15F7BC4B0031C416 /* UIView+PositioningUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1602,6 +1625,7 @@
 				E5AFAE8915B820B400E084D3 /* SBJsonWriter.m in Sources */,
 				E5AFAE9615B8A1E500E084D3 /* BlogEntry.m in Sources */,
 				E5E2999415C5DCA40092ADBA /* TapDetectingWindow.m in Sources */,
+				E562C68B15F7BC4B0031C416 /* UIView+PositioningUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -294,17 +294,28 @@
 
 -(void)handleBack:(id)sender
 {
+	
+	__block __typeof__(self) blockSelf = self;
+	
+	
 	if (self.isShownFromMosaic) {
         [self showMosaic];
+		
+		double delayInSeconds = .2;
+		dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+		dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+			[blockSelf.navigationController popViewControllerAnimated:NO];
+		});
+		
     }
     else
     {
-        if (self.viewControllerToReturnTo) {
-            [self.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
+        if (blockSelf.viewControllerToReturnTo) {
+            [blockSelf.navigationController popToViewController:self.viewControllerToReturnTo animated:YES];
         }
         else {
             DBLog(@"WARNING! viewControllerToReturnTo not found");
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            [blockSelf.navigationController popToRootViewControllerAnimated:YES];
         }
 	}
 }
@@ -1173,10 +1184,14 @@
         return;
     }
     else {
-        
-#warning TODO: if link not set, dismiss and show error (or something)
-       
+		
         __block __typeof__(self) blockSelf = self;
+		
+		if ([blockSelf.articleTitle length]==0 || [[blockSelf.articleWeblink absoluteString] length]==0) {
+			DBLog(@"articleTitle or articleWeblink is nil");
+			return;
+		}
+		
         NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog", blockSelf.articleTitle, blockSelf.articleWeblink];
         
         TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
@@ -1218,6 +1233,7 @@
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
     
+	
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
     
 }

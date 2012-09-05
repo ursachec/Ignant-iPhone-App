@@ -156,6 +156,7 @@
     IGNMosaikViewController *mosaikVC = self.appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
+	mosaikVC.viewControllerToReturnTo = self;
     
     if (!mosaikVC.isMosaicImagesArrayNotEmpty && ![self.appDelegate checkIfAppOnline]) 
     {

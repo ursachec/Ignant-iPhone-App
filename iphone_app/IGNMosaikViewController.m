@@ -129,6 +129,10 @@ NSString * const kImageFilename = @"filename";
 
 -(IBAction)handleBack:(id)sender
 {
+	if (self.viewControllerToReturnTo) {
+		[self.parentNavigationController popToViewController:self.viewControllerToReturnTo animated:NO];
+	}
+	
     [self dismissModalViewControllerAnimated:YES];
 }
 
