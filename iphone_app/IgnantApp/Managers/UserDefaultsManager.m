@@ -91,6 +91,7 @@
     LOG_CURRENT_FUNCTION_AND_CLASS()
     
     NSMutableArray* currentUpdateDates = [self currentDatesForLeastRecentArticles];
+	NSLog(@"currentUpdateDates: %@", currentUpdateDates);
     NSString* currentCategoryId = categoryId;
     
     //check if an entry for the categoryId already exists and remove it

@@ -153,6 +153,9 @@ NSString * const kImageFilename = @"filename";
         [self removeCurrentImageViews];
         _currentColumnHeights = [@[ @0,@0, @0 ] mutableCopy];
         [self loadMoreMosaicImages];
+		
+		NSError* error = nil;
+		GATrackEvent(&error, @"mosaicVC", @"triggerMosaicReload", @"", -1);
     }
     else {
         DBLog(@"not triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);

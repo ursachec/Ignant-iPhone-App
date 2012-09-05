@@ -97,7 +97,6 @@
 @synthesize favouritesViewController = _favouritesViewController;
 @synthesize externalPageViewController = _externalPageViewController;
 
-@synthesize customLoadingView = _customLoadingView;
 @synthesize noInternetConnectionView = _noInternetConnectionView;
 
 @synthesize facebook = _facebook;
@@ -609,10 +608,8 @@ return _categoryViewController;
 }
 
 - (void)application:(UIApplication *)app didReceiveRemoteNotification:(NSDictionary *)userInfo
-{   
-#warning TODO: check if this is OK
+{
     [self.masterViewController loadLatestContent];
-    
 }
 
 #pragma mark - ui stuff
