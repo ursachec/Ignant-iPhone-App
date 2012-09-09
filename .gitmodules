@@ -4,3 +4,6 @@
 [submodule "submodules/DTCoreText"]
 	path = submodules/DTCoreText
 	url = git@github.com:ursachec/DTCoreText.git
+[submodule "submodules/sstoolkit"]
+	path = submodules/sstoolkit
+	url = git://github.com/samsoffes/sstoolkit.git

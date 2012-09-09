@@ -96,6 +96,8 @@
 		E5B8714815B097EF00720050 /* Constants_Google_Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */; };
 		E5E2999315C5DCA40092ADBA /* TapDetectingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = E5E2999115C5DCA40092ADBA /* TapDetectingWindow.h */; };
 		E5E2999415C5DCA40092ADBA /* TapDetectingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E2999215C5DCA40092ADBA /* TapDetectingWindow.m */; };
+		E5F355D215FCE6AC0099B9B7 /* libSSToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A28B5C15F901920051C5E7 /* libSSToolkit.a */; };
+		E5F355D315FCE6E30099B9B7 /* SSToolkitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5A28B6015F901920051C5E7 /* SSToolkitResources.bundle */; };
 		FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE014AE34D0003B8778 /* UIKit.framework */; };
 		FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE214AE34D0003B8778 /* Foundation.framework */; };
 		FE0DDCE514AE34D0003B8778 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE0DDCE414AE34D0003B8778 /* CoreGraphics.framework */; };
@@ -295,6 +297,34 @@
 			remoteGlobalIDString = A70F11DD148632CD009202BF;
 			remoteInfo = "Static Library";
 		};
+		E5A28B5B15F901920051C5E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = SSToolkit;
+		};
+		E5A28B5D15F901920051C5E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B239101D1357DC3E00ADE21B;
+			remoteInfo = SSToolkitTests;
+		};
+		E5A28B5F15F901920051C5E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B2C507EA151BA64400E94614;
+			remoteInfo = SSToolkitResources;
+		};
+		E5F355D015FCE6990099B9B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B2C507E9151BA64400E94614;
+			remoteInfo = SSToolkitResources;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -363,6 +393,7 @@
 		E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "DefaultNoTOPX@2x.png"; path = "Resources/other_ui_images/DefaultNoTOPX@2x.png"; sourceTree = "<group>"; };
 		E562C68815F7BC4B0031C416 /* UIView+PositioningUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+PositioningUtils.h"; path = "Categories/Views/UIView+PositioningUtils.h"; sourceTree = "<group>"; };
 		E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PositioningUtils.m"; path = "Categories/Views/UIView+PositioningUtils.m"; sourceTree = "<group>"; };
+		E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSToolkit.xcodeproj; path = ../submodules/sstoolkit/SSToolkit.xcodeproj; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
 		E5AFAE5715B8209D00E084D3 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		E5AFAE5815B8209D00E084D3 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
@@ -567,18 +598,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5F355D215FCE6AC0099B9B7 /* libSSToolkit.a in Frameworks */,
 				E52EEBBB15C7DD020017FBF7 /* libDTCoreText.a in Frameworks */,
+				41ACB7E0158A855A001D31B0 /* libSDWebImageARC.a in Frameworks */,
+				41A4AB1B15A1D0A50062A624 /* libsqlite3.0.dylib in Frameworks */,
+				FEC36AE41528F9F0004F19C8 /* libxml2.dylib in Frameworks */,
+				FEBA71D1150CE0E40016AD6E /* libz.dylib in Frameworks */,
 				E52EEBBA15C7DCE40017FBF7 /* CoreText.framework in Frameworks */,
 				41A4AB1D15A1D66D0062A624 /* MessageUI.framework in Frameworks */,
-				41A4AB1B15A1D0A50062A624 /* libsqlite3.0.dylib in Frameworks */,
 				41AFBA3315921D3B00B2C22A /* MediaPlayer.framework in Frameworks */,
 				41AFBA241592174500B2C22A /* AVFoundation.framework in Frameworks */,
-				41ACB7E0158A855A001D31B0 /* libSDWebImageARC.a in Frameworks */,
 				41F9E7371584F26A00F11927 /* ImageIO.framework in Frameworks */,
 				4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */,
-				FEC36AE41528F9F0004F19C8 /* libxml2.dylib in Frameworks */,
 				FEC36AE21528F974004F19C8 /* Security.framework in Frameworks */,
-				FEBA71D1150CE0E40016AD6E /* libz.dylib in Frameworks */,
 				FEBA71CF150CDF4C0016AD6E /* SystemConfiguration.framework in Frameworks */,
 				FEBA71CD150CDF420016AD6E /* CoreLocation.framework in Frameworks */,
 				FEBA71CB150CDF390016AD6E /* CFNetwork.framework in Frameworks */,
@@ -733,6 +765,16 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		E5A28B5215F901920051C5E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E5A28B5C15F901920051C5E7 /* libSSToolkit.a */,
+				E5A28B5E15F901920051C5E7 /* SSToolkitTests.app */,
+				E5A28B6015F901920051C5E7 /* SSToolkitResources.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E5AFAE5615B8209000E084D3 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -792,6 +834,7 @@
 		FE0DDCD114AE34D0003B8778 = {
 			isa = PBXGroup;
 			children = (
+				E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */,
 				E52EEB9D15C7DC640017FBF7 /* DTCoreText.xcodeproj */,
 				41ACB7CF158A8535001D31B0 /* SDWebImage.xcodeproj */,
 				FE0DDCE814AE34D0003B8778 /* IgnantApp */,
@@ -1338,6 +1381,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E5F355D115FCE6990099B9B7 /* PBXTargetDependency */,
 				E52EEBB815C7DCBE0017FBF7 /* PBXTargetDependency */,
 				41ACB7DF158A854E001D31B0 /* PBXTargetDependency */,
 			);
@@ -1375,6 +1419,10 @@
 				{
 					ProductGroup = 41ACB7D0158A8535001D31B0 /* Products */;
 					ProjectRef = 41ACB7CF158A8535001D31B0 /* SDWebImage.xcodeproj */;
+				},
+				{
+					ProductGroup = E5A28B5215F901920051C5E7 /* Products */;
+					ProjectRef = E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1448,6 +1496,27 @@
 			remoteRef = E52EEBB515C7DC650017FBF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		E5A28B5C15F901920051C5E7 /* libSSToolkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSToolkit.a;
+			remoteRef = E5A28B5B15F901920051C5E7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E5A28B5E15F901920051C5E7 /* SSToolkitTests.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SSToolkitTests.app;
+			remoteRef = E5A28B5D15F901920051C5E7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E5A28B6015F901920051C5E7 /* SSToolkitResources.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SSToolkitResources.bundle;
+			remoteRef = E5A28B5F15F901920051C5E7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1455,6 +1524,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5F355D315FCE6E30099B9B7 /* SSToolkitResources.bundle in Resources */,
 				FE4B50A8152B95890009406F /* IgnantTumblrFeedViewController.xib in Resources */,
 				FE0DDCED14AE34D0003B8778 /* InfoPlist.strings in Resources */,
 				FE0DDCFF14AE34D0003B8778 /* IGNMasterViewController_iPhone.xib in Resources */,
@@ -1642,6 +1712,11 @@
 			name = "Static Library";
 			targetProxy = E52EEBB715C7DCBE0017FBF7 /* PBXContainerItemProxy */;
 		};
+		E5F355D115FCE6990099B9B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SSToolkitResources;
+			targetProxy = E5F355D015FCE6990099B9B7 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1760,10 +1835,13 @@
 					"\"$(SRCROOT)/IgnantApp/SDImageLib\"",
 					"\"$(SRCROOT)/IgnantApp\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				USER_HEADER_SEARCH_PATHS = "/Users/cvursache/privat/ignant/Ignant-iPhone-App/**";
+				USER_HEADER_SEARCH_PATHS = "/Users/cvursache/privat/ignant/Ignant-iPhone-App/** /Users/cvursache/privat/ignant/Ignant-iPhone-App/submodules/sstoolkit/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1787,9 +1865,12 @@
 					"\"$(SRCROOT)/IgnantApp/SDImageLib\"",
 					"\"$(SRCROOT)/IgnantApp\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "/Users/cvursache/privat/ignant/Ignant-iPhone-App/**";
+				USER_HEADER_SEARCH_PATHS = "/Users/cvursache/privat/ignant/Ignant-iPhone-App/** /Users/cvursache/privat/ignant/Ignant-iPhone-App/submodules/sstoolkit/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
