@@ -9,16 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
-
 #import "IGNViewController.h"
-#import "IgnantImporter.h"
-#import "Facebook.h"
 
-#import "TapDetectingWindow.h"
-
-#import "DTAttributedTextView.h"
-
+@class IgnantImporter;
 @class BlogEntry;
+
+@protocol IgnantImporterDelegate;
+@protocol FBDialogDelegate;
+@protocol DTAttributedTextContentViewDelegate;
 
 @interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, DTAttributedTextContentViewDelegate>
 

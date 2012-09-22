@@ -348,12 +348,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    } else {
-        return YES;
-    }
+	NSLog(@"shouldAutorotateToInterfaceOrientation");
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 -(void)triggerLoadLatestDataIfNecessary

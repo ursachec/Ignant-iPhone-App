@@ -8,30 +8,24 @@
 
 #import "UserDefaultsManager.h"
 
-#import "Constants.h"
-
 @implementation UserDefaultsManager
 
-#pragma mark - User Defaults
--(NSDate*)lastUpdateForFirstRun
-{
+#pragma mark -
+
+-(NSDate*)lastUpdateForFirstRun {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kLastStoreUpdateKey];
 }
 
--(void)setLastUpdateDateForFirstRun:(NSDate*)date
-{
-    [[NSUserDefaults standardUserDefaults] setObject:date forKey:kLastStoreUpdateKey];        
+-(void)setLastUpdateDateForFirstRun:(NSDate*)date {
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:kLastStoreUpdateKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+#pragma mark -
 
--(NSDate*)lastUpdateDateForCategoryId:(NSString*)categoryId
-{
-    
+-(NSDate*)lastUpdateDateForCategoryId:(NSString*)categoryId {
     NSMutableArray* currentUpdateDates = [self currentUpdateDatesForCategories];
     NSString* currentCategoryId = categoryId;
-    
-    //check if an entry for the categoryId already exists and remove it
     NSDate* updateDateForCategoryId = nil;
     for (NSDictionary* anUpdateDateDictionary in currentUpdateDates) {
         NSString*  aCategoryId = [anUpdateDateDictionary objectForKey:kUpdateDatesForCategoriesKeyCategoryIdValue];
@@ -40,35 +34,27 @@
             break;
         }
     }
-    
     return updateDateForCategoryId;
 }
 
--(void)setLastUpdateDate:(NSDate*)date forCategoryId:(NSString*)categoryId
-{
+-(void)setLastUpdateDate:(NSDate*)date forCategoryId:(NSString*)categoryId {
     if (categoryId==nil) {
-        DBLog(@"setLastUpdateDate You are trying to set the last update date for a nil categoryId, exiting method");
+        DBLog(@"WARNING: setLastUpdateDate for a nil categoryId");
         return;
     }
-    
     NSMutableArray* currentUpdateDates = [self currentUpdateDatesForCategories];
     NSString* currentCategoryId = categoryId;
-    
-    //check if an entry for the categoryId already exists and remove it
     NSDictionary* dictionaryToRemove = nil;
     for (NSDictionary* anUpdateDateDictionary in currentUpdateDates) {
         NSString*  aCategoryId = [anUpdateDateDictionary objectForKey:kUpdateDatesForCategoriesKeyCategoryIdValue];
         if ([aCategoryId compare:currentCategoryId]==NSOrderedSame) {
-            dictionaryToRemove = anUpdateDateDictionary; break;
+            dictionaryToRemove = anUpdateDateDictionary;
+			break;
         }
     }
-    
-    //remove the found dictionary from the currentUpdateDates array
     if (dictionaryToRemove!=nil) {
         [currentUpdateDates removeObject:dictionaryToRemove];
     }
-    
-    //add the new dictionary to the currentUpdateDates array
     NSDictionary* newEntryDictionary = [NSDictionary dictionaryWithObjectsAndKeys:date,kUpdateDatesForCategoriesKeyDateValue,categoryId,kUpdateDatesForCategoriesKeyCategoryIdValue, nil];
     [currentUpdateDates addObject:newEntryDictionary];
     
@@ -76,25 +62,19 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(NSMutableArray*)currentUpdateDatesForCategories
-{
+-(NSMutableArray*)currentUpdateDatesForCategories {
     NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kUpdateDatesForCategoriesKey];
     if (updateDates==nil) {
         return [[NSMutableArray alloc] initWithCapacity:1];
     }
-    
     return [updateDates mutableCopy];
 }
 
--(NSDate*)dateForLeastRecentArticleWithCategoryId:(NSString*)categoryId
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+#pragma mark -
+
+-(NSDate*)dateForLeastRecentArticleWithCategoryId:(NSString*)categoryId {    
     NSMutableArray* currentUpdateDates = [self currentDatesForLeastRecentArticles];
-	NSLog(@"currentUpdateDates: %@", currentUpdateDates);
     NSString* currentCategoryId = categoryId;
-    
-    //check if an entry for the categoryId already exists and remove it
     NSDate* updateDateForCategoryId = nil;
     for (NSDictionary* anUpdateDateDictionary in currentUpdateDates) {
         NSString*  aCategoryId = [anUpdateDateDictionary objectForKey:kDatesForLeastRecentArticleKeyCategoryIdValue];
@@ -103,37 +83,27 @@
             break;
         }
     }
-    
     return updateDateForCategoryId;
 }
 
--(void)setDateForLeastRecentArticle:(NSDate*)date withCategoryId:(NSString*)categoryId
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+-(void)setDateForLeastRecentArticle:(NSDate*)date withCategoryId:(NSString*)categoryId {
     if (categoryId==nil || date==nil) {
-        DBLog(@"setDateForLeastRecentArticle: You are trying to set the date for least recent article a nil categoryIdor date, exiting function");
+        DBLog(@"WARNING: setDateForLeastRecentArticle for a nil categoryId or date");
         return;
     }
-    
     NSMutableArray* currentUpdateDates = [self currentDatesForLeastRecentArticles];
     NSString* currentCategoryId = categoryId;
-    
-    //check if an entry for the categoryId already exists and remove it
     NSDictionary* dictionaryToRemove = nil;
     for (NSDictionary* anUpdateDateDictionary in currentUpdateDates) {
         NSString*  aCategoryId = [anUpdateDateDictionary objectForKey:kDatesForLeastRecentArticleKeyCategoryIdValue];
         if ([aCategoryId compare:currentCategoryId]==NSOrderedSame) {
-            dictionaryToRemove = anUpdateDateDictionary; break;
+            dictionaryToRemove = anUpdateDateDictionary;
+			break;
         }
     }
-    
-    //remove the found dictionary from the currentUpdateDates array
     if (dictionaryToRemove!=nil) {
         [currentUpdateDates removeObject:dictionaryToRemove];
     }
-    
-    //add the new dictionary to the currentUpdateDates array
     NSDictionary* newEntryDictionary = [NSDictionary dictionaryWithObjectsAndKeys:date,kDatesForLeastRecentArticleKeyDateValue,categoryId,kDatesForLeastRecentArticleKeyCategoryIdValue, nil];
     [currentUpdateDates addObject:newEntryDictionary];
     
@@ -141,45 +111,35 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(NSMutableArray*)currentDatesForLeastRecentArticles
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+-(NSMutableArray*)currentDatesForLeastRecentArticles {
     NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kDatesForLeastRecentArticleKey];    
     if (updateDates==nil) {
         return [[NSMutableArray alloc] initWithCapacity:1];
     }
-    
     return [updateDates mutableCopy];
 }
 
-#pragma mark - blog entry favourites
--(BOOL)isBlogEntryFavourite:(NSString*)articleId
-{
+#pragma mark -
+
+-(BOOL)isBlogEntryFavourite:(NSString*)articleId {
     NSMutableArray* currentFavouriteIds = [self currentFavouriteBlogEntries];
     for (NSString* aArticleId in currentFavouriteIds) {
         if ([articleId compare:aArticleId]==NSOrderedSame)
             return true;
     }
-    
     return false;
 }
 
--(void)setIsBlogEntry:(NSString*)articleId favourite:(BOOL)favourite
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+-(void)setIsBlogEntry:(NSString*)articleId favourite:(BOOL)favourite {
     if (articleId==nil) {
         DBLog(@"setIsBlogEntry: You are trying to set the favourite state of nil articleId");
         return;
     }
-    
     NSMutableArray* currentFavouriteIds = [self currentFavouriteBlogEntries];    
     BOOL currentFavouriteStatus = [self isBlogEntryFavourite:articleId];
-    
-    if (currentFavouriteStatus == favourite)
+    if (currentFavouriteStatus == favourite) {
         return;
-    
+	}
     else if (favourite==true && currentFavouriteStatus==false) {
         [currentFavouriteIds addObject:articleId];
     }
@@ -191,21 +151,16 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(void)toggleIsFavouriteBlogEntry:(NSString*)articleId
-{
+-(void)toggleIsFavouriteBlogEntry:(NSString*)articleId {
     BOOL currentFavouriteState = [self isBlogEntryFavourite:articleId];
     [self setIsBlogEntry:articleId favourite:!currentFavouriteState];
 }
 
--(NSMutableArray*)currentFavouriteBlogEntries
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+-(NSMutableArray*)currentFavouriteBlogEntries {
     NSArray *updateDates = (NSArray*)[[NSUserDefaults standardUserDefaults] objectForKey:kFavouriteBlogEntriesKey];    
     if (updateDates==nil) {
         return [[NSMutableArray alloc] initWithCapacity:1];
     }
-    
     return [updateDates mutableCopy];
 }
 

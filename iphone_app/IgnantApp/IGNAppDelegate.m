@@ -11,6 +11,8 @@
 #import "Reachability.h"
 
 
+#import "IntroductionViewController.h"
+
 //import relevant view controller
 #import "IGNMasterViewController.h"
 #import "IGNDetailViewController.h"
@@ -46,6 +48,9 @@
 @property(nonatomic, readwrite, strong) UIView* toolbarGradientView;
 
 @property(nonatomic, readwrite, strong) NSString* deviceToken;
+
+
+@property(nonatomic, readwrite, strong) IntroductionViewController *introVC;
 
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;
@@ -137,11 +142,11 @@
     IGNMasterViewController *mVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil];
     mVC.managedObjectContext = self.managedObjectContext;
     self.masterViewController = mVC;
-        
+
+	
     NSArray *viewControllers = [[NSArray alloc] initWithObjects:mVC, nil];
     nav.viewControllers = viewControllers;
     self.navigationController = nav;
-    self.window.rootViewController = self.navigationController;
     
     
     // check the last update, stored in NSUserDefaults    
@@ -170,7 +175,11 @@
     //set up the go home button
     [self setupGoHomeButton];
     
+	
+
+	self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+	
     
     [self initializeFacebook];
     
@@ -620,7 +629,8 @@ return _categoryViewController;
     if (_ignantToolbar==nil) {
         
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
-        CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
+		
+        CGRect toolbarFrame = CGRectMake(0.0f, DeviceHeight-toolbarSize.height, toolbarSize.width, toolbarSize.height);
         UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
         aView.backgroundColor = [UIColor clearColor];
         if(DEBUG_SHOW_DEBUG_COLORS)

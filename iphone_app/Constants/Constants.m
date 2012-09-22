@@ -60,7 +60,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 NSString* const kAdressForMercedesPage = @"http://mb.mercedes-benz.com/de_DE";
 NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8";
 
-#if TARGET_IPHONE_SIMULATOR==TRUE
+#if TARGET_IPHONE_SIMULATOR==TRUE && false
 NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/ignant.php";
 NSString * const kAdressForImageServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/videosrv.php";

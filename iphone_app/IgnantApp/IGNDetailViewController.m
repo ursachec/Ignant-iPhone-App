@@ -22,6 +22,10 @@
 
 #import "IGNMosaikViewController.h"
 
+#import "IgnantImporter.h"
+#import "Facebook.h"
+
+
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
@@ -39,26 +43,19 @@
     BOOL _isExecutingWebviewTapAction;
     
     NSURL* _linkOptionsUrl;
- 
     CGFloat lastHeightForWebView;
 }
 
 -(void)setupArticleContentViewWithRemoteDataDictionary:(NSDictionary*)articleDictionary;
-
 -(void)setupNavigationEntries;
-
 -(void)setupUIElementsForBlogEntryTemplate:(NSString*)template;
-
 - (IBAction)showMercedes:(id)sender;
-
 -(IBAction) toggleLike:(id)sender;
 
 //social media
 -(void)postToFacebook;
 -(void)postToPinterest;
 -(void)postToTwitter;
-
-@property (nonatomic, assign) TapDetectingWindow *mWindow;
 
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
 @property (nonatomic, assign, readwrite) BOOL isImportingRelatedArticle;
@@ -218,6 +215,12 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+	
+	
+	BOOL st = (interfaceOrientation == (UIInterfaceOrientationPortrait));
+	NSLog(@"st: %@", st ? @"TRUE" : @"FALSE");
+	
+	
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     } else {
@@ -1062,10 +1065,11 @@
     
     __block UIView* blockSelfView = self.view;
     
+	
     CGFloat navigationBarHeight = 44.0f;
-    CGFloat scrollViewHeight = 366.0f;
     CGFloat statusBarHeight = 20.0f;
     CGFloat shareAndMoreToolbarHeight = 50.0f;
+	CGFloat scrollViewHeight = DeviceHeight-navigationBarHeight-statusBarHeight-shareAndMoreToolbarHeight;
     
     void (^toolbarblock)(void);
     toolbarblock = ^{
@@ -1572,6 +1576,7 @@
     return YES;
 }
 
+
 #pragma mark - swipe UIGestureRecognizer
 
 - (IBAction)handleRightSwipe:(id)sender 
@@ -1627,11 +1632,7 @@
 
 -(UIColor*)newRandomColor
 {
-    CGFloat r = arc4random() % 255;
-    CGFloat g = arc4random() % 255;
-    CGFloat b = arc4random() % 255;
-    
-    UIColor* c = [[UIColor alloc] initWithRed:r/255 green:g/255 blue:b/255 alpha:1.0f];
+    UIColor* c = [[UIColor alloc] initWithRed:arc4random()%255/255 green:arc4random()%255/255 blue:arc4random()%255/255 alpha:1.0f];
     
     return c;
 }
