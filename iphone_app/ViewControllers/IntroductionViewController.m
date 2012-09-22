@@ -38,7 +38,9 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	NSLog(@"shouldAutorotateToInterfaceOrientation");
+	
+    return YES;
 }
 
 @end

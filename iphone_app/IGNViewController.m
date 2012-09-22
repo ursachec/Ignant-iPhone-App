@@ -51,11 +51,33 @@
     if (self) {
         // Custom initialization
         
+		[self addObservers];
+		
         self.importer = nil;
                 
     }
     return self;
 }
+
+#pragma mark - notification observers
+
+- (void)addObservers {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange:)
+                                                 name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+}
+
+- (void)removeObservers {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+}
+
+- (void)deviceOrientationDidChange:(void*)object {
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+
+	NSLog(@"deviceOrientationDidChange");
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -95,10 +117,19 @@
 }
 
 #pragma mark - View lifecycle
+-(void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	
+	[self addObservers];
+	
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+	
+	[self removeObservers];
     
     [self.appDelegate setIsToolbarHidden:NO animated:YES];
 }
@@ -345,7 +376,7 @@
     if (_specificToolbar==nil) {
         
         CGSize toolbarSize = CGSizeMake(320.0f, 50.0f);
-        CGRect toolbarFrame = CGRectMake(0.0f, 480.0f-20.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
+        CGRect toolbarFrame = CGRectMake(0.0f, DeviceHeight-20.0f-toolbarSize.height, toolbarSize.width, toolbarSize.height);
         UIView* aView = [[UIView alloc] initWithFrame:toolbarFrame];
         aView.backgroundColor = [UIColor clearColor];
         if(DEBUG_SHOW_DEBUG_COLORS)
@@ -561,7 +592,7 @@
         aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         aView.backgroundColor = [UIColor whiteColor];
         
-        CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, 480.0f-20.0f);
+        CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, DeviceHeight-20.0f);
         UIImageView* aImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
         aImageView.image = [UIImage imageNamed:@"DefaultNoTOPX"];
         [aView addSubview:aImageView];
