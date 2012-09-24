@@ -38,7 +38,7 @@
 
 -(void)handleDoubleTap:(UITapGestureRecognizer*)recognizer
 {
-    if(self.delegate!=nil)
+    if([_delegate respondsToSelector:@selector(triggerActionForDoubleTapInView:)])
     {
         [_delegate triggerActionForDoubleTapInView:self];
     }
@@ -46,7 +46,7 @@
 
 -(void)handleTap:(UITapGestureRecognizer*)recognizer
 {
-    if(self.delegate!=nil)
+    if([_delegate respondsToSelector:@selector(triggerActionForTapInView:)])
     {
         [_delegate triggerActionForTapInView:self];
     }

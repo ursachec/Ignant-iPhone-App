@@ -11,9 +11,9 @@
 @class MosaicView;
 
 @protocol MosaicViewDelegate <NSObject>
+@optional
 -(void)triggerActionForTapInView:(MosaicView*)view;
 -(void)triggerActionForDoubleTapInView:(MosaicView*)view;
-
 @end
 
 @interface MosaicView : UIView

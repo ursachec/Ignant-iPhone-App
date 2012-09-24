@@ -145,7 +145,7 @@ NSString * const kImageFilename = @"filename";
     
     BOOL forceLoad = false;
     
-    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds>updateTimer) && !_isLoadingMoreMosaicImages)))  && [self.appDelegate checkIfAppOnline]) {
+    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds<updateTimer) && !_isLoadingMoreMosaicImages)))  && [self.appDelegate checkIfAppOnline]) {
 		
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
 		
@@ -173,7 +173,6 @@ NSString * const kImageFilename = @"filename";
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     NSError* error = nil;
 	GATrackPageView(&error, kGAPVMosaicView);
 }
@@ -181,17 +180,13 @@ NSString * const kImageFilename = @"filename";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-        
     [self setIsSpecificToolbarHidden:YES animated:NO];
-    
     [self loadLatestContent];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 
-    //trigger the drawing for the images
     [self drawSavedMosaicImages];
     
     // add the big mosaik view to the content scrollview
@@ -205,7 +200,6 @@ NSString * const kImageFilename = @"filename";
     
     //set up the mock navigation bar + toolbar
     [self setUpToolbarAndMockNavigationBar];
-    
     [self setIsSpecificNavigationBarHidden:NO animated:NO];
 }
 
@@ -626,19 +620,8 @@ NSString * const kImageFilename = @"filename";
 }
 
 #pragma mark - MosaicView delegate
-
--(void)triggerActionForDoubleTapInView:(MosaicView*)view
-{
-    DBLog(@"double tap in view");
-    
-    //[self toggleShowSpecificNavigationBarAnimated:YES];
-    //[self toggleShowSpecificToolbar];
-}
-
 -(void)triggerActionForTapInView:(MosaicView*)view
 {
-    DBLog(@"tap in view");
-    
     [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
 
@@ -730,14 +713,12 @@ NSString * const kImageFilename = @"filename";
 -(void)handleTapOnSpecificToolbarMercedes:(id)sender
 {
     LOG_CURRENT_FUNCTION()
-    
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
 -(void)handleTapOnSpecificToolbarRight:(id)sender
 {
     LOG_CURRENT_FUNCTION()
-    
     [self.appDelegate showMore];
     [self dismissModalViewControllerAnimated:YES];
 }
