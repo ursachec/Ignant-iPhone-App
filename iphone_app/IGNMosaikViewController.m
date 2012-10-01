@@ -139,13 +139,17 @@ NSString * const kImageFilename = @"filename";
 -(void)loadLatestContent
 {
 	
-	NSTimeInterval updateTimer = 1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
+	NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     BOOL forceLoad = false;
     
-    if ((forceLoad ||(!self.isMosaicImagesArrayNotEmpty || ((lastUpdateInSeconds==0 || lastUpdateInSeconds<updateTimer) && !_isLoadingMoreMosaicImages)))  && [self.appDelegate checkIfAppOnline]) {
+    if ((forceLoad ||
+		 (!self.isMosaicImagesArrayNotEmpty ||
+		  ((lastUpdateInSeconds==0 || lastUpdateInSeconds<updateTimer) && !_isLoadingMoreMosaicImages)))
+		&& [self.appDelegate checkIfAppOnline])
+	{
 		
         DBLog(@"triggering load latest data, lastUpdateInSeconds: %f // updateTimer: %f", lastUpdateInSeconds, updateTimer);
 		
