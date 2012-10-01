@@ -13,7 +13,9 @@
 
 #import "IntroductionViewController.h"
 
+
 //import relevant view controller
+#import "IgnantNavigationController.h"
 #import "IGNMasterViewController.h"
 #import "IGNDetailViewController.h"
 #import "IGNMoreOptionsViewController.h"
@@ -138,16 +140,17 @@
     _importer.persistentStoreCoordinator = self.persistentStoreCoordinator;
     _importer.delegate = self;
     
+	
+	
+	
     UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
     IGNMasterViewController *mVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil];
     mVC.managedObjectContext = self.managedObjectContext;
     self.masterViewController = mVC;
-
 	
     NSArray *viewControllers = [[NSArray alloc] initWithObjects:mVC, nil];
     nav.viewControllers = viewControllers;
     self.navigationController = nav;
-    
     
     // check the last update, stored in NSUserDefaults    
     if (self.shouldLoadDataForFirstRun) {
@@ -175,8 +178,6 @@
     //set up the go home button
     [self setupGoHomeButton];
     
-	
-
 	self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
 	

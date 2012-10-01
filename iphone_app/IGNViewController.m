@@ -151,13 +151,6 @@
     self.noInternetConnectionView = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-
 #pragma mark - specific navigation bar
 -(void)toggleShowSpecificNavigationBarAnimated:(BOOL)animated
 {    
@@ -594,7 +587,14 @@
         
         CGRect imageViewRect = CGRectMake(0.0f, 0.0f, loadingViewFrame.size.width, DeviceHeight-20.0f);
         UIImageView* aImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
-        aImageView.image = [UIImage imageNamed:@"DefaultNoTOPX"];
+		
+		if([UIScreen mainScreen].bounds.size.height == 568.0){
+			aImageView.image = [UIImage imageNamed:@"Default-568h-NO-TOP@2x.png"];
+		}
+		else{
+			aImageView.image = [UIImage imageNamed:@"DefaultNoTOPX"];
+		}
+		
         [aView addSubview:aImageView];
         
         CGSize aiSize = CGSizeMake(21.0f, 21.0f);
@@ -806,6 +806,23 @@
                              failure:^(NSError* aError){
                                  DBLog(@"could NOT load triggerLoadingImageAtURL: %@", blockThumbURL);
                              }];
+}
+
+
+#pragma mark - autorotation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

@@ -78,9 +78,11 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIButton" id="595891406">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<string key="NSFrameSize">{72, 37}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<string key="NSReuseIdentifierKey">_NS:225</string>
 				<reference key="IBUIBackgroundColor" ref="263677000"/>
 				<bool key="IBUIOpaque">NO</bool>
@@ -117,9 +119,11 @@
 				</object>
 			</object>
 			<object class="IBUIImageView" id="779202036">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<string key="NSFrameSize">{320, 50}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="619842379"/>
 				<string key="NSReuseIdentifierKey">_NS:567</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -134,9 +138,11 @@
 				</object>
 			</object>
 			<object class="IBUIButton" id="619842379">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<string key="NSFrameSize">{85, 37}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="595891406"/>
 				<string key="NSReuseIdentifierKey">_NS:225</string>
 				<reference key="IBUIBackgroundColor" ref="263677000"/>

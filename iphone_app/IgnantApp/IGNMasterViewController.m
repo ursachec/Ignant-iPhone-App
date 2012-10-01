@@ -346,12 +346,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	NSLog(@"shouldAutorotateToInterfaceOrientation");
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 -(void)triggerLoadLatestDataIfNecessary
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
@@ -959,5 +953,8 @@
     
     return defaultView;
 }
+
+
+
 
 @end

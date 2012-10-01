@@ -64,6 +64,7 @@
 		E55338FF15C08FB300D05795 /* DefaultNoTOPX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */; };
 		E562C68A15F7BC4B0031C416 /* UIView+PositioningUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E562C68815F7BC4B0031C416 /* UIView+PositioningUtils.h */; };
 		E562C68B15F7BC4B0031C416 /* UIView+PositioningUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */; };
+		E5AB094D1610E344006551D7 /* Default-568h-NO-TOP@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */; };
 		E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5AFAE5415B8207700E084D3 /* FBConnect.bundle */; };
 		E5AFAE6315B8209D00E084D3 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = E5AFAE5715B8209D00E084D3 /* Facebook.h */; };
 		E5AFAE6415B8209D00E084D3 /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AFAE5815B8209D00E084D3 /* Facebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -94,6 +95,8 @@
 		E5AFAE9615B8A1E500E084D3 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AFAE9415B8A1E500E084D3 /* BlogEntry.m */; };
 		E5B8714715B097EF00720050 /* Constants_Google_Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = E5B8714515B097EF00720050 /* Constants_Google_Analytics.h */; };
 		E5B8714815B097EF00720050 /* Constants_Google_Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */; };
+		E5CC1615161A3F3300905461 /* IgnantNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = E5CC1613161A3F3300905461 /* IgnantNavigationController.h */; };
+		E5CC1616161A3F3300905461 /* IgnantNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CC1614161A3F3300905461 /* IgnantNavigationController.m */; };
 		E5F355D215FCE6AC0099B9B7 /* libSSToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A28B5C15F901920051C5E7 /* libSSToolkit.a */; };
 		E5F355D315FCE6E30099B9B7 /* SSToolkitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5A28B6015F901920051C5E7 /* SSToolkitResources.bundle */; };
 		E5FEA9A4160E29E700787B58 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */; };
@@ -394,6 +397,7 @@
 		E562C68915F7BC4B0031C416 /* UIView+PositioningUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PositioningUtils.m"; path = "Categories/Views/UIView+PositioningUtils.m"; sourceTree = "<group>"; };
 		E5797AC016090034004928CA /* Useful_PP_Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Useful_PP_Macros.h; sourceTree = "<group>"; };
 		E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSToolkit.xcodeproj; path = ../submodules/sstoolkit/SSToolkit.xcodeproj; sourceTree = "<group>"; };
+		E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h-NO-TOP@2x.png"; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
 		E5AFAE5715B8209D00E084D3 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		E5AFAE5815B8209D00E084D3 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
@@ -424,7 +428,9 @@
 		E5AFAE9415B8A1E500E084D3 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		E5B8714515B097EF00720050 /* Constants_Google_Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants_Google_Analytics.h; path = Constants/Constants_Google_Analytics.h; sourceTree = "<group>"; };
 		E5B8714615B097EF00720050 /* Constants_Google_Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Constants_Google_Analytics.m; path = Constants/Constants_Google_Analytics.m; sourceTree = "<group>"; };
-		E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		E5CC1613161A3F3300905461 /* IgnantNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IgnantNavigationController.h; path = ViewControllers/IgnantNavigationController.h; sourceTree = SOURCE_ROOT; };
+		E5CC1614161A3F3300905461 /* IgnantNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IgnantNavigationController.m; path = ViewControllers/IgnantNavigationController.m; sourceTree = SOURCE_ROOT; };
+		E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		FE0DDCDC14AE34D0003B8778 /* IgnantApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IgnantApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE0DDCE014AE34D0003B8778 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FE0DDCE214AE34D0003B8778 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -822,18 +828,50 @@
 			name = Facebook;
 			sourceTree = "<group>";
 		};
-		FE0DDCD114AE34D0003B8778 = {
+		E5CC15D7161A358100905461 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				E5CC15D8161A359C00905461 /* SDWebImage */,
+				E5CC15D9161A35A400905461 /* DTCoreText */,
+				E5CC15DA161A35AB00905461 /* SSToolKit */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
+		E5CC15D8161A359C00905461 /* SDWebImage */ = {
+			isa = PBXGroup;
+			children = (
+				41ACB7CF158A8535001D31B0 /* SDWebImage.xcodeproj */,
+			);
+			name = SDWebImage;
+			sourceTree = "<group>";
+		};
+		E5CC15D9161A35A400905461 /* DTCoreText */ = {
+			isa = PBXGroup;
+			children = (
+				E52EEB9D15C7DC640017FBF7 /* DTCoreText.xcodeproj */,
+			);
+			name = DTCoreText;
+			sourceTree = "<group>";
+		};
+		E5CC15DA161A35AB00905461 /* SSToolKit */ = {
 			isa = PBXGroup;
 			children = (
 				E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */,
-				E52EEB9D15C7DC640017FBF7 /* DTCoreText.xcodeproj */,
-				41ACB7CF158A8535001D31B0 /* SDWebImage.xcodeproj */,
+			);
+			name = SSToolKit;
+			sourceTree = "<group>";
+		};
+		FE0DDCD114AE34D0003B8778 = {
+			isa = PBXGroup;
+			children = (
 				FE0DDCE814AE34D0003B8778 /* IgnantApp */,
 				FE0DDD0F14AE34FF003B8778 /* Controllers */,
 				FE0DDD1114AE3515003B8778 /* Views */,
 				FE0DDD0E14AE34F8003B8778 /* Model */,
 				FE0DDD1014AE350F003B8778 /* Resources */,
 				FE3D9D2114DF109600B5E252 /* External libraries */,
+				E5CC15D7161A358100905461 /* Vendor */,
 				E562C68615F7BC040031C416 /* Own Categories */,
 				FEBA71D2150CE1470016AD6E /* External Categories */,
 				FE0DDCDF14AE34D0003B8778 /* Frameworks */,
@@ -894,7 +932,6 @@
 		FE0DDCE914AE34D0003B8778 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */,
 				FE0DDCEA14AE34D0003B8778 /* IgnantApp-Info.plist */,
 				FEADC52F14B4F9E70041C8FD /* Settings.bundle */,
 				FE0DDCEB14AE34D0003B8778 /* InfoPlist.strings */,
@@ -1111,6 +1148,8 @@
 			children = (
 				E55338FC15C08FB200D05795 /* DefaultNoTOPX.png */,
 				E55338FD15C08FB200D05795 /* DefaultNoTOPX@2x.png */,
+				E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */,
+				E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */,
 				E50220ED15A5C3380033EEA4 /* mb_logo.png */,
 				E50220F115A5C4FF0033EEA4 /* mb_footer.png */,
 				4146FE3C1582430D001BAC75 /* navigation */,
@@ -1279,6 +1318,8 @@
 				FEA811B514B24C3D00E6C3CA /* IgnantNavigationController.xib */,
 				FEA811B614B24C3D00E6C3CA /* IgnantNavigationBar.h */,
 				FEA811B714B24C3D00E6C3CA /* IgnantNavigationBar.m */,
+				E5CC1613161A3F3300905461 /* IgnantNavigationController.h */,
+				E5CC1614161A3F3300905461 /* IgnantNavigationController.m */,
 			);
 			name = "Custom UI Elements";
 			sourceTree = "<group>";
@@ -1353,6 +1394,7 @@
 				E5AFAE8815B820B400E084D3 /* SBJsonWriter.h in Headers */,
 				E5AFAE9515B8A1E500E084D3 /* BlogEntry.h in Headers */,
 				E562C68A15F7BC4B0031C416 /* UIView+PositioningUtils.h in Headers */,
+				E5CC1615161A3F3300905461 /* IgnantNavigationController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1610,6 +1652,7 @@
 				E52EEBC015C85AD10017FBF7 /* arrow_right_244.png in Resources */,
 				E539C38515CF28A700562A43 /* DTWrapper.html in Resources */,
 				E5FEA9A4160E29E700787B58 /* Default-568h@2x.png in Resources */,
+				E5AB094D1610E344006551D7 /* Default-568h-NO-TOP@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1686,6 +1729,7 @@
 				E5AFAE8915B820B400E084D3 /* SBJsonWriter.m in Sources */,
 				E5AFAE9615B8A1E500E084D3 /* BlogEntry.m in Sources */,
 				E562C68B15F7BC4B0031C416 /* UIView+PositioningUtils.m in Sources */,
+				E5CC1616161A3F3300905461 /* IgnantNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

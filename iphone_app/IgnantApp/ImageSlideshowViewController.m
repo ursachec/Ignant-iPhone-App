@@ -103,15 +103,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	BOOL st = (interfaceOrientation == (UIInterfaceOrientationPortrait | UIInterfaceOrientationLandscapeLeft | UIInterfaceOrientationLandscapeRight));
-	NSLog(@"st: %@", st ? @"TRUE" : @"FALSE");
-	
-    // Return YES for supported orientations
-    return st;
-}
-
 #pragma mark - article images cache
 
 -(void)setUpScrollViewWithImages:(NSArray*)images
@@ -233,5 +224,22 @@
     _slideshowPageControl.currentPage = _activePage;
     
     [scrollView layoutSubviews];
+}
+
+
+#pragma mark - autorotation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation==UIInterfaceOrientationMaskAllButUpsideDown);
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 @end
