@@ -10,10 +10,6 @@
 
 #import "Reachability.h"
 
-
-#import "IntroductionViewController.h"
-
-
 //import relevant view controller
 #import "IgnantNavigationController.h"
 #import "IGNMasterViewController.h"
@@ -50,9 +46,6 @@
 @property(nonatomic, readwrite, strong) UIView* toolbarGradientView;
 
 @property(nonatomic, readwrite, strong) NSString* deviceToken;
-
-
-@property(nonatomic, readwrite, strong) IntroductionViewController *introVC;
 
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;

@@ -45,8 +45,6 @@
 		41AFBA3315921D3B00B2C22A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41AFBA3215921D3B00B2C22A /* MediaPlayer.framework */; };
 		41B30984157FD87500C65CBA /* IgnantNoInternetConnectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B30983157FD87500C65CBA /* IgnantNoInternetConnectionView.m */; };
 		41B30987157FD89600C65CBA /* IgnantNoInternetConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41B30986157FD89600C65CBA /* IgnantNoInternetConnectionView.xib */; };
-		41B3098B1580D7EE00C65CBA /* IntroductionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B309891580D7ED00C65CBA /* IntroductionViewController.m */; };
-		41B3098C1580D7EE00C65CBA /* IntroductionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */; };
 		41B309901580E54900C65CBA /* AlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B3098F1580E54900C65CBA /* AlertManager.m */; };
 		41BBCCA11567D91D003DD66B /* TumblrEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BBCCA01567D91D003DD66B /* TumblrEntry.m */; };
 		41BC104E15726A140071A4D6 /* Constants_API_Flow_Control.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BC104D15726A140071A4D6 /* Constants_API_Flow_Control.m */; };
@@ -167,7 +165,6 @@
 		FE1B2C681559A03300F7FFF8 /* toolbarTopWithHexagon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE1B2C371559A03300F7FFF8 /* toolbarTopWithHexagon@2x.png */; };
 		FE33F6B014B898ED00A44ABA /* IgnantLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE33F6AF14B898ED00A44ABA /* IgnantLoadingView.xib */; };
 		FE33F6B314B89B0700A44ABA /* IgnantLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE33F6B214B89B0700A44ABA /* IgnantLoadingView.m */; };
-		FE3D9D2514DF10C700B5E252 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D9D2414DF10C700B5E252 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FE4B50A7152B951D0009406F /* IgnantTumblrFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE4B50A4152B94A20009406F /* IgnantTumblrFeedViewController.m */; };
 		FE4B50A8152B95890009406F /* IgnantTumblrFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE4B50A5152B94A20009406F /* IgnantTumblrFeedViewController.xib */; };
 		FE62059515386C1300339F12 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE62059415386A6D00339F12 /* EGORefreshTableHeaderView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -372,9 +369,6 @@
 		41B30982157FD87500C65CBA /* IgnantNoInternetConnectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IgnantNoInternetConnectionView.h; path = Views/IgnantNoInternetConnectionView.h; sourceTree = "<group>"; };
 		41B30983157FD87500C65CBA /* IgnantNoInternetConnectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IgnantNoInternetConnectionView.m; path = Views/IgnantNoInternetConnectionView.m; sourceTree = "<group>"; };
 		41B30986157FD89600C65CBA /* IgnantNoInternetConnectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IgnantNoInternetConnectionView.xib; path = Views/IgnantNoInternetConnectionView.xib; sourceTree = "<group>"; };
-		41B309881580D7ED00C65CBA /* IntroductionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroductionViewController.h; path = ViewControllers/IntroductionViewController.h; sourceTree = "<group>"; };
-		41B309891580D7ED00C65CBA /* IntroductionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IntroductionViewController.m; path = ViewControllers/IntroductionViewController.m; sourceTree = "<group>"; };
-		41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IntroductionViewController.xib; path = ViewControllers/IntroductionViewController.xib; sourceTree = "<group>"; };
 		41B3098E1580E54900C65CBA /* AlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertManager.h; path = Managers/AlertManager.h; sourceTree = "<group>"; };
 		41B3098F1580E54900C65CBA /* AlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertManager.m; path = Managers/AlertManager.m; sourceTree = "<group>"; };
 		41BBCC9F1567D91D003DD66B /* TumblrEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TumblrEntry.h; sourceTree = "<group>"; };
@@ -508,8 +502,6 @@
 		FE33F6AF14B898ED00A44ABA /* IgnantLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IgnantLoadingView.xib; sourceTree = "<group>"; };
 		FE33F6B114B89B0700A44ABA /* IgnantLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IgnantLoadingView.h; sourceTree = "<group>"; };
 		FE33F6B214B89B0700A44ABA /* IgnantLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IgnantLoadingView.m; sourceTree = "<group>"; };
-		FE3D9D2314DF10C700B5E252 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		FE3D9D2414DF10C700B5E252 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		FE4B50A3152B94A20009406F /* IgnantTumblrFeedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IgnantTumblrFeedViewController.h; sourceTree = "<group>"; };
 		FE4B50A4152B94A20009406F /* IgnantTumblrFeedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IgnantTumblrFeedViewController.m; sourceTree = "<group>"; };
 		FE4B50A5152B94A20009406F /* IgnantTumblrFeedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IgnantTumblrFeedViewController.xib; sourceTree = "<group>"; };
@@ -709,16 +701,6 @@
 				41ACB7DD158A8536001D31B0 /* libSDWebImageARC+MKAnnotation.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		41B3098D1580D80B00C65CBA /* Introduction */ = {
-			isa = PBXGroup;
-			children = (
-				41B309881580D7ED00C65CBA /* IntroductionViewController.h */,
-				41B309891580D7ED00C65CBA /* IntroductionViewController.m */,
-				41B3098A1580D7EE00C65CBA /* IntroductionViewController.xib */,
-			);
-			name = Introduction;
 			sourceTree = "<group>";
 		};
 		41F9E7881584FB0800F11927 /* Tumblr */ = {
@@ -959,7 +941,6 @@
 		FE0DDD0F14AE34FF003B8778 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				41B3098D1580D80B00C65CBA /* Introduction */,
 				416AB6F01577FCE600625B03 /* Abstract Controllers */,
 				FEC82EDC154B2E45004F4E95 /* Home */,
 				FEC82EDD154B2E52004F4E95 /* Article Detail  */,
@@ -1128,19 +1109,9 @@
 				FEBA71A5150CDE800016AD6E /* ASIHTTPRequest */,
 				FEBA71C2150CDEDE0016AD6E /* Reachability */,
 				FE62059215386A5B00339F12 /* EGORefreshTableViewHeader */,
-				FE3D9D2214DF10B700B5E252 /* Base64 encoding/decoding */,
 			);
 			name = "External libraries";
 			path = IgnantApp;
-			sourceTree = "<group>";
-		};
-		FE3D9D2214DF10B700B5E252 /* Base64 encoding/decoding */ = {
-			isa = PBXGroup;
-			children = (
-				FE3D9D2314DF10C700B5E252 /* NSData+Base64.h */,
-				FE3D9D2414DF10C700B5E252 /* NSData+Base64.m */,
-			);
-			name = "Base64 encoding/decoding";
 			sourceTree = "<group>";
 		};
 		FE42566315599F61008E0911 /* Images */ = {
@@ -1623,7 +1594,6 @@
 				FE1B2C671559A03300F7FFF8 /* toolbarTopWithHexagon.png in Resources */,
 				FE1B2C681559A03300F7FFF8 /* toolbarTopWithHexagon@2x.png in Resources */,
 				41B30987157FD89600C65CBA /* IgnantNoInternetConnectionView.xib in Resources */,
-				41B3098C1580D7EE00C65CBA /* IntroductionViewController.xib in Resources */,
 				4146FE3E15824346001BAC75 /* arrow_back.png in Resources */,
 				419F88101586672F000A5BAF /* Localizable.strings in Resources */,
 				41AB131015937FF800CB6D77 /* ign_footer.jpg in Resources */,
@@ -1683,7 +1653,6 @@
 				FEE61BC214DD88E700A169BF /* CategoriesViewController.m in Sources */,
 				FEE61BD114DD891500A169BF /* ContactViewController.m in Sources */,
 				FEE61BE114DD974A00A169BF /* IGNViewController.m in Sources */,
-				FE3D9D2514DF10C700B5E252 /* NSData+Base64.m in Sources */,
 				FE12C4D114E3F08B008053ED /* ImageSlideshowViewController.m in Sources */,
 				FEF0EB5D15042E9600571E99 /* IgnantLoadingMoreCell.m in Sources */,
 				FE8CCA4E15066AF500BB22A8 /* Category.m in Sources */,
@@ -1709,7 +1678,6 @@
 				414A052C15760B3600DDB8EA /* EasySocialMedia.m in Sources */,
 				416AB6ED1577A68100625B03 /* UserDefaultsManager.m in Sources */,
 				41B30984157FD87500C65CBA /* IgnantNoInternetConnectionView.m in Sources */,
-				41B3098B1580D7EE00C65CBA /* IntroductionViewController.m in Sources */,
 				41B309901580E54900C65CBA /* AlertManager.m in Sources */,
 				41F9E78D1584FB3800F11927 /* TumblrCell.m in Sources */,
 				415A9E4A159B6AD400BC2B2C /* MoreCell.m in Sources */,

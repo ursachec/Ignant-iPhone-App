@@ -18,7 +18,7 @@
 #import "IgnantLoadingView.h"
 
 #import "NSString+HTML.h"
-#import "NSData+Base64.h"
+
 
 #import "IGNMosaikViewController.h"
 
