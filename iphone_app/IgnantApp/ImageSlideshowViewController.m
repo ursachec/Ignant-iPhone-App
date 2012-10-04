@@ -94,8 +94,6 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -107,6 +105,10 @@
 
 -(void)setUpScrollViewWithImages:(NSArray*)images
 {
+	
+	CGFloat currentScreenWidth = [[UIScreen mainScreen] currentBounds].size.width;
+	CGFloat currentScreenHeight = [[UIScreen mainScreen] currentBounds].size.height;
+	
     //first of all remove every subview on the scrolview
     for (UIView *v in [_imageScrollView subviews]) {
             [v removeFromSuperview];
@@ -129,7 +131,7 @@
         if(imageURLString==nil)
             return;
         
-        CGFloat maxWidth = 320.0f;
+        CGFloat maxWidth = currentScreenWidth;
         CGFloat cImageWidth = 0.0f, cImageHeight = 0.0f, scale = 1.0;
         
         if (imageWidth)
@@ -139,7 +141,7 @@
         
         
         if (cImageWidth==0) 
-            cImageWidth = 320.0f;
+            cImageWidth = currentScreenWidth;
         
         if (cImageHeight==0) 
             cImageHeight = _imageScrollView.frame.size.height;  
@@ -154,8 +156,7 @@
         
         UIImageView *newImageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*_imageScrollView.frame.size.width, (_imageScrollView.frame.size.height-cImageHeight)/2, cImageWidth , cImageHeight)];
         newImageView.contentMode = UIViewContentModeScaleAspectFit;
-        
-		
+        newImageView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin;
 		
 		CGSize avSize = CGSizeMake(21.0f, 21.0f);
 		CGFloat scalingFactor = 0.8;
@@ -203,8 +204,6 @@
 							  }
 							  failure:^(NSError* error){ DBLog(@"error");
 							  }];
-
-	
         
         [self.imageScrollView addSubview:newImageView];
 
@@ -219,13 +218,14 @@
 #pragma mark - UIScrollView delegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
+	CGFloat currentScreenWidth = [[UIScreen mainScreen] currentBounds].size.width;
+	
     CGPoint cO = scrollView.contentOffset;
-    _activePage = (NSUInteger)(cO.x/320.0f);    
+    _activePage = (NSUInteger)(cO.x/currentScreenWidth);    
     _slideshowPageControl.currentPage = _activePage;
     
     [scrollView layoutSubviews];
 }
-
 
 #pragma mark - autorotation
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -242,4 +242,21 @@
 {
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
+
+#pragma mark new subview layout
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	_imageScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
+	[self setUpScrollViewWithImages:_remoteImagesArray];
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+    //first of all remove every subview on the scrolview
+    for (UIView *v in [_imageScrollView subviews]) {
+		[v removeFromSuperview];
+    }
+}
+
+
 @end
