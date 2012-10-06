@@ -50,34 +50,12 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
-		[self addObservers];
-		
+        		
         self.importer = nil;
                 
     }
     return self;
 }
-
-#pragma mark - notification observers
-
-- (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(deviceOrientationDidChange:)
-                                                 name:@"UIDeviceOrientationDidChangeNotification" object:nil];
-}
-
-- (void)removeObservers {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"UIDeviceOrientationDidChangeNotification" object:nil];
-}
-
-- (void)deviceOrientationDidChange:(void*)object {
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-
-	NSLog(@"deviceOrientationDidChange");
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -120,17 +98,13 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-	
-	[self addObservers];
-	
+		
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	
-	[self removeObservers];
-    
+	   
     [self.appDelegate setIsToolbarHidden:NO animated:YES];
 }
 
