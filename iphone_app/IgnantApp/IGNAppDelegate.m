@@ -215,7 +215,7 @@
 }
 
 
-#pragma mark - 
+#pragma mark -
 -(void)setupGoogleAnalytics
 {
     LOG_CURRENT_FUNCTION()
@@ -233,9 +233,10 @@
         DBLog(@"error in setCustomVariableAtIndex");
     }
     
-	
-	
-	GATrackEvent(&error, @"Application iOS", @"Launch iOS", @"Example iOS", 99);
+	NSString* systemVersion = [UIDevice currentDevice].systemVersion;
+	NSString* model = [UIDevice currentDevice].model;
+	NSString* deviceInfo = [NSString stringWithFormat:@"version:%@|model:%@",systemVersion, model];
+	GATrackEvent(&error, @"Application iOS", @"Launch iOS", deviceInfo, 99);
 	GATrackPageView(&error, kGAPVAppEntryPoint);
 }
 
