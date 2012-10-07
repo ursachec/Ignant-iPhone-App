@@ -27,6 +27,7 @@ define('API_COMMAND_GET_LATEST_ARTICLES_FOR_CATEGORY','getLatestArticlesForCateg
 define('API_COMMAND_GET_SET_OF_MOSAIC_IMAGES','getSetOfMosaicImages');
 define('API_COMMAND_GET_MORE_TUMBLR_ARTICLES','getMoreTumblrArticles');
 define('API_COMMAND_GET_LATEST_TUMBLR_ARTICLES','getLatestTumblrArticles');
+define('API_COMMAND_SHOULD_RELOAD_FIRST_RUN_DATA','getShouldReloadDataForTheFirstRun');
 define('API_COMMAND_APP_STORE_LINK','asl');
 
 define('API_COMMAND_TEST','test');
@@ -54,6 +55,11 @@ $contentProxy = new JSONContentProxy();
 $apiCommand = $_GET[GET_ACTION];
 $acceptedLanguages = array('de','en');
 
+function getCategories()
+{
+	global $contentProxy;
+	return $contentProxy->getJSONReadyCategories();
+}
 
 function getContentLanguage($pLanguage)
 {
@@ -65,6 +71,12 @@ function getContentLanguage($pLanguage)
 	return DEFAULT_LANGUAGE;
 }
 
+
+//set the right HTTP headers
+header('Content-Type: application/json');
+
+
+//handling API calls
 if(strcmp($apiCommand,API_COMMAND_IS_SERVER_REACHABLE)==0)
 {
 	//TODO: define when the server is defined as not reachable
@@ -83,6 +95,20 @@ else if(strcmp($apiCommand,API_COMMAND_APP_STORE_LINK)==0)
 	exit;
 }
 
+else if(strcmp($apiCommand, API_COMMAND_SHOULD_RELOAD_FIRST_RUN_DATA)==0)
+{
+	//TODO: update date before uploading
+	$referenceAPIUpdate = mktime(0, 0, 0, 10, 7, 2012);
+	$lastFetch = $_GET[TL_LAST_FIRST_DATA_FETCH];
+
+	$shouldReload = false;
+	if ($referenceAPIUpdate!=0 && $lastFetch<$referenceAPIUpdate) {
+		$shouldReload = true;
+	}
+
+	$finalJSONArrayForExport[TL_SHOULD_FETCH_FIRST_DATA] = $shouldReload;
+}
+
 else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
 {
 	$dTInDB = false;
@@ -95,14 +121,8 @@ else if(strcmp($apiCommand,API_COMMAND_FOR_NOTIFICATIONS)==0)
 		//if $dTInDB is TRUE, all is fine, otherwise an error has occured
 	}
 	
-	if($dTInDB)
-	{
-		$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = true;	
-	}
-	else
-	{
-		$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = false;
-	}
+	$finalJSONArrayForExport[API_KEY_DID_REGISTER_FOR_NOTIFICATIONS] = $dTInDB;	
+
 }
 
 else if(strcmp($apiCommand,API_COMMAND_GET_DATA_FOR_FIRST_RUN)==0)

@@ -33,6 +33,11 @@ define('TL_RETURN_SLIDESHOW_IMAGE','slideshowImg');
 define('TL_NO_POSTS','noposts');
 
 
+//SHOULD RELOAD
+define('TL_LAST_FIRST_DATA_FETCH','lastFetch');
+define('TL_SHOULD_FETCH_FIRST_DATA','shouldFetch');
+
+
 //GENERAL
 define('IGNANT_OBJECT_TYPE_MOSAIC_ENTRY','mosaic_entry');
 define('IGNANT_OBJECT_TYPE_LIGHT_ARTICLE','light_article');
