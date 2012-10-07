@@ -7,3 +7,6 @@
 [submodule "submodules/sstoolkit"]
 	path = submodules/sstoolkit
 	url = git://github.com/samsoffes/sstoolkit.git
+[submodule "submodules/afnetworking"]
+	path = submodules/afnetworking
+	url = git://github.com/AFNetworking/AFNetworking.git
