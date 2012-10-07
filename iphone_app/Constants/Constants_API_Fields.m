@@ -34,6 +34,9 @@ NSString * const kTLReturnSlideshowImage = @"slideshowImg";
 NSString * const kTLNoPosts = @"noposts";
 
 
+NSString * const kTLLastFirstDataFetch = @"lastFetch";
+NSString * const kTLShouldFetchFirstData = @"shouldFetch";
+
 //METAINFORMATION
 NSString * const kMetaInformationFlagNoMoreObjects = @"no_more_objects";
 

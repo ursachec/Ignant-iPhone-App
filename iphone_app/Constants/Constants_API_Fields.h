@@ -28,6 +28,9 @@ extern NSString * const kTLReturnSlideshowImage;
 
 extern NSString * const kTLNoPosts;
 
+extern NSString * const kTLLastFirstDataFetch;
+extern NSString * const kTLShouldFetchFirstData;
+
 
 extern NSString * const kMetaInformationFlagNoMoreObjects;
 

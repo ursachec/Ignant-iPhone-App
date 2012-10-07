@@ -10,6 +10,8 @@
 
 #import "Reachability.h"
 
+#import "AFIgnantAPIClient.h"
+
 //import relevant view controller
 #import "IgnantNavigationController.h"
 #import "IGNMasterViewController.h"
@@ -134,8 +136,6 @@
     _importer.delegate = self;
     
 	
-	
-	
     UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
     IGNMasterViewController *mVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil];
     mVC.managedObjectContext = self.managedObjectContext;
@@ -161,7 +161,35 @@
             [self fetchAndLoadDataForFirstRun];
         }
     }
-    
+	
+	//check with the server if the firstData should be reloaded
+	else if([self checkIfAppOnline])
+	{
+		__block __typeof__(self) blockSelf = self;
+			
+		NSDate *lastUpdate = [self.userDefaultsManager lastUpdateForFirstRun];
+		NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];
+		
+		[[AFIgnantAPIClient sharedClient] getContentWithParameters:@{kParameterAction:kAPICommandShouldReloadDataForTheFirstRun, kTLLastFirstDataFetch:lastUpdateTimeStamp}
+												success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+												  
+												  if ([responseJSON isKindOfClass:[NSDictionary class]]) {
+													  BOOL shouldReload = false;
+													  id responseValue = [responseJSON objectForKey:kTLShouldFetchFirstData];
+													  if ([responseValue isKindOfClass:[NSNumber class]]) {
+														  shouldReload = [responseValue boolValue];
+													  }
+													  if (shouldReload) {
+														  [blockSelf fetchAndLoadDataForFirstRun];
+													  }													  
+												  }
+												  
+											  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+												  DBLog(@"failure");
+											  }];
+	}
+	
+	
     //set up the toolbar
     [self.navigationController.view addSubview:self.ignantToolbar];
     
@@ -545,6 +573,14 @@ return _categoryViewController;
 }
 
 #pragma mark - getting content from the server
+
+-(void)fetchShouldReloadData
+{
+
+	//fetch should reload
+	
+}
+
 -(void)fetchAndLoadDataForFirstRun
 {
     self.isLoadingDataForFirstRun = YES;

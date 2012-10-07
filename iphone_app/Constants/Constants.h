@@ -82,6 +82,7 @@ extern NSString * const kAdressForContentServer;
 extern NSString * const kAdressForImageServer;
 extern NSString * const kAdressForVideoServer;
 extern NSString * const kReachabilityHostnameToCheck;
+extern NSString * const kAFContentBaseURL;
 
 //top parameter names
 extern NSString * const kParameterAction;
@@ -107,6 +108,7 @@ extern NSString * const kAPICommandGetSingleArticle;
 extern NSString * const kAPICommandGetSetOfMosaicImages;
 extern NSString * const kAPICommandGetMoreTumblrArticles;
 extern NSString * const kAPICommandGetLatestTumblrArticles;
+extern NSString * const kAPICommandShouldReloadDataForTheFirstRun;
 
 
 //getting content

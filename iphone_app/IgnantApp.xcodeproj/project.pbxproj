@@ -83,6 +83,8 @@
 		E56C0BAD16220822004C1402 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E56C0B9A16220822004C1402 /* AFXMLRequestOperation.m */; };
 		E56C0BAE16220822004C1402 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = E56C0B9B16220822004C1402 /* UIImageView+AFNetworking.h */; };
 		E56C0BAF16220822004C1402 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = E56C0B9C16220822004C1402 /* UIImageView+AFNetworking.m */; };
+		E58DAE9D16221CCD00150F2F /* AFIgnantAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E58DAE9B16221CCD00150F2F /* AFIgnantAPIClient.h */; };
+		E58DAE9E16221CCD00150F2F /* AFIgnantAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */; };
 		E5AB094D1610E344006551D7 /* Default-568h-NO-TOP@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */; };
 		E5AFAE5515B8207700E084D3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5AFAE5415B8207700E084D3 /* FBConnect.bundle */; };
 		E5AFAE6315B8209D00E084D3 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = E5AFAE5715B8209D00E084D3 /* Facebook.h */; };
@@ -432,6 +434,8 @@
 		E56C0B9B16220822004C1402 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		E56C0B9C16220822004C1402 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		E5797AC016090034004928CA /* Useful_PP_Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Useful_PP_Macros.h; sourceTree = "<group>"; };
+		E58DAE9B16221CCD00150F2F /* AFIgnantAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFIgnantAPIClient.h; sourceTree = "<group>"; };
+		E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFIgnantAPIClient.m; sourceTree = "<group>"; };
 		E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSToolkit.xcodeproj; path = ../submodules/sstoolkit/SSToolkit.xcodeproj; sourceTree = "<group>"; };
 		E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h-NO-TOP@2x.png"; sourceTree = "<group>"; };
 		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
@@ -690,6 +694,7 @@
 		414A052715760B0000DDB8EA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E56C0BD516221C1B004C1402 /* Networking Extensions */,
 				FEC82EE0154B2FC9004F4E95 /* Data importers */,
 				414A052915760B0700DDB8EA /* Social Media */,
 				E5797AC016090034004928CA /* Useful_PP_Macros.h */,
@@ -820,6 +825,15 @@
 			);
 			name = AFNetworking;
 			path = ../submodules/afnetworking/AFNetworking;
+			sourceTree = "<group>";
+		};
+		E56C0BD516221C1B004C1402 /* Networking Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E58DAE9B16221CCD00150F2F /* AFIgnantAPIClient.h */,
+				E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */,
+			);
+			name = "Networking Extensions";
 			sourceTree = "<group>";
 		};
 		E5A28B5215F901920051C5E7 /* Products */ = {
@@ -1448,6 +1462,7 @@
 				E56C0BAA16220822004C1402 /* AFURLConnectionOperation.h in Headers */,
 				E56C0BAC16220822004C1402 /* AFXMLRequestOperation.h in Headers */,
 				E56C0BAE16220822004C1402 /* UIImageView+AFNetworking.h in Headers */,
+				E58DAE9D16221CCD00150F2F /* AFIgnantAPIClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1791,6 +1806,7 @@
 				E56C0BAB16220822004C1402 /* AFURLConnectionOperation.m in Sources */,
 				E56C0BAD16220822004C1402 /* AFXMLRequestOperation.m in Sources */,
 				E56C0BAF16220822004C1402 /* UIImageView+AFNetworking.m in Sources */,
+				E58DAE9E16221CCD00150F2F /* AFIgnantAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

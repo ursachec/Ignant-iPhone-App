@@ -331,11 +331,35 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
         NSString *categoryId = [oneCategory objectForKey:kFKCategoryId];
         NSString *categoryDescription = [oneCategory objectForKey:kFKCategoryDescription];
         
-        //create new BlogEntry
-        self.currentCategory = nil;
-        self.currentCategory.categoryId = categoryId;
-        self.currentCategory.name = categoryName;
-        self.currentCategory.categoryDescription = categoryDescription;
+		
+		//check if entry with this articleId already exists
+		NSFetchRequest *checkRequest = self.checkingFetchRequestForCategories;
+		[checkRequest setPredicate:[NSPredicate predicateWithFormat:@"categoryId == %@", categoryId]];
+		
+		DBLog(@"executing fetch request...");
+		NSError *error = nil;
+		NSArray *result = [self.insertionContext executeFetchRequest:checkRequest error:&error];
+		if (error==nil) {
+			
+			//rewrite logic can be implemented here
+			if ([result count]>0) {
+				NSLog(@"found category: %@", categoryName);
+				continue;
+			}
+			else
+			{
+				//create new BlogEntry
+				self.currentCategory = nil;
+				self.currentCategory.categoryId = categoryId;
+				self.currentCategory.name = categoryName;
+				self.currentCategory.categoryDescription = categoryDescription;
+			}
+		}
+		else {
+#warning handle fetch error
+			DBLog(@"error is not nil this should be handled");
+		}
+        
     }
     
     //----------------------------------------------------
