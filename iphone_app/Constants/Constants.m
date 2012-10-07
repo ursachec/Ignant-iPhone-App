@@ -60,11 +60,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 NSString* const kAdressForMercedesPage = @"http://mb.mercedes-benz.com/de_DE";
 NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8";
 
-#if TARGET_IPHONE_SIMULATOR==TRUE && false
-NSString * const kAdressForContentServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/ignant.php";
-NSString * const kAdressForImageServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/imgsrv.php";
-NSString * const kAdressForVideoServer = @"http://localhost/ignant/Ignant-iPhone-App/server_side/videosrv.php";
-#elif shouldUseRemoteServer
+#if shouldUseRemoteServer
 NSString * const kAdressForContentServer = @"http://107.21.216.249/ignant/ignant.php";
 NSString * const kAdressForImageServer = @"http://107.21.216.249/ignant/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://107.21.216.249/ignant/videosrv.php";
@@ -73,9 +69,9 @@ NSString * const kAdressForContentServer = @"http://www.ignant.de/app/ignant.php
 NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #else
-NSString * const kAdressForContentServer = @"http://192.168.2.102/ign/ignant.php";
-NSString * const kAdressForImageServer = @"http://192.168.2.102/ign/imgsrv.php";
-NSString * const kAdressForVideoServer = @"http://192.168.2.102/ign/videosrv.php";
+NSString * const kAdressForContentServer = @"http://192.168.2.107:9999/ign/ignant.php";
+NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #endif
 
 NSString * const kReachabilityHostnameToCheck = @"www.google.de";

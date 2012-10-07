@@ -56,8 +56,9 @@ function getExcludedCategories()
 	//Video 861
 	//Monifaktur 860
 	//Daily Basics 868
+	//Creative Match 894
 	
-	$categories = array(1,7,862,857,855,858, 860);
+	$categories = array(1,7,862,857,855,858, 860, 894);
 	return $categories;
 }
 
