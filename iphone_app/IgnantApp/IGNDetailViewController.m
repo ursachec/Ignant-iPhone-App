@@ -34,15 +34,9 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-
-
 @interface IGNDetailViewController ()
 {
-    BOOL _isLoadingCurrentArticle;
-    BOOL _isShowingLinkOptions;
     BOOL _isExecutingWebviewTapAction;
-    
-    NSURL* _linkOptionsUrl;
     CGFloat lastHeightForWebView;
 }
 
@@ -57,6 +51,11 @@
 -(void)postToPinterest;
 -(void)postToTwitter;
 
+
+@property(assign) BOOL isShowingLinkOptions;
+@property(assign) BOOL isLoadingCurrentArticle;
+@property(nonatomic, strong, readwrite) NSURL* linkOptionsUrl;
+
 @property (nonatomic, assign, readwrite) BOOL isShowingImageSlideshow;
 @property (nonatomic, assign, readwrite) BOOL isImportingRelatedArticle;
 
@@ -69,9 +68,6 @@
 @property (strong, nonatomic, readwrite) NSURL *articleWeblink;
 @property (strong, nonatomic, readwrite) NSString *articleDescription;
 
-@property (strong, nonatomic) NSString *firstRelatedArticleId;
-@property (strong, nonatomic) NSString *secondRelatedArticleId;
-@property (strong, nonatomic) NSString *thirdRelatedArticleId;
 
 //properties for navigating through remote articles
 @property (strong, nonatomic) NSArray *relatedArticlesIds;
@@ -89,11 +85,6 @@
 
 @property (nonatomic, strong, readwrite) NSNumberFormatter *numberFormatter;
 
-//properties related to the navigation
-@property (strong, nonatomic) BlogEntry* nextBlogEntry;
-@property (strong, nonatomic) BlogEntry* previousBlogEntry;
-
-@property(strong, nonatomic) IGNDetailViewController* navigationDetailViewController;
 @property(strong, nonatomic) UIButton *previousArticleButton;
 @property(strong, nonatomic) UIButton *nextArticleButton;
 
@@ -175,32 +166,6 @@
     
 }
 
--(void)loadNavigationButtons
-{
-    CGSize sizeOfButtons = CGSizeMake(35.0f, 35.0f);
-    
-    //add the navigate back-forth buttons
-    UIView *backAndForwardNavigationItemView = [[UIView alloc] initWithFrame:CGRectMake(320.0f-70.0f-10.0f-10.0f, 5.0f, 90.0f, 35.0f)];
-    backAndForwardNavigationItemView.backgroundColor = [UIColor clearColor];
-    
-    //add navigate forward button
-    self.nextArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _nextArticleButton.frame = CGRectMake(backAndForwardNavigationItemView.bounds.size.width-sizeOfButtons.width, 0, sizeOfButtons.width, sizeOfButtons.height);
-    [_nextArticleButton addTarget:self action:@selector(navigateToNextArticle) forControlEvents:UIControlEventTouchDown];
-    [_nextArticleButton setImage:[UIImage imageNamed:@"navigationButtonNextArticle"] forState:UIControlStateNormal];
-    [backAndForwardNavigationItemView addSubview:_nextArticleButton];
-    
-    //add navigate back button
-    self.previousArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _previousArticleButton.frame = CGRectMake(_nextArticleButton.frame.origin.x-sizeOfButtons.width-10.0f, 0, sizeOfButtons.width, sizeOfButtons.height);
-    [_previousArticleButton addTarget:self action:@selector(navigateToPreviousArticle) forControlEvents:UIControlEventTouchDown];
-    [_previousArticleButton setImage:[UIImage imageNamed:@"navigationButtonPreviousArticle"] forState:UIControlStateNormal];
-    [backAndForwardNavigationItemView addSubview:_previousArticleButton];
-    
-    UIBarButtonItem *backAndForwardNavigationItem = [[UIBarButtonItem alloc] initWithCustomView:backAndForwardNavigationItemView];
-    self.navigationItem.rightBarButtonItem = backAndForwardNavigationItem;
-}
-
 - (void)viewDidUnload
 {
     [self setToggleLikeButton:nil];
@@ -215,12 +180,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	
-	
-	BOOL st = (interfaceOrientation == (UIInterfaceOrientationPortrait));
-	NSLog(@"st: %@", st ? @"TRUE" : @"FALSE");
-	
-	
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     } else {
@@ -323,87 +282,6 @@
 	}
 }
 
--(void)navigateToNextArticle
-{    
-    //if previous blog entry invalid, just return
-    if (_nextBlogEntryIndex==kInvalidBlogEntryIndex)
-        return;
-    
-    if (_navigationDetailViewController==nil) {
-        self.navigationDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
-    }
-    
-    self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
-    
-    self.navigationDetailViewController.fetchedResults = _fetchedResults;
-    self.navigationDetailViewController.currentBlogEntryIndex = _nextBlogEntryIndex;
-    self.navigationDetailViewController.isShowingArticleFromLocalDatabase = YES;
-    
-    if (_nextBlogEntryIndex-1>=0) {
-        self.navigationDetailViewController.previousBlogEntryIndex = _nextBlogEntryIndex-1;
-    } 
-    else{
-        self.navigationDetailViewController.previousBlogEntryIndex = -1;
-    }
-    
-    if(_nextBlogEntryIndex+1<_fetchedResults.count)
-    {
-        self.navigationDetailViewController.nextBlogEntryIndex = _nextBlogEntryIndex+1;
-    }
-    else{
-        self.navigationDetailViewController.nextBlogEntryIndex = -1;
-    }
-    
-    _navigationDetailViewController.blogEntry = self.nextBlogEntry;
-    
-    self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
-
-    
-    [self.navigationController pushViewController:_navigationDetailViewController animated:YES];
-}
-
--(void)navigateToPreviousArticle
-{
-    //if previous blog entry invalid, just return
-    if (_previousBlogEntryIndex==kInvalidBlogEntryIndex)
-        return;
-    
-    //navigate to previous article
-    if (_navigationDetailViewController==nil) {
-        self.navigationDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
-    }
-    
-    self.navigationDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
-    
-    self.navigationDetailViewController.fetchedResults = _fetchedResults;
-    self.navigationDetailViewController.currentBlogEntryIndex = _previousBlogEntryIndex;
-    self.navigationDetailViewController.isShowingArticleFromLocalDatabase = YES;
-    
-    if (_currentBlogEntryIndex-1>=0) {
-        self.navigationDetailViewController.previousBlogEntryIndex = _previousBlogEntryIndex-1;
-    } 
-    else{
-        self.navigationDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
-    }
-    
-    if(_currentBlogEntryIndex<_fetchedResults.count)
-    {
-        self.navigationDetailViewController.nextBlogEntryIndex = _currentBlogEntryIndex;
-    }
-    else{
-        self.navigationDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
-    }
-    
-    self.navigationDetailViewController.blogEntry = self.previousBlogEntry;
-    self.navigationDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
-    
-    //push the view controller from left to right
-    NSMutableArray *vcs =  [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-    [vcs insertObject:_navigationDetailViewController atIndex:[vcs count]-1];
-    [self.navigationController setViewControllers:vcs animated:NO];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 -(void)setupNavigationEntries
 {
     //set up view for when the article is not in the local database and has to be loaded
@@ -452,24 +330,11 @@
     if (_isLoadingCurrentArticle) 
     {
         self.nextBlogEntry = nil;
-        self.previousBlogEntry = nil;
-        
-        _nextArticleButton.alpha = 0;
-        _previousArticleButton.alpha = 0;
-        
+        self.previousBlogEntry = nil;        
         return;
     }
-    
-    //set up view for when article is not saved in the local database
-    else if(!_isShowingArticleFromLocalDatabase)
-    {
-    
-        
-        
-    }
-    
     //set up view for when article is stored in the local database
-    else 
+    else if(_isShowingArticleFromLocalDatabase)
     {
         //set up previousObject
         NSManagedObject *previousObject = nil;
@@ -484,41 +349,13 @@
             nextObject = [_fetchedResults objectAtIndex:_nextBlogEntryIndex];
         }
         self.nextBlogEntry = (BlogEntry*)nextObject;
-        
-        
-        CGFloat alphaForInactiveButtons = 0.35;
-        CGFloat alphaForActiveButtons = 1.0;
-        
-        //only activate the back button if the previousBlogEntry is set
-        if (_previousBlogEntry==nil) 
-        {
-            _previousArticleButton.userInteractionEnabled = NO;
-            _previousArticleButton.alpha = alphaForInactiveButtons;
-        }
-        else
-        {
-            _previousArticleButton.userInteractionEnabled = YES;
-            _previousArticleButton.alpha = alphaForActiveButtons;
-        }
-        
-        //only activate the next button if the previousBlogEntry is set
-        if (_nextBlogEntry==nil) 
-        {
-            _nextArticleButton.userInteractionEnabled = NO;
-            _nextArticleButton.alpha = alphaForInactiveButtons;
-        }
-        else
-        {
-            _nextArticleButton.userInteractionEnabled = YES;
-            _nextArticleButton.alpha = alphaForActiveButtons;
-        }
     }
 }
 
 -(void)showLinkOptions:(NSURL*)url
 {
-    _isShowingLinkOptions = true;
-    _linkOptionsUrl = url;
+    self.isShowingLinkOptions = true;
+    self.linkOptionsUrl = url;
     
     UIActionSheet *linkActionSheet = nil;
     linkActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
@@ -740,11 +577,6 @@
 	self.articleContentView.frame = CGRectMake(oldFrame.origin.x, oldFrame.origin.y, sizeAfterTitleAndCategoryLavel.width, sizeAfterTitleAndCategoryLavel.height);
 }
 
--(void)drawArticleImageOrVideoView
-{
-
-}
-
 -(void)drawDTViewWithRichtext:(NSString*)descriptionText
 {
 	self.articleDescription = descriptionText;
@@ -814,12 +646,7 @@
 }
 
 -(void)setupRelatedArticlesUI:(NSArray*)relatedArticles
-{
-    #define DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI true
-    
-    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    LOG_CURRENT_FUNCTION()
-    
+{    
     if ([relatedArticles count]<3)
         return;
         
@@ -828,9 +655,6 @@
     NSDictionary* thirdRelatedArticle = [relatedArticles objectAtIndex:2];
     
     //set up first related article
-    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    DBLog(@"setting up first related article...");
-    
     if (firstRelatedArticle!=nil) {
         self.firstRelatedArticleTitleLabel.text = [firstRelatedArticle objectForKey:kFKArticleTitle];
         self.firstRelatedArticleCategoryLabel.text = [firstRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -841,9 +665,6 @@
     }
     
     //set up second related article
-    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    DBLog(@"setting up second related article...");
-    
     if (secondRelatedArticle!=nil) {
         self.secondRelatedArticleTitleLabel.text = [secondRelatedArticle objectForKey:kFKArticleTitle];
         self.secondRelatedArticleCategoryLabel.text = [secondRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -854,10 +675,7 @@
         
     }
     
-    //set up third related article
-    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    DBLog(@"setting up third related article...");
-    
+    //set up third related article    
     if (thirdRelatedArticle!=nil) {
         self.thirdRelatedArticleTitleLabel.text = [thirdRelatedArticle objectForKey:kFKArticleTitle];
         self.thirdRelatedArticleCategoryLabel.text = [thirdRelatedArticle objectForKey:kFKRelatedArticleCategoryText];
@@ -866,10 +684,7 @@
         [self triggerLoadingRelatedImageWithArticleId:self.thirdRelatedArticleId
                                          forImageView:self.thirdRelatedArticleImageView];
     }
-    
-    if(DEBUG_ENABLE_FOR_SETUP_RELATED_ARTICLES_UI)
-    DBLog(@"finished setting up related articles!");
-    
+        
     //set the appropriate title for the toggle like button
     [self updateToggleLikeButtonTitle];
 }
@@ -938,16 +753,10 @@
 - (IBAction)showPictureSlideshow:(id)sender
 {
     self.isShowingImageSlideshow = YES;
-    
     ImageSlideshowViewController *slideshowVC = [[ImageSlideshowViewController alloc] initWithNibName:@"ImageSlideshowViewController" bundle:nil];
-    
-    //set up the slideshowVC
     slideshowVC.remoteImagesArray = _remoteImagesArray;
-    
-    //show the slideshowVC
     slideshowVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self.navigationController presentModalViewController:slideshowVC animated:YES];
-
 }
 
 -(void)handleDTViewTap:(id)sender
@@ -1174,10 +983,7 @@
     IGNMosaikViewController *mosaikVC = self.appDelegate.mosaikViewController;
     mosaikVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     mosaikVC.parentNavigationController = self.navigationController;
-    
-	
     [self.navigationController presentModalViewController:mosaikVC animated:YES];
-    
 }
 
 - (IBAction)showShare:(id)sender {
@@ -1286,85 +1092,7 @@
 
 -(void)showRelatedArticle:(id)sender
 {
-    NSString *articleId = nil;
-    
-	NSError* error = nil;
-	GATrackEvent(&error, @"IGNDetailViewController", @"showRelated", self.currentArticleId, 10);
 	
-	
-    DBLog(@"trying to showRelatedArticle: %d", [sender tag]);
-    
-    if ([sender tag] == kFirstRelatedArticleTag)
-    {
-        articleId = [[NSString alloc] initWithString:self.firstRelatedArticleId];
-    }
-    
-    else if ([sender tag] == kSecondRelatedArticleTag) 
-    {
-        articleId = [[NSString alloc] initWithString:self.secondRelatedArticleId];
-    } 
-    
-    else if ([sender tag] == kThirdRelatedArticleTag) 
-    {
-        articleId = [[NSString alloc] initWithString:self.thirdRelatedArticleId];
-    }
-    
-    //tag is falsly set
-    else
-    {
-        DBLog(@"tag is falsly set, doing nothing");
-        return;
-    }
-    
-    DBLog(@"articleId: %@", articleId);
-    
-    BlogEntry* entry = nil;
-    entry = [self.importer blogEntryWithId:articleId];
-    BOOL shouldLoadBlogEntryFromRemoteServer = (entry == nil);
-    
-    //check for the internet connection 
-    if(shouldLoadBlogEntryFromRemoteServer && ![self.appDelegate checkIfAppOnline])
-    {
-        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@"" 
-                                                     message:NSLocalizedString(@"ui_alert_message_you_need_an_internet_connection",nil)  
-                                                    delegate:self 
-                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss",nil)
-                                           otherButtonTitles:nil];
-        [av show];
-        return;
-    }
-    
-    //blog entry to be shown is set, show the view controller loading the article data
-    if (!self.nextDetailViewController) {
-        self.nextDetailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
-    }
-    
-    DBLog(@"articleIdChosen: %@", articleId);
-    self.nextDetailViewController.viewControllerToReturnTo = self.viewControllerToReturnTo;
-    
-    if(entry)
-    {
-        DBLog(@"entry exists, do not load");
-        self.nextDetailViewController.blogEntry = entry;
-        self.nextDetailViewController.isShowingArticleFromLocalDatabase = YES;        
-    }
-    
-    else 
-    {
-        DBLog(@"entry DOES NOT exist, DO! load, :%@", articleId);
-        self.nextDetailViewController.currentArticleId = articleId;
-        self.nextDetailViewController.didLoadContentForRemoteArticle = NO;
-        self.nextDetailViewController.isShowingArticleFromLocalDatabase = NO;
-    }
-    
-    //reset the indexes
-    self.nextDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
-    self.nextDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
-    
-    //set the managedObjectContext and push the view controller
-    self.nextDetailViewController.managedObjectContext = self.managedObjectContext;
-    self.nextDetailViewController.isNavigationBarAndToolbarHidden = _isNavigationBarAndToolbarHidden;
-    [self.navigationController pushViewController:self.nextDetailViewController animated:YES];
 }
 
 #pragma mark - getting content from the server
@@ -1431,9 +1159,7 @@
 }
 
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
+{    
     __block __typeof__(self) blockSelf = self;
     if(blockSelf.isImportingRelatedArticle)
     {
@@ -1484,13 +1210,6 @@
         }
     }
     
-    //check if touch on video button
-    if (self.playVideoButton.superview !=nil ) {
-        if ([touch.view isDescendantOfView:self.playVideoButton]) {
-            return NO;
-        }
-    }
-    
     //check if touch on show fotos button
     if (self.showPictureSlideshowButton.superview !=nil ) {
         if ([touch.view isDescendantOfView:self.showPictureSlideshowButton]) {
@@ -1520,15 +1239,12 @@
 - (IBAction)handleRightSwipe:(id)sender 
 {
     LOG_CURRENT_FUNCTION()
-    
-    [self navigateToPreviousArticle];
 }
 
 - (IBAction)handleLeftSwipe:(id)sender 
 {
     LOG_CURRENT_FUNCTION()
     
-    [self navigateToNextArticle];
 }
 
 #pragma mark - custom special views
@@ -1537,21 +1253,6 @@
     UIView* defaultView = [super couldNotLoadDataView];
     self.couldNotLoadDataLabel.text =  NSLocalizedString(@"could_not_load_data_for_this_article", @"Title of the 'couldNotLoadDataLabel'");
     return defaultView;
-}
-
-
--(IBAction)playVideo:(id)sender
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForVideoServer,kArticleId,self.currentArticleId];
-    NSURL* videoUrl = [[NSURL alloc] initWithString:encodedString];
-    [self.playVideoButton removeFromSuperview];
-    
-    MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoUrl];        
-    [self presentMoviePlayerViewControllerAnimated:moviePlayerViewController];
-    
-    DBLog(@"start playing video: %@", videoUrl);
 }
 
 #pragma mark - Custom Views on Text

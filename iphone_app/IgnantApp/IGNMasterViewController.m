@@ -11,7 +11,7 @@
 
 //import necessary ViewController files
 #import "IGNMasterViewController.h"
-#import "IGNDetailViewController.h"
+#import "ArticleDetailViewController.h"
 #import "IGNMoreOptionsViewController.h"
 #import "IGNMosaikViewController.h"
 #import "IgnantTumblrFeedViewController.h"
@@ -66,7 +66,6 @@
 @synthesize managedObjectContext = __managedObjectContext;
 
 @synthesize blogEntriesTableView = _blogEntriesTableView;
-@synthesize detailViewController = _detailViewController;
 
 @synthesize currentCategory = _currentCategory;
 
@@ -188,23 +187,23 @@
 
 -(void)showArticleWithId:(NSString*)articleId
 {    
-    if (!self.detailViewController) {
-        self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
+    if (!self.articleDetailViewController) {
+        self.articleDetailViewController = [[ArticleDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
 
-    self.detailViewController.didLoadContentForRemoteArticle = NO;
-    self.detailViewController.isShowingArticleFromLocalDatabase = NO;
-    self.detailViewController.viewControllerToReturnTo = self;
+    self.articleDetailViewController.didLoadContentForRemoteArticle = NO;
+    self.articleDetailViewController.isShowingArticleFromLocalDatabase = NO;
+    self.articleDetailViewController.viewControllerToReturnTo = self;
     
     //set up the selected object and previous/next objects
-    self.detailViewController.currentArticleId = articleId;
-    self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
-    self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
+    self.articleDetailViewController.currentArticleId = articleId;
+    self.articleDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
+    self.articleDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
 
     //set the managedObjectContext and push the view controller
-    self.detailViewController.managedObjectContext = self.managedObjectContext;
-    self.detailViewController.isNavigationBarAndToolbarHidden = NO;
-    [self.navigationController pushViewController:self.detailViewController animated:NO];        
+    self.articleDetailViewController.managedObjectContext = self.managedObjectContext;
+    self.articleDetailViewController.isNavigationBarAndToolbarHidden = NO;
+    [self.navigationController pushViewController:self.articleDetailViewController animated:NO];
 }
 
 #pragma mark - View lifecycle
@@ -502,40 +501,40 @@
     }
     else
     {
-        if (!self.detailViewController) {
-            self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
+        if (!self.articleDetailViewController) {
+            self.articleDetailViewController = [[ArticleDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
         }
         
-        self.detailViewController.isShowingArticleFromLocalDatabase = YES;
-        self.detailViewController.viewControllerToReturnTo = self;
+        self.articleDetailViewController.isShowingArticleFromLocalDatabase = YES;
+        self.articleDetailViewController.viewControllerToReturnTo = self;
         
         //set up the selected object and previous/next objects
         NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.detailViewController.blogEntry = (BlogEntry*)selectedObject;
+        self.articleDetailViewController.blogEntry = (BlogEntry*)selectedObject;
         
         NSArray *fetchedResultsArray = self.fetchedResultsController.fetchedObjects;
-        self.detailViewController.fetchedResults = fetchedResultsArray;
-        self.detailViewController.currentBlogEntryIndex = indexPath.row;
+        self.articleDetailViewController.fetchedResults = fetchedResultsArray;
+        self.articleDetailViewController.currentBlogEntryIndex = indexPath.row;
         
         if (indexPath.row-1>=0) {
-            self.detailViewController.previousBlogEntryIndex = indexPath.row-1;
+            self.articleDetailViewController.previousBlogEntryIndex = indexPath.row-1;
         } 
         else{
-            self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
+            self.articleDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         if(indexPath.row+1<fetchedResultsArray.count)
         {
-            self.detailViewController.nextBlogEntryIndex = indexPath.row+1;
+            self.articleDetailViewController.nextBlogEntryIndex = indexPath.row+1;
         }
         else{
-            self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
+            self.articleDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
         }
         
         //set the managedObjectContext and push the view controller
-        self.detailViewController.managedObjectContext = self.managedObjectContext;
-        self.detailViewController.isNavigationBarAndToolbarHidden = NO;
-        [self.navigationController pushViewController:self.detailViewController animated:YES];
+        self.articleDetailViewController.managedObjectContext = self.managedObjectContext;
+        self.articleDetailViewController.isNavigationBarAndToolbarHidden = NO;
+        [self.navigationController pushViewController:self.articleDetailViewController animated:YES];
         
         //deselect the row
         

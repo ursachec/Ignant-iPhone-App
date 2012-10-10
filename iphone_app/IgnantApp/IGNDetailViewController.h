@@ -55,7 +55,11 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) IBOutlet UIScrollView *contentScrollView;
 
-@property (strong, nonatomic) IGNDetailViewController *nextDetailViewController;
+
+
+//properties related to the navigation
+@property (strong, nonatomic) BlogEntry* nextBlogEntry;
+@property (strong, nonatomic) BlogEntry* previousBlogEntry;
 
 //properties related to the navigation
 @property(unsafe_unretained) NSInteger currentBlogEntryIndex;
@@ -68,15 +72,25 @@
 @property (nonatomic, assign, readonly) BOOL isShowingImageSlideshow;
 @property (nonatomic, assign, readwrite) BOOL isShownFromMosaic;
 
-- (IBAction)handleRightSwipe:(id)sender;
 
 - (IBAction)tapAction:(id)sender;
 
 -(IBAction)showRelatedArticle:(id)sender;
 -(IBAction)playVideo:(id)sender;
 
+-(IBAction)toggleLike:(id)sender;
+
+
+
+- (IBAction)handleRightSwipe:(id)sender;
 - (IBAction)handleLeftSwipe:(id)sender;
 
--(IBAction)toggleLike:(id)sender;
+
+@property (strong, nonatomic) NSString *firstRelatedArticleId;
+@property (strong, nonatomic) NSString *secondRelatedArticleId;
+@property (strong, nonatomic) NSString *thirdRelatedArticleId;
+
+
+
 
 @end

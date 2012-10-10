@@ -16,7 +16,7 @@
 #import "EGORefreshTableHeaderView.h"
 
 @class Category;
-@class IGNDetailViewController;
+@class ArticleDetailViewController;
 
 @interface IGNMasterViewController : IGNViewController <NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, IgnantImporterDelegate, EGORefreshTableHeaderDelegate>
 {
@@ -34,7 +34,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *blogEntriesTableView;
 
-@property (strong, nonatomic) IGNDetailViewController *detailViewController;
+@property (strong, nonatomic) ArticleDetailViewController *articleDetailViewController;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

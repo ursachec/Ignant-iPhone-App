@@ -83,6 +83,8 @@
 		E56C0BAD16220822004C1402 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E56C0B9A16220822004C1402 /* AFXMLRequestOperation.m */; };
 		E56C0BAE16220822004C1402 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = E56C0B9B16220822004C1402 /* UIImageView+AFNetworking.h */; };
 		E56C0BAF16220822004C1402 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = E56C0B9C16220822004C1402 /* UIImageView+AFNetworking.m */; };
+		E58606C716262849001D0D64 /* ArticleDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = E58606C516262849001D0D64 /* ArticleDetailViewController.h */; };
+		E58606C816262849001D0D64 /* ArticleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E58606C616262849001D0D64 /* ArticleDetailViewController.m */; };
 		E58DAE9D16221CCD00150F2F /* AFIgnantAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E58DAE9B16221CCD00150F2F /* AFIgnantAPIClient.h */; };
 		E58DAE9E16221CCD00150F2F /* AFIgnantAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */; };
 		E5AB094D1610E344006551D7 /* Default-568h-NO-TOP@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */; };
@@ -434,6 +436,8 @@
 		E56C0B9B16220822004C1402 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		E56C0B9C16220822004C1402 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		E5797AC016090034004928CA /* Useful_PP_Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Useful_PP_Macros.h; sourceTree = "<group>"; };
+		E58606C516262849001D0D64 /* ArticleDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArticleDetailViewController.h; path = ViewControllers/ArticleDetailViewController.h; sourceTree = "<group>"; };
+		E58606C616262849001D0D64 /* ArticleDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArticleDetailViewController.m; path = ViewControllers/ArticleDetailViewController.m; sourceTree = "<group>"; };
 		E58DAE9B16221CCD00150F2F /* AFIgnantAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFIgnantAPIClient.h; sourceTree = "<group>"; };
 		E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFIgnantAPIClient.m; sourceTree = "<group>"; };
 		E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSToolkit.xcodeproj; path = ../submodules/sstoolkit/SSToolkit.xcodeproj; sourceTree = "<group>"; };
@@ -641,6 +645,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEBA71C7150CDF270016AD6E /* MobileCoreServices.framework in Frameworks */,
+				FEBA71CF150CDF4C0016AD6E /* SystemConfiguration.framework in Frameworks */,
 				E5F355D215FCE6AC0099B9B7 /* libSSToolkit.a in Frameworks */,
 				E52EEBBB15C7DD020017FBF7 /* libDTCoreText.a in Frameworks */,
 				41ACB7E0158A855A001D31B0 /* libSDWebImageARC.a in Frameworks */,
@@ -654,11 +660,9 @@
 				41F9E7371584F26A00F11927 /* ImageIO.framework in Frameworks */,
 				4146FE3B158222BB001BAC75 /* Accounts.framework in Frameworks */,
 				FEC36AE21528F974004F19C8 /* Security.framework in Frameworks */,
-				FEBA71CF150CDF4C0016AD6E /* SystemConfiguration.framework in Frameworks */,
 				FEBA71CD150CDF420016AD6E /* CoreLocation.framework in Frameworks */,
 				FEBA71CB150CDF390016AD6E /* CFNetwork.framework in Frameworks */,
 				FEBA71C9150CDF2E0016AD6E /* MapKit.framework in Frameworks */,
-				FEBA71C7150CDF270016AD6E /* MobileCoreServices.framework in Frameworks */,
 				FE8B35B914DC7B17008F0407 /* QuartzCore.framework in Frameworks */,
 				FE0DDCE114AE34D0003B8778 /* UIKit.framework in Frameworks */,
 				FE0DDCE314AE34D0003B8778 /* Foundation.framework in Frameworks */,
@@ -1397,6 +1401,8 @@
 				FE0DDCFA14AE34D0003B8778 /* IGNDetailViewController.h */,
 				FE0DDCFB14AE34D0003B8778 /* IGNDetailViewController.m */,
 				FE0DDD0314AE34D1003B8778 /* IGNDetailViewController_iPhone.xib */,
+				E58606C516262849001D0D64 /* ArticleDetailViewController.h */,
+				E58606C616262849001D0D64 /* ArticleDetailViewController.m */,
 				FEB3A745150FB36900AECCC4 /* RelatedArticleView.h */,
 				FEB3A746150FB36900AECCC4 /* RelatedArticleView.m */,
 			);
@@ -1463,6 +1469,7 @@
 				E56C0BAC16220822004C1402 /* AFXMLRequestOperation.h in Headers */,
 				E56C0BAE16220822004C1402 /* UIImageView+AFNetworking.h in Headers */,
 				E58DAE9D16221CCD00150F2F /* AFIgnantAPIClient.h in Headers */,
+				E58606C716262849001D0D64 /* ArticleDetailViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1807,6 +1814,7 @@
 				E56C0BAD16220822004C1402 /* AFXMLRequestOperation.m in Sources */,
 				E56C0BAF16220822004C1402 /* UIImageView+AFNetworking.m in Sources */,
 				E58DAE9E16221CCD00150F2F /* AFIgnantAPIClient.m in Sources */,
+				E58606C816262849001D0D64 /* ArticleDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

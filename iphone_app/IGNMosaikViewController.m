@@ -9,6 +9,7 @@
 #import "IGNMosaikViewController.h"
 
 #import "IGNDetailViewController.h"
+#import "ArticleDetailViewController.h"
 
 //import custom views
 #import "LoadMoreMosaicView.h"
@@ -59,7 +60,7 @@ NSString * const kImageFilename = @"filename";
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
 @property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
-@property(nonatomic,strong) IGNDetailViewController* detailViewController;
+@property(nonatomic,strong) ArticleDetailViewController* articleDetailViewController;
 @property(nonatomic,strong) LoadMoreMosaicView* loadingMoreMosaicView;
 
 -(void)drawSavedMosaicImages;
@@ -79,7 +80,6 @@ NSString * const kImageFilename = @"filename";
 @synthesize savedMosaicImages;
 @synthesize overlayView = _overlayView;
 @synthesize mockNavigationBar;
-@synthesize detailViewController;
 @synthesize parentNavigationController;
 @synthesize isMosaicImagesArrayNotEmpty = _isMosaicImagesArrayNotEmpty;
 @synthesize shareAndMoreToolbar;
@@ -650,26 +650,26 @@ NSString * const kImageFilename = @"filename";
     DBLog(@"transitionToDetailViewControllerForArticleId: %@", articleId);
     
     //blog entry to be shown is set, show the view controller loading the article data
-    if (!self.detailViewController) {
-        self.detailViewController = [[IGNDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
+    if (!self.articleDetailViewController) {
+        self.articleDetailViewController = [[ArticleDetailViewController alloc] initWithNibName:@"IGNDetailViewController_iPhone" bundle:nil];
     }
     
-    self.detailViewController.isShownFromMosaic = YES;
-    self.detailViewController.currentArticleId = articleId;
-    self.detailViewController.didLoadContentForRemoteArticle = NO;
-    self.detailViewController.isShowingArticleFromLocalDatabase = NO;
+    self.articleDetailViewController.isShownFromMosaic = YES;
+    self.articleDetailViewController.currentArticleId = articleId;
+    self.articleDetailViewController.didLoadContentForRemoteArticle = NO;
+    self.articleDetailViewController.isShowingArticleFromLocalDatabase = NO;
     
     //reset the indexes
-    self.detailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
-    self.detailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
+    self.articleDetailViewController.nextBlogEntryIndex = kInvalidBlogEntryIndex;
+    self.articleDetailViewController.previousBlogEntryIndex = kInvalidBlogEntryIndex;
     
     //set the managedObjectContext and push the view controller
-    self.detailViewController.managedObjectContext = self.appDelegate.managedObjectContext;
-    self.detailViewController.isNavigationBarAndToolbarHidden = NO;
+    self.articleDetailViewController.managedObjectContext = self.appDelegate.managedObjectContext;
+    self.articleDetailViewController.isNavigationBarAndToolbarHidden = NO;
     
-    if (![self.parentNavigationController.topViewController isKindOfClass:[IGNDetailViewController class]]) 
+    if (![self.parentNavigationController.topViewController isKindOfClass:[ArticleDetailViewController class]])
     {
-        [self.parentNavigationController pushViewController:self.detailViewController animated:NO];        
+        [self.parentNavigationController pushViewController:self.articleDetailViewController animated:NO];        
     }
     
     [self dismissModalViewControllerAnimated:YES];

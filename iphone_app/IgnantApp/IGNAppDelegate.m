@@ -15,7 +15,6 @@
 //import relevant view controller
 #import "IgnantNavigationController.h"
 #import "IGNMasterViewController.h"
-#import "IGNDetailViewController.h"
 #import "IGNMoreOptionsViewController.h"
 #import "IgnantTumblrFeedViewController.h"
 #import "CategoriesViewController.h"
