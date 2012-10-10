@@ -594,15 +594,6 @@
         [self.articleVideoView removeFromSuperview];
     }
     
-    /*
-    else if ([self.blogEntry.tempate compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
-        [self.articleContentView addSubview:self.playVideoButton];
-        [self.articleVideoView removeFromSuperview];
-    }
-    
-    */
-    
     else if ([template compare:kFKArticleTemplateDailyBasics]==NSOrderedSame) {
         [self.showPictureSlideshowButton removeFromSuperview];
         [self.playVideoButton removeFromSuperview];
@@ -667,39 +658,13 @@
                                 videoEmbedCode:(NSString*)videoEmbedCode
                                       template:(NSString*)articleTemplate
 {
-    
-#define DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW true
-#define SHOW_DEBUG_COLORS false
-    
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-        LOG_CURRENT_FUNCTION()
         
-        
-    NSLog(@"articleTemplate: %@", articleTemplate);
     [self setupUIElementsForBlogEntryTemplate:articleTemplate];
-        
-        
     self.currentArticleId = articleID;
-    self.articleTitle = title;
     self.articleWeblink = articleWebLink;
-    self.articleDescription = descriptionText;
-    self.remoteImagesArray = [NSArray arrayWithArray:remoteImages];
-    
-    CGSize finalSizeForArticleContentView = CGSizeMake(0, 0);
-    CGFloat contentViewWidth = 320.0f;
-    CGRect tempRect = CGRectMake(0, 0, 0, 0);
-    CGSize tempSize = CGSizeMake(0, 0);
-    
+	
     if ([videoEmbedCode length]>0) {
-        
-        CGFloat videoWidth = 950.0f;
-        CGFloat videoHeight = 534.0f;
-        CGFloat videoNewWidth = 310.0f;
-        CGFloat videoNewHeight = videoNewWidth*videoHeight/videoWidth;
-        NSString* videoDescriptionText = [NSString stringWithFormat:@"<html><head><title></title><style type='text/css'>*{ padding:0; margin:0; }</style></head><body><div style=\"width:%fpx; height:%fpx;\">%@</div></body></html>", videoNewWidth, videoNewHeight, videoEmbedCode];
-        [self.articleVideoWebView loadHTMLString:videoDescriptionText baseURL:nil];
-        CGRect oldFrame = self.articleVideoView.frame;
-        self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
+		[self setupVideoViewWithContent:videoEmbedCode];
     }
     else
     {
@@ -707,36 +672,66 @@
                                         forImageView:self.entryImageView];
     }
     
-    //add the imageViewSize to the finalSizeForArticleContentView
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"adding the imageViewSize to the finalSizeForArticleContentView...");
+	[self drawArticleImageView];
+	[self drawSlideShowButtonForImages:remoteImages];
+    [self drawLabelsForTitle:title
+					category:categoryName
+			  publishingDate:publishDate];
+    [self drawDTViewWithRichtext:descriptionText];
+	
+	//set the articleContentView
+    [self.contentScrollView addSubview:self.articleContentView];
     
-    finalSizeForArticleContentView = CGSizeMake(contentViewWidth, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
-    
-    //set up the button for showing pictures
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"setting up the button for showing pictures...");
-    
-    if ([remoteImages isKindOfClass:[NSArray class]]) {
-        NSString *showPicturesButtonText = [NSString stringWithFormat:NSLocalizedString(@"fotos_button_title", @"Title of the 'Fotos' button on the Detail View Controller"),[remoteImages count]];
+	[self drawRelatedArticlesView:relatedArticles];
+    [self resizeContentScrollViewForCurrentSubviews];
+	
+    [self setIsLoadingViewHidden:YES];
+}
+
+-(void)setupVideoViewWithContent:(NSString*)videoEmbedCode
+{
+	CGFloat videoWidth = 950.0f;
+	CGFloat videoHeight = 534.0f;
+	CGFloat videoNewWidth = 310.0f;
+	CGFloat videoNewHeight = videoNewWidth*videoHeight/videoWidth;
+	NSString* videoDescriptionText = [NSString stringWithFormat:@"<html><head><title></title><style type='text/css'>*{ padding:0; margin:0; }</style></head><body><div style=\"width:%fpx; height:%fpx;\">%@</div></body></html>", videoNewWidth, videoNewHeight, videoEmbedCode];
+	[self.articleVideoWebView loadHTMLString:videoDescriptionText baseURL:nil];
+	CGRect oldFrame = self.articleVideoView.frame;
+	self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
+}
+
+-(void)drawArticleImageView
+{
+	CGSize sizeAfterEntryImageView = CGSizeMake(320.0f, _entryImageView.frame.origin.y+_entryImageView.bounds.size.height);
+	CGRect oldFrameAfterEntryImageView = self.articleContentView.frame;
+	CGRect frameAfterEntryImageView = CGRectMake(oldFrameAfterEntryImageView.origin.x, oldFrameAfterEntryImageView.origin.y, sizeAfterEntryImageView.width, sizeAfterEntryImageView.height);
+	self.articleContentView.frame = frameAfterEntryImageView;
+}
+
+-(void)drawSlideShowButtonForImages:(id)images
+{
+	self.remoteImagesArray = [NSArray arrayWithArray:images];
+	
+    if ([images isKindOfClass:[NSArray class]]) {
+        NSString *showPicturesButtonText = [NSString stringWithFormat:NSLocalizedString(@"fotos_button_title", @"Title of the 'Fotos' button on the Detail View Controller"),[images count]];
         [self.showPictureSlideshowButton setTitle:showPicturesButtonText forState:UIControlStateNormal];
     }
-    
-    //set up the title
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"setting up the title...");
-    
+}
+
+-(void)drawLabelsForTitle:(NSString *) title
+				 category:(NSString *) categoryName
+			publishingDate:(NSDate *) date
+{
+	self.articleTitle = title;
+	
     self.titleLabel.text = [title uppercaseString];
     
     //set up the date label
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"setting up the date label...");
-    
-    tempRect = self.dateLabel.frame;
+    CGRect tempRect = self.dateLabel.frame;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
-    NSString* publishDateString = [formatter stringFromDate:publishDate];
+    NSString* publishDateString = [formatter stringFromDate:date];
     CGSize publishDateSize = [publishDateString sizeWithFont:self.dateLabel.font];
     DBLog(@"publishDateSize: %@", NSStringFromCGSize(publishDateSize));
     
@@ -745,11 +740,8 @@
     
     tempRect = self.dateLabel.frame;
     
-    //set up the category name
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"setting up the category name... categoryName: %@", categoryName);
-    
-    if (categoryName!=nil) 
+    //set up the category name    
+    if (categoryName!=nil)
     {
         NSString *category = categoryName;
         NSString *categoryName = @" ∙ "; //special characters: ∙ , ●
@@ -761,26 +753,24 @@
     }
     
     //add the title, date and category labels size to the finalSizeForArticleContentView
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"adding the title, date and category labels size to the finalSizeForArticleContentView...");
-    
-    tempSize = finalSizeForArticleContentView;
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-tempSize.height));
-    
-    if(SHOW_DEBUG_COLORS)
-    {
-        self.dateLabel.backgroundColor = [UIColor blueColor];
-        self.titleLabel.backgroundColor = [UIColor purpleColor];
-        self.categoryLabel.backgroundColor = [UIColor redColor];
-    }
-    
-    
-    NSString* finalRichText = [self wrapDTRichtext:descriptionText];
-    
-    // Load HTML data
-	NSData *data = [finalRichText dataUsingEncoding:NSUTF8StringEncoding];
 	
-	// Create attributed string from HTML
+    CGSize sizeBeforeTitleAndCategoryLabel = self.articleContentView.bounds.size;
+	CGRect oldFrame = self.articleContentView.frame;
+	CGSize sizeAfterTitleAndCategoryLavel = CGSizeMake(sizeBeforeTitleAndCategoryLabel.width, sizeBeforeTitleAndCategoryLabel.height+_titleLabel.bounds.size.height+_categoryLabel.bounds.size.height+(_titleLabel.frame.origin.y-sizeBeforeTitleAndCategoryLabel.height));
+	self.articleContentView.frame = CGRectMake(oldFrame.origin.x, oldFrame.origin.y, sizeAfterTitleAndCategoryLavel.width, sizeAfterTitleAndCategoryLavel.height);
+}
+
+-(void)drawArticleImageOrVideoView
+{
+
+}
+
+-(void)drawDTViewWithRichtext:(NSString*)descriptionText
+{
+	self.articleDescription = descriptionText;
+	
+	NSString* finalRichText = [self wrapDTRichtext:descriptionText];
+	NSData *data = [finalRichText dataUsingEncoding:NSUTF8StringEncoding];
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
 	
 	// example for setting a willFlushCallback, that gets called before elements are written to the generated attributed string
@@ -805,60 +795,28 @@
     CGSize oneTcontentSize = self.dtTextView.contentSize;
     
     self.dtTextView.frame = CGRectMake(oldDTTextViewFrame.origin.x, oldDTTextViewFrame.origin.y, oldDTTextViewFrame.size.width, oneTcontentSize.height);
-    
-    tempSize = finalSizeForArticleContentView;
-    finalSizeForArticleContentView = CGSizeMake(tempSize.width, tempSize.height+self.dtTextView.frame.size.height);
-    
-    
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-    DBLog(@"(after decriptiontextview) finalSizeForArticleContentView: %@", NSStringFromCGSize(finalSizeForArticleContentView));
-    
-    //set the frame of the article content view
-    if(DEBUG_ENABLE_FOR_SETUP_ARTICLE_CONTENT_VIEW)
-        DBLog(@"setting the frame of the article content view...");
-    
-    tempRect = self.articleContentView.frame;
-    CGFloat paddingBottomOfWebView = 10.0f;
-    self.articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, finalSizeForArticleContentView.width, finalSizeForArticleContentView.height+paddingBottomOfWebView);
-    
-    //add the articleContentView to the scrollView
-    [self.contentScrollView addSubview:self.articleContentView];
-    
-    //setup related articles UI for presentation, don't add the view to the contentView yet
+	
+	CGFloat paddingBottom = 10.0f;
+	CGSize oldSizeBeforeDT = self.articleContentView.bounds.size;
+	CGRect oldFrameBeforeDT = self.articleContentView.frame;
+	CGSize newSizeBeforeDT = CGSizeMake(oldSizeBeforeDT.width, oldSizeBeforeDT.height+self.dtTextView.frame.size.height+paddingBottom);
+	self.articleContentView.frame = CGRectMake(oldFrameBeforeDT.origin.x, oldFrameBeforeDT.origin.y, newSizeBeforeDT.width, newSizeBeforeDT.height);
+}
+
+-(void)drawRelatedArticlesView:(NSArray*)relatedArticles
+{
     [self setupRelatedArticlesUI:relatedArticles];
-    
-    
-    
-    
-    
-    
-    
-    CGSize finalSizeForArticleContentView2 = _articleContentView.bounds.size;
-    tempSize = finalSizeForArticleContentView2;
-   
-    
-    //set the frame of the article content view
-    tempRect = _articleContentView.frame;
-    _articleContentView.frame = CGRectMake(tempRect.origin.x, tempRect.origin.y, tempSize.width, tempSize.height);
-    
-    //set up the related articles view and add it to the contentScrollView
-    CGPoint pointToDrawRelatedArticles = CGPointMake(0, self.articleContentView.bounds.size.height);
-    CGSize nibSizeForRelatedArticles = self.relatedArticlesView.bounds.size;
-    self.relatedArticlesView.frame = CGRectMake(pointToDrawRelatedArticles.x, pointToDrawRelatedArticles.y, nibSizeForRelatedArticles.width, nibSizeForRelatedArticles.height);
+	
+    CGPoint pointToDraw = CGPointMake(0, self.articleContentView.bounds.size.height);
+    CGSize nibSize = self.relatedArticlesView.bounds.size;
+    self.relatedArticlesView.frame = CGRectMake(pointToDraw.x, pointToDraw.y, nibSize.width, nibSize.height);
     [self.contentScrollView addSubview:self.relatedArticlesView];
-    
-    
-#define WEBVIEW_PADDING_BOTTOM 0
-    //set up the scrollView's final contentSize
-    CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, _relatedArticlesView.bounds.size.height+_articleContentView.bounds.size.height + WEBVIEW_PADDING_BOTTOM);
+}
+
+-(void)resizeContentScrollViewForCurrentSubviews
+{
+	CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, self.relatedArticlesView.bounds.size.height+self.articleContentView.bounds.size.height);
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-    //set up the scrollView's final contentSize
-    self.contentScrollView.contentSize = contentScrollViewFinalSize;
-    
-    
-    [self setIsLoadingViewHidden:YES];
-    
 }
 
 -(void)triggerLoadingRelatedImageWithArticleId:(NSString*)articleId forImageView:(UIImageView*)imageView

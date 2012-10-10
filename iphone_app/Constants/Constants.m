@@ -55,7 +55,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 
 //server stuff
 #define shouldUseRemoteServer false
-#define shouldUseIgnantServer false
+#define shouldUseIgnantServer true
 
 NSString* const kAdressForMercedesPage = @"http://mb.mercedes-benz.com/de_DE";
 NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8";
