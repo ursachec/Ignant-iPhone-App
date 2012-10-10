@@ -550,19 +550,13 @@
 
 - (void)configureView
 {
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    
     self.archiveLabel.text = NSLocalizedString(@"title_related_articles_detail_vc", @"Archive label");
-    
-    
     [_contentScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
     
     //if article still needs to be loaded, show loading view
     if (_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==YES) 
     {        
         [self setIsLoadingViewHidden:NO];
-        
         return;
     }
     else if(_isShowingArticleFromLocalDatabase==NO && _isLoadingCurrentArticle==NO)
@@ -588,49 +582,35 @@
 
 -(void)setupUIElementsForBlogEntryTemplate:(NSString*)template
 {
-    if ([template compare:kFKArticleTemplateDefault]==NSOrderedSame) {
-        [self.articleContentView addSubview:self.showPictureSlideshowButton];
-        [self.playVideoButton removeFromSuperview];
-        [self.articleVideoView removeFromSuperview];
-    }
-    
-    else if ([template compare:kFKArticleTemplateDailyBasics]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
-        [self.playVideoButton removeFromSuperview];
-        [self.articleVideoView removeFromSuperview];
-    }
-    
-    else if ([template compare:kFKArticleTemplateMonifaktur]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
-        [self.playVideoButton removeFromSuperview];
-        [self.articleVideoView removeFromSuperview];
-    }
-    
-    else if ([template compare:kFKArticleTemplateVideo]==NSOrderedSame
-             || [template compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
-        [self.showPictureSlideshowButton removeFromSuperview];
+	//add/remove video view
+	if ([template compare:kFKArticleTemplateVideo]==NSOrderedSame
+		|| [template compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
         [self.playVideoButton removeFromSuperview];
         [self.articleContentView addSubview:self.articleVideoView];
     }
-    
-    else if ([template compare:kFKArticleTemplateAicuisine]==NSOrderedSame) {
-        [self.articleContentView addSubview:self.showPictureSlideshowButton];
+	else{
         [self.playVideoButton removeFromSuperview];
         [self.articleVideoView removeFromSuperview];
+	}
+	
+	//add/remove pictureSlideshowButton
+    if ([template compare:kFKArticleTemplateDefault]==NSOrderedSame
+		|| [template compare:kFKArticleTemplateAicuisine]==NSOrderedSame
+		|| [template compare:kFKArticleTemplateItravel]==NSOrderedSame) {
+        [self.articleContentView addSubview:self.showPictureSlideshowButton];
     }
     
-    else if ([template compare:kFKArticleTemplateItravel]==NSOrderedSame) {
-        [self.articleContentView addSubview:self.showPictureSlideshowButton];
-        [self.playVideoButton removeFromSuperview];
-        [self.articleVideoView removeFromSuperview];
+    else if ([template compare:kFKArticleTemplateDailyBasics]==NSOrderedSame
+			 || [template compare:kFKArticleTemplateMonifaktur]==NSOrderedSame
+			 || [template compare:kFKArticleTemplateVideo]==NSOrderedSame
+			 || [template compare:kFKArticleTemplateIgnanTV]==NSOrderedSame) {
+        [self.showPictureSlideshowButton removeFromSuperview];
     }
 }
 
 - (IBAction)showMercedes:(id)sender {
-    
     NSError* error = nil;
 	GATrackEvent(&error, @"IGNDetailViewController", @"showMercedes", @"", -1);
-    
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
@@ -1588,13 +1568,6 @@
 	return button;
 }
 
--(UIColor*)newRandomColor
-{
-    UIColor* c = [[UIColor alloc] initWithRed:arc4random()%255/255 green:arc4random()%255/255 blue:arc4random()%255/255 alpha:1.0f];
-    
-    return c;
-}
-
 - (BOOL)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView shouldDrawBackgroundForTextBlock:(DTTextBlock *)textBlock frame:(CGRect)frame context:(CGContextRef)context forLayoutFrame:(DTCoreTextLayoutFrame *)layoutFrame
 {
 	UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:10];
@@ -1618,10 +1591,8 @@
 - (void)linkPushed:(DTLinkButton *)button
 {
 	NSURL *URL = button.URL;
-	
 	if ([[UIApplication sharedApplication] canOpenURL:[URL absoluteURL]])
 	{
-        DBLog(@"show link options");
         [self showLinkOptions:URL];
 	}
 }
