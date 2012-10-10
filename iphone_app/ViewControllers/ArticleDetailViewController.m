@@ -12,6 +12,10 @@
 
 @property(strong, nonatomic) ArticleDetailViewController* navigationArticleDetailViewController;
 
+-(void)postToFacebook;
+-(void)postToPinterest;
+-(void)postToTwitter;
+
 @end
 
 @implementation ArticleDetailViewController
@@ -50,6 +54,8 @@
     
     [self navigateToNextArticle];
 }
+
+#pragma mark - navigation functions
 
 -(void)navigateToNextArticle
 {
@@ -140,7 +146,7 @@
 	NSError* error = nil;
 	GATrackEvent(&error, @"IGNDetailViewController", @"showRelated", self.currentArticleId, 10);
 	
-	    
+	
     if ([sender tag] == kFirstRelatedArticleTag)
     {
         articleId = [[NSString alloc] initWithString:self.firstRelatedArticleId];
@@ -207,6 +213,187 @@
     self.nextArticleDetailViewController.managedObjectContext = self.managedObjectContext;
     self.nextArticleDetailViewController.isNavigationBarAndToolbarHidden = self.isNavigationBarAndToolbarHidden;
     [self.navigationController pushViewController:self.nextArticleDetailViewController animated:YES];
+}
+
+
+#pragma mark - social media
+
+-(NSURL*)currentImageThumbURL
+{
+    NSURL* url = nil;
+    
+    if(self.currentArticleId!=nil)
+    {
+        NSString *encodedString = [[NSString alloc] initWithFormat:@"%@?%@=%@",kAdressForImageServer,kArticleId,self.currentArticleId];
+        url = [[NSURL alloc] initWithString:encodedString];
+    }
+    
+    return url;
+}
+
+-(void)postToFacebook
+{
+    if (![self.appDelegate.facebook isSessionValid]) {
+        DBLog(@"facebook: session NOT valid");
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"user_likes",
+                                @"read_stream",
+                                nil];
+        [self.appDelegate.facebook authorize:permissions];
+        return;
+    }
+    
+    NSString* infoLinkToArticleMainPage = [self.articleWeblink absoluteString];
+    NSString* infoNameOfArticle = self.articleTitle;
+    NSString* infoDescriptionForArticle = self.articleDescription;
+    NSString* substringInfoDescriptionForArticle = [infoDescriptionForArticle isKindOfClass:[NSString class]] ? [infoDescriptionForArticle substringWithRange:NSMakeRange(0, 200)] : @"";
+    substringInfoDescriptionForArticle = [substringInfoDescriptionForArticle stringByAppendingFormat:@"..."];
+    
+    NSString* infoLinkToThumbForArticle = [[self currentImageThumbURL] absoluteString];
+    NSString* infoCaptionForArticle = @"";
+    
+    //show the facebok dialogue for posting to wall
+    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   kFacebookAppId, @"app_id",
+                                   infoLinkToArticleMainPage, @"link",
+                                   infoLinkToThumbForArticle, @"picture",
+                                   infoNameOfArticle, @"name",
+                                   infoCaptionForArticle, @"caption",
+                                   substringInfoDescriptionForArticle, @"description",
+                                   nil];
+    
+    [self.appDelegate.facebook dialog:@"feed" andParams:params andDelegate:self];
+    
+    NSError* error = nil;
+	GATrackEvent(&error, @"IGNDetailViewController", @"postToFacebook", self.currentArticleId, -1);
+	
+}
+
+-(void)postToPinterest
+{
+	DBLog(@"should post to pinterest");
+}
+
+-(void)postToTwitter
+{
+    BOOL canTweet = [TWTweetComposeViewController canSendTweet];
+    
+    if (!canTweet) {
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:@""
+                                                     message:NSLocalizedString(@"ui_alert_message_you_need_to_be_logged_in_with_twitter", nil)
+                                                    delegate:self
+                                           cancelButtonTitle:NSLocalizedString(@"ui_alert_dismiss", nil)
+                                           otherButtonTitles:nil];
+        [av show];
+        
+        return;
+    }
+    else {
+		
+        __block __typeof__(self) blockSelf = self;
+		
+		if ([blockSelf.articleTitle length]==0 || [[blockSelf.articleWeblink absoluteString] length]==0) {
+			DBLog(@"articleTitle or articleWeblink is nil");
+			return;
+		}
+		
+        NSString* tweet = [NSString stringWithFormat:@"☞ %@ | %@ via @ignantblog", blockSelf.articleTitle, blockSelf.articleWeblink];
+        
+        TWTweetComposeViewController *tweetVC = [[TWTweetComposeViewController alloc] init];
+        [tweetVC setInitialText:tweet];
+        [tweetVC setCompletionHandler:^(TWTweetComposeViewControllerResult result){
+			
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                {
+                    break;
+                }
+                case TWTweetComposeViewControllerResultDone:
+                {
+                    NSError* error = nil;
+					GATrackEvent(&error, @"IGNDetailViewController", @"postToTwitter", blockSelf.currentArticleId, -1);
+                    break;
+                }
+                default:
+                    break;
+            }
+            
+            //dismiss the tweet composition view controller modally
+            [blockSelf dismissModalViewControllerAnimated:YES];
+        }];
+        
+        
+        [self presentModalViewController:tweetVC animated:YES];
+    }
+    
+    DBLog(@"canTweet: %@", canTweet ? @"TRUE" : @"FALSE");
+    
+    DBLog(@"should post to twitter");
+}
+
+
+- (IBAction)showShare:(id)sender {
+    
+    
+    NSError* error = nil;
+	GATrackEvent(&error, @"IGNDetailViewController", @"showShare", self.currentArticleId, -1);
+    
+    
+    UIActionSheet *shareActionSheet = nil;
+    
+    if ([IGNAppDelegate isIOS5]) {
+        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"),NSLocalizedString(@"actionsheet_share_twitter", @"Title of the 'Twitter' button in the actionsheet when tapping on share"), nil ];
+    }
+    else {
+        shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"actionsheet_share_cancel", @"Title of the 'Cancel' button in the actionsheet when tapping on share")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"actionsheet_share_facebook", @"Title of the 'Facebook' button in the actionsheet when tapping on share"), nil ];
+    }
+    [shareActionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    self.isShowingLinkOptions = NO;
+}
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet
+{
+    self.isShowingLinkOptions = NO;
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(self.isShowingLinkOptions){
+        int openInSafariButtonIndex = 0;
+        if (buttonIndex==openInSafariButtonIndex) {
+            
+            NSError* error = nil;
+			GATrackEvent(&error, @"IGNDetailViewController", @"openInSafari", [self.linkOptionsUrl absoluteString], 10);
+			
+            [[UIApplication sharedApplication] openURL:self.linkOptionsUrl];
+        }
+    }
+    else{
+
+		int facebookButtonIndex = 0;
+		int twitterButtonIndex = 1;
+		
+		if (buttonIndex==facebookButtonIndex) {
+			[self postToFacebook];
+		}
+		
+		else if (buttonIndex==twitterButtonIndex) {
+			[self postToTwitter];
+		}
+	}
+    self.isShowingLinkOptions = NO;
 }
 
 @end

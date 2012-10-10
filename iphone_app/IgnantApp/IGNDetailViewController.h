@@ -81,6 +81,12 @@
 -(IBAction)toggleLike:(id)sender;
 
 
+@property(nonatomic, strong, readwrite) NSURL* linkOptionsUrl;
+
+@property(assign) BOOL isShowingLinkOptions;
+@property (strong, nonatomic, readwrite) NSString *articleTitle;
+@property (strong, nonatomic, readwrite) NSURL *articleWeblink;
+@property (strong, nonatomic, readwrite) NSString *articleDescription;
 
 - (IBAction)handleRightSwipe:(id)sender;
 - (IBAction)handleLeftSwipe:(id)sender;

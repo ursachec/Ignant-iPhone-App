@@ -8,9 +8,6 @@
 
 #import "AFIgnantAPIClient.h"
 
-
-#import "AFIgnantAPIClient.h"
-
 #import "AFJSONRequestOperation.h"
 
 @implementation AFIgnantAPIClient
