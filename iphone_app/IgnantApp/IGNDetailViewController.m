@@ -1123,11 +1123,7 @@
 		
 		[self redrawArticleContentViewWithNewDTViewHeight:self.dtTextView.contentView.bounds.size.height];
 		self.lastDTTextViewSize = self.dtTextView.contentView.bounds.size;
-		NSLog(@"trigger reload");
-	}
-
-	NSLog(@"self.dtTextView.contentView.bounds.size: %@", NSStringFromCGSize(self.dtTextView.contentView.bounds.size));
-	
+	}	
 }
 
 - (BOOL)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView shouldDrawBackgroundForTextBlock:(DTTextBlock *)textBlock frame:(CGRect)frame context:(CGContextRef)context forLayoutFrame:(DTCoreTextLayoutFrame *)layoutFrame

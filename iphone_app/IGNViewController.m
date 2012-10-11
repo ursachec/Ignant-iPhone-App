@@ -185,9 +185,7 @@
 #define DEBUG_SHOW_COLORS false
 #define NAVBAR_PADDING_TOP 0.0f
 #define PADDING_LEFT 3.0f
-    
-	NSLog(@"specificNavigationBar");
-	
+    	
     if (_specificNavigationBar==nil) {
         
         CGRect specificNavigationBarFrame = CGRectMake(0.0f, 0.0f, 320.f, 44.0f);

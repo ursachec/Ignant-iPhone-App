@@ -55,7 +55,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 
 //server stuff
 #define shouldUseRemoteServer false
-#define shouldUseIgnantServer true
+#define shouldUseIgnantServer false
 
 NSString* const kAdressForMercedesPage = @"http://mb.mercedes-benz.com/de_DE";
 NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8";
@@ -88,12 +88,10 @@ NSString * const kAPIKeyIsServerReachable = @"status";
 NSString * const kAPIResponseServerOk = @"ok";
 NSString * const kAPIResponseServerError = @"error";
 
-
 //registering for notifications
 NSString * const kAPICommandRegisterForNotifications = @"registerForNotifications";
 NSString * const kAPIKeyRegisterForNotificationsDeviceToken = @"deviceToken";
 NSString * const kAPIKeyDidRegisterForNotifications = @"didRegister";
-
 
 //possible actions
 NSString * const kAPICommandGetDataForFirstRun = @"getDataForTheFirstRun";

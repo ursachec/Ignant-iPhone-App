@@ -126,6 +126,14 @@ function getThumbLinkForArticleId($articleId = '', $imgType = '', $dbh = null)
 	return $imgUrl;
 }
 
+function shouldIncludeImagesInHTMLForCategoryId($categoryId = -1)
+{
+	if ($categoryId==860) {
+		return true;
+	}
+	return true;
+}
+
 function getArticleWithId($articleId = '', $lang = 'de')
 {
 	$lightArticle = null;
@@ -136,7 +144,9 @@ function getArticleWithId($articleId = '', $lang = 'de')
 	$postId = $p['id'];
 	$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 	$postDate = strtotime($p['post_date_gmt']);
-	$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang)));
+
+	$shouldIncludeImagesInHTML = shouldIncludeImagesInHTMLForCategoryId($p['category_id']);
+	$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang, $shouldIncludeImagesInHTML)));
 
 	//post images
 	//$remoteImagesForArticleDescription = getRemoteImagesForArticleDescription($postId, $p['post_content'], $lang);
@@ -235,7 +245,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
 		AND pt.`post_date` <= :aDate
-		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
+		AND pt.`post_date` > IF(tr.`term_taxonomy_id`=860,'".POSTS_DATE_AFTER_FOR_MONIFACTORY."','".POSTS_DATE_AFTER."')
 		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")";
 		
@@ -262,7 +272,7 @@ function fetchArticlesForCategory($category = ID_FOR_HOME_CATEGORY, $timeBefore 
 		AND pt.`post_type` = 'post' 
 		AND tr.`term_taxonomy_id` = :id 
 		AND pt.`post_date` <= :aDate
-		AND pt.`post_date` > '".POSTS_DATE_AFTER."'
+		AND pt.`post_date` > IF(tr.`term_taxonomy_id`=860,'".POSTS_DATE_AFTER_FOR_MONIFACTORY."','".POSTS_DATE_AFTER."')
 		AND wpm2.`meta_value` IS NULL
 		AND tr.`term_taxonomy_id` IN (".$includedCategoriesPDOString.") ";
 		
@@ -301,7 +311,8 @@ function getArticlesForCategory($cat = 0, $tOfOldestArticle = 0 , $lang = 'de', 
 		$postTitle =  utf8_encode(textForLanguage($p['post_title'], $lang));
 				
 		$postDate = strtotime($p['post_date_gmt']);
-		$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang)));
+		$shouldIncludeImagesInHTML = shouldIncludeImagesInHTMLForCategoryId($p['category_id']);	
+		$postDescription = base64_encode(utf8_encode(cleanedDescriptionForLanguage($p['post_content'], $lang, $shouldIncludeImagesInHTML)));
 			
 		$remoteImagesForArticleDescription = fetchRemoteImagesIdsForArticleDescription($postId, $p['post_content'], $lang);
 		$postRemoteImages = $remoteImagesForArticleDescription;
@@ -368,8 +379,6 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 	$posts = array();	
 	$includedCategoriesPDOString = getIgnantCategoriesAsPDOString();
 	
-	//TODO: define what date best to enter here
-	$dateAfter = POSTS_DATE_AFTER;
 	$dbh = newPDOConnection();
 	
 	$qString = "SELECT 
@@ -384,7 +393,7 @@ function fetchRandomArticles($numberOfArticles = 3, $categoryId = ID_FOR_HOME_CA
 		WHERE pt.`post_status` = 'publish'
 		AND pt.`post_type` = 'post'
 		AND pt.`post_parent` = 0
-		AND pt.`post_date` > '".$dateAfter."'
+		AND pt.`post_date` > IF(tr.`term_taxonomy_id`=860,'".POSTS_DATE_AFTER_FOR_MONIFACTORY."','".POSTS_DATE_AFTER."')
 		AND wpm2.`meta_value` IS NULL
 		AND tt.`term_taxonomy_id` IN (".$includedCategoriesPDOString.")
 		ORDER BY RAND() LIMIT ".$numberOfArticles.";";
@@ -442,11 +451,11 @@ function textForLanguage($str, $lang)
 	return $str;
 }
 
-function cleanedDescriptionForLanguage($str, $language)
+function cleanedDescriptionForLanguage($str, $language, $includeImages=false)
 {
 	$description = descriptionForLanguage($str, $language);
 	
-	$finalString = removeUnwantedHTML($description);
+	$finalString = removeUnwantedHTML($description, $includeImages);
 	$finalString = nl2br($finalString);
 	
 	return $finalString;
@@ -603,10 +612,14 @@ function getImageLinksForArticleDescription($articleDescription='', $language='d
 	return $imageLinks;
 }
 
-function removeUnwantedHTML($string)
+function removeUnwantedHTML($string, $includeImages=false)
 {
-	$s = "";
-	$s = removeImgTags($string);
+	$s = $string;
+
+	if (!$includeImages) {
+		$s = removeImgTags($s);
+	}
+	
 	$s = removeIframes($s);
 	$s = removeLastParagraph($s);
 	return $s;

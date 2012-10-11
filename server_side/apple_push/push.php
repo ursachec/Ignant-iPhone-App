@@ -12,16 +12,14 @@ function getAllDeviceTokens(){
 
 }
 
-
-
-
 $tokensFromTheDatabase = getAllDeviceTokens();
 */
-$development = true;
+$development = false;
 
 // APNs Push testen auf Token
-$deviceToken = 'fb0cb5a6a3aef678614e481a9bb896d29aac619e826caf0797ce53eb78ee2a6f'; // Hier das Device-Token angeben, ist 64-stellig
- 
+//$deviceToken = 'fb0cb5a6a3aef678614e481a9bb896d29aac619e826caf0797ce53eb78ee2a6f'; // Hier das Device-Token angeben, ist 64-stellig
+ $deviceToken = '3ace0f88fa09da19d6097a87eef6be4a1ffef55be9276c597b70278d86d36dcc';
+
 $d1 = 'fb0cb5a6a3aef678614e481a9bb896d29aac619e826caf0797ce53eb78ee2a6f';
 $d2 = 'fb0cb5a6a3aef678614e481a9bb896d29aac619e826caf0797ce53eb78ee2a6f';
 $d3 = '9ad6a267dbfae64cd37826787183c66acaf0443173980f63d234014d49661f6a';
@@ -30,10 +28,10 @@ $d4 = 'd5a207a3a903eb26c32d1fac16b152c2d74ea13b2c8634dafb91d5f407ebf35f';
 $deviceTokenClemens = '1f4a23e9 43df08ba 9c3ea415 19be3a02 cd8a8789 7c0756a2 0444c459 8be0daf2';
 
 
-$deviceTokens = array($d1);
+$deviceTokens = array($deviceToken);
 
 // Payload erstellen und JSON codieren
-$payload['aps'] = array('alert' => '☞ Keisuke Tanaka', 'badge' => 0);
+$payload['aps'] = array('alert' => '☞ hallo Thomas', 'badge' => 0);
 $payload['articleId'] = '45038';
 
 $payload = json_encode($payload);

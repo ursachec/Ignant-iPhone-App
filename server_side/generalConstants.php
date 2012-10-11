@@ -1,6 +1,7 @@
 <?php
 	
 define('POSTS_DATE_AFTER','2011-5-5');
+define('POSTS_DATE_AFTER_FOR_MONIFACTORY','2009-1-1');
 
 //define thumb image constants
 
