@@ -865,14 +865,12 @@
 -(void)importRemoteArticleDictionary
 {
     LOG_CURRENT_FUNCTION()
-    
     self.isImportingRelatedArticle = true;
     [self.importer importOneArticleFromDictionary:self.remoteArticleDictionary forceSave:YES];
 }
 
 -(IBAction)toggleLike:(id)sender {
     
-	
 	NSError* error = nil;
 	
 	GATrackEvent(&error, @"IGNDetailViewController", @"toggleLike", self.currentArticleId, 10);
@@ -997,35 +995,18 @@
        shouldReceiveTouch:(UITouch *)touch
 {
     
+	NSArray* cancelingViews = @[self.showSlideshowButton,self.showPictureSlideshowButton,
+	self.firstRelatedArticleShowDetailsButton,self.secondRelatedArticleShowDetailsButton,
+	self.thirdRelatedArticleShowDetailsButton];
+	for (UIView* singleView in cancelingViews) {
+		if (singleView.superview!=nil && [touch.view isDescendantOfView:singleView]) {
+			return NO;
+		}
+	}
+	
     if ([touch.view isKindOfClass:[DTLinkButton class]]) {
         return NO;
     }
-    
-    if (self.showSlideshowButton.superview !=nil ) {
-        if ([touch.view isDescendantOfView:self.showSlideshowButton]) {
-            return NO;
-        }
-    }
-    
-    //check if touch on show fotos button
-    if (self.showPictureSlideshowButton.superview !=nil ) {
-        if ([touch.view isDescendantOfView:self.showPictureSlideshowButton]) {
-            return NO;
-        }
-    }
-    
-    //check if touch on show related articles button
-    if (self.firstRelatedArticleShowDetailsButton.superview !=nil
-        || self.secondRelatedArticleShowDetailsButton.superview !=nil
-        || self.thirdRelatedArticleShowDetailsButton.superview !=nil) {
-        
-        if ([touch.view isDescendantOfView:self.firstRelatedArticleShowDetailsButton]
-            || [touch.view isDescendantOfView:self.secondRelatedArticleShowDetailsButton]
-            || [touch.view isDescendantOfView:self.thirdRelatedArticleShowDetailsButton]) {
-            return NO;
-        }
-    }
-    
     
     return YES;
 }
