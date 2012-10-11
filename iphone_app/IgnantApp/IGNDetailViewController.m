@@ -674,23 +674,15 @@
     
     self.remoteArticleDictionary = articleDictionary;
     
-    
-    NSString *remoteContentArticleTitle = [articleDictionary objectForKey:kFKArticleTitle];
     NSString *remoteContentArticleWeblinkString = [articleDictionary objectForKey:kFKArticleWebLink];
     NSURL* remoteContentArticleWeblink = [NSURL URLWithString:remoteContentArticleWeblinkString];
-    NSString *remoteContentArticleID = [articleDictionary objectForKey:kFKArticleId];
-    NSString *remoteContentCategoryName = [articleDictionary objectForKey:kFKArticleCategoryName];
-    NSString *remoteContentTemplate = [articleDictionary objectForKey:kFKArticleTemplate];
-    
     
     NSString *remoteContentArticleDescriptionTextBase64 = [articleDictionary objectForKey:kFKArticleDescriptionText];
     NSString *remoteContentArticleDescriptionText = [[NSString alloc] initWithData:[NSData dataFromBase64String:remoteContentArticleDescriptionTextBase64] encoding:NSUTF8StringEncoding];
     
     NSString *remoteContentArticleVideoEmbedCodeBase64 = [articleDictionary objectForKey:kFKArticleVideoEmbedCode];
     NSString *remoteContentArticleVideoEmbedCode = [[NSString alloc] initWithData:[NSData dataFromBase64String:remoteContentArticleVideoEmbedCodeBase64] encoding:NSUTF8StringEncoding];
-    
-    NSArray *remoteContentRelatedArticles = [articleDictionary objectForKey:kFKArticleRelatedArticles];
-    NSArray *remoteContentRemoteImages = [articleDictionary objectForKey:kFKArticleRemoteImages];
+
     id unconvertedBlogEntryPublishDate = [articleDictionary objectForKey:kFKArticlePublishingDate];
     
     NSNumber *blogEntryPublishDateSecondsSince1970 = nil;
@@ -706,16 +698,16 @@
     
     NSDate *fDate = [NSDate dateWithTimeIntervalSince1970:[blogEntryPublishDateSecondsSince1970 floatValue]];
     
-    [self setupArticleContentViewWithArticleTitle:remoteContentArticleTitle
-                                        articleId:remoteContentArticleID
+    [self setupArticleContentViewWithArticleTitle:articleDictionary[kFKArticleTitle]
+                                        articleId:articleDictionary[kFKArticleId]
                                           webLink:remoteContentArticleWeblink
-                                     categoryName:remoteContentCategoryName
+                                     categoryName:articleDictionary[kFKArticleCategoryName]
                                   descriptionText:remoteContentArticleDescriptionText
-                                  relatedArticles:remoteContentRelatedArticles
-                                     remoteImages:remoteContentRemoteImages
+                                  relatedArticles:articleDictionary[kFKArticleRelatedArticles]
+                                     remoteImages:articleDictionary[kFKArticleRemoteImages]
                                       publishDate:fDate
                                    videoEmbedCode:remoteContentArticleVideoEmbedCode
-                                         template:remoteContentTemplate];
+                                         template:articleDictionary[kFKArticleTemplate]];
     return;
 }
 
