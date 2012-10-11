@@ -47,6 +47,8 @@
 -(IBAction) toggleLike:(id)sender;
 
 
+@property(assign) CGSize lastDTTextViewSize;
+@property(assign) CGFloat lastDTViewHeight;
 @property(assign) BOOL isLoadingCurrentArticle;
 
 
@@ -57,9 +59,6 @@
 
 @property (strong, nonatomic, readwrite) NSDictionary *remoteArticleDictionary;
 @property (strong, nonatomic, readwrite) NSString *remoteArticleJSONString;
-
-
-
 
 //properties for navigating through remote articles
 @property (strong, nonatomic) NSArray *relatedArticlesIds;
@@ -397,13 +396,6 @@
     }
 }
 
--(NSString*)wrapDTRichtext:(NSString*)richText
-{
-    NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"DTWrapper" ofType:@"html"];
-    NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
-    return [NSString stringWithFormat:contents,richText];
-}
-
 -(void)setupUIElementsForBlogEntryTemplate:(NSString*)template
 {
 	//add/remove video view
@@ -436,6 +428,8 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAdressForMercedesPage]];
 }
 
+#pragma mark - drawing methods
+
 -(void)setupArticleContentViewWithArticleTitle:(NSString*)title
                                      articleId:(NSString*)articleID
                                        webLink:(NSURL*)articleWebLink
@@ -447,10 +441,15 @@
                                 videoEmbedCode:(NSString*)videoEmbedCode
                                       template:(NSString*)articleTemplate
 {
-        
+    
+	
+//	descriptionText = @"Das Dreieck definiert sich in drei Punkten (die nicht auf einer Geraden liegen), welche durch drei Seiten verbunden werden. Gleichschenklige und spitze Dreiecke bestechen mit Sexyness, stumpfwinklige kommen eher plump daher und öffnen beim Nachdenken ein wenig den Mund. Im Christentum steht das Dreieck als Symbol für die Dreifaltigkeit. <!--more-->In Polen ist ein auf der Spitze stehendes Dreieck das Symbol für die Herrentoilette. Es unterliegt dem Viereck um eine Ecke, tritt aber trotz alledem besonders selbstsicher und häufig in der Mathematik, in der Straßenbeschilderungs-Szene und im Grafik-Design auf.\" <img src=\"http://www.ignant.de/wp-content/uploads/2010/12/monja_gentschow_dreieck_01.jpg\" alt=\"\" width=\"320px\" /><img src=\"http://www.ignant.de/wp-content/uploads/2010/12/monja_gentschow_dreieck_02.jpg\" alt=\"aaa\" width=\"320px\" /><img src=\"http://www.ignant.de/wp-content/uploads/2010/12/monja_gentschow_dreieck_03.jpg\" alt=\"\" width=\"320px\" />Diese Dreiecksgeschichten und vieles mehr könnt ihr heute Abend bei der Eröffnung des <a href=\"http://www.undplus.com/\" target=\"_blank\">UNDPLUS Urban Gallery Store N°4</a> sehen. Ab 19 Uhr in der Torstraße 66, Berlin-Mitte.<br />Der Tapir, ein schwerfälliges Tier mit charakteristischem Rüssel, ein Säugetier und Unpaarhufer zugleich. Im Gegensatz zu den Paarhufern sind Unpaarhufer mit einer ungeraden Anzahl von Zehen charakterisiert. Äußerlich Schweineähnlich, ist es jedoch durch seine Hufigkeit am nächsten mit den Pferden und Nashörnern verwandt. <!--more--><img src=\"http://www.ignant.de/wp-content/uploads/2011/05/Tapir-logo-Monja-Gentschow.jpg\" alt=\"\" title=\"Tapir-logo-Monja-Gentschow\" width=\"720\" height=\"501\" class=\"alignnone size-full wp-image-21841\" /><img src=\"http://www.ignant.de/wp-content/uploads/2011/05/Tapir-eins-Monja-Gentschow.jpg\" width=\"720\" height=\"611\" class=\"alignnone size-full wp-image-21833\" /><img src=\"http://www.ignant.de/wp-content/uploads/2011/05/Tapir-galopp-Monja-Gentschow.gif\" title=\"Tapir-galopp-Monja-Gentschow\" width=\"720\" height=\"448\" class=\"alignnone size-full wp-image-21834\" />";
+	
     [self setupUIElementsForBlogEntryTemplate:articleTemplate];
     self.currentArticleId = articleID;
     self.articleWeblink = articleWebLink;
+	self.articleDescription = descriptionText;
+	self.currentRelatedArticles = relatedArticles;
 	
     if ([videoEmbedCode length]>0) {
 		[self setupVideoViewWithContent:videoEmbedCode];
@@ -466,15 +465,36 @@
     [self drawLabelsForTitle:title
 					category:categoryName
 			  publishingDate:publishDate];
-    [self drawDTViewWithRichtext:descriptionText];
+	[self.contentScrollView addSubview:self.articleContentView];
 	
-	//set the articleContentView
-    [self.contentScrollView addSubview:self.articleContentView];
-    
-	[self drawRelatedArticlesView:relatedArticles];
-    [self resizeContentScrollViewForCurrentSubviews];
+	[self drawDTViewWithRichtext:descriptionText];
+	self.articleDescription = descriptionText;
+	[self redrawArticleContentViewWithNewDTViewHeight:self.dtTextView.bounds.size.height];    
 	
     [self setIsLoadingViewHidden:YES];
+}
+
+-(void)redrawArticleContentViewWithNewDTViewHeight:(CGFloat)newDTViewHeight
+{
+	if (self.lastDTViewHeight==newDTViewHeight) {
+		return;
+	}
+	self.lastDTViewHeight = newDTViewHeight;
+		
+	[self.dtTextView removeFromSuperview];
+	
+	CGRect oldDTTextViewFrame = self.dtTextView.frame;
+	CGSize oneTcontentSize = self.dtTextView.contentSize;
+    
+    self.dtTextView.frame = CGRectMake(oldDTTextViewFrame.origin.x, oldDTTextViewFrame.origin.y, oldDTTextViewFrame.size.width, oneTcontentSize.height);
+	
+	CGPoint pointToDraw = CGPointMake(0, self.articleContentView.bounds.size.height);
+    CGSize nibSize = self.dtTextView.bounds.size;
+    self.dtTextView.frame = CGRectMake(pointToDraw.x, pointToDraw.y, nibSize.width, nibSize.height);
+    [self.contentScrollView addSubview:self.dtTextView];
+	
+	[self drawRelatedArticlesView:self.currentRelatedArticles];
+	[self resizeContentScrollViewForCurrentSubviews];
 }
 
 -(void)setupVideoViewWithContent:(NSString*)videoEmbedCode
@@ -487,6 +507,13 @@
 	[self.articleVideoWebView loadHTMLString:videoDescriptionText baseURL:nil];
 	CGRect oldFrame = self.articleVideoView.frame;
 	self.articleVideoView.frame = CGRectMake(oldFrame.origin.x, 5.0f, oldFrame.size.width, oldFrame.size.height);
+}
+
+-(NSString*)wrapDTRichtext:(NSString*)richText
+{
+    NSString * dbFile = [[NSBundle mainBundle] pathForResource:@"DTWrapper" ofType:@"html"];
+    NSString * contents = [NSString stringWithContentsOfFile:dbFile encoding:NSUTF8StringEncoding error:nil];
+    return [NSString stringWithFormat:contents,richText];
 }
 
 -(void)drawArticleImageView
@@ -550,9 +577,7 @@
 }
 
 -(void)drawDTViewWithRichtext:(NSString*)descriptionText
-{
-	self.articleDescription = descriptionText;
-	
+{	
 	NSString* finalRichText = [self wrapDTRichtext:descriptionText];
 	NSData *data = [finalRichText dataUsingEncoding:NSUTF8StringEncoding];
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
@@ -570,28 +595,16 @@
                              @"Georgia", DTDefaultFontFamily,  @"black", DTDefaultLinkColor, callBackBlock, DTWillFlushBlockCallBack, nil];
 	
 	NSAttributedString *string = [[NSAttributedString alloc] initWithHTMLData:data options:options documentAttributes:NULL];
-    
-    CGRect oldDTTextViewFrame = self.dtTextView.frame;
-    
-	self.dtTextView.contentView.edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+	self.dtTextView.contentView.edgeInsets = UIEdgeInsetsMake(0,5.0f, 0, 2.0f);
 	self.dtTextView.attributedString = string;
-    
-    CGSize oneTcontentSize = self.dtTextView.contentSize;
-    
-    self.dtTextView.frame = CGRectMake(oldDTTextViewFrame.origin.x, oldDTTextViewFrame.origin.y, oldDTTextViewFrame.size.width, oneTcontentSize.height);
-	
-	CGFloat paddingBottom = 10.0f;
-	CGSize oldSizeBeforeDT = self.articleContentView.bounds.size;
-	CGRect oldFrameBeforeDT = self.articleContentView.frame;
-	CGSize newSizeBeforeDT = CGSizeMake(oldSizeBeforeDT.width, oldSizeBeforeDT.height+self.dtTextView.frame.size.height+paddingBottom);
-	self.articleContentView.frame = CGRectMake(oldFrameBeforeDT.origin.x, oldFrameBeforeDT.origin.y, newSizeBeforeDT.width, newSizeBeforeDT.height);
+
 }
 
 -(void)drawRelatedArticlesView:(NSArray*)relatedArticles
 {
     [self setupRelatedArticlesUI:relatedArticles];
 	
-    CGPoint pointToDraw = CGPointMake(0, self.articleContentView.bounds.size.height);
+    CGPoint pointToDraw = CGPointMake(0, self.articleContentView.bounds.size.height+self.dtTextView.bounds.size.height);
     CGSize nibSize = self.relatedArticlesView.bounds.size;
     self.relatedArticlesView.frame = CGRectMake(pointToDraw.x, pointToDraw.y, nibSize.width, nibSize.height);
     [self.contentScrollView addSubview:self.relatedArticlesView];
@@ -599,7 +612,17 @@
 
 -(void)resizeContentScrollViewForCurrentSubviews
 {
-	CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, self.relatedArticlesView.bounds.size.height+self.articleContentView.bounds.size.height);
+	CGFloat heightForDTTextView = 0.0f;
+	if (self.dtTextView.superview!=nil) {
+		heightForDTTextView = self.dtTextView.bounds.size.height;
+	}
+	
+	CGFloat heightForRelatedArticles = 0.0f;
+	if (self.relatedArticlesView.superview!=nil) {
+		heightForRelatedArticles = self.relatedArticlesView.bounds.size.height;
+	}
+	
+	CGSize contentScrollViewFinalSize = CGSizeMake(320.0f, heightForDTTextView+heightForRelatedArticles+self.articleContentView.bounds.size.height);
     self.contentScrollView.contentSize = contentScrollViewFinalSize;
 }
 
@@ -1037,6 +1060,74 @@
 	[button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
 	
 	return button;
+}
+
+
+- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(CGRect)frame
+{
+
+	if (attachment.contentType == DTTextAttachmentTypeImage)
+	{
+		// if the attachment has a hyperlinkURL then this is currently ignored
+		DTLazyImageView *imageView = [[DTLazyImageView alloc] initWithFrame:frame];
+		imageView.delegate = self;
+		if (attachment.contents)
+		{
+			imageView.image = attachment.contents;
+		}
+		
+		// url for deferred loading
+		imageView.url = attachment.contentURL;
+		
+		// if there is a hyperlink then add a link button on top of this image
+		if (attachment.hyperLinkURL)
+		{
+			// NOTE: this is a hack, you probably want to use your own image view and touch handling
+			// also, this treats an image with a hyperlink by itself because we don't have the GUID of the link parts
+			imageView.userInteractionEnabled = YES;
+			DTLinkButton *button = (DTLinkButton *)[self attributedTextContentView:attributedTextContentView viewForLink:attachment.hyperLinkURL identifier:attachment.hyperLinkGUID frame:imageView.bounds];
+			[imageView addSubview:button];
+		}
+		
+		return imageView;
+	}
+	
+	return nil;
+}
+
+
+#pragma mark - DTLazyImageViewDelegate
+
+- (void)lazyImageView:(DTLazyImageView *)lazyImageView didChangeImageSize:(CGSize)size {
+	NSURL *url = lazyImageView.url;
+	CGSize imageSize = CGSizeMake(310.0f, size.height*310.0f/size.width);
+	
+	NSPredicate *pred = [NSPredicate predicateWithFormat:@"contentURL == %@", url];
+	
+	// update all attachments that matchin this URL (possibly multiple images with same size)
+	for (DTTextAttachment *oneAttachment in [self.dtTextView.contentView.layoutFrame textAttachmentsWithPredicate:pred])
+	{
+		oneAttachment.originalSize = imageSize;
+		
+//		if (!CGSizeEqualToSize(imageSize, oneAttachment.displaySize))
+//		{
+//			oneAttachment.displaySize = imageSize;
+//		}
+	}
+	
+	// redo layout
+	// here we're layouting the entire string, might be more efficient to only relayout the paragraphs that contain these attachments
+	[self.dtTextView.contentView relayoutText];
+	
+	if (self.dtTextView.contentView.bounds.size.height != self.lastDTTextViewSize.height) {
+		
+		[self redrawArticleContentViewWithNewDTViewHeight:self.dtTextView.contentView.bounds.size.height];
+		self.lastDTTextViewSize = self.dtTextView.contentView.bounds.size;
+		NSLog(@"trigger reload");
+	}
+
+	NSLog(@"self.dtTextView.contentView.bounds.size: %@", NSStringFromCGSize(self.dtTextView.contentView.bounds.size));
+	
 }
 
 - (BOOL)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView shouldDrawBackgroundForTextBlock:(DTTextBlock *)textBlock frame:(CGRect)frame context:(CGContextRef)context forLayoutFrame:(DTCoreTextLayoutFrame *)layoutFrame

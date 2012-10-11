@@ -18,9 +18,10 @@
 @protocol FBDialogDelegate;
 @protocol DTAttributedTextContentViewDelegate;
 
-@interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, DTAttributedTextContentViewDelegate>
+@interface IGNDetailViewController : IGNViewController <IgnantImporterDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, FBDialogDelegate, DTAttributedTextContentViewDelegate, DTLazyImageViewDelegate>
 
 @property (strong, nonatomic) NSString *currentArticleId;
+@property (strong, nonatomic) NSArray *currentRelatedArticles;
 @property (strong, nonatomic) IBOutlet UILabel *relatedArticlesTitleLabel;
 @property (strong, nonatomic) IBOutlet UIView *articleVideoView;
 @property (strong, nonatomic) IBOutlet UIWebView *articleVideoWebView;
