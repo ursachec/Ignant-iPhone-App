@@ -75,6 +75,7 @@
     //add the specific navigation bar
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
     [self.view addSubview:self.specificNavigationBar];
+	
 }
 
 -(void)viewWillAppear:(BOOL)animated

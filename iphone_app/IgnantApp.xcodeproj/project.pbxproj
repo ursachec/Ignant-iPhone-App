@@ -1887,6 +1887,66 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E5C3DD7E162B222C00F4180D /* Over-The-Air Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = IgnantApp.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Over-The-Air Distribution";
+		};
+		E5C3DD7F162B222C00F4180D /* Over-The-Air Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_ENTITLEMENTS = IgnantApp/IgnantApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Claudiu Ursache";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IgnantApp/IgnantApp-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(SDKROOT)/usr/include/libxml2/**",
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"/**",
+					"\"$(OBJROOT)/UninstalledProducts/include\"/**",
+				);
+				INFOPLIST_FILE = "IgnantApp/IgnantApp-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External Libraries/SDImageLib\"",
+					"\"$(SRCROOT)/IgnantApp/SDImageLib\"",
+					"\"$(SRCROOT)/IgnantApp\"",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B52CDA61-3F27-4C14-AC8C-2240AC077ABC";
+				USER_HEADER_SEARCH_PATHS = "/Users/cvursache/privat/ignant/Ignant-iPhone-App/** /Users/cvursache/privat/ignant/Ignant-iPhone-App/submodules/sstoolkit/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Over-The-Air Distribution";
+		};
 		FE0DDD0914AE34D1003B8778 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2016,6 +2076,7 @@
 			buildConfigurations = (
 				FE0DDD0914AE34D1003B8778 /* Debug */,
 				FE0DDD0A14AE34D1003B8778 /* Release */,
+				E5C3DD7E162B222C00F4180D /* Over-The-Air Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2025,6 +2086,7 @@
 			buildConfigurations = (
 				FE0DDD0C14AE34D1003B8778 /* Debug */,
 				FE0DDD0D14AE34D1003B8778 /* Release */,
+				E5C3DD7F162B222C00F4180D /* Over-The-Air Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -9,6 +9,8 @@
 #import "IGNViewController.h"
 #import "Constants.h"
 #import "IGNAppDelegate.h"
+#import "IgnantNavigationBar.h"
+
 
 @interface IGNViewController ()
 {
@@ -181,34 +183,47 @@
 
 -(UIView*)specificNavigationBar
 {
-	
+
 #define DEBUG_SHOW_COLORS false
 #define NAVBAR_PADDING_TOP 0.0f
 #define PADDING_LEFT 3.0f
     	
     if (_specificNavigationBar==nil) {
         
-        CGRect specificNavigationBarFrame = CGRectMake(0.0f, 0.0f, 320.f, 44.0f);
-        UIView* navView = [[UIView alloc] initWithFrame:specificNavigationBarFrame];
-        navView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		navView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ign_nav_bar_pattern.png"]];
 		
-		//logo view
-		CGSize ignantLogoSize = CGSizeMake(20.0f, 23.0f);
-		CGRect ignantLogoFrame = CGRectMake((navView.bounds.size.width-ignantLogoSize.width)/2, (navView.bounds.size.height-ignantLogoSize.height)/2, ignantLogoSize.width, ignantLogoSize.height);
-        UIImageView* ignantLogoView = [[UIImageView alloc] initWithFrame:ignantLogoFrame];
-		ignantLogoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-		ignantLogoView.image = [UIImage imageNamed:@"ignant_logo_small.png"];
-        [navView addSubview:ignantLogoView];
-        
-        //add the back button
-        //back button
+        CGRect specificNavigationBarFrame = CGRectMake(0.0f, 0.0f, 320.f, 44.0f);
+		IgnantNavigationBar* navBar = [[IgnantNavigationBar alloc] initWithFrame:specificNavigationBarFrame];
+		navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_specificNavigationBar = navBar;
+		
+		CGSize navBarSize = navBar.bounds.size;
+		CGSize ignantLogoSize = CGSizeMake(26.0f,26.0f);
+		UIImageView* ignantLogo = [[UIImageView alloc] initWithFrame:CGRectMake((navBarSize.width-ignantLogoSize.width)/2, (navBarSize.height-ignantLogoSize.height)/2, ignantLogoSize.width, ignantLogoSize.height)];
+		ignantLogo.image = [UIImage imageNamed:@"navbar_ignant_logo"];
+		ignantLogo.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+		[navBar addSubview:ignantLogo];
+		
+		
+		//add the home button
+        UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGRect homeButtonFrame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+        homeButton.frame = homeButtonFrame;
+		homeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+        homeButton.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor blueColor] : [UIColor clearColor];
+        [homeButton addTarget:self action:@selector(handleTapOnSpecificNavBarHomeButton:) forControlEvents:UIControlEventTouchDown];
+		[navBar addSubview:homeButton];
+		
+		homeButtonFrame = CGRectMake((navBar.frame.size.width-homeButton.frame.size.width)/2, (navBar.frame.size.height-homeButton.frame.size.height)/2,homeButtonFrame.size.width, homeButtonFrame.size.height);
+		homeButton.frame = homeButtonFrame;
+		
+		//back button
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGRect backButtonFrame = CGRectMake(PADDING_LEFT, 0.0f, 100.0f, 44.0f);
+		backButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
         backButton.frame = backButtonFrame;
         backButton.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor blueColor] : [UIColor clearColor];
         [backButton addTarget:self action:@selector(handleTapOnSpecificNavBarBackButton:) forControlEvents:UIControlEventTouchDown];
-        
+		
         //arrow
         CGFloat arrowRatio = .25f;
         CGSize backArrowSize = CGSizeMake(17.0f*arrowRatio, 26.0f*arrowRatio);
@@ -234,51 +249,11 @@
         //resize the frame
         backButtonFrame = CGRectMake(backButtonFrame.origin.x, backButtonFrame.origin.y, backArrowSize.width+paddingLeft+someLabelSize.width, backButtonFrame.size.height);
         backButton.frame = backButtonFrame;
-        
-        //add the home button
-        UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        CGRect homeButtonFrame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
-        homeButton.frame = homeButtonFrame;
-        homeButton.backgroundColor = DEBUG_SHOW_COLORS ? [UIColor blueColor] : [UIColor clearColor];
-        [homeButton addTarget:self action:@selector(handleTapOnSpecificNavBarHomeButton:) forControlEvents:UIControlEventTouchDown];
-        
-        //resize the frame for the home button
-        homeButtonFrame = CGRectMake((navView.frame.size.width-homeButton.frame.size.width)/2, (navView.frame.size.height-homeButton.frame.size.height)/2,homeButtonFrame.size.width, homeButtonFrame.size.height);
-        homeButton.frame = homeButtonFrame;
+
+		[navBar addSubview:backButton];
 		
-		
-		CGRect navBarFrame = specificNavigationBarFrame;
-		
-		//set up the gradient view
-		CGSize gradientViewSize = CGSizeMake(2000.0f, 3.0f);
-		CGRect gradientViewFrame = CGRectMake(navBarFrame.origin.x, navBarFrame.origin.y+navBarFrame.size.height, gradientViewSize.width, gradientViewSize.height);
-		UIView* gradientView = [[UIView alloc] initWithFrame:gradientViewFrame];
-		gradientView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		
-		gradientView.backgroundColor = [UIColor clearColor];
-		
-		CAGradientLayer *gradient = [CAGradientLayer layer];
-		gradient.frame = gradientView.bounds;
-		gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
-		[gradientView.layer insertSublayer:gradient atIndex:0];
-		gradientView.contentMode = UIViewContentModeScaleAspectFill;
-		
-        
-		//add the ignant logo
-		
-		
-		
-		
-        [navView addSubview:homeButton];
-        [navView addSubview:backButton];
-        [navView addSubview:gradientView];
-        
-        _specificNavigationBar = navView;
+		return navBar;
     }
-    
-	
-	
-	
 	
     return _specificNavigationBar;
 }
