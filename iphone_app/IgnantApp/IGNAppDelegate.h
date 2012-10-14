@@ -20,8 +20,6 @@
     NSString *persistentStorePath;
 }
 
--(void)fetchShouldReloadData;
-
 @property (strong, nonatomic) UIWindow *window;
 
 @property(nonatomic, readonly, strong) UIView* ignantToolbar;

@@ -46,10 +46,7 @@
 											failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
 
-	NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];
-
-	DEF_BLOCK_SELF
-	
+	NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];	
 	NSDictionary *params = @{kParameterAction:kAPICommandShouldReloadDataForTheFirstRun, kTLLastFirstDataFetch:lastUpdateTimeStamp};
 	[self getContentWithParameters:params success:success failure:failure];
 }

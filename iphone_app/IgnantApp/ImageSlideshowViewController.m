@@ -105,9 +105,7 @@
 
 -(void)setUpScrollViewWithImages:(NSArray*)images
 {
-	
 	CGFloat currentScreenWidth = [[UIScreen mainScreen] currentBounds].size.width;
-	CGFloat currentScreenHeight = [[UIScreen mainScreen] currentBounds].size.height;
 	
     //first of all remove every subview on the scrolview
     for (UIView *v in [_imageScrollView subviews]) {

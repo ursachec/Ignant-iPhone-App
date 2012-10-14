@@ -446,7 +446,7 @@
         NSURL* urlAtCurrentIndex = [[NSURL alloc] initWithString:encodedString];
         __block NSURL* blockUrlAtCurrentIndex = urlAtCurrentIndex;
 		__block UIImageView* blockImageView = aCell.cellImageView;
-        [blockImageView setImageWithURL:urlAtCurrentIndex
+        [blockImageView setImageWithURL:blockUrlAtCurrentIndex
                            placeholderImage:nil 
                                      success:^(UIImage* image){
 										 blockImageView.alpha = .0f;
