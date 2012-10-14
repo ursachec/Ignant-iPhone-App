@@ -69,7 +69,7 @@
     // Do any additional setup after loading the view from its nib.
     
     
-    [_refreshHeaderView removeFromSuperview];
+    [self.refreshHeaderView removeFromSuperview];
 }
 
 -(void)viewWillAppear:(BOOL)animated

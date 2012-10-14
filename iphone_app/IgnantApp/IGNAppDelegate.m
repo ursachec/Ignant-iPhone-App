@@ -563,10 +563,7 @@
 {
     self.isLoadingDataForFirstRun = YES;
     
-#warning TODO: test this
-	
-	// fetch data using afnetworking
-	
+
 	
 	DEF_BLOCK_SELF
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -590,19 +587,11 @@
 
     NSString * tokenAsString = [[[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""] copy];
     
-    //register also on server side
-    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandRegisterForNotifications,kParameterAction, currentPreferredLanguage,kParameterLanguage, tokenAsString,kAPIKeyRegisterForNotificationsDeviceToken, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"encodedString: %@ tokenAsString: %@", encodedString, tokenAsString);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-    [request setTimeOutSeconds:20.0f];
-	[request startAsynchronous];
-    
+	[[AFIgnantAPIClient sharedClient] getRegisterForNotificationsWithDeviceToken:tokenAsString success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+		
+	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+		
+	}];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

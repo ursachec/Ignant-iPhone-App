@@ -330,7 +330,6 @@
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
 	DEF_BLOCK_SELF
-#warning TODO: AFNetworking test this
 	NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
 	[[AFIgnantAPIClient sharedClient] getMoreDataForTumblrWithLeastRecentDate:newImplementationDateForMost
 																	  success:^(AFHTTPRequestOperation *operation, id responseJSON) {
@@ -353,7 +352,6 @@
 
 -(void)loadLatestTumblrArticles
 {
-#warning TODO: built in afnetworking - check if this works
 	
     if (self.isLoadingLatestTumblrArticles) {
 		return;

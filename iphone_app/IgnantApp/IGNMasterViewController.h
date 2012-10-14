@@ -17,21 +17,18 @@
 
 @class Category;
 @class ArticleDetailViewController;
+@class IgnantImporter;
 
 @interface IGNMasterViewController : IGNViewController <NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, IgnantImporterDelegate, EGORefreshTableHeaderDelegate>
-{
-    @protected
-    EGORefreshTableHeaderView *_refreshHeaderView;
-    
-    BOOL _reloading;
-    BOOL _showLoadMoreContent;
-    BOOL _isLoadingMoreContent;
-    BOOL _isLoadingLatestContent;
-    
-    int _numberOfActiveRequests;
-    
-}
 
+@property(assign) BOOL reloading;
+@property(assign) BOOL showLoadMoreContent;
+@property(assign) BOOL isLoadingMoreContent;
+@property(assign) BOOL isLoadingLatestContent;
+@property(assign) int numberOfActiveRequests;
+@property(strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
+
+@property (strong, nonatomic) IgnantImporter* importer;
 @property (strong, nonatomic) IBOutlet UITableView *blogEntriesTableView;
 
 @property (strong, nonatomic) ArticleDetailViewController *articleDetailViewController;

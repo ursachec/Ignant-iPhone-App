@@ -33,4 +33,17 @@
 -(void)getSetOfMosaicImagesWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 							   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 
+
+-(void)getMoreArticlesWithCategoryId:(NSString*)categoryId
+				 dateOfOldestArticle:(NSDate*)dateOfOldestArticle
+							 success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getLatestArticlesWithCategoryId:(NSString*)categoryId
+							   success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getRegisterForNotificationsWithDeviceToken:(NSString*)deviceToken
+										  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+										  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 @end

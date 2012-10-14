@@ -61,7 +61,6 @@
 -(void)initializeFacebook;
 -(BOOL)checkIfAppOnline;
 
--(void)setIsToolbarGradientViewHidden:(BOOL)hidden;
 -(void)setIsToolbarHidden:(BOOL)hidden;
 -(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 

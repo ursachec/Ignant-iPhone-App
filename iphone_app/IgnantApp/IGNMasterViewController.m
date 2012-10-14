@@ -27,11 +27,7 @@
 #import "IgnantLoadingView.h"
 #import "IgnantImporter.h"
 
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
-
+#import "AFIgnantAPIClient.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 
@@ -45,34 +41,20 @@
 -(void)loadMoreContent;
 -(NSString*)currentCategoryId;
 
-
 @property (strong, nonatomic, readwrite) UIView* scrollTopHomeButtonView;
 @property (strong, nonatomic, readwrite) Category* currentCategory;
 @property (unsafe_unretained, readwrite) BOOL isHomeCategory;
 
-
 @property (strong, nonatomic, readwrite) NSDateFormatter* articleCellDateFormatter;
+
 @end
 
 #pragma mark -
 
 @implementation IGNMasterViewController
-
-@synthesize isHomeCategory = _isHomeCategory;
-
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-
-@synthesize blogEntriesTableView = _blogEntriesTableView;
-
-@synthesize currentCategory = _currentCategory;
-
-@synthesize fetchingDataForFirstRun;
-
 @synthesize importer = _importer;
-
-@synthesize articleCellDateFormatter = _articleCellDateFormatter;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil category:(Category*)category
 {
@@ -80,9 +62,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        _showLoadMoreContent = YES;
-        _isLoadingMoreContent = NO;
-        _isLoadingLatestContent = NO;
+        self.showLoadMoreContent = YES;
+        self.isLoadingMoreContent = NO;
+        self.isLoadingLatestContent = NO;
         
         self.currentCategory = category;
         self.isHomeCategory = (category==nil) ? TRUE : FALSE;
@@ -95,10 +77,8 @@
         }
         
         self.importer = nil;
-        
-        
     }
-    
+	
     return self;
 }
 
@@ -632,28 +612,82 @@
 #pragma mark - getting content from the server
 -(void)loadLatestContent
 {
-    if (_isLoadingLatestContent) return;        
-    _isLoadingLatestContent = YES;
+    if (self.isLoadingLatestContent) {
+		return;
+	}
+    self.isLoadingLatestContent = YES;
     
-    NSString *categoryId = [self currentCategoryId];
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetLatestArticlesForCategory,kParameterAction,categoryId,kCurrentCategoryId, [self currentPreferredLanguage], kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"MASTER LOAD LATEST CONTENT encodedString go: %@",encodedString);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous]; 
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+	if (lastUpdateDateForCurrentCategoryId==nil) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self setIsLoadingViewHidden:NO];
+		});
+	}
+	
+	
+	DEF_BLOCK_SELF
+	[[AFIgnantAPIClient sharedClient] getLatestArticlesWithCategoryId:[self currentCategoryId]
+															  success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+																  
+																  dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+																  dispatch_async(importerDispatchQueue, ^{
+																	  
+																	  NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
+																	  backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+																	  
+																	  IgnantImporter* newImporter = [[IgnantImporter alloc] init];
+																	  newImporter.delegate = blockSelf;
+																	  newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+																	  
+																	  DBLog(@"starting importJSONWithLatestPosts...");
+																	  [newImporter importJSONWithLatestPosts:[operation responseString] forCategoryId:[self currentCategoryId]];
+																  });
+																  dispatch_release(importerDispatchQueue);
+																  
+																  self.isLoadingLatestContent = NO;
+																  [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
+																  
+																  
+																  dispatch_async(dispatch_get_main_queue(), ^{
+																	  [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+																  });
+																  
+															  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+	
+																  
+																  if ([blockSelf.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[blockSelf currentCategoryId]]==nil) {
+																	  dispatch_async(dispatch_get_main_queue(), ^{
+																		  [blockSelf setIsCouldNotLoadDataViewHidden:NO];
+																	  });
+																  }
+																  
+																  blockSelf.isLoadingLatestContent = NO;
+																  [blockSelf.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
+																  
+																  
+																  dispatch_async(dispatch_get_main_queue(), ^{
+																	  [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+																  });
+															  }];
+	
+
 }
 
 -(void)loadMoreContent
 {
-    if (_isLoadingMoreContent) return;        
-    _isLoadingMoreContent = YES;
+    if (self.isLoadingMoreContent) {
+		return;
+	}
+    self.isLoadingMoreContent = YES;
     
-    _numberOfActiveRequests++;
+    self.numberOfActiveRequests++;
     
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
     DBLog(@"loading more content");
     
     //this is done to update the "loading more cell"
@@ -661,104 +695,56 @@
         [self.blogEntriesTableView reloadData];
     });
     
-    NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
     
-    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreArticlesForCategory,kParameterAction,[self currentCategoryId],kCurrentCategoryId, secondsSince1970, kDateOfOldestArticle, [self currentPreferredLanguage],kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"encodedString go: %@",encodedString);
-    
-    NSURL* reqUrl = [[NSURL alloc] initWithString:encodedString];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:reqUrl];
-    [request setDelegate:self];
-    [request startAsynchronous];
-}
 
-- (void)requestStarted:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
-    
-    if (_isLoadingMoreContent) {
-        
-        
-        
-    }
-    
-    else if (_isLoadingLatestContent) {
-        
-        if (lastUpdateDateForCurrentCategoryId==nil) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setIsLoadingViewHidden:NO];
-            });
-            
-        }
-        
-    }
-}
+	NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
+	
+	
+	
+	DEF_BLOCK_SELF
+    [[AFIgnantAPIClient sharedClient] getMoreArticlesWithCategoryId:[self currentCategoryId]
+												dateOfOldestArticle:newImplementationDateForMost success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+													
+													
+													dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
+													dispatch_async(importerDispatchQueue, ^{
+														
+														NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
+														backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+														
+														IgnantImporter* newImporter = [[IgnantImporter alloc] init];
+														newImporter.delegate = blockSelf;
+														newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
+														
+														DBLog(@"starting importingJSONWithMorePosts..., currentCategoryId: %@", [blockSelf currentCategoryId]);
+														NSString* aCategoryId = [blockSelf currentCategoryId];
+														[newImporter importJSONWithMorePosts:[operation responseString] forCategoryId:aCategoryId];
+													});
+													dispatch_release(importerDispatchQueue);
+													
+													blockSelf.numberOfActiveRequests--;
+													blockSelf.showLoadMoreContent = YES;
+													blockSelf.isLoadingMoreContent = NO;
+													
+													dispatch_async(dispatch_get_main_queue(), ^{
+														[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+													});
 
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    
-    if (_isLoadingMoreContent) {
-    
-        DBLog(@"is loading more content...");
-        
-        DEF_BLOCK_SELF
-        
-        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
-        dispatch_async(importerDispatchQueue, ^{
-            
-            NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
-            backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
-            
-            IgnantImporter* newImporter = [[IgnantImporter alloc] init];
-            newImporter.delegate = blockSelf;
-            newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
-            
-            DBLog(@"starting importingJSONWithMorePosts..., currentCategoryId: %@", [blockSelf currentCategoryId]);
-            NSString* aCategoryId = [blockSelf currentCategoryId];
-            [newImporter importJSONWithMorePosts:[request responseString] forCategoryId:aCategoryId];
-        });
-        dispatch_release(importerDispatchQueue);
-        
-        _numberOfActiveRequests--;
-        _showLoadMoreContent = YES;
-        _isLoadingMoreContent = NO;
-        
-    }
-    else if (_isLoadingLatestContent) {
-                
-        DBLog(@"is loading latest content...");
-        
-        DEF_BLOCK_SELF
-        
-        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
-        dispatch_async(importerDispatchQueue, ^{
-            
-            NSManagedObjectContext *backgroundContext = [[NSManagedObjectContext alloc] init];
-            backgroundContext.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
-            
-            IgnantImporter* newImporter = [[IgnantImporter alloc] init];
-            newImporter.delegate = blockSelf;
-            newImporter.persistentStoreCoordinator = blockSelf.managedObjectContext.persistentStoreCoordinator;
-            
-            DBLog(@"starting importJSONWithLatestPosts...");
-            [newImporter importJSONWithLatestPosts:[request responseString] forCategoryId:[self currentCategoryId]];
-        });
-        dispatch_release(importerDispatchQueue);
-        
-        _isLoadingLatestContent = NO;
-        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
-    }
+												} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+													
+													blockSelf.numberOfActiveRequests--;
+													blockSelf.isLoadingMoreContent = NO;
+													
+													//this is done to update the "loading more cell"
+													dispatch_async(dispatch_get_main_queue(), ^{
+														[blockSelf.blogEntriesTableView reloadData];
+														[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+													});
+													
+												}];
+
+	return;
+	
 }
 
 -(IgnantImporter*)importer
@@ -770,33 +756,6 @@
     }
     
     return _importer;
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    DBLog(@"requestFailed");
-    
-    if (_isLoadingMoreContent) {    
-        _numberOfActiveRequests--;
-        _isLoadingMoreContent = NO;
-        
-        //this is done to update the "loading more cell"
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.blogEntriesTableView reloadData];
-        });
-    }
-    
-    else if (_isLoadingLatestContent) {
-        if ([self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]]==nil) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setIsCouldNotLoadDataViewHidden:NO];
-            });
-        }
-        
-        _isLoadingLatestContent = NO;
-        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.blogEntriesTableView];
-    }
 }
 
 #pragma mark - IgnantImporterDelegate

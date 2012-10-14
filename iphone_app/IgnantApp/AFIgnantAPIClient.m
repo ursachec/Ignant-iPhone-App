@@ -80,7 +80,6 @@
 	[self getContentWithParameters:params success:success failure:failure];
 }
 
-
 -(void)getSetOfMosaicImagesWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
@@ -89,4 +88,30 @@
 }
 
 
+-(void)getMoreArticlesWithCategoryId:(NSString*)categoryId
+				 dateOfOldestArticle:(NSDate*)dateOfOldestArticle
+							 success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{	
+	NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[dateOfOldestArticle timeIntervalSince1970]];
+	NSDictionary *params = @{kParameterAction:kAPICommandGetMoreArticlesForCategory, kParameterLanguage:[NSLocale currentPreferredLanguage],kCurrentCategoryId:categoryId,kDateOfOldestArticle:secondsSince1970};
+	[self getContentWithParameters:params success:success failure:failure];
+}
+
+-(void)getLatestArticlesWithCategoryId:(NSString*)categoryId
+							 success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+	NSDictionary *params = @{kParameterAction:kAPICommandGetLatestArticlesForCategory, kParameterLanguage:[NSLocale currentPreferredLanguage],kCurrentCategoryId:categoryId};
+	[self getContentWithParameters:params success:success failure:failure];
+}
+
+-(void)getRegisterForNotificationsWithDeviceToken:(NSString*)deviceToken
+										  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+										  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+	NSDictionary *params = @{kParameterAction:kAPICommandRegisterForNotifications, kParameterLanguage:[NSLocale currentPreferredLanguage],kAPIKeyRegisterForNotificationsDeviceToken:deviceToken};
+	[self getContentWithParameters:params success:success failure:failure];
+}
+					  
 @end
