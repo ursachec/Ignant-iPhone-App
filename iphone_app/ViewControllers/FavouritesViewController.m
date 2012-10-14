@@ -146,7 +146,7 @@
     
     
     //get the current favourites
-    NSMutableArray* currentFavourites = self.appDelegate.userDefaultsManager.currentFavouriteBlogEntries;
+    NSMutableArray* currentFavourites = [UserDefaultsManager sharedDefautsManager].currentFavouriteBlogEntries;
     for (NSString* articleId in currentFavourites) {
         DBLog(@"articleId: %@", articleId);
         NSPredicate *p = [NSPredicate predicateWithFormat:@"articleId == %@", articleId];

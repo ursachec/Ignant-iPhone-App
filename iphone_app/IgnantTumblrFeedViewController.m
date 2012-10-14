@@ -144,7 +144,7 @@
     
     NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     
-    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate* lastUpdate = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if (lastUpdateInSeconds<updateTimer) {
@@ -330,7 +330,7 @@
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
 	DEF_BLOCK_SELF
-	NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
+	NSDate* newImplementationDateForMost = [[UserDefaultsManager sharedDefautsManager] dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
 	[[AFIgnantAPIClient sharedClient] getMoreDataForTumblrWithLeastRecentDate:newImplementationDateForMost
 																	  success:^(AFHTTPRequestOperation *operation, id responseJSON) {
 																			
@@ -502,7 +502,7 @@
     }
     
     //set the last update date
-    [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+    [[UserDefaultsManager sharedDefautsManager] setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
 	DEF_BLOCK_SELF
     dispatch_async(dispatch_get_main_queue(), ^{

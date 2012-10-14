@@ -200,8 +200,10 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     if (savedOk) {
         
+		
+		
         //save date for least recent article
-        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        [[UserDefaultsManager sharedDefautsManager] setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
         
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
@@ -272,7 +274,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     if (savedOk) {
         
         //save date for least recent article
-        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
+        [[UserDefaultsManager sharedDefautsManager] setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:categoryId];
         
         
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
@@ -372,7 +374,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     {
         //save date for least recent article
         NSString* homeCategoryId = [NSString stringWithFormat:@"%d",kCategoryIndexForHome];
-        [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];
+        [[UserDefaultsManager sharedDefautsManager] setDateForLeastRecentArticle:self.currentDateForLeastRecentArticle withCategoryId:homeCategoryId];
         
         self.lastImportDateForMainPageArticle = self.currentBlogEntry.publishingDate;
         [self updateLastDateForImportedArticleForMainPage];
@@ -611,7 +613,7 @@ NSString *const kUserDefaultsLastImportDateForMainPageArticle = @"last_import_da
     
     if (savedOk) {
             //save date for least recent article
-            [self.appDelegate.userDefaultsManager setDateForLeastRecentArticle:self.currentDateForLeastRecentTumblrEntry withCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForTumblr]];
+            [[UserDefaultsManager sharedDefautsManager] setDateForLeastRecentArticle:self.currentDateForLeastRecentTumblrEntry withCategoryId:[NSString stringWithFormat:@"%d",kCategoryIndexForTumblr]];
             
         if([delegate respondsToSelector:@selector(didFinishImportingData)]){
             [delegate didFinishImportingData];

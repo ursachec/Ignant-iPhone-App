@@ -436,7 +436,7 @@
 		E58DAE9C16221CCD00150F2F /* AFIgnantAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFIgnantAPIClient.m; sourceTree = "<group>"; };
 		E5A28B5115F901920051C5E7 /* SSToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSToolkit.xcodeproj; path = ../submodules/sstoolkit/SSToolkit.xcodeproj; sourceTree = "<group>"; };
 		E5AB094C1610E344006551D7 /* Default-568h-NO-TOP@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h-NO-TOP@2x.png"; sourceTree = "<group>"; };
-		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBConnect.bundle; sourceTree = "<group>"; };
+		E5AFAE5415B8207700E084D3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBConnect.bundle; path = IgnantApp/FBConnect.bundle; sourceTree = "<group>"; };
 		E5AFAE5715B8209D00E084D3 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		E5AFAE5815B8209D00E084D3 /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
 		E5AFAE5915B8209D00E084D3 /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBConnect.h; sourceTree = "<group>"; };
@@ -724,6 +724,7 @@
 				41A4AB1715A1D08E0062A624 /* libGoogleAnalytics.a */,
 			);
 			name = GoogleAnalytics;
+			path = IgnantApp;
 			sourceTree = "<group>";
 		};
 		41ACB7D0158A8535001D31B0 /* Products */ = {
@@ -853,6 +854,7 @@
 				E5AFAE6215B8209D00E084D3 /* FBFrictionlessRequestSettings.m */,
 			);
 			name = FBConnect;
+			path = IgnantApp;
 			sourceTree = "<group>";
 		};
 		E5AFAE6F15B820A900E084D3 /* JSON */ = {
@@ -878,6 +880,11 @@
 		E5CC15D7161A358100905461 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E5AFAE5615B8209000E084D3 /* FBConnect */,
+				E5AFAE5415B8207700E084D3 /* FBConnect.bundle */,
+				41A4AB1515A1D0800062A624 /* GoogleAnalytics */,
+				FE62059215386A5B00339F12 /* EGORefreshTableViewHeader */,
+				FEBA71C2150CDEDE0016AD6E /* Reachability */,
 				E542982F162B48B60091AC5F /* AFNetworking */,
 				E5CC15D8161A359C00905461 /* SDWebImage */,
 				E5CC15D9161A35A400905461 /* DTCoreText */,
@@ -918,7 +925,6 @@
 				FE0DDD1114AE3515003B8778 /* Views */,
 				FE0DDD0E14AE34F8003B8778 /* Model */,
 				FE0DDD1014AE350F003B8778 /* Resources */,
-				FE3D9D2114DF109600B5E252 /* External libraries */,
 				E5CC15D7161A358100905461 /* Vendor */,
 				E562C68615F7BC040031C416 /* Own Categories */,
 				FEBA71D2150CE1470016AD6E /* External Categories */,
@@ -1161,19 +1167,6 @@
 			path = Resources/toolbars;
 			sourceTree = "<group>";
 		};
-		FE3D9D2114DF109600B5E252 /* External libraries */ = {
-			isa = PBXGroup;
-			children = (
-				E5AFAE5615B8209000E084D3 /* FBConnect */,
-				E5AFAE5415B8207700E084D3 /* FBConnect.bundle */,
-				41A4AB1515A1D0800062A624 /* GoogleAnalytics */,
-				FEBA71C2150CDEDE0016AD6E /* Reachability */,
-				FE62059215386A5B00339F12 /* EGORefreshTableViewHeader */,
-			);
-			name = "External libraries";
-			path = IgnantApp;
-			sourceTree = "<group>";
-		};
 		FE42566315599F61008E0911 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1203,7 +1196,6 @@
 				FE62059415386A6D00339F12 /* EGORefreshTableHeaderView.m */,
 			);
 			name = EGORefreshTableViewHeader;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		FE62059615386C1A00339F12 /* Resources */ = {
@@ -1260,7 +1252,6 @@
 				FEBA71C4150CDEF40016AD6E /* Reachability.m */,
 			);
 			name = Reachability;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		FEBA71D2150CE1470016AD6E /* External Categories */ = {

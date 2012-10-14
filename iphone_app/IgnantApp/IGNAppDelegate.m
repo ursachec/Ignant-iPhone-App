@@ -29,10 +29,6 @@
 #import "IgnantNoInternetConnectionView.h"
 #import "UserDefaultsManager.h"
 
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
 #import "Reachability.h"
 
 //---google analytics
@@ -73,10 +69,6 @@
 
 @implementation IGNAppDelegate
 
-@synthesize goHomeButton = _goHomeButton;
-
-@synthesize userDefaultsManager = _userDefaultsManager;
-
 @synthesize window = _window;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
@@ -84,14 +76,10 @@
 @synthesize navigationController = _navigationController;
 @synthesize importer = _importer;
 
-@synthesize noInternetConnectionView = _noInternetConnectionView;
-
 @synthesize facebook = _facebook;
 
 @synthesize shouldLoadDataForFirstRun;
 @synthesize isLoadingDataForFirstRun;
-
-@synthesize ignantToolbar = _ignantToolbar;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

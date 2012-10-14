@@ -10,6 +10,8 @@
 
 @interface UserDefaultsManager : NSObject
 
++ (UserDefaultsManager *)sharedDefautsManager;
+
 -(NSDate*)lastUpdateDateForCategoryId:(NSString*)categoryId;
 -(void)setLastUpdateDate:(NSDate*)date forCategoryId:(NSString*)categoryId;
 -(NSMutableArray*)currentUpdateDatesForCategories;

@@ -236,7 +236,7 @@
     }
     
     //check when was the last time updating the currently set category and trigger load latest/load more
-    NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];    
+    NSDate* dateForLastUpdate = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];    
     DBLog(@"dateForLastUpdate: %@ isLoadingDataForFirstRun: %@", dateForLastUpdate, [self.appDelegate isLoadingDataForFirstRun] ? @"TRUE" : @"FALSE");
     
     //only check if data is here if not on first run
@@ -329,7 +329,7 @@
     
     NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
     
-    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate* lastUpdate = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     if (lastUpdateInSeconds<updateTimer) {
@@ -620,7 +620,7 @@
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
-	NSDate *lastUpdateDateForCurrentCategoryId = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+	NSDate *lastUpdateDateForCurrentCategoryId = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];
 	if (lastUpdateDateForCurrentCategoryId==nil) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self setIsLoadingViewHidden:NO];
@@ -658,7 +658,7 @@
 															  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 	
 																  
-																  if ([blockSelf.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[blockSelf currentCategoryId]]==nil) {
+																  if ([[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[blockSelf currentCategoryId]]==nil) {
 																	  dispatch_async(dispatch_get_main_queue(), ^{
 																		  [blockSelf setIsCouldNotLoadDataViewHidden:NO];
 																	  });
@@ -697,7 +697,7 @@
     
     
 
-	NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
+	NSDate* newImplementationDateForMost = [[UserDefaultsManager sharedDefautsManager] dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
 	
 	
 	
@@ -785,7 +785,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [blockSelf.blogEntriesTableView reloadData];
         [blockSelf setIsLoadingViewHidden:YES];
-        [blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[blockSelf currentCategoryId]];
+        [[UserDefaultsManager sharedDefautsManager] setLastUpdateDate:[NSDate date] forCategoryId:[blockSelf currentCategoryId]];
     });
 }
 
@@ -827,7 +827,7 @@
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-    NSDate* dateForLastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate* dateForLastUpdate = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];
 	return dateForLastUpdate==nil ? [NSDate dateWithTimeIntervalSince1970:0] : dateForLastUpdate;
 }
 

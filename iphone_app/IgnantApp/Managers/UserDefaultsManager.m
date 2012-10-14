@@ -10,6 +10,16 @@
 
 @implementation UserDefaultsManager
 
++ (UserDefaultsManager *)sharedDefautsManager {
+    static UserDefaultsManager *_sharedClient = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedClient = [[UserDefaultsManager alloc] init];
+    });
+    
+    return _sharedClient;
+}
+
 #pragma mark -
 
 -(NSDate*)lastUpdateForFirstRun {

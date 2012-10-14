@@ -679,7 +679,7 @@
 
 -(void)updateToggleLikeButtonTitle
 {
-    BOOL isFavourite = [self.appDelegate.userDefaultsManager isBlogEntryFavourite:[self currentArticleId]];
+    BOOL isFavourite = [[UserDefaultsManager sharedDefautsManager] isBlogEntryFavourite:[self currentArticleId]];
     NSString *likeTitle = isFavourite ? NSLocalizedString(@"button_title_unlike", @"Title of the 'Unlike' button on the Detail View Controller") : NSLocalizedString(@"button_title_like", @"Title of the 'Like' button on the Detail View Controller");
     [self.toggleLikeButton setTitle:likeTitle forState:UIControlStateNormal];
 }
@@ -877,7 +877,7 @@
         [self importRemoteArticleDictionary];
     }
     
-    [self.appDelegate.userDefaultsManager toggleIsFavouriteBlogEntry:[self currentArticleId]];
+    [[UserDefaultsManager sharedDefautsManager] toggleIsFavouriteBlogEntry:[self currentArticleId]];
     [self updateToggleLikeButtonTitle];
 }
 

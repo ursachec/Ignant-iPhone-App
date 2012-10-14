@@ -118,7 +118,7 @@ NSString * const kImageFilename = @"filename";
 {
 	
 	NSTimeInterval updateTimer = -1.0f * (CGFloat)kDefaultNumberOfHoursBeforeTriggeringLatestUpdate * 60.0f * 60.f;
-    NSDate* lastUpdate = [self.appDelegate.userDefaultsManager lastUpdateDateForCategoryId:[self currentCategoryId]];
+    NSDate* lastUpdate = [[UserDefaultsManager sharedDefautsManager] lastUpdateDateForCategoryId:[self currentCategoryId]];
     NSTimeInterval lastUpdateInSeconds = [lastUpdate timeIntervalSinceNow];
     
     BOOL forceLoad = false;
@@ -238,7 +238,7 @@ NSString * const kImageFilename = @"filename";
 			return;
 		}
 		
-		[blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+		[[UserDefaultsManager sharedDefautsManager] setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
 		
 		if (blockSelf.isLoadingReplacingMosaicImages) {
 			[blockSelf replaceCurrentMosaicImagesWithNewOnes:[images copy]];
