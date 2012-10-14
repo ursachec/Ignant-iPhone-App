@@ -9,6 +9,7 @@
 #import "MoreCell.h"
 
 CGFloat const kMoreCellHeight = 62.1f;
+CGFloat const kMoreCellHeightIphone5 = 75.5f;
 
 @interface MoreCell()
 @property(nonatomic,strong,readwrite) UIView *overlayView;
@@ -36,9 +37,10 @@ CGFloat const kMoreCellHeight = 62.1f;
         self.opaque = YES;
 
         
-
+		CGFloat cellHeight = [UIDevice isIphone5] ? kMoreCellHeightIphone5 : kMoreCellHeight;
+		
         CGRect oldRect = self.contentView.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, oldRect.origin.y, oldRect.size.width, kMoreCellHeight);
+        CGRect newRect = CGRectMake(oldRect.origin.x, oldRect.origin.y, oldRect.size.width, cellHeight);
         
         UIView* newContentView = [[UIView alloc] initWithFrame:newRect];
         newContentView.backgroundColor = [UIColor clearColor];
@@ -102,11 +104,13 @@ CGFloat const kMoreCellHeight = 62.1f;
         //background view
         UIView *bV =[[UIView alloc] initWithFrame:newContentView.bounds]; 
         bV.backgroundColor = COLOR_BACKGROUND_VIEW;
+		bV.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.backgroundView = bV;
         
         //selected background view
         UIView *sbV =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10.0f)]; 
         sbV.backgroundColor = COLOR_SELECTED_BACKGROUND_VIEW;
+		sbV.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.selectedBackgroundView = sbV;
     }
     return self;

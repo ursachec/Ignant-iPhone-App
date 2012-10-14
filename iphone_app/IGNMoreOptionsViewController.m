@@ -157,7 +157,8 @@ typedef enum _moreOptionsIndeces  {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kMoreCellHeight;
+	CGFloat height = [UIDevice isIphone5] ? kMoreCellHeightIphone5 : kMoreCellHeight;
+    return height;
 }
 
 // Customize the appearance of table view cells.

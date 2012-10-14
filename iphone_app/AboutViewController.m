@@ -37,11 +37,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    
-    
     CGFloat paddingTop = 5.0f;
     CGFloat paddingBottom = 25.0f;
-    
     
     CGRect oldAboutTextViewFrame = self.aboutTextView.frame;
     NSString* aboutText = NSLocalizedString(@"about_text", nil);    
@@ -54,7 +51,7 @@
     CGSize aboutImageViewSize = self.aboutImageView.frame.size;
     CGSize textSize = [self.aboutTextView.text sizeWithFont:self.aboutTextView.font constrainedToSize:constraintSize];
     
-    CGRect newAboutTextViewFrame = CGRectMake(oldAboutTextViewFrame.origin.x, oldAboutTextViewFrame.origin.y, oldAboutTextViewFrame.size.width, textSize.height+8.0f);
+    CGRect newAboutTextViewFrame = CGRectMake(oldAboutTextViewFrame.origin.x, oldAboutTextViewFrame.origin.y, oldAboutTextViewFrame.size.width, textSize.height+10.0f);
     self.aboutTextView.frame = newAboutTextViewFrame;
     
     CGFloat newAboutScrollViewHeight = paddingTop+aboutImageViewSize.height+textSize.height+paddingBottom;

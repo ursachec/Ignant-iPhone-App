@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 extern CGFloat const kMoreCellHeight;
+extern CGFloat const kMoreCellHeightIphone5;
 
 @interface MoreCell : UITableViewCell
 

@@ -123,6 +123,8 @@
 		E5C3DD75162B003300F4180D /* navbar_background_portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C3DD71162B003300F4180D /* navbar_background_portrait@2x.png */; };
 		E5C3DD78162B0A8F00F4180D /* navbar_ignant_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C3DD76162B0A8F00F4180D /* navbar_ignant_logo.png */; };
 		E5C3DD79162B0A8F00F4180D /* navbar_ignant_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C3DD77162B0A8F00F4180D /* navbar_ignant_logo@2x.png */; };
+		E5C3DD7C162B11BF00F4180D /* UIDevice+Ignant.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C3DD7A162B11BF00F4180D /* UIDevice+Ignant.h */; };
+		E5C3DD7D162B11BF00F4180D /* UIDevice+Ignant.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C3DD7B162B11BF00F4180D /* UIDevice+Ignant.m */; };
 		E5CC1615161A3F3300905461 /* IgnantNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = E5CC1613161A3F3300905461 /* IgnantNavigationController.h */; };
 		E5CC1616161A3F3300905461 /* IgnantNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CC1614161A3F3300905461 /* IgnantNavigationController.m */; };
 		E5F355D215FCE6AC0099B9B7 /* libSSToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A28B5C15F901920051C5E7 /* libSSToolkit.a */; };
@@ -477,6 +479,8 @@
 		E5C3DD71162B003300F4180D /* navbar_background_portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navbar_background_portrait@2x.png"; path = "Resources/navbar_images/navbar_background_portrait@2x.png"; sourceTree = "<group>"; };
 		E5C3DD76162B0A8F00F4180D /* navbar_ignant_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = navbar_ignant_logo.png; path = Resources/navbar_images/navbar_ignant_logo.png; sourceTree = "<group>"; };
 		E5C3DD77162B0A8F00F4180D /* navbar_ignant_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navbar_ignant_logo@2x.png"; path = "Resources/navbar_images/navbar_ignant_logo@2x.png"; sourceTree = "<group>"; };
+		E5C3DD7A162B11BF00F4180D /* UIDevice+Ignant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIDevice+Ignant.h"; path = "Categories/UIDevice+Ignant.h"; sourceTree = "<group>"; };
+		E5C3DD7B162B11BF00F4180D /* UIDevice+Ignant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIDevice+Ignant.m"; path = "Categories/UIDevice+Ignant.m"; sourceTree = "<group>"; };
 		E5CC1613161A3F3300905461 /* IgnantNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IgnantNavigationController.h; path = ViewControllers/IgnantNavigationController.h; sourceTree = SOURCE_ROOT; };
 		E5CC1614161A3F3300905461 /* IgnantNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IgnantNavigationController.m; path = ViewControllers/IgnantNavigationController.m; sourceTree = SOURCE_ROOT; };
 		E5FEA9A3160E29E700787B58 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -796,6 +800,8 @@
 			isa = PBXGroup;
 			children = (
 				E562C68715F7BC130031C416 /* Views */,
+				E5C3DD7A162B11BF00F4180D /* UIDevice+Ignant.h */,
+				E5C3DD7B162B11BF00F4180D /* UIDevice+Ignant.m */,
 			);
 			name = "Own Categories";
 			sourceTree = "<group>";
@@ -1471,6 +1477,7 @@
 				E56C0BAE16220822004C1402 /* UIImageView+AFNetworking.h in Headers */,
 				E58DAE9D16221CCD00150F2F /* AFIgnantAPIClient.h in Headers */,
 				E58606C716262849001D0D64 /* ArticleDetailViewController.h in Headers */,
+				E5C3DD7C162B11BF00F4180D /* UIDevice+Ignant.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1817,6 +1824,7 @@
 				E56C0BAF16220822004C1402 /* UIImageView+AFNetworking.m in Sources */,
 				E58DAE9E16221CCD00150F2F /* AFIgnantAPIClient.m in Sources */,
 				E58606C816262849001D0D64 /* ArticleDetailViewController.m in Sources */,
+				E5C3DD7D162B11BF00F4180D /* UIDevice+Ignant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

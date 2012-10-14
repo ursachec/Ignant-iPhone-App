@@ -247,6 +247,7 @@
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
 	_imageScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
+	[_slideshowPageControl setCurrentPage:0];
 	[self setUpScrollViewWithImages:_remoteImagesArray];
 }
 
