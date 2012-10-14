@@ -290,7 +290,7 @@
     }
     else {
 		
-        __block __typeof__(self) blockSelf = self;
+        DEF_BLOCK_SELF
 		
 		if ([blockSelf.articleTitle length]==0 || [[blockSelf.articleWeblink absoluteString] length]==0) {
 			DBLog(@"articleTitle or articleWeblink is nil");

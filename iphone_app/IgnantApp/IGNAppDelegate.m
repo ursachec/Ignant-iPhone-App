@@ -46,8 +46,6 @@
 
 @property(nonatomic, readwrite, strong) UIView* toolbarGradientView;
 
-@property(nonatomic, readwrite, strong) NSString* deviceToken;
-
 @property(nonatomic, readwrite, strong) IGNMasterViewController *masterViewController;
 @property(nonatomic, readwrite, strong) IGNMasterViewController *categoryViewController;
 @property(nonatomic, readwrite, strong) IGNMoreOptionsViewController *moreOptionsViewController;
@@ -73,7 +71,6 @@
 #pragma mark -
 
 @implementation IGNAppDelegate
-@synthesize deviceToken = _deviceToken;
 
 @synthesize goHomeButton = _goHomeButton;
 @synthesize toolbarGradientView = _toolbarGradientView;
@@ -86,17 +83,6 @@
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize navigationController = _navigationController;
 @synthesize importer = _importer;
-
-@synthesize masterViewController = _masterViewController;
-@synthesize categoryViewController = _categoryViewController;
-@synthesize moreOptionsViewController = _moreOptionsViewController;
-@synthesize tumblrFeedViewController = _tumblrFeedViewController;
-@synthesize categoriesViewController = _categoriesViewController;
-@synthesize mosaikViewController = _mosaikViewController;
-@synthesize aboutViewController = _aboutViewController;
-@synthesize contactViewController = _contactViewController;
-@synthesize favouritesViewController = _favouritesViewController;
-@synthesize externalPageViewController = _externalPageViewController;
 
 @synthesize noInternetConnectionView = _noInternetConnectionView;
 
@@ -164,7 +150,7 @@
 	//check with the server if the firstData should be reloaded
 	else if([self checkIfAppOnline])
 	{
-		__block __typeof__(self) blockSelf = self;
+		DEF_BLOCK_SELF
 			
 		NSDate *lastUpdate = [self.userDefaultsManager lastUpdateForFirstRun];
 		NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];
@@ -322,11 +308,11 @@
 
 -(IGNMasterViewController*)categoryViewController
 {
-if (_categoryViewController==nil) {
-    _categoryViewController = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
-}
+	if (_categoryViewController==nil) {
+		_categoryViewController = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil ];
+	}
 
-return _categoryViewController;
+	return _categoryViewController;
 }
 
 
@@ -573,53 +559,30 @@ return _categoryViewController;
 }
 
 #pragma mark - getting content from the server
-
--(void)fetchShouldReloadData
-{
-
-	//fetch should reload
-	
-}
-
 -(void)fetchAndLoadDataForFirstRun
 {
     self.isLoadingDataForFirstRun = YES;
     
-    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetDataForFirstRun,kParameterAction, currentPreferredLanguage,kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-        
-    DBLog(@"APPDELEGATE FETCH LOAD DATA FIRST RUN encodedString: %@ /// deviceToken: %@", encodedString, self.deviceToken);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-    [request setTimeOutSeconds:6.0f];
-	[request setDelegate:self];
-	[request startAsynchronous];
-}
-
-- (void)requestStarted:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-}
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{    
-    [self.importer importJSONStringForFirstRun:[request responseString]];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];    
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    DBLog(@"shouldLoadData: %@", self.shouldLoadDataForFirstRun ? @"TRUE" : @"FALSE");
-    
-    DBLog(@"requestFailed");
-    
-    [self.masterViewController setIsCouldNotLoadDataViewHidden:NO fullscreen:YES];
-    
-    self.isLoadingDataForFirstRun = NO;
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+#warning TODO: test this
+	
+	// fetch data using afnetworking
+	
+	
+	DEF_BLOCK_SELF
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	[[AFIgnantAPIClient sharedClient] getDataForFirstRunWithSuccess:^(AFHTTPRequestOperation *operation, id responseJSON) {
+		
+		NSString *responseString = [[NSString alloc] initWithData:[operation responseData] encoding:NSUTF8StringEncoding];
+		[blockSelf.importer importJSONStringForFirstRun:responseString];
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		
+	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+				
+		[blockSelf.masterViewController setIsCouldNotLoadDataViewHidden:NO fullscreen:YES];
+		blockSelf.isLoadingDataForFirstRun = NO;
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		
+	}];	
 }
 
 #pragma mark - push notifications
@@ -830,7 +793,7 @@ return _categoryViewController;
     
 #define ANIMATION_DURATION .5f
     
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     __block BOOL bHidden = hidden;
     void (^toolbarblock)(void);
     toolbarblock = ^{

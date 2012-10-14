@@ -56,6 +56,7 @@ NSString * const kFavouriteBlogEntriesKeyArticleIdValue = @"favouriteBlogEntries
 //server stuff
 #define shouldUseRemoteServer false
 #define shouldUseIgnantServer false
+#define shouldUseIgnantDevServer true
 
 NSString* const kAdressForMercedesPage = @"http://mb.mercedes-benz.com/de_DE";
 NSString* const kAdressForItunesStore = @"itms-apps://ax.itunes.apple.com/app/ignant/id500183975?ls=1&mt=8";
@@ -68,6 +69,11 @@ NSString * const kAdressForVideoServer = @"http://107.21.216.249/ignant/videosrv
 #elif shouldUseIgnantServer
 NSString * const kAFContentBaseURL = @"http://www.ignant.de/app/ignant.php";
 NSString * const kAdressForContentServer = @"http://www.ignant.de/app/ignant.php";
+NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
+#elif shouldUseIgnantServer
+NSString * const kAFContentBaseURL = @"http://www.ignant.de/app_dev_api/";
+NSString * const kAdressForContentServer = @"http://www.ignant.de/app_dev_api/ignant.php";
 NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #else

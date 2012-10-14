@@ -26,35 +26,29 @@
 
 #import "TumblrCell.h"
 
+#import "AFIgnantAPIClient.h"
+
 #define kMinimumNumberOfPostsOnLoad 5
 
 @interface IgnantTumblrFeedViewController ()
-{
-    BOOL _isLoadingMoreTumblr;
-    BOOL _showLoadMoreTumblr;
-    BOOL isLoadingLatestTumblrArticles;
-    
-    int _numberOfActiveRequests;
-    
-    EGORefreshTableHeaderView *_refreshHeaderView;
-    
-    BOOL _isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
-    
-    CGPoint lastContentOffset;
-}
+
+@property(assign) CGPoint lastContentOffset;
+@property(assign) int numberOfActiveRequests;
+@property(assign) BOOL isLoadingMoreTumblr;
+@property(assign) BOOL showLoadMoreTumblr;
+@property(assign) BOOL isLoadingLatestTumblrArticles;
+@property(assign) BOOL isLoadingTumblrArticlesForCurrentlyEmptyDataSet;
 
 @property(nonatomic, strong, readwrite) UILabel* couldNotLoadDataLabel;
+@property(nonatomic, strong, readwrite) EGORefreshTableHeaderView *refreshHeaderView;
 
 @end
 
 @implementation IgnantTumblrFeedViewController
-@synthesize tumblrTableView = _tumblrTableView;
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize fetchedResultsController = __fetchedResultsController;
-
-@synthesize couldNotLoadDataLabel = _couldNotLoadDataLabel;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -67,9 +61,9 @@
                         
         self.importer = nil;
         
-        _showLoadMoreTumblr = YES;
-        _isLoadingMoreTumblr = NO;
-        isLoadingLatestTumblrArticles = NO;
+        self.showLoadMoreTumblr = YES;
+        self.isLoadingMoreTumblr = NO;
+        self.isLoadingLatestTumblrArticles = NO;
                 
     }
     return self;
@@ -317,130 +311,100 @@
     float reload_distance = -20;
     if(y > h + reload_distance) 
     {
-        if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
+        if (self.lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreTumblr && _numberOfActiveRequests==0) {
             [self loadMoreTumblrArticles];
         }
     }
     
-    lastContentOffset = scrollView.contentOffset;
+    self.lastContentOffset = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	[self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 #pragma mark - server communication actions
 -(void)loadMoreTumblrArticles
 {        
-    if (_isLoadingMoreTumblr) return;
-    _isLoadingMoreTumblr = YES;
+    if (self.isLoadingMoreTumblr) return;
+    self.isLoadingMoreTumblr = YES;
     
     DBLog(@"loadMoreTumblrArticles");
     
-    _numberOfActiveRequests++;
+    self.numberOfActiveRequests++;
     
-    NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];    
-    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[newImplementationDateForMost timeIntervalSince1970]];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetMoreTumblrArticles,kParameterAction, secondsSince1970,kDateOfOldestArticle, [self currentPreferredLanguage],kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"LOAD MORE TUMBLR encodedString go: %@",encodedString);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous];    
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	DEF_BLOCK_SELF
+#warning TODO: AFNetworking test this
+	NSDate* newImplementationDateForMost = [self.appDelegate.userDefaultsManager dateForLeastRecentArticleWithCategoryId:[self currentCategoryId]];
+	[[AFIgnantAPIClient sharedClient] getMoreDataForTumblrWithLeastRecentDate:newImplementationDateForMost
+																	  success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+																			
+																		  NSString* responseString = [[NSString alloc] initWithData:[operation responseData] encoding:NSUTF8StringEncoding];
+																		  [blockSelf importTumblrDataWithResponseString:responseString];
+																		  
+																		  [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+																		  
+																	  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+																		  
+																		  [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+																		  
+																		  self.numberOfActiveRequests--;
+																		  self.isLoadingMoreTumblr = NO;
+																		  
+																	  }];
+	
 }
 
 -(void)loadLatestTumblrArticles
 {
-    if (isLoadingLatestTumblrArticles) return;        
-    isLoadingLatestTumblrArticles = YES;
+#warning TODO: built in afnetworking - check if this works
+	
+    if (self.isLoadingLatestTumblrArticles) {
+		return;
+	}
+    self.isLoadingLatestTumblrArticles = YES;
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetLatestTumblrArticles,kParameterAction, [self currentPreferredLanguage],kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"LOAD LATEST TUMBLR encodedString go: %@",encodedString);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous]; 
-}
-
-- (void)requestStarted:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    LOG_CURRENT_FUNCTION()
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    if (_isLoadingMoreTumblr) {
-        
-        
-    }
-    else if (isLoadingLatestTumblrArticles) {
-        
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
-            [self setIsLoadingViewHidden:NO];
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+		[self setIsLoadingViewHidden:NO];
+	}
+	
+	DEF_BLOCK_SELF
+	[[AFIgnantAPIClient sharedClient] getLatestDataForTumblrWithSuccess:^(AFHTTPRequestOperation *operation, id responseJSON) {
+		
+		NSString* responseString = [[NSString alloc] initWithData:[operation responseData] encoding:NSUTF8StringEncoding];
+		[blockSelf importTumblrDataWithResponseString:responseString];
+		blockSelf.isLoadingLatestTumblrArticles = NO;
+        [blockSelf.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:blockSelf.tumblrTableView];
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		
+	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+		
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		blockSelf.isLoadingLatestTumblrArticles = NO;
+        if (blockSelf.isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            [blockSelf setIsCouldNotLoadDataViewHidden:NO];
         }
-        
-    }
+        [blockSelf.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
+		
+	}];
+
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request
+-(void)importTumblrDataWithResponseString:(NSString*)reponseString
 {
-    LOG_CURRENT_FUNCTION()
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    
-    if (_isLoadingMoreTumblr) {
-        
-        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueMoreTumblr", NULL);
-        dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONStringForTumblrPosts:[request responseString]];
-        });
-        dispatch_release(importerDispatchQueue);
-        
-    }
-    else if (isLoadingLatestTumblrArticles) {
-                
-        dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueLatestTumblr", NULL);
-        dispatch_async(importerDispatchQueue, ^{
-            [self.importer importJSONStringForTumblrPosts:[request responseString]];
-        });
-        dispatch_release(importerDispatchQueue);
-        
-        isLoadingLatestTumblrArticles = NO;
-        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
-    }
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
-    LOG_CURRENT_FUNCTION()
-        
-    if (_isLoadingMoreTumblr) {
-        
-        _numberOfActiveRequests--;
-        _isLoadingMoreTumblr = NO;
-        
-    }
-    else if (isLoadingLatestTumblrArticles) {
-        
-        isLoadingLatestTumblrArticles = NO;
-        
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
-            [self setIsCouldNotLoadDataViewHidden:NO];
-        }
-        
-        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tumblrTableView];
-    }
+	DEF_BLOCK_SELF
+	dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueueLatestTumblr", NULL);
+	dispatch_async(importerDispatchQueue, ^{
+		[blockSelf.importer importJSONStringForTumblrPosts:reponseString];
+	});
+	dispatch_release(importerDispatchQueue);
+	
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -451,12 +415,12 @@
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	return isLoadingLatestTumblrArticles; // should return if data source model is reloading
+	return self.isLoadingLatestTumblrArticles;
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-	return [NSDate date]; // should return date data source was last changed
+	return [NSDate date];
 }
 
 
@@ -529,10 +493,6 @@
 {
     LOG_CURRENT_FUNCTION()
     DBLog(@"tumblrFeed didStartImportingData");
-    
-
-    
-    
 }
 
 -(void)didFinishImportingData
@@ -540,14 +500,11 @@
     LOG_CURRENT_FUNCTION() 
     DBLog(@"tumblrFeed didStartImportingData");
     
-    
-    
-    
-    if (_isLoadingMoreTumblr) {
+    if (self.isLoadingMoreTumblr) {
         
-        _numberOfActiveRequests--;
-        _showLoadMoreTumblr = YES;
-        _isLoadingMoreTumblr = NO;
+        self.numberOfActiveRequests--;
+        self.showLoadMoreTumblr = YES;
+        self.isLoadingMoreTumblr = NO;
         
     }
     else {
@@ -557,13 +514,14 @@
     //set the last update date
     [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
     
+	DEF_BLOCK_SELF
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self fetch];
-        [self.tumblrTableView reloadData];
+        [blockSelf fetch];
+        [blockSelf.tumblrTableView reloadData];
         
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {            
-            [self setIsLoadingViewHidden:YES];
-            _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
+        if (blockSelf.isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            [blockSelf setIsLoadingViewHidden:YES];
+            blockSelf.isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
     });
 }
@@ -572,19 +530,20 @@
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
         
-    if (_isLoadingMoreTumblr) {
-        _numberOfActiveRequests--;
-        _showLoadMoreTumblr = YES;
-        _isLoadingMoreTumblr = NO;
+    if (self.isLoadingMoreTumblr) {
+        self.numberOfActiveRequests--;
+        self.showLoadMoreTumblr = YES;
+        self.isLoadingMoreTumblr = NO;
     }
     else {
         
     }
     
+	DEF_BLOCK_SELF
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (_isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
-            _isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
+        if (blockSelf.isLoadingTumblrArticlesForCurrentlyEmptyDataSet) {
+            blockSelf.isLoadingTumblrArticlesForCurrentlyEmptyDataSet = NO;
         }
     });
 }

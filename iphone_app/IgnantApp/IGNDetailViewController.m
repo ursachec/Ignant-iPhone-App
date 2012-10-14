@@ -243,7 +243,7 @@
 -(void)handleBack:(id)sender
 {
 	
-	__block __typeof__(self) blockSelf = self;
+	DEF_BLOCK_SELF
 	
 	
 	if (self.isShownFromMosaic) {
@@ -756,7 +756,7 @@
 {
     DBLog(@"tapAction ");
     
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     double delayInSeconds = .1;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -957,7 +957,7 @@
 {
     DBLog(@"importerDidStartParsingSingleArticle");
     
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"failed importing for favorite");
@@ -970,7 +970,7 @@
 
 -(void)importer:(IgnantImporter*)importer didFinishParsingSingleArticleWithDictionary:(NSDictionary*)articleDictionary
 {    
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"finished importing related article");
@@ -993,7 +993,7 @@
     
 #warning TODO: handle failing parsing the single article dictionary
 	
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     if(blockSelf.isImportingRelatedArticle)
     {
         DBLog(@"failed importing for favorite");

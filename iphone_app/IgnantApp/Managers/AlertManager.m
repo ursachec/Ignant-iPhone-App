@@ -10,9 +10,4 @@
 
 @implementation AlertManager
 
-
-
-
-
-
 @end

@@ -48,10 +48,6 @@
 #define RGBA(r, g, b, a)                    [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
 
 
-
-
-
-
 // ----
 
 #define NewViewController(x) [[x alloc] initWithNibName:@"x" bundle:nil]
@@ -68,4 +64,11 @@
 #define ObjectNotation(x,y) if(x)
 
 
+#define DEF_BLOCK_SELF __block __typeof__(self) blockSelf = self;
+
 #endif
+
+
+
+
+

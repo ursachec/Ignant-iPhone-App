@@ -73,14 +73,10 @@
 @property (nonatomic, assign, readonly) BOOL isShowingImageSlideshow;
 @property (nonatomic, assign, readwrite) BOOL isShownFromMosaic;
 
-
 - (IBAction)tapAction:(id)sender;
 
 -(IBAction)showRelatedArticle:(id)sender;
--(IBAction)playVideo:(id)sender;
-
 -(IBAction)toggleLike:(id)sender;
-
 
 @property(nonatomic, strong, readwrite) NSURL* linkOptionsUrl;
 

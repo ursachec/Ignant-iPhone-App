@@ -14,4 +14,16 @@
 - (void)getContentWithParameters:(NSDictionary *)parameters
 						 success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 						 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getDataForFirstRunWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+
+-(void)getMoreDataForTumblrWithLeastRecentDate:(NSDate*)leastRecentDate
+									   success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+									   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getLatestDataForTumblrWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
 @end

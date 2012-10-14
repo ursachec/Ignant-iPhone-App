@@ -271,14 +271,6 @@ NSString * const kImageFilename = @"filename";
     }
 }
 
--(NSArray*)columnHeightsForMosaicImages:(NSArray*)mosaicImages
-{
-    NSArray* columnHeights = @[@0, @0, @0];
-    
-    
-    return columnHeights;
-}
-
 -(void)addMoreMosaicImages:(NSArray*)mosaicImages
 {
     //first retrieve the currently saved mosaic images as copy

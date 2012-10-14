@@ -714,7 +714,7 @@
     
         DBLog(@"is loading more content...");
         
-        __block __typeof__(self) blockSelf = self;
+        DEF_BLOCK_SELF
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
@@ -741,7 +741,7 @@
                 
         DBLog(@"is loading latest content...");
         
-        __block __typeof__(self) blockSelf = self;
+        DEF_BLOCK_SELF
         
         dispatch_queue_t importerDispatchQueue = dispatch_queue_create("com.ignant.importerDispatchQueue", NULL);
         dispatch_async(importerDispatchQueue, ^{
@@ -823,7 +823,7 @@
 -(void)didFinishImportingData
 {
     LOG_CURRENT_FUNCTION_AND_CLASS()
-    __block __typeof__(self) blockSelf = self;
+    DEF_BLOCK_SELF
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [blockSelf.blogEntriesTableView reloadData];

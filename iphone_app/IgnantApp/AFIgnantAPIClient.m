@@ -42,5 +42,35 @@
 	[self getPath:@"ignant.php" parameters:parameters success:success failure:failure];
 }
 
+-(void)getDataForFirstRunWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{	
+    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+	NSDictionary *params = @{kParameterAction:kAPICommandGetDataForFirstRun, kParameterLanguage:currentPreferredLanguage};
+	[self getContentWithParameters:params success:success failure:failure];	
+}
+
+-(void)getMoreDataForTumblrWithLeastRecentDate:(NSDate*)leastRecentDate
+										success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+									   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[leastRecentDate timeIntervalSince1970]];
+	NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+	NSDictionary *params = @{
+							kParameterAction:kAPICommandGetMoreTumblrArticles,
+							kParameterLanguage:currentPreferredLanguage,
+							kDateOfOldestArticle:secondsSince1970
+							};
+	[self getContentWithParameters:params success:success failure:failure];
+	
+}
+
+-(void)getLatestDataForTumblrWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+	NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+	NSDictionary *params = @{kParameterAction:kAPICommandGetLatestTumblrArticles, kParameterLanguage:currentPreferredLanguage};
+	[self getContentWithParameters:params success:success failure:failure];	
+}
 
 @end
