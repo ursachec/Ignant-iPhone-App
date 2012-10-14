@@ -8,14 +8,8 @@
 
 #import "IgnantImporter.h"
 #import "NSString+HTML.h"
-
-
 #import "SBJSON.h"
-
 #import "Category.h"
-
-#import "Constants.h"
-
 #import "IGNAppDelegate.h"
 
 #define TEST_JSON_DUMP [[NSBundle mainBundle] pathForResource:@"dump_images_big_jpg" ofType:@"txt"]

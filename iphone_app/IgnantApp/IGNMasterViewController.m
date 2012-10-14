@@ -6,7 +6,6 @@
 //  Copyright (c) 2011 c.v.ursache. All rights reserved.
 //
 
-
 #import "Reachability.h"
 
 //import necessary ViewController files
@@ -32,7 +31,6 @@
 #import "ASIHTTPRequest.h"
 #import "NSURL+stringforurl.h"
 
-#import "Constants.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
 

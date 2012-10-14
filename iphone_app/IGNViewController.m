@@ -7,7 +7,6 @@
 //
 
 #import "IGNViewController.h"
-#import "Constants.h"
 #import "IGNAppDelegate.h"
 #import "IgnantNavigationBar.h"
 

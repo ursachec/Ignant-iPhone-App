@@ -14,7 +14,6 @@
 #import "IGNAppDelegate.h"
 
 #import "GANTracker.h"
-#import "Constants.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
 

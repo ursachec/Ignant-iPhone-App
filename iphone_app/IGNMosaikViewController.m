@@ -15,16 +15,9 @@
 #import "LoadMoreMosaicView.h"
 #import "MosaicView.h"
 
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
-#import "Constants.h"
-
 #import <SDWebImage/UIImageView+WebCache.h>
 
-#import "SBJSON.h"
-
+#import "AFIgnantAPIClient.h"
 
 static int kMinimumMosaicImagesLoaded = 1;
 
@@ -45,21 +38,18 @@ NSString * const kImageFilename = @"filename";
 
 
 @interface IGNMosaikViewController ()
-{
-    BOOL _isLoadingMoreMosaicImages;
-    BOOL _isLoadingReplacingMosaicImages;
-    BOOL _isMosaicShownForTheFirstTime;
-    int _numberOfActiveRequests;
-    CGPoint lastContentOffset;
-}
+
+@property(assign) BOOL isLoadingMoreMosaicImages;
+@property(assign) BOOL isLoadingReplacingMosaicImages;
+@property(assign) BOOL isMosaicShownForTheFirstTime;
+@property(assign) int numberOfActiveRequests;
+@property(assign) CGPoint lastContentOffset;
 
 @property(nonatomic,strong) NSMutableArray* currentColumnHeights;
-
 
 @property(nonatomic,strong) NSArray* currentBatchOfMosaicImages;
 @property(nonatomic,strong) NSArray* savedMosaicImages;
 @property (nonatomic,strong) UIView* overlayView;
-@property (retain, nonatomic) IBOutlet UIView *mockNavigationBar;
 @property(nonatomic,strong) ArticleDetailViewController* articleDetailViewController;
 @property(nonatomic,strong) LoadMoreMosaicView* loadingMoreMosaicView;
 
@@ -74,28 +64,16 @@ NSString * const kImageFilename = @"filename";
 #pragma mark -
 
 @implementation IGNMosaikViewController
-@synthesize bigMosaikView;
-@synthesize mosaikScrollView;
-@synthesize closeMosaikButton;
-@synthesize savedMosaicImages;
-@synthesize overlayView = _overlayView;
-@synthesize mockNavigationBar;
-@synthesize parentNavigationController;
-@synthesize isMosaicImagesArrayNotEmpty = _isMosaicImagesArrayNotEmpty;
-@synthesize shareAndMoreToolbar;
-@synthesize loadingMoreMosaicView = _loadingMoreMosaicView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        _numberOfActiveRequests = 0;
-        
-        _isLoadingMoreMosaicImages = false;
-        _isLoadingReplacingMosaicImages = false;
-        
-        _isMosaicShownForTheFirstTime= true;
+        self.numberOfActiveRequests = 0;
+        self.isLoadingMoreMosaicImages = NO;
+        self.isLoadingReplacingMosaicImages = NO;
+        self.isMosaicShownForTheFirstTime= NO;
         
     }
     return self;
@@ -203,7 +181,7 @@ NSString * const kImageFilename = @"filename";
     self.overlayView = overlayView;
     
     //set up the mock navigation bar + toolbar
-    [self setUpToolbarAndMockNavigationBar];
+    [self setUpToolbarAndNavigationBar];
     [self setIsSpecificNavigationBarHidden:NO animated:NO];
 }
 
@@ -225,12 +203,12 @@ NSString * const kImageFilename = @"filename";
 {    
     LOG_CURRENT_FUNCTION()
     
-    if (_isLoadingMoreMosaicImages)
+    if (_isLoadingMoreMosaicImages) {
         return;
-    
-    _isLoadingMoreMosaicImages = YES;
-    
-    _numberOfActiveRequests++;
+	}
+	
+    self.isLoadingMoreMosaicImages = YES;
+    self.numberOfActiveRequests++;
     
     //show a covering loading view if mosaic images array is empty
     if(!self.isMosaicImagesArrayNotEmpty || _isLoadingReplacingMosaicImages)
@@ -239,16 +217,61 @@ NSString * const kImageFilename = @"filename";
     }
     
     self.loadingMoreMosaicView.isLoading = YES;
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSetOfMosaicImages,kParameterAction, [self currentPreferredLanguage],kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"LOAD MORE MOSAIK encodedString go: %@",encodedString);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous];    
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	DEF_BLOCK_SELF
+	[[AFIgnantAPIClient sharedClient] getSetOfMosaicImagesWithSuccess:^(AFHTTPRequestOperation *operation, id responseJSON) {
+		
+		blockSelf.isLoadingMoreMosaicImages = NO;
+		blockSelf.numberOfActiveRequests--;
+		
+		NSArray* images = nil;
+		if ([responseJSON isKindOfClass:[NSDictionary class]]) {
+			images = responseJSON[kTLMosaicEntries];
+		}
+		
+		if ([images count]<1 && !blockSelf.isMosaicImagesArrayNotEmpty){
+			[blockSelf showViewsForCouldNotGetMosaicData];
+			blockSelf.loadingMoreMosaicView.isLoading = NO;
+			blockSelf.isLoadingReplacingMosaicImages = NO;
+			return;
+		}
+		
+		[blockSelf.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
+		
+		if (blockSelf.isLoadingReplacingMosaicImages) {
+			[blockSelf replaceCurrentMosaicImagesWithNewOnes:[images copy]];
+		}
+		else {	
+			//add the mosaic images
+			[blockSelf addMoreMosaicImages:[images copy]];
+		}
+				
+		//redraw the images
+		[blockSelf drawSavedMosaicImages];
+		blockSelf.loadingMoreMosaicView.isLoading = NO;
+		blockSelf.isLoadingReplacingMosaicImages = NO;
+		
+		[blockSelf setIsLoadingViewHidden:YES];
+		
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		
+	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+		
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+		
+		blockSelf.isLoadingMoreMosaicImages = NO;
+		blockSelf.isLoadingReplacingMosaicImages = NO;
+		blockSelf.loadingMoreMosaicView.isLoading = NO;
+		
+		blockSelf.numberOfActiveRequests--;
+		
+		if (!blockSelf.isMosaicImagesArrayNotEmpty){
+			[blockSelf showViewsForCouldNotGetMosaicData];
+		}
+		
+	}];
 }
 
 #pragma mark - client-side loading / saving of the mosaic images
@@ -490,13 +513,6 @@ NSString * const kImageFilename = @"filename";
     return xpos;
 }
 
-#pragma mark - ASIHTTP request delegate
-
-- (void)requestStarted:(ASIHTTPRequest *)request
-{
-    LOG_CURRENT_FUNCTION()
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-}
 
 -(void)showViewsForCouldNotGetMosaicData
 {
@@ -506,73 +522,6 @@ NSString * const kImageFilename = @"filename";
     [self.view bringSubviewToFront:self.specificNavigationBar];
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request
-{    
-    LOG_CURRENT_FUNCTION_AND_CLASS()
-    
-    _isLoadingMoreMosaicImages = NO;
-    
-    _numberOfActiveRequests--;
-    
-    //currently using dummy mosaik images
-    NSString* jsonString = [request responseString];
-    SBJSON *parser = [[SBJSON alloc] init];
-    
-    NSString *json_string = [jsonString copy];
-    NSDictionary *dictionaryFromJSON = [parser objectWithString:json_string error:nil];
-    NSArray* images = [dictionaryFromJSON objectForKey:kTLMosaicEntries];
-    
-    
-    if ([images count]<1 && !self.isMosaicImagesArrayNotEmpty){
-    
-        [self showViewsForCouldNotGetMosaicData];
-        
-        self.loadingMoreMosaicView.isLoading = NO;
-        _isLoadingReplacingMosaicImages = NO;
-        
-        return;
-    }
-    
-    [self.appDelegate.userDefaultsManager setLastUpdateDate:[NSDate date] forCategoryId:[self currentCategoryId]];
-    
-    if (_isLoadingReplacingMosaicImages) {
-        [self replaceCurrentMosaicImagesWithNewOnes:[images copy]];
-    }
-    else {
-                
-        //add the mosaic images
-        [self addMoreMosaicImages:[images copy]];
-    }
-
-    
-    //redraw the images
-    [self drawSavedMosaicImages];
-    
-    self.loadingMoreMosaicView.isLoading = NO;
-
-    _isLoadingReplacingMosaicImages = NO;
-    
-    [self setIsLoadingViewHidden:YES];        
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];    
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    DBLog(@"MOSAIC: requestFailed");
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    
-    _isLoadingMoreMosaicImages = NO;
-    _isLoadingReplacingMosaicImages = NO;
-    self.loadingMoreMosaicView.isLoading = NO;
-    
-    _numberOfActiveRequests--;
-    
-    if (!self.isMosaicImagesArrayNotEmpty){
-        [self showViewsForCouldNotGetMosaicData];
-    }
-}
 
 #pragma mark - overlay view
 
@@ -621,7 +570,7 @@ NSString * const kImageFilename = @"filename";
     [self transitionToDetailViewControllerForArticleId:view.articleId];
 }
 
--(void)setUpToolbarAndMockNavigationBar
+-(void)setUpToolbarAndNavigationBar
 {    
     //add the specific navigation bar
     [self setIsSpecificNavigationBarHidden:YES animated:NO];
@@ -682,7 +631,7 @@ NSString * const kImageFilename = @"filename";
     float reload_distance = -20;
     if(y > h + reload_distance) 
     {
-        if (lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
+        if (self.lastContentOffset.y < offset.y) //only trigger when scroll direction is DOWN
         if (!_isLoadingMoreMosaicImages && _numberOfActiveRequests==0) 
         {
             [self loadMoreMosaicImages];

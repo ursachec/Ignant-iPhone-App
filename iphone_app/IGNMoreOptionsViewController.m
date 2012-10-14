@@ -18,7 +18,6 @@
 
 #import "MoreCell.h"
 
-#import "Constants.h"
 
 typedef enum _moreOptionsIndeces  {
     indexForAboutIgnant = 0,

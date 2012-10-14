@@ -28,7 +28,6 @@
 #import "IgnantLoadingView.h"
 #import "IgnantNoInternetConnectionView.h"
 #import "UserDefaultsManager.h"
-#import "Constants.h"
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"

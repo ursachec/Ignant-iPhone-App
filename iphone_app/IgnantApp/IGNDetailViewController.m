@@ -8,8 +8,6 @@
 
 #import "IGNDetailViewController.h"
 
-#import "Constants.h"
-
 #import "BlogEntry.h"
 
 #import "ImageSlideshowViewController.h"
@@ -19,13 +17,12 @@
 
 #import "NSString+HTML.h"
 
-
 #import "IGNMosaikViewController.h"
 
 #import "IgnantImporter.h"
 #import "Facebook.h"
 
-
+#import "AFIgnantAPIClient.h"
 
 //imports for ASIHTTPRequest
 #import "ASIHTTPRequest.h"
@@ -900,43 +897,29 @@
     
     [self configureView];
     
-    NSString* lang = [self currentPreferredLanguage];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:kAPICommandGetSingleArticle,kParameterAction,self.currentArticleId,kArticleId, lang,kParameterLanguage, nil];
-    NSString *requestString = kAdressForContentServer;
-    NSString *encodedString = [NSURL addQueryStringToUrlString:requestString withDictionary:dict];
-    
-    DBLog(@"DETAIL encodedString go: %@ language: %@",encodedString, lang);
-    
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:encodedString]];
-	[request setDelegate:self];
-	[request startAsynchronous];
-}
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	DEF_BLOCK_SELF
+	[[AFIgnantAPIClient sharedClient] getSingleArticleWithId:self.currentArticleId
+													 success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+														 
+														 
+														 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+														 _isLoadingCurrentArticle = NO;
+														 blockSelf.remoteArticleJSONString = [operation responseString];
+														 [blockSelf.importer importJSONStringForSingleArticle:[operation responseString] forceSave:NO];
+														 
+														 
+													 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+														 
+														 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+														 blockSelf.isLoadingCurrentArticle = NO;
+														 
+														 [blockSelf setIsCouldNotLoadDataViewHidden:NO];
+														 [blockSelf.navigationController setNavigationBarHidden:NO animated:NO];
+														 
+													 }];
 
-- (void)requestStarted:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    DBLog(@"requestStarted");
-}
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    _isLoadingCurrentArticle = NO;
-    self.remoteArticleJSONString = [request responseString];
-    
-    DBLog(@"[request responseString]: %@", [request responseString]);
-    [self.importer importJSONStringForSingleArticle:[request responseString] forceSave:NO];
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    _isLoadingCurrentArticle = NO;
-        
-    [self setIsCouldNotLoadDataViewHidden:NO];
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 #pragma mark - IgnantImporterDelegate
@@ -1049,7 +1032,6 @@
 	
 	return button;
 }
-
 
 - (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(CGRect)frame
 {

@@ -26,4 +26,11 @@
 -(void)getLatestDataForTumblrWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 
+-(void)getSingleArticleWithId:(NSString*)articleId
+					  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+					  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getSetOfMosaicImagesWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+							   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
 @end

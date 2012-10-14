@@ -9,14 +9,6 @@
 #import "IgnantTumblrFeedViewController.h"
 
 #import "IgnantImporter.h"
-
-
-//imports for ASIHTTPRequest
-#import "ASIHTTPRequest.h"
-#import "NSURL+stringforurl.h"
-
-#import "Constants.h"
-
 #import "TumblrEntry.h"
 
 #import "IgnantLoadMoreCell.h"

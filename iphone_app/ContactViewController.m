@@ -7,7 +7,6 @@
 //
 
 #import "ContactViewController.h"
-#import "Constants.h"
 
 NSString * const kEmailClaudiu = @"claudiu@cvursache.com";
 NSString * const kEmailIgnant = @"clemens@ignant.de";

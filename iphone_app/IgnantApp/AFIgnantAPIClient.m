@@ -44,9 +44,9 @@
 
 -(void)getDataForFirstRunWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 							 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
-{	
-    NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
-	NSDictionary *params = @{kParameterAction:kAPICommandGetDataForFirstRun, kParameterLanguage:currentPreferredLanguage};
+{
+
+	NSDictionary *params = @{kParameterAction:kAPICommandGetDataForFirstRun, kParameterLanguage:[NSLocale currentPreferredLanguage]};
 	[self getContentWithParameters:params success:success failure:failure];	
 }
 
@@ -55,10 +55,9 @@
 									   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
     NSNumber *secondsSince1970 = [NSNumber numberWithInteger:[leastRecentDate timeIntervalSince1970]];
-	NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
 	NSDictionary *params = @{
 							kParameterAction:kAPICommandGetMoreTumblrArticles,
-							kParameterLanguage:currentPreferredLanguage,
+							kParameterLanguage:[NSLocale currentPreferredLanguage],
 							kDateOfOldestArticle:secondsSince1970
 							};
 	[self getContentWithParameters:params success:success failure:failure];
@@ -68,9 +67,26 @@
 -(void)getLatestDataForTumblrWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
-	NSString* currentPreferredLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
-	NSDictionary *params = @{kParameterAction:kAPICommandGetLatestTumblrArticles, kParameterLanguage:currentPreferredLanguage};
+	NSDictionary *params = @{kParameterAction:kAPICommandGetLatestTumblrArticles, kParameterLanguage:[NSLocale currentPreferredLanguage]};
 	[self getContentWithParameters:params success:success failure:failure];	
 }
+
+
+-(void)getSingleArticleWithId:(NSString*)articleId
+					  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+					  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{	
+	NSDictionary *params = @{kParameterAction:kAPICommandGetSingleArticle, kParameterLanguage:[NSLocale currentPreferredLanguage],kArticleId:articleId};
+	[self getContentWithParameters:params success:success failure:failure];
+}
+
+
+-(void)getSetOfMosaicImagesWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+								 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+	NSDictionary *params = @{kParameterAction:kAPICommandGetSetOfMosaicImages, kParameterLanguage:[NSLocale currentPreferredLanguage]};
+	[self getContentWithParameters:params success:success failure:failure];
+}
+
 
 @end

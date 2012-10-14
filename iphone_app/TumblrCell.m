@@ -7,7 +7,6 @@
 //
 
 #import "TumblrCell.h"
-#import "Constants.h"
 
 @interface TumblrCellContentView : UIView 
 {
