@@ -27,6 +27,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+	
+	UINavigationBar* navBar = self.navigationBar;
+	
+	CGSize navBarSize = navBar.bounds.size;
+	CGSize ignantLogoSize = CGSizeMake(26.0f,26.0f);
+		
+	UIImageView* ignantLogo = [[UIImageView alloc] initWithFrame:CGRectMake((navBarSize.width-ignantLogoSize.width)/2, (navBarSize.height-ignantLogoSize.height)/2, ignantLogoSize.width, ignantLogoSize.height)];
+	ignantLogo.image = [UIImage imageNamed:@"navbar_ignant_logo"];
+	ignantLogo.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+	[self.navigationBar addSubview:ignantLogo];
+	
 }
 
 - (void)didReceiveMemoryWarning

@@ -29,3 +29,4 @@ php $THUMB_SCRIPT_DIR imgType=slideshowImg max=$BATCH >> $PHP_SCRIPT_LOG ;
 echo '##########################################' >> $PHP_SCRIPT_LOG
 echo 'finished running ignant cronjob.' >> $PHP_SCRIPT_LOG
 echo "##########################################\n" >> $PHP_SCRIPT_LOG
+

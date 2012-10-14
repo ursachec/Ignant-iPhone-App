@@ -39,6 +39,8 @@
 //---google analytics
 #import "GANTracker.h"
 
+#import "IgnantNavigationBar.h"
+
 #define kForceReloadCoreData NO
 
 
@@ -73,7 +75,6 @@
 @implementation IGNAppDelegate
 
 @synthesize goHomeButton = _goHomeButton;
-@synthesize toolbarGradientView = _toolbarGradientView;
 
 @synthesize userDefaultsManager = _userDefaultsManager;
 
@@ -121,7 +122,7 @@
     _importer.delegate = self;
     
 	
-    UINavigationController *nav = [[[NSBundle mainBundle] loadNibNamed:@"IgnantNavigationController" owner:self options:nil] objectAtIndex:0];
+	IgnantNavigationController *nav = [[IgnantNavigationController alloc] initWithNavigationBarClass:[IgnantNavigationBar class] toolbarClass:[UIToolbar class]];
     IGNMasterViewController *mVC = [[IGNMasterViewController alloc] initWithNibName:@"IGNMasterViewController_iPhone" bundle:nil category:nil];
     mVC.managedObjectContext = self.managedObjectContext;
     self.masterViewController = mVC;
@@ -750,42 +751,6 @@
 
 #pragma mark - toolbar methods
 
--(UIView*)toolbarGradientView
-{
-    if (_toolbarGradientView==nil) {
-        
-        CGRect navBarFrame = self.navigationController.navigationBar.frame;
-        DBLog(@"navBarFrame: %@", NSStringFromCGRect(navBarFrame));
-        
-        //set up the gradient view
-        CGSize gradientViewSize = CGSizeMake(320.0f, 3.0f);
-        CGRect gradientViewFrame = CGRectMake(navBarFrame.origin.x, navBarFrame.origin.y+navBarFrame.size.height, gradientViewSize.width, gradientViewSize.height);
-        UIView* aView = [[UIView alloc] initWithFrame:gradientViewFrame];
-        aView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        
-        aView.backgroundColor = [UIColor clearColor];
-        
-        CAGradientLayer *gradient = [CAGradientLayer layer];
-        gradient.frame = aView.bounds;
-        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:.5f] CGColor], (id)[[UIColor colorWithRed:223.0f/255.0f green:223.0f/255.0f blue:223.0f/255.0f alpha:0.f] CGColor], nil];
-        [aView.layer insertSublayer:gradient atIndex:0];
-        
-        _toolbarGradientView = aView;  
-    }
-    
-    return _toolbarGradientView;
-}
-
--(void)setIsToolbarGradientViewHidden:(BOOL)hidden
-{
-    if (hidden) {
-        [self.toolbarGradientView removeFromSuperview];
-    } 
-    else {
-        
-        [self.navigationController.view addSubview:self.toolbarGradientView];
-    }
-}
 
 -(void)setIsToolbarHidden:(BOOL)hidden animated:(BOOL)animated
 {

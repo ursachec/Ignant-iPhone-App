@@ -131,7 +131,7 @@ function shouldIncludeImagesInHTMLForCategoryId($categoryId = -1)
 	if ($categoryId==860) {
 		return true;
 	}
-	return true;
+	return false;
 }
 
 function getArticleWithId($articleId = '', $lang = 'de')

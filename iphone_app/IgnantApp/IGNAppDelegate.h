@@ -24,7 +24,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property(nonatomic, readonly, strong) UIView* toolbarGradientView;
 @property(nonatomic, readonly, strong) UIView* ignantToolbar;
 @property(nonatomic, readonly, strong) UIButton* goHomeButton;
 

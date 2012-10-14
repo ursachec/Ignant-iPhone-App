@@ -16,15 +16,20 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.opaque = YES;
+		
+		
+		UIImage *backgroundPortrait = [[UIImage imageNamed: @"navbar_background_portrait"]
+													 resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)];
+		[[UINavigationBar appearance] setBackgroundImage: backgroundPortrait
+										   forBarMetrics: UIBarMetricsDefault];
+		
+		UIImage *backgroundLandscape = [[UIImage imageNamed: @"navbar_background_landscape"]
+									   resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)];
+		[[UINavigationBar appearance] setBackgroundImage: backgroundLandscape
+										   forBarMetrics: UIBarMetricsLandscapePhone];
     }
     return self;
 }
 
--(void) drawRect:(CGRect)rect
-{
-    UIImage *image = [UIImage imageNamed:@"ign_header.jpg"];
-    [image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    
-}
 
 @end

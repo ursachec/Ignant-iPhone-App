@@ -793,7 +793,6 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     __block UIView* blockReadyShareAndMoreToolBar = self.shareAndMoreToolbar;
-    __block UIView* blockReadyGradientView = self.appDelegate.toolbarGradientView;
     __block UIScrollView* blockReadyContentScrollView = self.contentScrollView;
     
     __block UIView* blockSelfView = self.view;
@@ -806,17 +805,6 @@
     
     void (^toolbarblock)(void);
     toolbarblock = ^{
-        
-        //move the gradient on/off the screen
-        CGRect gradientFrame = blockReadyGradientView.frame;
-        CGRect newGradientFrame = CGRectMake(0.0f, 0.0f, 0.0f, 0.0f);
-        if (hidden) {
-            newGradientFrame = CGRectMake(0.0f, -(statusBarHeight+navigationBarHeight), gradientFrame.size.width, gradientFrame.size.height);
-        }
-        else {
-            newGradientFrame = CGRectMake(0.0f, statusBarHeight+navigationBarHeight, gradientFrame.size.width, gradientFrame.size.height);
-        }
-        [blockReadyGradientView setFrame:newGradientFrame];
 
         //move the toolbar out of the screen
         CGRect currentShareAndMoreToolbarFrame = blockReadyShareAndMoreToolBar.frame; 
