@@ -46,4 +46,8 @@
 -(void)getRegisterForNotificationsWithDeviceToken:(NSString*)deviceToken
 										  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
 										  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+-(void)getShouldFetchFirstRunDataWithLastUpdateDate:(NSDate*)lastUpdate
+											success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+											failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 @end

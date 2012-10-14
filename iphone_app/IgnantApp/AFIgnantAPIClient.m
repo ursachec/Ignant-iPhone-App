@@ -31,7 +31,6 @@
     
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
 	
-    
     return self;
 }
 
@@ -40,6 +39,19 @@
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
 	[self getPath:@"ignant.php" parameters:parameters success:success failure:failure];
+}
+
+-(void)getShouldFetchFirstRunDataWithLastUpdateDate:(NSDate*)lastUpdate
+											success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
+											failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+
+	NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];
+
+	DEF_BLOCK_SELF
+	
+	NSDictionary *params = @{kParameterAction:kAPICommandShouldReloadDataForTheFirstRun, kTLLastFirstDataFetch:lastUpdateTimeStamp};
+	[self getContentWithParameters:params success:success failure:failure];
 }
 
 -(void)getDataForFirstRunWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
@@ -61,7 +73,6 @@
 							kDateOfOldestArticle:secondsSince1970
 							};
 	[self getContentWithParameters:params success:success failure:failure];
-	
 }
 
 -(void)getLatestDataForTumblrWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success
@@ -70,7 +81,6 @@
 	NSDictionary *params = @{kParameterAction:kAPICommandGetLatestTumblrArticles, kParameterLanguage:[NSLocale currentPreferredLanguage]};
 	[self getContentWithParameters:params success:success failure:failure];	
 }
-
 
 -(void)getSingleArticleWithId:(NSString*)articleId
 					  success:(void (^)(AFHTTPRequestOperation *operation, id responseJSON))success

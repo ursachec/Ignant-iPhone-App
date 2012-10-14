@@ -139,27 +139,24 @@
 	else if([self checkIfAppOnline])
 	{
 		DEF_BLOCK_SELF
-			
 		NSDate *lastUpdate = [self.userDefaultsManager lastUpdateForFirstRun];
-		NSNumber* lastUpdateTimeStamp = [NSNumber numberWithInteger:[lastUpdate timeIntervalSince1970]];
-		
-		[[AFIgnantAPIClient sharedClient] getContentWithParameters:@{kParameterAction:kAPICommandShouldReloadDataForTheFirstRun, kTLLastFirstDataFetch:lastUpdateTimeStamp}
-												success:^(AFHTTPRequestOperation *operation, id responseJSON) {
-												  
-												  if ([responseJSON isKindOfClass:[NSDictionary class]]) {
-													  BOOL shouldReload = false;
-													  id responseValue = [responseJSON objectForKey:kTLShouldFetchFirstData];
-													  if ([responseValue isKindOfClass:[NSNumber class]]) {
-														  shouldReload = [responseValue boolValue];
-													  }
-													  if (shouldReload) {
-														  [blockSelf fetchAndLoadDataForFirstRun];
-													  }													  
-												  }
-												  
-											  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-												  DBLog(@"failure");
-											  }];
+		[[AFIgnantAPIClient sharedClient] getShouldFetchFirstRunDataWithLastUpdateDate:lastUpdate
+																			   success:^(AFHTTPRequestOperation *operation, id responseJSON) {
+			
+			if ([responseJSON isKindOfClass:[NSDictionary class]]) {
+				BOOL shouldReload = false;
+				id responseValue = [responseJSON objectForKey:kTLShouldFetchFirstData];
+				if ([responseValue isKindOfClass:[NSNumber class]]) {
+					shouldReload = [responseValue boolValue];
+				}
+				if (shouldReload) {
+					[blockSelf fetchAndLoadDataForFirstRun];
+				}
+			}
+			
+		} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+			DBLog(@"failure");
+		}];
 	}
 	
 	
@@ -550,8 +547,6 @@
 -(void)fetchAndLoadDataForFirstRun
 {
     self.isLoadingDataForFirstRun = YES;
-    
-
 	
 	DEF_BLOCK_SELF
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
