@@ -174,6 +174,10 @@
     
     NSError* error = nil;
 	GATrackPageView(&error, [NSString stringWithFormat:kGAPVArticleDetailView,self.currentArticleId]);
+	
+	[self.dtTextView.contentView relayoutText];
+	[self redrawArticleContentViewWithNewDTViewHeight:self.dtTextView.contentView.bounds.size.height];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -1016,7 +1020,10 @@
 }
 
 #pragma mark - Custom Views on Text
-- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForLink:(NSURL *)url identifier:(NSString *)identifier frame:(CGRect)frame
+- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView
+						  viewForLink:(NSURL *)url
+						   identifier:(NSString *)identifier
+								frame:(CGRect)frame
 {
 	DTLinkButton *button = [[DTLinkButton alloc] initWithFrame:frame];
 	button.URL = url;
@@ -1031,7 +1038,7 @@
 
 - (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(CGRect)frame
 {
-
+	
 	if (attachment.contentType == DTTextAttachmentTypeImage)
 	{
 		// if the attachment has a hyperlinkURL then this is currently ignored
@@ -1094,6 +1101,7 @@
 
 - (BOOL)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView shouldDrawBackgroundForTextBlock:(DTTextBlock *)textBlock frame:(CGRect)frame context:(CGContextRef)context forLayoutFrame:(DTCoreTextLayoutFrame *)layoutFrame
 {
+	
 	UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:10];
     
 	CGColorRef color = [textBlock.backgroundColor CGColor];

@@ -76,9 +76,14 @@ NSString * const kAFContentBaseURL = @"http://www.ignant.de/app_dev_api/";
 NSString * const kAdressForContentServer = @"http://www.ignant.de/app_dev_api/ignant.php";
 NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
+#elif shouldUseIgnantDevServer
+NSString * const kAFContentBaseURL = @"http://www.ignant.de/app_dev_api/";
+NSString * const kAdressForContentServer = @"http://www.ignant.de/app_dev_api/ignant.php";
+NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
+NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #else
-NSString * const kAFContentBaseURL = @"http://192.168.2.107:9999/ign/";
-NSString * const kAdressForContentServer = @"http://192.168.2.107:9999/ign/ignant.php";
+NSString * const kAFContentBaseURL = @"http://192.168.144.236:9999/ign/";
+NSString * const kAdressForContentServer = @"http://192.168.144.236:9999/ign/ignant.php";
 NSString * const kAdressForImageServer = @"http://www.ignant.de/app/imgsrv.php";
 NSString * const kAdressForVideoServer = @"http://www.ignant.de/app/videosrv.php";
 #endif
